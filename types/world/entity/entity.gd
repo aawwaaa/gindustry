@@ -20,6 +20,7 @@ var entity_type: EntityType;
     - inventory(Inventory-物品栏)
     - item_source(ItemAdapter-物品来源)
     - item_target(ItemAdapter-物品目标)
+    - builder(BuilderAdapter-建造)
 """
 @export var adapters: Dictionary = {}
 
@@ -38,12 +39,9 @@ var world: World:
     set = set_world;
 
 var has_entity_id: bool = false
+var inited: bool = false
 var entity_id: int:
     set(v):
-        if not has_entity_id:
-            has_entity_id = true
-            for node in child_entities_main_node:
-                node.get_entity().init_entity()
         entity_id = v;
         main_node.name = "Entity#" + str(v);
 
@@ -133,6 +131,11 @@ func _on_world_layer_changed(new_layer: int, from: int) -> void:
 func init_entity() -> void:
     entity_id = Game.entity_inc_id;
     Game.entity_inc_id += 1;
+    if not has_entity_id:
+        has_entity_id = true
+        inited = true 
+        if parent_entity: for child in child_entities_main_node:
+            child.get_entity().init_entity()
 
 func get_z_index(offset: int) -> int:
     return 32 * (world.layer + layer + offset)
@@ -140,6 +143,7 @@ func get_z_index(offset: int) -> int:
 func _ready() -> void:
     for node in child_entities_main_node:
         node.get_entity().parent_entity = self
+        if inited: node.get_entity().init_entity()
     layer_changed.emit(layer, 0);
     if entity_ref_targets.has(entity_id):
         for callback in entity_ref_targets[entity_id]:
@@ -250,10 +254,12 @@ func save_data(stream: Stream) -> void:
         stream.store_64(0 if access_target == null else access_target.entity_id),
     func():
         var should_save_adapters: Dictionary = {}
+        var should_save_adapters_values = []
         for adapter_name in adapters:
             var adapter: EntityAdapter = get_node(adapters[adapter_name])
-            if adapter._should_save_data():
+            if adapter._should_save_data() and not should_save_adapters_values.has(adapter):
                 should_save_adapters[adapter_name] = adapter
+                should_save_adapters_values.append(adapter)
         stream.store_16(should_save_adapters.size())
         for adapter_name in should_save_adapters:
             stream.store_string(adapter_name)

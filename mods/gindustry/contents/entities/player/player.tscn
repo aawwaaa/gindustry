@@ -1,10 +1,13 @@
-[gd_scene load_steps=9 format=3 uid="uid://c6ktp7v2kr3xe"]
+[gd_scene load_steps=12 format=3 uid="uid://c6ktp7v2kr3xe"]
 
 [ext_resource type="Script" path="res://mods/gindustry/contents/entities/player/player.gd" id="1_0kf5p"]
 [ext_resource type="Texture2D" uid="uid://bpamijghl1a1b" path="res://mods/gindustry/assets/simple_entities.png" id="1_2daoq"]
 [ext_resource type="Script" path="res://types/world/entity/entity.gd" id="3_byptf"]
 [ext_resource type="Script" path="res://types/world/entity/controller_adapter.gd" id="4_ltlka"]
+[ext_resource type="Script" path="res://types/world/entity/building/builder_adapter.gd" id="5_6aijs"]
 [ext_resource type="Script" path="res://types/world/item/inventory.gd" id="5_tdurn"]
+[ext_resource type="Resource" uid="uid://ysn74ytdk81q" path="res://mods/gindustry/contents/entities/player/player_builder.tres" id="6_u5f24"]
+[ext_resource type="Script" path="res://types/entities/entity_container/entity_container.gd" id="8_ndjmd"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jktfm"]
 radius = 384.0
@@ -42,6 +45,7 @@ unique_name_in_owner = true
 script = ExtResource("3_byptf")
 main_node = NodePath("..")
 adapters = {
+"builder": NodePath("../BuilderAdapter"),
 "controller": NodePath("../ControllerAdapter"),
 "inventory": NodePath("../Inventory"),
 "item": NodePath("../Inventory")
@@ -53,22 +57,30 @@ layer = 1
 [node name="ControllerAdapter" type="Node" parent="." node_paths=PackedStringArray("main_node", "entity_node")]
 unique_name_in_owner = true
 script = ExtResource("4_ltlka")
-main_node = NodePath("..")
-entity_node = NodePath("../Entity")
 available_attributes = Array[String](["position", "rotation"])
 available_operations = Array[String](["inventory"])
+main_node = NodePath("..")
+entity_node = NodePath("../Entity")
 
-[node name="Inventory" type="Node" parent="." node_paths=PackedStringArray("entity")]
+[node name="BuilderAdapter" type="Node" parent="." node_paths=PackedStringArray("builder_containers", "main_node", "entity_node")]
+script = ExtResource("5_6aijs")
+builder_containers = [NodePath("../Builders/EntityContainer")]
+builder_type = ExtResource("6_u5f24")
+main_node = NodePath("..")
+entity_node = NodePath("../Entity")
+
+[node name="Inventory" type="Node" parent="." node_paths=PackedStringArray("main_node", "entity_node")]
 unique_name_in_owner = true
 script = ExtResource("5_tdurn")
-entity = NodePath("../Entity")
+main_node = NodePath("..")
+entity_node = NodePath("../Entity")
 
-[node name="Node2D" type="Node2D" parent="."]
+[node name="Name" type="Node2D" parent="."]
 z_as_relative = false
 position = Vector2(0, -16)
 scale = Vector2(0.12, 0.12)
 
-[node name="PlayerName" type="Label" parent="Node2D"]
+[node name="PlayerName" type="Label" parent="Name"]
 unique_name_in_owner = true
 anchors_preset = 7
 anchor_left = 0.5
@@ -82,6 +94,11 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_font_sizes/font_size = 64
 metadata/_edit_use_anchors_ = true
+
+[node name="Builders" type="Node2D" parent="."]
+
+[node name="EntityContainer" type="Node2D" parent="Builders"]
+script = ExtResource("8_ndjmd")
 
 [connection signal="layer_changed" from="Entity" to="." method="_on_entity_layer_changed"]
 [connection signal="on_load_data" from="Entity" to="." method="_on_entity_on_load_data"]

@@ -1,9 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://cf2gwbsrtbj6l"]
+[gd_scene load_steps=3 format=3 uid="uid://bhmk8befysu6f"]
 
 [ext_resource type="Script" path="res://types/world/entity/entity.gd" id="1_3ugrc"]
+[ext_resource type="Script" path="res://types/entities/builder/builder.gd" id="1_4clg6"]
 
-[node name="Builder" type="Node2D"]
+[node name="Builder" type="Node2D" node_paths=PackedStringArray("entity")]
+script = ExtResource("1_4clg6")
+entity = NodePath("Entity")
 
-[node name="Entity" type="Node" parent="." node_paths=PackedStringArray("main_node")]
+[node name="Entity" type="Node" parent="." node_paths=PackedStringArray("main_node", "access_range")]
 script = ExtResource("1_3ugrc")
 main_node = NodePath("..")
+access_range = NodePath("../Area2D")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]

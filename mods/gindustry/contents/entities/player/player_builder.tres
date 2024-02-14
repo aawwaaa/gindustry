@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="BuilderType" load_steps=4 format=3 uid="uid://ysn74ytdk81q"]
+
+[ext_resource type="PackedScene" uid="uid://bhmk8befysu6f" path="res://types/entities/builder/builder.tscn" id="1_ntpsr"]
+[ext_resource type="Script" path="res://types/entities/builder/builder_type.gd" id="1_pdxhb"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_11gx5"]
+radius = 768.0
+
+[resource]
+script = ExtResource("1_pdxhb")
+build_range = SubResource("CircleShape2D_11gx5")
+build_range_layer_begin = 0
+build_range_layer_end = 0
+build_speed = 1.0
+entity_scene = ExtResource("1_ntpsr")
+controllable = false
+id = "player_builder"

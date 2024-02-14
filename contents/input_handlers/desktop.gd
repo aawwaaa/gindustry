@@ -27,7 +27,7 @@ func _handle_input(event: InputEvent) -> void:
 func _handle_process(_delta: float) -> void:
     if entity: update_debug_message()
     if controller: update_move()
-    if controller: update_camera()
+    if target: update_camera()
 
 func handle_unhandled_input_event_mouse_button(event: InputEventMouseButton) -> void:
     if event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
