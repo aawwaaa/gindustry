@@ -3,6 +3,7 @@ extends ItemType
 
 static var default_options_item = {
     "item_scene": preload("res://types/world/item/item.tscn"),
+    "cost": 1
 };
 
 func _get_type_id() -> String:
@@ -18,5 +19,6 @@ func _init_by_mod(content_id: String, atlas_texture: AtlasTexture, args: Array) 
     
     texture = atlas_texture
     item_scene = options["item_scene"]
+    cost = options["cost"]
 
     return options

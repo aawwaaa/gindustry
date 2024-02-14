@@ -5,6 +5,7 @@ extends Content
 
 @export var texture: Texture2D = load("res://assets/asset-not-found.png")
 @export var max_stack: int = 100
+@export var cost: int = 1
 
 @export var useable: bool = false
 @export var use_scene: PackedScene

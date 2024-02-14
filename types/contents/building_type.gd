@@ -5,6 +5,7 @@ extends EntityType
 @export var shadow: PackedScene
 
 @export var category: BuildingCategory
+@export var requirements: Array[TypedItemStack] = []
 
 func get_tr_name() -> String:
     return Content.to_full_id(mod.mod_info.id, id, "Building")

@@ -13,6 +13,9 @@ func _copy_type() -> Item:
     var new_item = item_type.create_item()
     return new_item
 
+func _apply_type(typed: TypedItemStack) -> void:
+    amount = typed.amount
+
 func _set_in_inventory(in_inventory: bool, inventory: Inventory) -> void:
     pass
 
