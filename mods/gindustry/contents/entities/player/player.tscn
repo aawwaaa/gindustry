@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c6ktp7v2kr3xe"]
+[gd_scene load_steps=13 format=3 uid="uid://c6ktp7v2kr3xe"]
 
 [ext_resource type="Script" path="res://mods/gindustry/contents/entities/player/player.gd" id="1_0kf5p"]
 [ext_resource type="Texture2D" uid="uid://bpamijghl1a1b" path="res://mods/gindustry/assets/simple_entities.png" id="1_2daoq"]
@@ -6,8 +6,7 @@
 [ext_resource type="Script" path="res://types/world/entity/controller_adapter.gd" id="4_ltlka"]
 [ext_resource type="Script" path="res://types/world/entity/building/builder_adapter.gd" id="5_6aijs"]
 [ext_resource type="Script" path="res://types/world/item/inventory.gd" id="5_tdurn"]
-[ext_resource type="Resource" uid="uid://ysn74ytdk81q" path="res://mods/gindustry/contents/entities/player/player_builder.tres" id="6_u5f24"]
-[ext_resource type="Script" path="res://types/entities/entity_container/entity_container.gd" id="8_ndjmd"]
+[ext_resource type="Script" path="res://types/world/entity/adapter_unit/builder/builder_adapter_unit_type.gd" id="6_2y0pv"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jktfm"]
 radius = 384.0
@@ -18,6 +17,16 @@ region = Rect2(0, 0, 32, 32)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3i2rj"]
 size = Vector2(16, 16)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7b62i"]
+radius = 400.0
+
+[sub_resource type="Resource" id="Resource_pru8i"]
+script = ExtResource("6_2y0pv")
+build_range = SubResource("CircleShape2D_7b62i")
+build_range_layer_begin = 0
+build_range_layer_end = 0
+build_speed = 1.0
 
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("entity")]
 collision_layer = 0
@@ -62,10 +71,10 @@ available_operations = Array[String](["inventory"])
 main_node = NodePath("..")
 entity_node = NodePath("../Entity")
 
-[node name="BuilderAdapter" type="Node" parent="." node_paths=PackedStringArray("builder_containers", "main_node", "entity_node")]
+[node name="BuilderAdapter" type="Node" parent="." node_paths=PackedStringArray("builder_unit_positions", "main_node", "entity_node")]
 script = ExtResource("5_6aijs")
-builder_containers = [NodePath("../Builders/EntityContainer")]
-builder_type = ExtResource("6_u5f24")
+builder_unit_positions = [NodePath("../Builders/Marker2D"), NodePath("../Builders/Marker2D2")]
+builder_type = SubResource("Resource_pru8i")
 main_node = NodePath("..")
 entity_node = NodePath("../Entity")
 
@@ -97,8 +106,11 @@ metadata/_edit_use_anchors_ = true
 
 [node name="Builders" type="Node2D" parent="."]
 
-[node name="EntityContainer" type="Node2D" parent="Builders"]
-script = ExtResource("8_ndjmd")
+[node name="Marker2D" type="Marker2D" parent="Builders"]
+position = Vector2(-8, -8)
+
+[node name="Marker2D2" type="Marker2D" parent="Builders"]
+position = Vector2(8, -8)
 
 [connection signal="layer_changed" from="Entity" to="." method="_on_entity_layer_changed"]
 [connection signal="on_load_data" from="Entity" to="." method="_on_entity_on_load_data"]

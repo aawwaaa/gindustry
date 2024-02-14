@@ -76,7 +76,7 @@ func operate_remote(controller: Controller, operation: String, args: Array[Varia
     access_target.get_entity().get_adapter("controller").remote_operation_received.emit(self, operation, args)
     return true
 
-func update_control(type: String, updater: Callable, append_args: Array[String] = []) -> bool:
+func update_control(type: String, updater: Callable, append_args: Array = []) -> bool:
     for controller in controllers:
         if not controller._get_attributes().has(type):
             continue
@@ -87,9 +87,9 @@ func update_control(type: String, updater: Callable, append_args: Array[String] 
     return false
 
 func update_velocity(controller: Controller, _adapter: ControllerAdapter, speed: float) -> void:
-    entity_node.velocity = controller._get_move_velocity(entity_node.velocity);
-    if entity_node.velocity != Vector2.ZERO:
-        entity_node.velocity = entity_node.velocity.normalized() * speed
+    main_node.velocity = controller._get_move_velocity(main_node.velocity);
+    if main_node.velocity != Vector2.ZERO:
+        main_node.velocity = main_node.velocity.normalized() * speed
 
 func update_building(controller: Controller, _adapter: ControllerAdapter, builders: Array) -> void:
     pass

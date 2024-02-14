@@ -1,7 +1,11 @@
 class_name AdapterUnitType
 extends Resource
 
-@export var adapter_unit_scene: PackedScene
+var adapter_unit_scene: PackedScene:
+    get = _get_adapter_unit_scene
+
+func _get_adapter_unit_scene() -> PackedScene:
+    return null
 
 func create_adapter_unit(adapter: EntityAdapter) -> AdapterUnit:
     var inst = adapter_unit_scene.instantiate()
