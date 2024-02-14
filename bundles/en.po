@@ -1,0 +1,63 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# LogLevel
+msgid "LogLevel_Info"
+msgstr ""
+
+msgid "LogLevel_Warn"
+msgstr ""
+
+msgid "LogLevel_Error"
+msgstr ""
+
+msgid "LogLevel_Debug"
+msgstr ""
+
+# Loading
+msgid "Loading_Title"
+msgstr ""
+
+msgid "MainMenu_Title"
+msgstr "Gindustry"
+
+msgid "MainMenu_NewGame"
+msgstr "New Game"
+
+msgid "MainMenu_Saves"
+msgstr "Saves"
+
+msgid "MainMenu_Mods"
+msgstr "Mods"
+
+msgid "MainMenu_Servers"
+msgstr "Servers"
+
+msgid "MainMenu_Settings"
+msgstr "Settings"
+
+# mods
+msgid "Mods_LogSource"
+msgstr ""
+
+msgid "Mods_NotAMod {path}"
+msgstr ""
+
+msgid "Mods_SearchFailed {directory}"
+msgstr ""
+
+msgid "Mods_SearchSuccess {directory} {amount}"
+msgid_plural "Mods_SearchSuccess_plural {directory} {amount}"
+msgstr[0] ""
+msgstr[1] ""

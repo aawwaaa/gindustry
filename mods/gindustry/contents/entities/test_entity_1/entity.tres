@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="EntityType" load_steps=3 format=3 uid="uid://blkv56qmfrm0e"]
+
+[ext_resource type="PackedScene" uid="uid://b6bstd2r2wdld" path="res://mods/gindustry/contents/entities/test_entity_1/test_entity_1.tscn" id="1_f53ip"]
+[ext_resource type="Script" path="res://types/contents/entity_type.gd" id="2_lbmij"]
+
+[resource]
+script = ExtResource("2_lbmij")
+entity_scene = ExtResource("1_f53ip")
+controllable = false
+id = "test_entity_1"

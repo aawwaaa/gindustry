@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="Gindustry_TestPreset" load_steps=2 format=3 uid="uid://u8d3feck8t4d"]
+
+[ext_resource type="Script" path="res://mods/gindustry/contents/presets/test/preset.gd" id="1_d1soe"]
+
+[resource]
+script = ExtResource("1_d1soe")
+id = "test_preset"

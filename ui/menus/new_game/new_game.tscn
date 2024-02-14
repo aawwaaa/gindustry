@@ -1,0 +1,73 @@
+[gd_scene load_steps=2 format=3 uid="uid://chotu7f2vsjke"]
+
+[ext_resource type="Script" path="res://ui/menus/new_game/new_game.gd" id="1_itsr7"]
+
+[node name="NewGame" type="Window"]
+title = "NewGame_Title"
+initial_position = 2
+size = Vector2i(960, 450)
+script = ExtResource("1_itsr7")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HSplitContainer" type="HSplitContainer" parent="PanelContainer"]
+layout_mode = 2
+split_offset = -100
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Search" type="LineEdit" parent="PanelContainer/HSplitContainer/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "NewGame_Search"
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/HSplitContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/HSplitContainer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="PresetGroups" type="VBoxContainer" parent="PanelContainer/HSplitContainer/VBoxContainer/PanelContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HSplitContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="PresetDescriptionBody" type="ScrollContainer" parent="PanelContainer/HSplitContainer/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Control" type="Control" parent="PanelContainer/HSplitContainer/PanelContainer/VBoxContainer/PresetDescriptionBody"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/HSplitContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="CurrentPresetName" type="Label" parent="PanelContainer/HSplitContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ConfirmButton" type="Button" parent="PanelContainer/HSplitContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+disabled = true
+text = "NewGame_Confirm"
+
+[connection signal="close_requested" from="." to="." method="hide"]
+[connection signal="text_changed" from="PanelContainer/HSplitContainer/VBoxContainer/Search" to="." method="_on_search_text_changed"]
+[connection signal="pressed" from="PanelContainer/HSplitContainer/PanelContainer/VBoxContainer/HBoxContainer/ConfirmButton" to="." method="_on_confirm_button_pressed"]

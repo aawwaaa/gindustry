@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://8xf5hsaj7jk1"]
+
+[ext_resource type="Script" path="res://types/world/entity/entity.gd" id="1_70ccx"]
+[ext_resource type="Script" path="res://contents/entities/building_shadow_container/building_shadow_container.gd" id="1_s2tmb"]
+
+[node name="BuildingShadowContainer" type="Node2D" node_paths=PackedStringArray("entity")]
+script = ExtResource("1_s2tmb")
+entity = NodePath("Entity")
+
+[node name="Entity" type="Node" parent="." node_paths=PackedStringArray("main_node")]
+script = ExtResource("1_70ccx")
+main_node = NodePath("..")
+layer_follow_world = true
+layer = 1
+
+[connection signal="layer_changed" from="Entity" to="." method="_on_entity_layer_changed"]
+[connection signal="on_load_data" from="Entity" to="." method="_on_entity_on_load_data"]
+[connection signal="on_save_data" from="Entity" to="." method="_on_entity_on_save_data"]

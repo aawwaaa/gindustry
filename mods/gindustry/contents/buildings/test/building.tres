@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="BuildingType" load_steps=5 format=3 uid="uid://cgmoqad23karh"]
+
+[ext_resource type="Resource" uid="uid://ceig7jq8y8add" path="res://contents/building_categories/misc.tres" id="1_3lqgk"]
+[ext_resource type="Script" path="res://types/contents/building_type.gd" id="1_n844q"]
+[ext_resource type="PackedScene" uid="uid://dsemh3wutwhcn" path="res://mods/gindustry/types/buildings/test/test.tscn" id="2_cmy5s"]
+[ext_resource type="PackedScene" uid="uid://c5s4tsla3ll5n" path="res://mods/gindustry/contents/buildings/test/shadow.tscn" id="3_o3ck7"]
+
+[resource]
+script = ExtResource("1_n844q")
+shadow = ExtResource("3_o3ck7")
+category = ExtResource("1_3lqgk")
+entity_scene = ExtResource("2_cmy5s")
+controllable = false
+id = "test"

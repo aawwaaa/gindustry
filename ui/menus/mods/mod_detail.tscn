@@ -1,0 +1,179 @@
+[gd_scene load_steps=3 format=3 uid="uid://bwtjx2xrsrk7e"]
+
+[ext_resource type="Script" path="res://ui/menus/mods/mod_detail.gd" id="1_gs6wk"]
+[ext_resource type="Texture2D" uid="uid://bhvx2a5ify12e" path="res://assets/asset-not-found.png" id="1_r33tj"]
+
+[node name="ModDetail" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_gs6wk")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="ModIcon" type="TextureRect" parent="HBoxContainer/AspectRatioContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("1_r33tj")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Mods_ModName"
+
+[node name="ModName" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 9.0
+text = "ModName"
+
+[node name="Label2" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Mods_ModVersion"
+
+[node name="ModDisplayVersion" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 9.0
+text = "ModDisplayVersion"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ModID" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "ModID"
+
+[node name="ModVersion" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "ModVersion"
+
+[node name="ConfigButton" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "配置"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Mods_ModAuthor"
+
+[node name="ModAuthor" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 9.0
+text = "ModAuthor"
+
+[node name="RepoPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="RepoPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="RepoPanel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Mods_ModRepo"
+
+[node name="ModRepo" type="LineEdit" parent="RepoPanel/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 9.0
+editable = false
+select_all_on_focus = true
+
+[node name="DescPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DescPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="DescPanel/VBoxContainer"]
+layout_mode = 2
+text = "Mods_ModDescription"
+
+[node name="MarginContainer" type="MarginContainer" parent="DescPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+
+[node name="ModDescription" type="Label" parent="DescPanel/VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 20)
+layout_mode = 2
+text = "ModDescription"
+autowrap_mode = 3
+
+[node name="DependsPanel" type="PanelContainer" parent="."]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DependsPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="DependsPanel/VBoxContainer"]
+layout_mode = 2
+text = "Mods_ModDepends"
+
+[node name="MarginContainer" type="MarginContainer" parent="DependsPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+
+[node name="ModDepends" type="VBoxContainer" parent="DependsPanel/VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ExceptsPanel" type="PanelContainer" parent="."]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ExceptsPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ExceptsPanel/VBoxContainer"]
+layout_mode = 2
+text = "Mods_ModExcepts"
+
+[node name="MarginContainer" type="MarginContainer" parent="ExceptsPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+
+[node name="ModExcepts" type="VBoxContainer" parent="ExceptsPanel/VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer2/ConfigButton" to="." method="_on_config_button_pressed"]

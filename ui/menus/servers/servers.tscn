@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://cd7x0p0fsdn7g"]
+
+[ext_resource type="Script" path="res://ui/menus/servers/servers.gd" id="1_jfuyl"]
+
+[node name="Servers" type="Window"]
+title = "Servers_Title"
+initial_position = 2
+size = Vector2i(960, 450)
+script = ExtResource("1_jfuyl")
+
+[connection signal="close_requested" from="." to="." method="hide"]

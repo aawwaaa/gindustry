@@ -1,0 +1,7 @@
+# presets
+
+msgid "Gindustry_Presets_Test"
+msgstr ""
+
+msgid "Gindustry_Presets_Test_Description"
+msgstr ""

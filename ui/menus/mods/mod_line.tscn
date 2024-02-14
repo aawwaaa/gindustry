@@ -1,0 +1,34 @@
+[gd_scene load_steps=3 format=3 uid="uid://b8stbkykklnxu"]
+
+[ext_resource type="Script" path="res://ui/menus/mods/mod_line.gd" id="1_p38qi"]
+[ext_resource type="Texture2D" uid="uid://b46gtdt64efsa" path="res://assets/ui/icons/right_arrow.tres" id="2_15lvr"]
+
+[node name="HBoxContainer" type="HBoxContainer"]
+offset_right = 1152.0
+offset_bottom = 24.0
+script = ExtResource("1_p38qi")
+
+[node name="Enabled" type="CheckBox" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ModName" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 20.0
+text = "ModName"
+
+[node name="ModVersion" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 10.0
+text = "ModVersion"
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+icon = ExtResource("2_15lvr")
+
+[connection signal="pressed" from="Enabled" to="." method="_on_enabled_pressed"]
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

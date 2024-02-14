@@ -1,0 +1,189 @@
+[gd_scene load_steps=16 format=3 uid="uid://bkjiopb08w5no"]
+
+[ext_resource type="Script" path="res://ui/game/build/build_ui.gd" id="1_1mh4v"]
+[ext_resource type="Texture2D" uid="uid://bnrgbbio2cewj" path="res://assets/ui/arrows.png" id="1_o3puo"]
+[ext_resource type="Texture2D" uid="uid://ds4ih5scc8o4r" path="res://assets/ui/icons/break.tres" id="2_ob47p"]
+[ext_resource type="Texture2D" uid="uid://djiadsqq65hkd" path="res://assets/ui/icons/copy.tres" id="3_6eicn"]
+[ext_resource type="Texture2D" uid="uid://d4h3l85gk7ahu" path="res://assets/ui/icons/check.tres" id="4_7f4ug"]
+[ext_resource type="Texture2D" uid="uid://botefrj43l1li" path="res://assets/ui/icons/schematics.tres" id="5_33xuc"]
+[ext_resource type="Texture2D" uid="uid://cclko02al4esb" path="res://assets/ui/icons/pause.tres" id="6_e0py0"]
+[ext_resource type="Texture2D" uid="uid://3c3cfli0hgal" path="res://assets/ui/icons/cross.tres" id="7_p34gd"]
+[ext_resource type="Texture2D" uid="uid://by77kj5tc8uke" path="res://assets/ui/arrows/vertical_arrow.tres" id="7_ttgs1"]
+[ext_resource type="Texture2D" uid="uid://fed4wl6lnb46" path="res://assets/ui/arrows/horizonal_arrow.tres" id="8_g3q4l"]
+[ext_resource type="Texture2D" uid="uid://bg7y4tesxmtlu" path="res://assets/ui/icons/rotate_left.tres" id="9_yhjwy"]
+[ext_resource type="Texture2D" uid="uid://cjsn2lqjqs38f" path="res://assets/ui/icons/rotate_right.tres" id="10_sl52u"]
+[ext_resource type="Texture2D" uid="uid://b0ee6d4l85m7b" path="res://assets/ui/icons/save.tres" id="11_fike3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eidnk"]
+atlas = ExtResource("1_o3puo")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_yfndi"]
+allow_unpress = true
+
+[node name="BuildUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1mh4v")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="BuildingInfo" type="VBoxContainer" parent="PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(320, 300)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="BuildingTypes" type="HFlowContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PanelContainer2" type="PanelContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer2"]
+layout_mode = 2
+
+[node name="Rotation" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer2/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+icon = SubResource("AtlasTexture_eidnk")
+
+[node name="Break" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer2/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+button_group = SubResource("ButtonGroup_yfndi")
+icon = ExtResource("2_ob47p")
+
+[node name="Copy" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer2/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+button_group = SubResource("ButtonGroup_yfndi")
+icon = ExtResource("3_6eicn")
+
+[node name="Confirm" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer2/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("4_7f4ug")
+
+[node name="Schematic" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer2/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("5_33xuc")
+
+[node name="Pause" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer2/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("6_e0py0")
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="BuildingCategorys" type="HFlowContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/PanelContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="SchematicPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+grow_vertical = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SchematicPanel"]
+layout_mode = 2
+
+[node name="SchematicTools" type="VFlowContainer" parent="SchematicPanel/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 84)
+layout_mode = 2
+
+[node name="VerticalFlip" type="Button" parent="SchematicPanel/VBoxContainer/SchematicTools"]
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("7_ttgs1")
+
+[node name="HorizonalFlip" type="Button" parent="SchematicPanel/VBoxContainer/SchematicTools"]
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("8_g3q4l")
+
+[node name="RotateLeft" type="Button" parent="SchematicPanel/VBoxContainer/SchematicTools"]
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("9_yhjwy")
+
+[node name="RotateRight" type="Button" parent="SchematicPanel/VBoxContainer/SchematicTools"]
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("10_sl52u")
+
+[node name="Save" type="Button" parent="SchematicPanel/VBoxContainer/SchematicTools"]
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("11_fike3")
+
+[node name="Cancel" type="Button" parent="SchematicPanel/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+focus_mode = 0
+text = "BuildUI_Cancel"
+icon = ExtResource("7_p34gd")
+
+[connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer2/HBoxContainer/Rotation" to="." method="_on_rotation_pressed"]
+[connection signal="toggled" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer2/HBoxContainer/Break" to="." method="_on_break_toggled"]
+[connection signal="toggled" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer2/HBoxContainer/Copy" to="." method="_on_copy_toggled"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer2/HBoxContainer/Confirm" to="." method="_on_confirm_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer2/HBoxContainer/Schematic" to="." method="_on_schematic_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer2/HBoxContainer/Pause" to="." method="_on_pause_pressed"]
+[connection signal="pressed" from="SchematicPanel/VBoxContainer/SchematicTools/VerticalFlip" to="." method="_on_vertical_flip_pressed"]
+[connection signal="pressed" from="SchematicPanel/VBoxContainer/SchematicTools/HorizonalFlip" to="." method="_on_horizonal_flip_pressed"]
+[connection signal="pressed" from="SchematicPanel/VBoxContainer/SchematicTools/RotateLeft" to="." method="_on_rotate_left_pressed"]
+[connection signal="pressed" from="SchematicPanel/VBoxContainer/SchematicTools/RotateRight" to="." method="_on_rotate_right_pressed"]
+[connection signal="pressed" from="SchematicPanel/VBoxContainer/SchematicTools/Save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="SchematicPanel/VBoxContainer/Cancel" to="." method="_on_cancel_pressed"]

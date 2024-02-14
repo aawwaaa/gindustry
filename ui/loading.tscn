@@ -1,0 +1,56 @@
+[gd_scene load_steps=2 format=3 uid="uid://btxboyi6ctpxq"]
+
+[ext_resource type="Script" path="res://ui/loading.gd" id="1_q4g0j"]
+
+[node name="Loading" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_q4g0j")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+alignment = 1
+
+[node name="Title" type="MarginContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 200
+theme_override_constants/margin_right = 200
+
+[node name="LoadingTitle" type="Label" parent="CenterContainer/VBoxContainer/Title"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 60
+text = "Loading_Title"
+
+[node name="Log" type="MarginContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 50
+
+[node name="LoadingLog" type="Label" parent="CenterContainer/VBoxContainer/Log"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 12
+text = "[I] Log1
+[I] Log2
+[I] Log3
+[I] Log4
+[I] Log5
+[I] Log6
+[I] Log7
+[I] Log8"
+
+[node name="ProgressBar" type="ProgressBar" parent="CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.0

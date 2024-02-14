@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="BuildingCategory" load_steps=4 format=3 uid="uid://ceig7jq8y8add"]
+
+[ext_resource type="Texture2D" uid="uid://bfnno2826v8pe" path="res://assets/building_category_icons.png" id="1_5jfek"]
+[ext_resource type="Script" path="res://types/contents/building_category.gd" id="1_g4gjs"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m27fd"]
+atlas = ExtResource("1_5jfek")
+region = Rect2(32, 32, 32, 32)
+
+[resource]
+script = ExtResource("1_g4gjs")
+icon = SubResource("AtlasTexture_m27fd")
+id = "misc"

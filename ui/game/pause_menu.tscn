@@ -1,0 +1,58 @@
+[gd_scene load_steps=2 format=3 uid="uid://cinollqc0t0s0"]
+
+[ext_resource type="Script" path="res://ui/game/pause_menu.gd" id="1_bri1g"]
+
+[node name="PauseMenu" type="PanelContainer"]
+z_index = 2048
+z_as_relative = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bri1g")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="Buttons" type="VBoxContainer" parent="CenterContainer/PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer/Buttons"]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_right = 120
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/Buttons/MarginContainer"]
+layout_mode = 2
+text = "PauseMenu_Title"
+
+[node name="Back" type="Button" parent="CenterContainer/PanelContainer/Buttons"]
+layout_mode = 2
+text = "PauseMenu_Back"
+
+[node name="Pause" type="Button" parent="CenterContainer/PanelContainer/Buttons"]
+layout_mode = 2
+text = "PauseMenu_Pause"
+
+[node name="Save" type="Button" parent="CenterContainer/PanelContainer/Buttons"]
+layout_mode = 2
+text = "PauseMenu_Save"
+
+[node name="Settings" type="Button" parent="CenterContainer/PanelContainer/Buttons"]
+layout_mode = 2
+text = "PauseMenu_Settings"
+
+[node name="Exit" type="Button" parent="CenterContainer/PanelContainer/Buttons"]
+layout_mode = 2
+text = "PauseMenu_Exit"
+
+[connection signal="pressed" from="CenterContainer/PanelContainer/Buttons/Back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="CenterContainer/PanelContainer/Buttons/Pause" to="." method="_on_pause_pressed"]
+[connection signal="pressed" from="CenterContainer/PanelContainer/Buttons/Save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="CenterContainer/PanelContainer/Buttons/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="CenterContainer/PanelContainer/Buttons/Exit" to="." method="_on_exit_pressed"]

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ModInfo" load_steps=3 format=3 uid="uid://gfnjtv4ew3ga"]
+
+[ext_resource type="Texture2D" uid="uid://bhvx2a5ify12e" path="res://assets/asset-not-found.png" id="1_0pbux"]
+[ext_resource type="Script" path="res://types/mod/mod-info.gd" id="2_3bxmx"]
+
+[resource]
+script = ExtResource("2_3bxmx")
+id = "builtin"
+name = "Gindustry-builtin"
+description = "builtin"
+author = "awa"
+repo = "no_repo"
+version = "1.0.0"
+display_version = "unmarked"
+depends = {}
+excepts = []
+icon = ExtResource("1_0pbux")
+main = ""

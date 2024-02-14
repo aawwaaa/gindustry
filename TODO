@@ -1,0 +1,60 @@
+-- 物品 --
+[X] 2. 物品使用gui(物品使用预览及确认)
+[.] 3. 物品拆分
+
+-- 预设 --
+[X] 1. 预设大改
+[X] 2. 玩家数据保存
+[X] 3. 玩家加入由预设处理
+
+-- 存档/读档/多人游戏 --
+[X] 1. 保存/加载
+[=] 2. 多人游戏
+    [ ] Multiplayer.join
+    [ ] mod检查
+[=] 3. headless模式
+    [ ] 新游戏
+    [X] 加载游戏
+    [ ] 重新生成密钥
+
+-- 建造系统(直接放置/需要建造) --
+[X] 玩家控制器跟据配置自动生成
+    玩家附带自身控制器类型
+    其他客户端生成PlayerControllerRemote
+    玩家客户端生成对应的控制器类型
+    [X] 4. GameUI由PlayerController控制
+        UI显示由Controller
+    [.] PlayerController向Player发送target_changed信号, Player转发
+    [X] Global提供set_input_handler(type: String)方法
+    [.] Player提供default_controller_type属性
+    [X] 1. InputHandler类型注册: controller: GDScript, tr_name: String
+    [X] 2. GameUI动态实例化: ControllerUI
+    [X] 3. 设置界面提供选项
+    [X] ! PlayerController拆分为InputHandler
+        InputHandler使用全局实例, 控制Game.current_controller(Game.current_player.get_controller())
+        玩家变更等由InputHandler处理
+
+[X] 设置界面由程序生成
+
+[.] 玩家控制器处理点击
+[ ] Tile控制是否可建造
+[X] 建筑覆盖
+[ ] 建造模块
+
+[ ] 1. 建筑选择
+    [X] 建筑分类
+    [ ] UI
+[ ] 2. 建筑建造预览
+[X] 3. 多方块建筑定义
+[ ] 4. 建筑放置
+[ ] 5. 建筑拆除
+[ ] 6. 带物品的建筑拆除
+[ ] 7. 掉落物
+
+-- 物流, 流体, 能量(传送带, 分流器, 机械臂, 管道, 箱子, 电杆) --
+-- 基础工业(矿机, 工厂, 发电机) --
+-- 基础单位(汽车, 移动炮塔, 基础火车) --
+-- 地图, 标记系统 --
+-- 世界盒(带子世界的火车, 飞船) --
+-- 高级工业(大型建筑, 多方块建筑) --
+-- 用于模组的扩展(有限多世界, 模板模组) --

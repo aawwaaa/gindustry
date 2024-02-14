@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=3 uid="uid://fm4ff8ar5nm0"]
+
+[ext_resource type="Script" path="res://ui/main_menu.gd" id="1_h06p1"]
+
+[node name="MainMenu" type="CenterContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_h06p1")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 2
+
+[node name="Buttons" type="VBoxContainer" parent="PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/Buttons"]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_right = 150
+
+[node name="Title" type="Label" parent="PanelContainer/Buttons/MarginContainer"]
+layout_mode = 2
+text = "MainMenu_Title"

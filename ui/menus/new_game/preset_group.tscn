@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=3 uid="uid://xaids4ovr0gr"]
+
+[ext_resource type="Script" path="res://ui/menus/new_game/preset_group.gd" id="1_ex284"]
+
+[node name="PresetGroup" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_ex284")
+
+[node name="Name" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "PresetGroupName"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Presets" type="VBoxContainer" parent="MarginContainer/PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2

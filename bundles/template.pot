@@ -1,0 +1,232 @@
+# LogLevel
+
+msgid "LogLevel_Info"
+msgstr ""
+
+msgid "LogLevel_Warn"
+msgstr ""
+
+msgid "LogLevel_Error"
+msgstr ""
+
+msgid "LogLevel_Debug"
+msgstr ""
+
+# Loading
+
+msgid "Loading_Title"
+msgstr ""
+
+# MainMenu
+
+msgid "MainMenu_Title"
+msgstr ""
+
+msgid "MainMenu_NewGame"
+msgstr ""
+
+msgid "MainMenu_Saves"
+msgstr ""
+
+msgid "MainMenu_Mods"
+msgstr ""
+
+msgid "MainMenu_Servers"
+msgstr ""
+
+msgid "MainMenu_Settings"
+msgstr ""
+
+# loader
+
+msgid "Loader_LogSource"
+msgstr ""
+
+msgid "Loader_LoadFailed {path}"
+msgstr ""
+
+msgid "Loader_ModLoad_System"
+msgstr ""
+
+msgid "Loader_ModLoad_Items"
+msgstr ""
+
+msgid "Loader_ModLoad_Blocks"
+msgstr ""
+
+msgid "Loader_ModLoad_Units"
+msgstr ""
+
+msgid "Loader_ModLoad_Translations"
+msgstr ""
+
+msgid "Loader_ModLoad_Presets"
+msgstr ""
+
+msgid "Loader_ModLoad_Scripts"
+msgstr ""
+
+msgid "Loader_ModLoad_Configs"
+msgstr ""
+
+msgid "Loader_ModLoad_Datas"
+msgstr ""
+
+# global
+
+msgid "Global_LogSource"
+msgstr ""
+
+msgid "Global_ConfigsNotFound"
+msgstr ""
+
+msgid "Global_LoadConfigs"
+msgstr ""
+
+msgid "Global_SaveConfigs"
+msgstr ""
+
+# mods
+
+msgid "Mods_LogSource"
+msgstr ""
+
+msgid "Mods_NotAMod {path}"
+msgstr ""
+
+msgid "Mods_FolderNotSupported {path}"
+msgstr ""
+
+msgid "Mods_Search"
+msgstr ""
+
+msgid "Mods_SearchFailed {directory}"
+msgstr ""
+
+msgid "Mods_SearchSuccess {directory} {amount}"
+msgid_plural "Mods_SearchSuccess_plural {directory} {amount}"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Mods_LoadEnableConfigs"
+msgstr ""
+
+msgid "Mods_SaveEnableConfigs"
+msgstr ""
+
+msgid "Mods_EnableConfigsNotFound"
+msgstr ""
+
+msgid "Mods_FoundNewModEnabled {id} {name}"
+msgstr ""
+
+msgid "Mods_ModConfigsNotFound {id} {name}"
+msgstr ""
+
+msgid "Mods_LoadModConfigs {id} {name}"
+msgstr ""
+
+msgid "Mods_SaveModConfigs {id} {name}"
+msgstr ""
+
+msgid "Mods_MissingDepends {id}"
+msgstr ""
+
+msgid "Mods_DependsVersionMismatch {id} {name} {versionRange} {currentVersion}"
+msgstr ""
+
+msgid "Mods_DependsNotEnabled {id} {name}"
+msgstr ""
+
+msgid "Mods_DetectedExcepts {id} {name}"
+msgstr ""
+
+msgid "Mods_Load_LoadResources {id} {name}"
+msgstr ""
+
+msgid "Mods_Load_Initialize {id} {name}"
+msgstr ""
+
+msgid "Mods_Load_LoadContents {id} {name}"
+msgstr ""
+
+msgid "Mods_Load_LoadComplete {amount}"
+msgid_plural "Mods_Load_LoadComplete_plural {amount}"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Mods_DetectedExceptsInLoading"
+msgstr ""
+
+msgid "Mods_Title"
+msgstr ""
+
+msgid "Mods_SaveConfigs"
+msgstr ""
+
+msgid "Mods_NoConfigs"
+msgstr ""
+
+msgid "Mods_NeedRestart"
+msgstr ""
+
+msgid "Mods_ModName"
+msgstr ""
+
+msgid "Mods_ModVersion"
+msgstr ""
+
+msgid "Mods_ModAuthor"
+msgstr ""
+
+msgid "Mods_ModRepo"
+msgstr ""
+
+msgid "Mods_ModDescription"
+msgstr ""
+
+msgid "Mods_ModDepends"
+msgstr ""
+
+msgid "Mods_ModExcepts"
+msgstr ""
+
+msgid "Mods_Unsloved"
+msgstr ""
+
+# new game
+
+msgid "NewGame_Title"
+msgstr ""
+
+msgid "NewGame_Search"
+msgstr ""
+
+msgid "NewGame_Confirm"
+msgstr ""
+
+# presets
+
+msgid "Presets_LogSource"
+msgstr ""
+
+msgid "Presets_LoadPreset {name}"
+msgstr ""
+
+# saves
+
+msgid "Saves_Title"
+msgstr ""
+
+# servers
+
+msgid "Servers_Title"
+msgstr ""
+
+# settings
+
+msgid "Settings_Title"
+msgstr ""
+
+msgid "Settings_About"
+msgstr ""

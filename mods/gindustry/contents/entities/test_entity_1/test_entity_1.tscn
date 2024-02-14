@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://b6bstd2r2wdld"]
+
+[ext_resource type="Script" path="res://mods/gindustry/contents/entities/test_entity_1/test_entity_1.gd" id="1_1fkk2"]
+[ext_resource type="Texture2D" uid="uid://bpamijghl1a1b" path="res://mods/gindustry/assets/simple_entities.png" id="2_jcxak"]
+[ext_resource type="Script" path="res://types/world/entity/entity.gd" id="3_k606n"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j4j55"]
+atlas = ExtResource("2_jcxak")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3i2rj"]
+size = Vector2(16, 16)
+
+[node name="TestEntity1" type="RigidBody2D" node_paths=PackedStringArray("entity")]
+z_as_relative = false
+gravity_scale = 0.0
+linear_velocity = Vector2(0, 80)
+angular_velocity = 0.785398
+script = ExtResource("1_1fkk2")
+entity = NodePath("Entity")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(5, 5)
+texture = SubResource("AtlasTexture_j4j55")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(5, 5)
+shape = SubResource("RectangleShape2D_3i2rj")
+
+[node name="Entity" type="Node" parent="." node_paths=PackedStringArray("main_node")]
+unique_name_in_owner = true
+script = ExtResource("3_k606n")
+main_node = NodePath("..")
+layer_follow_world = true
+layer = 1
+
+[connection signal="layer_changed" from="Entity" to="." method="_on_entity_layer_changed"]

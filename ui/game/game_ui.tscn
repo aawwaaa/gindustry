@@ -1,0 +1,50 @@
+[gd_scene load_steps=5 format=3 uid="uid://c7uj4kdkhepli"]
+
+[ext_resource type="Script" path="res://ui/game/game_ui.gd" id="1_8q3go"]
+[ext_resource type="PackedScene" uid="uid://dkx3l5m02nde" path="res://ui/game/player_inventory/player_inventory.tscn" id="2_eemsh"]
+[ext_resource type="PackedScene" uid="uid://by7nnwa735mfp" path="res://ui/game/player_inventory/default_inventory_panel.tscn" id="3_fpt4v"]
+[ext_resource type="PackedScene" uid="uid://cinollqc0t0s0" path="res://ui/game/pause_menu.tscn" id="4_kutpy"]
+
+[node name="GameUI" type="Control"]
+process_mode = 3
+z_index = 1023
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8q3go")
+
+[node name="PlayerInventory" parent="." instance=ExtResource("2_eemsh")]
+process_mode = 1
+default_inventory_panel = ExtResource("3_fpt4v")
+
+[node name="PauseMenu" parent="." instance=ExtResource("4_kutpy")]
+visible = false
+layout_mode = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+grow_vertical = 0
+
+[node name="Debug" type="Label" parent="PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="InputHandlerUI" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="ui_hidden" from="." to="PlayerInventory" method="_on_game_ui_ui_hidden"]
+[connection signal="ui_hidden" from="." to="PauseMenu" method="_on_game_ui_ui_hidden"]

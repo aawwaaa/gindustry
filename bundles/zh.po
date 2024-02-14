@@ -1,0 +1,238 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "LogLevel_Info"
+msgstr "信息"
+
+msgid "LogLevel_Warn"
+msgstr "警告"
+
+msgid "LogLevel_Error"
+msgstr "错误"
+
+msgid "LogLevel_Debug"
+msgstr "调试"
+
+msgid "Loading_Title"
+msgstr "Gindustry"
+
+msgid "MainMenu_Title"
+msgstr "Gindustry"
+
+msgid "MainMenu_NewGame"
+msgstr "新游戏"
+
+msgid "MainMenu_Saves"
+msgstr "存档"
+
+msgid "MainMenu_Mods"
+msgstr "模组"
+
+msgid "MainMenu_Servers"
+msgstr "服务器"
+
+msgid "MainMenu_Settings"
+msgstr "设置"
+
+# loader
+msgid "Loader_LogSource"
+msgstr "加载"
+
+msgid "Loader_LoadFailed {path}"
+msgstr "资源加载失败 {path}"
+
+msgid "Loader_ModLoad_System"
+msgstr "加载系统中"
+
+msgid "Loader_ModLoad_Items"
+msgstr "加载物品中"
+
+msgid "Loader_ModLoad_Blocks"
+msgstr "加载方块中"
+
+msgid "Loader_ModLoad_Units"
+msgstr "加载单位中"
+
+msgid "Loader_ModLoad_Translations"
+msgstr "加载翻译中"
+
+msgid "Loader_ModLoad_Presets"
+msgstr "加载预设中"
+
+msgid "Loader_ModLoad_Scripts"
+msgstr "加载脚本中"
+
+msgid "Loader_ModLoad_Configs"
+msgstr "加载配置中"
+
+msgid "Loader_ModLoad_Datas"
+msgstr "加载数据中"
+
+# global
+msgid "Global_LogSource"
+msgstr "全局"
+
+msgid "Global_ConfigsNotFound"
+msgstr "未检测到配置文件, 使用默认配置"
+
+msgid "Global_LoadConfigs"
+msgstr "加载配置中"
+
+msgid "Global_SaveConfigs"
+msgstr "保存配置中"
+
+# mods
+msgid "Mods_LogSource"
+msgstr "模组"
+
+msgid "Mods_NotAMod {path}"
+msgstr "不是一个模组: {path}"
+
+msgid "Mods_FolderNotSupported {path}"
+msgstr "此处不支持文件夹模组,请打包为zip/pck: {path}"
+
+msgid "Mods_Search"
+msgstr "搜索"
+
+msgid "Mods_SearchFailed {directory}"
+msgstr "模组搜索失败: {directory}"
+
+msgid "Mods_SearchSuccess {directory} {amount}"
+msgid_plural "Mods_SearchSuccess_plural {directory} {amount}"
+msgstr[0] "成功在 {directory} 目录下发现 {amount} 个模组"
+
+msgid "Mods_LoadEnableConfigs"
+msgstr "加载模组启用配置中"
+
+msgid "Mods_SaveEnableConfigs"
+msgstr "保存模组启用配置中"
+
+msgid "Mods_EnableConfigsNotFound"
+msgstr "未检测到模组启用配置, 使用默认配置"
+
+msgid "Mods_FoundNewModEnabled {id} {name}"
+msgstr "发现新模组 {name} ( {id} ) , 已自动启用"
+
+msgid "Mods_ModConfigsNotFound {id} {name}"
+msgstr "未检测到模组 {name} ( {id} ) 的配置文件, 使用默认配置"
+
+msgid "Mods_LoadModConfigs {id} {name}"
+msgstr "加载模组 {name} ( {id} ) 配置文件中"
+
+msgid "Mods_SaveModConfigs {id} {name}"
+msgstr "保存模组 {name} ( {id} ) 配置文件中"
+
+msgid "Mods_MissingDepends {id}"
+msgstr "缺失依赖模组 {id}"
+
+msgid "Mods_DependsVersionMismatch {id} {name} {versionRange} {currentVersion}"
+msgstr ""
+"依赖模组版本不匹配 {name} ( {id} ) , 需要 {versionRange} 而你有 "
+"{currentVersion}"
+
+msgid "Mods_DependsNotEnabled {id} {name}"
+msgstr "依赖模组未启用 {name} ( {id} )"
+
+msgid "Mods_DetectedExcepts {id} {name}"
+msgstr "检测到不兼容的模组 {name} ( {id} )"
+
+msgid "Mods_Load_LoadResources {id} {name}"
+msgstr "加载模组 {name} ( {id} ) 资源中"
+
+msgid "Mods_Load_Initialize {id} {name}"
+msgstr "初始化模组 {name} ( {id} ) 中"
+
+msgid "Mods_Load_LoadContents {id} {name}"
+msgstr "加载模组 {name} ( {id} ) 内容中"
+
+msgid "Mods_Load_LoadComplete {amount}"
+msgid_plural "Mods_Load_LoadComplete_plural {amount}"
+msgstr[0] "加载模组完成, 共 {amount} 个模组"
+
+msgid "Mods_DetectedExceptsInLoading"
+msgstr "检测到模组冲突, 已禁用所有模组"
+
+msgid "Mods_Title"
+msgstr "模组"
+
+msgid "Mods_SaveConfigs"
+msgstr "保存配置"
+
+msgid "Mods_NoConfigs"
+msgstr "此模组没有配置"
+
+msgid "Mods_NeedRestart"
+msgstr "游戏需要重新启动"
+
+msgid "Mods_ModName"
+msgstr "模组名"
+
+msgid "Mods_ModVersion"
+msgstr "模组版本"
+
+msgid "Mods_ModAuthor"
+msgstr "模组作者"
+
+msgid "Mods_ModRepo"
+msgstr "存储库"
+
+msgid "Mods_ModDescription"
+msgstr "模组介绍"
+
+msgid "Mods_ModDepends"
+msgstr "依赖于"
+
+msgid "Mods_ModExcepts"
+msgstr "不兼容"
+
+msgid "Mods_Unsloved"
+msgstr "<无法解析>"
+
+# new game
+msgid "NewGame_Title"
+msgstr "新游戏"
+
+msgid "NewGame_Search"
+msgstr "搜索"
+
+msgid "NewGame_Confirm"
+msgstr "确定"
+
+# presets
+msgid "Presets_LogSource"
+msgstr "预设"
+
+msgid "Presets_LoadPreset {name}"
+msgstr "正在加载预设 {name}"
+
+msgid "Saves_Title"
+msgstr "存档"
+
+# servers
+msgid "Servers_Title"
+msgstr "服务器"
+
+msgid "Settings_Title"
+msgstr "设置"
+
+msgid "Settings_About"
+msgstr "关于"
+
+#~ msgid "Mods_DetectedExceptsInLoading_Notify"
+#~ msgstr "注意: 关闭此窗口后游戏将自动退出"
+
+#, fuzzy
+#~| msgid "MainMenu_Mods"
+#~ msgid "MainMenu_Main"
+#~ msgstr "模组"
