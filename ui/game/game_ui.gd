@@ -3,10 +3,11 @@ extends Control
 
 signal ui_shown();
 signal ui_hidden();
+signal contents_loaded();
 
 static var instance: GameUI;
 @onready var player_inventory: PlayerInventory = $PlayerInventory
-@onready var pause_menu: PauseMenu = $PauseMenu
+@onready var pause_menu: PauseMenu = %PauseMenu
 @onready var debug: Label = %Debug
 @onready var input_handler_ui: Control = %InputHandlerUI
 
@@ -20,3 +21,6 @@ func show_ui() -> void:
 func hide_ui() -> void:
     visible = false
     ui_hidden.emit()
+
+func loaded() -> void:
+    contents_loaded.emit()

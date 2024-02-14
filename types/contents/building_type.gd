@@ -1,6 +1,7 @@
 class_name BuildingType
 extends EntityType
 
+@export var icon: Texture2D = load("res://assets/asset-not-found.png")
 @export var shadow: PackedScene
 
 @export var category: BuildingCategory

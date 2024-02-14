@@ -31,7 +31,52 @@ var has_build_plan: bool = false:
 
 func _ready() -> void:
     building_button_group = ButtonGroup.new();
+    building_button_group.allow_unpress = true
     building_category_button_group = ButtonGroup.new();
+
+func show_category(category: BuildingCategory) -> void:
+    for child in %BuildingTypes.get_children():
+        child.queue_free();
+
+    for building_type in category.building_types:
+        var node = Control.new()
+        node.custom_minimum_size = Vector2(48, 48)
+        var button = Button.new();
+        button.icon = building_type.icon;
+        button.button_group = building_button_group;
+        button.scale = node.custom_minimum_size / button.icon.get_size();
+        button.focus_mode = Control.FOCUS_NONE
+        button.toggle_mode = true
+        if selected_building_type == building_type: button.button_pressed = true
+        button.toggled.connect(set_selected_building_type.bind(building_type))
+        node.add_child(button)
+        %BuildingTypes.add_child(node);
+
+func set_selected_building_type(toggled: bool, building_type: BuildingType) -> void:
+    if not toggled:
+        selected_building_type = null
+        return
+    selected_building_type = building_type
+
+func load_categories() -> void:
+    for child in %BuildingCategories.get_children():
+        child.queue_free();
+
+    var first: BuildingCategory
+
+    for category in Contents.contents_type_indexed["building_category"]:
+        var button = Button.new();
+        button.icon = category.icon;
+        button.button_group = building_category_button_group;
+        button.focus_mode = Control.FOCUS_NONE
+        button.toggle_mode = true
+        if not first:
+            first = category
+            button.button_pressed = true
+        button.pressed.connect(show_category.bind(category))
+        %BuildingCategories.add_child(button);
+
+    show_category(first)
 
 func _on_rotation_pressed() -> void:
     current_rotation += 1;
@@ -72,6 +117,7 @@ func _on_cancel_pressed() -> void:
         has_build_plan = false
         return
     selected_building_type = null
+    building_button_group.get_pressed_button().button_pressed = false
 
 func _on_vertical_flip_pressed() -> void:
     build_plan_operate.emit("vertical-flip");
@@ -87,3 +133,6 @@ func _on_rotate_right_pressed() -> void:
 
 func _on_save_pressed() -> void:
     build_plan_operate.emit("save");
+
+func _on_game_ui_contents_loaded() -> void:
+    load_categories()

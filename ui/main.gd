@@ -20,14 +20,14 @@ func back_to_menu() -> void:
 func hide_all() -> void:
     for node in $Windows.get_children():
         node.hide();
-    %GameUI.hide()
+    %GameUI.hide_ui()
     $Loading.visible = false;
     $MainMenu.visible = false;
 
 func show_game_ui() -> void:
     for node in $Windows.get_children():
         node.hide();
-    %GameUI.show()
+    %GameUI.show_ui()
     $Loading.visible = false;
     $MainMenu.visible = false;
 
@@ -89,7 +89,8 @@ func start_load() -> void:
     Game.camera_node = %Camera;
     
     GameUI.instance = %GameUI
-
+    
+    %GameUI.loaded()
     Global.game_ui_input_handler = %GameUI.input_handler_ui
     Global.set_input_handler()
     progress.call(5);

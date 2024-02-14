@@ -3,7 +3,7 @@ extends Content
 
 @export var item_scene: PackedScene
 
-@export var texture: Texture
+@export var texture: Texture2D = load("res://assets/asset-not-found.png")
 @export var max_stack: int = 100
 
 @export var useable: bool = false

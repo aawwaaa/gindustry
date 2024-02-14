@@ -1,7 +1,7 @@
 class_name BuildingCategory
 extends Content
 
-@export var icon: Texture2D
+@export var icon: Texture2D = load("res://assets/asset-not-found.png")
 
 var building_types: Array[BuildingType] = []
 

@@ -120,9 +120,9 @@ icon = ExtResource("6_e0py0")
 [node name="PanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="BuildingCategorys" type="HFlowContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/PanelContainer"]
+[node name="BuildingCategories" type="HFlowContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/PanelContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(64, 0)
+custom_minimum_size = Vector2(84, 0)
 layout_mode = 2
 
 [node name="SchematicPanel" type="PanelContainer" parent="."]
