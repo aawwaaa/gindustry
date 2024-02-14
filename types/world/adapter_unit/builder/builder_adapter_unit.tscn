@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://hvdgkm4im0s7"]
 
-[ext_resource type="Script" path="res://types/world/entity/adapter_unit/builder/builder_adapter_unit.gd" id="1_v2ws7"]
+[ext_resource type="Script" path="res://types/world/adapter_unit/builder/builder_adapter_unit.gd" id="1_v2ws7"]
 
 [node name="BuilderAdapterUnit" type="Node2D"]
 script = ExtResource("1_v2ws7")

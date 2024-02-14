@@ -5,6 +5,7 @@ extends EntityAdapter
 @export var builder_type: BuilderAdapterUnitType;
 
 @export var item_source: ItemAdapter;
+@export var effectity_adapter: EffectityAdapter;
 
 var units: Array[BuilderAdapterUnit] = []
 
@@ -15,6 +16,9 @@ func _enter_tree() -> void:
         unit._init_unit()
         units.append(unit)
         marker.add_child(unit)
+
+func get_effectity() -> float:
+    return effectity_adapter.get_effectity() if effectity_adapter else 1
 
 func update_building(controller: Controller, _adapter: ControllerAdapter) -> void:
     var build_plan = controller._get_build_plan()

@@ -25,8 +25,7 @@ func check_access_range(world: World, target: Vector2) -> bool:
     return distance < shape.radius
 
 func _process(delta: float) -> void:
-    # TODO effectity
-    overflowed_times += delta
+    overflowed_times += delta * adapter.get_effectity()
     var build_costs = floori(overflowed_times * type.build_speed)
     overflowed_times -= build_costs / type.build_speed
     if build_costs <= 0: return

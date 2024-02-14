@@ -81,6 +81,10 @@ item_use_confirm={
 locale/translations=PackedStringArray("res://bundles/en.po", "res://bundles/zh.po")
 locale/test="zh"
 
+[layer_names]
+
+2d_physics/layer_24="Effectity Field"
+
 [physics]
 
 2d/default_gravity_vector=Vector2(0, 0)
