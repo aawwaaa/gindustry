@@ -36,9 +36,11 @@
 
 [X] 设置界面由程序生成
 
-[ ] EntityContainer
-    * enter_tree时配置好
-    * get_entity时实例化实体
+[ ] AdapterUnit
+    作为节点的子节点, 存在类型系统
+    基于场景, 无实体id但有实体引用
+    由Adapter生成
+    可保存数据但不可保存类型
 
 [.] 玩家控制器处理点击
 [X] Tile控制是否可建造
