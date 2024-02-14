@@ -120,13 +120,7 @@ func remove_items(templates: Array[Item]) -> Array[Item]:
     return removed_items
 
 func _check_item(template: Item, target_amount = template.amount) -> bool:
-    var amount = 0;
-    for index in slots.size():
-        if not is_slot_has_item(index):
-            continue
-        if template._is_same_item(slots[index]):
-            amount += slots[index].amount
-    return amount >= target_amount
+    return _get_item_amount(template) >= target_amount
 
 func check_items(templates: Array[Item]) -> bool:
     var passed = true
@@ -135,6 +129,15 @@ func check_items(templates: Array[Item]) -> bool:
             passed = false;
             break
     return passed
+
+func _get_item_amount(template: Item) -> int:
+    var amount = 0
+    for index in slots.size():
+        if not is_slot_has_item(index):
+            continue
+        if template._is_same_item(slots[index]):
+            amount += slots[index].amount
+    return amount
 
 func _should_save_data() -> bool:
     return true

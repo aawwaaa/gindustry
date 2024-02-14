@@ -7,6 +7,11 @@ extends EntityType
 @export var category: BuildingCategory
 @export var requirements: Array[TypedItemStack] = []
 
+func get_requirements() -> Array[Item]:
+    return requirements.map(func(item: TypedItemStack):
+        return item.get_item()
+    )
+
 func get_tr_name() -> String:
     return Content.to_full_id(mod.mod_info.id, id, "Building")
 

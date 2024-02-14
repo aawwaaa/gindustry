@@ -18,6 +18,8 @@ func _enter_tree() -> void:
 
 func update_building(controller: Controller, _adapter: ControllerAdapter) -> void:
     var build_plan = controller._get_build_plan()
+    for unit in units:
+        unit.current_building_plan = null
     for plan in build_plan:
         build_plan_process(plan)
 
@@ -35,11 +37,24 @@ func build_plan_process(plan: BuildPlan) -> void:
     if tile == null:
         plan.check_passed = false
         return
+    if plan.breaking:
+        if tile.building_ref == 0:
+            plan.build_finished = true
+            return
+        for unit in units:
+            if unit.current_build_plan == null:
+                unit.current_building_plan = plan
+                plan.building = true
+                return
     if should_place_build_shadow(plan, tile) \
             and not place_build_shadow(plan, tile):
         plan.check_passed = false
         return
-
+    for unit in units:
+        if unit.current_building_plan == null:
+            unit.current_build_plan = plan
+            plan.building = true
+            return
 
 func should_place_build_shadow(plan: BuildPlan, tile: Tile) -> bool:
     if not tile.building_shadow: return true

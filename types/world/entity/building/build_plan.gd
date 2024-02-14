@@ -7,6 +7,8 @@ var world: World:
     set(v): world_id = v.world_id if v else 0
 var pos: Vector2
 
+var breaking: bool = false
+
 var building_type_index: int
 var building_type: BuildingType:
     get: return Contents.get_content_by_index(building_type_index)
