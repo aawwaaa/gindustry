@@ -91,5 +91,3 @@ func update_velocity(controller: Controller, _adapter: ControllerAdapter, speed:
     if main_node.velocity != Vector2.ZERO:
         main_node.velocity = main_node.velocity.normalized() * speed
 
-func update_building(controller: Controller, _adapter: ControllerAdapter, builders: Array) -> void:
-    pass

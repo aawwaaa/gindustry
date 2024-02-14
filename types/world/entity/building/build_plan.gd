@@ -11,7 +11,15 @@ var building_type_index: int
 var building_type: BuildingType:
     get: return Contents.get_content_by_index(building_type_index)
     set(v): building_type_index = v.index if v else 0
+var building_config: Variant
 
+var check_passed: bool = true
 var building: bool = false
 var build_progress: float = 0
 var build_finished: bool = false
+
+func load_data(stream: Stream) -> void:
+    pass
+
+func save_data(stream: Stream) -> void:
+    pass

@@ -49,6 +49,9 @@ var building_shadow: BuildingShadowContainer:
 static func floor_to_tile_grid(pos: Vector2) -> Vector2i:
     return (pos / Global.TILE_SIZE).floor() * Global.TILE_SIZE
 
+static func to_tile_pos(pos: Vector2) -> Vector2i:
+    return (pos / Global.TILE_SIZE).floor()
+
 func set_special_data() -> void:
     if has_special_data:
         return;
