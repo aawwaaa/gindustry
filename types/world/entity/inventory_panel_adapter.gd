@@ -1,11 +1,10 @@
 class_name InventoryPanelAdapter
-extends Node
+extends EntityAdapter
 
-@export var entity: Entity;
 @export var panel_scene: PackedScene;
 
 func create_panel() -> InventoryPanel:
     var panel = panel_scene.instantiate()
-    panel.entity = entity
-    panel.main_node = entity.main_node
+    panel.entity = entity_node
+    panel.main_node = main_node
     return panel

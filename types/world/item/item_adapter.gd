@@ -1,5 +1,5 @@
 class_name ItemAdapter
-extends Node
+extends EntityAdapter
 
 func _accept_item(item: Item) -> bool:
     return false

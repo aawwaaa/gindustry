@@ -10,7 +10,6 @@ signal inventory_slot_changed(slot_id: int, item_type_changed: bool)
         slots_size = v
         if slots.size() != slots_size:
             slots.resize(slots_size)
-@export var entity: Entity;
 
 var hand_slot: int = 0
 
@@ -25,9 +24,9 @@ func handle_operation(operate: String, args: Array) -> void:
             var world: World = args[0]
             var position: Vector2 = args[1]
             var item = get_slot(hand_slot)
-            if not item or not await item._useable(entity, world, position):
+            if not item or not await item._useable(entity_node, world, position):
                 return
-            var use = item._create_use(entity, world)
+            var use = item._create_use(entity_node, world)
             use.inventory = self
             use.slot = hand_slot
             use._set_position(position)
@@ -137,9 +136,12 @@ func check_items(templates: Array[Item]) -> bool:
             break
     return passed
 
+func _should_save_data() -> bool:
+    return true
+
 const current_data_version = 0;
 
-func load_data(stream: Stream) -> void:
+func _load_data(stream: Stream) -> void:
     var version = stream.get_16();
     # version 0
     if version < 0: return
@@ -153,7 +155,7 @@ func load_data(stream: Stream) -> void:
             continue
         slots[index] = null
 
-func save_data(stream: Stream) -> void:
+func _save_data(stream: Stream) -> void:
     stream.store_16(current_data_version);
     # version 0
     stream.store_32(slots_size)

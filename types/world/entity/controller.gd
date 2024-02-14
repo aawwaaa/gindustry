@@ -108,6 +108,9 @@ func _get_move_velocity(_current_velocity: Vector2) -> Vector2:
 func _get_name() -> String:
     return "";
 
+func _get_build_plan() -> Array[BuildPlan]:
+    return []
+
 const current_data_version = 0;
 
 func load_data(stream: Stream) -> void:

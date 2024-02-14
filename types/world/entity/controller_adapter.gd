@@ -1,14 +1,11 @@
 class_name ControllerAdapter
-extends Node
+extends EntityAdapter
 
 signal controller_added(controller: Controller)
 signal controller_removed(controller: Controller)
 
 signal operation_received(operation: String, args: Array[Variant])
 signal remote_operation_received(from: ControllerAdapter, operation: String, args: Array[Variant])
-
-@export var main_node: Node2D;
-@export var entity_node: Entity;
 
 """
 默认控制器, 由0~length优先级依次递减
@@ -88,3 +85,11 @@ func update_control(type: String, updater: Callable, append_args: Array[String] 
         updater.callv(call_args)
         return true
     return false
+
+func update_velocity(controller: Controller, _adapter: ControllerAdapter, speed: float) -> void:
+    entity_node.velocity = controller._get_move_velocity(entity_node.velocity);
+    if entity_node.velocity != Vector2.ZERO:
+        entity_node.velocity = entity_node.velocity.normalized() * speed
+
+func update_building(controller: Controller, _adapter: ControllerAdapter, builders: Array) -> void:
+    pass

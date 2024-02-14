@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://cf2gwbsrtbj6l"]
+
+[ext_resource type="Script" path="res://types/world/entity/entity.gd" id="1_3ugrc"]
+
+[node name="Builder" type="Node2D"]
+
+[node name="Entity" type="Node" parent="." node_paths=PackedStringArray("main_node")]
+script = ExtResource("1_3ugrc")
+main_node = NodePath("..")

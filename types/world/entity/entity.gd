@@ -226,6 +226,11 @@ func load_data(stream: Stream) -> void:
             entity.load_data(stream)
 
         Entity.get_entity_by_ref(stream.get_64(), func(entity): access_target = entity),
+    func():
+        for _1 in range(stream.get_16()):
+            var adapter_name: String = stream.get_string()
+            var adapter: EntityAdapter = get_node(adapters[adapter_name])
+            adapter._load_data(stream)
     ])
     _load_data(stream)
     on_load_data.emit(stream)
@@ -242,7 +247,17 @@ func save_data(stream: Stream) -> void:
             var entity = node.get_entity()
             entity.save_data(stream)
 
-        stream.store_64(0 if access_target == null else access_target.entity_id);
+        stream.store_64(0 if access_target == null else access_target.entity_id),
+    func():
+        var should_save_adapters: Dictionary = {}
+        for adapter_name in adapters:
+            var adapter: EntityAdapter = get_node(adapters[adapter_name])
+            if adapter._should_save_data():
+                should_save_adapters[adapter_name] = adapter
+        stream.store_16(should_save_adapters.size())
+        for adapter_name in should_save_adapters:
+            stream.store_string(adapter_name)
+            should_save_adapters[adapter_name]._save_data(stream)
     ])
     _save_data(stream)
     on_save_data.emit(stream)

@@ -41,9 +41,10 @@
 [X] 建筑覆盖
 [ ] 建造模块
 
-[ ] 1. 建筑选择
+[X] 1. 建筑选择
     [X] 建筑分类
-    [ ] UI
+    [X] UI
+ControllerAdapter.update_building
 [ ] 2. 建筑建造预览
 [X] 3. 多方块建筑定义
 [ ] 4. 建筑放置

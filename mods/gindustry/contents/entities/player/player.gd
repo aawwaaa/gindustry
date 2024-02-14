@@ -5,16 +5,11 @@ extends CharacterBody2D
 const max_speed = 500;
 
 func _physics_process(_delta: float) -> void:
-    %ControllerAdapter.update_control("move", update_velocity)
+    %ControllerAdapter.update_control("move", %ControllerAdapter.update_velocity)
     move_and_slide()
 
 func _on_controller_adapter_controller_added(_controller: Controller) -> void:
     %PlayerName.visible = %ControllerAdapter.update_control("name", update_name)
-
-func update_velocity(controller: Controller, _adapter: ControllerAdapter) -> void:
-    velocity = controller._get_move_velocity(velocity)
-    if velocity != Vector2.ZERO:
-        velocity = velocity.normalized() * max_speed
 
 func update_name(controller: Controller, _adapter: ControllerAdapter) -> void:
     %PlayerName.text = controller._get_name()
@@ -50,11 +45,7 @@ func _on_controller_adapter_operation_received(operation: String, args: Array) -
 const current_data_version = 0
 
 func _on_entity_on_load_data(stream: Stream) -> void:
-    Utils.load_data_with_version(stream, [func():
-        %Inventory.load_data(stream),
-    ])
+    Utils.load_data_with_version(stream, [])
 
 func _on_entity_on_save_data(stream: Stream) -> void:
-    Utils.save_data_with_version(stream, [func():
-        %Inventory.save_data(stream),
-    ])
+    Utils.save_data_with_version(stream, [])
