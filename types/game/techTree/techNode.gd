@@ -1,14 +1,23 @@
 class_name techNode
-
+var content:unlockableContent
 var depth:int
 var name:String
 var requiresUnlock:bool
 var parent:techNode
 var children:Array[techNode]=[]
 var finishedRequirements:Array[Item]=[]
+var itemsMap:={}
 var requirements:Array[Item]=[]
-func _init(par:techNode,requirements:Array):
+func _init(par:techNode,requirements:Array,con:unlockableContent):
 	parent=par
+	content=con
+	finishedRequirements=[]
+	for it in requirements:
+		var item=Item.new()
+		item.amount=0
+		item.item_type=it.item_type
+		finishedRequirements.append(item)
+		itemsMap[it.item_type.index]=it.item_type
 	if par==null:
 		depth=0
 	else:
@@ -26,4 +35,9 @@ func load_data(stream:Stream):
 	var size=stream.get_8()
 	for it in range(size):#TODO itemType
 		var index=stream.get_16()
+		var item=itemsMap.get(index)
 		var amount=stream.get_16()
+		var i=Item.new()
+		i.item_type=item
+		i.amount=amount
+		finishedRequirements.append(i)
