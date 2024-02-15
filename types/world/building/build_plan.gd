@@ -8,6 +8,7 @@ var world: World:
 var pos: Vector2i
 
 var breaking: bool = false
+var paused: bool = false
 
 var building_type_index: int
 var building_type: BuildingType:

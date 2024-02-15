@@ -52,6 +52,9 @@ static func floor_to_tile_grid(pos: Vector2) -> Vector2i:
 static func to_tile_pos(pos: Vector2) -> Vector2i:
     return (pos / Global.TILE_SIZE).floor()
 
+static func to_world_pos(pos: Vector2) -> Vector2:
+    return pos * Global.TILE_SIZE + Vector2(HALF_TILE)
+
 func set_special_data() -> void:
     if has_special_data:
         return;

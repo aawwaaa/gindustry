@@ -41,6 +41,12 @@ func _check_build() -> bool:
         if not tile.can_build_on(building_type): return false
     return true
 
+func _set_check_build_result(result: bool) -> void:
+    if result:
+        display_sprite.modulate = Color(1.0, 1.0, 1.0, 0.5)
+    else:
+        display_sprite.modulate = Color(1.0, 0.2, 0.2, 0.5)
+
 func finish_build() -> void:
     if full_build: return
     build_progress = 1

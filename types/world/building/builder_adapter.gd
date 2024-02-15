@@ -29,6 +29,7 @@ func update_building(controller: Controller, _adapter: ControllerAdapter) -> voi
 
 func build_plan_process(plan: BuildPlan) -> void:
     plan.building = false
+    if plan.paused: return
     if not plan.check_passed: return
     if plan.world != entity_node.world: return
     var accessible = false

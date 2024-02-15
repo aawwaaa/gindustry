@@ -40,6 +40,7 @@ func _unload_ui(node: Control) -> void:
 func _ready() -> void:
     Game.current_player_changed.connect(_on_player_changed)
 
+
 func _on_player_changed(player: Player, from: Player) -> void:
     Utils.signal_dynamic_connect(controller, from.get_controller() if from else null,
         "target_changed", _on_controller_target_changed)
