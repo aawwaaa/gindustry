@@ -5,7 +5,7 @@ var world_id: int
 var world: World:
     get: return Game.get_world_or_null(world_id)
     set(v): world_id = v.world_id if v else 0
-var pos: Vector2
+var pos: Vector2i
 
 var breaking: bool = false
 

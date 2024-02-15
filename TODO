@@ -62,7 +62,7 @@
 [X] 1. 建筑选择
     [X] 建筑分类
     [X] UI
-[ ] PlayerController._get_build_plan
+[X] PlayerController._get_build_plan
 [ ] InputHandler处理build_plan
 [ ] 2. 建筑建造预览
 [X] 3. 多方块建筑定义

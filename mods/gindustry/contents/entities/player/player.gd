@@ -4,6 +4,9 @@ extends CharacterBody2D
 
 const max_speed = 500;
 
+func _process(_delta: float) -> void:
+    %ControllerAdapter.update_control("build", %BuilderAdapter.update_building)
+
 func _physics_process(_delta: float) -> void:
     %ControllerAdapter.update_control("move", %ControllerAdapter.update_velocity.bind(max_speed))
     move_and_slide()
