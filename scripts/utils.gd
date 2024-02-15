@@ -88,6 +88,14 @@ func signal_dynamic_connect(obj: Object, from: Object, signal_name: StringName, 
     if obj:
         obj.connect(signal_name, callable)
 
+func connect_signal_by_table(target: Node, table: Dictionary) -> void:
+    for signal_name in table:
+        target.connect(signal_name, table[signal_name])
+
+func disconnect_signal_by_table(target: Node, table: Dictionary) -> void:
+    for signal_name in table:
+        target.disconnect(signal_name, table[signal_name])
+
 func load_data_with_version(stream: Stream, loaders: Array[Callable] = []) -> void:
     var version = stream.get_16();
     for loader in loaders:

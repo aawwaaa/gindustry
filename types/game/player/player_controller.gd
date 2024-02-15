@@ -7,6 +7,7 @@ const PLAYER_CONTROLLER_ATTRIBUTES = {"move": 1, "name": 1, "build": 1}
 var datas: Dictionary
 var move_velocity: Vector2;
 
+var build_paused: bool = false
 var build_plan: Array[BuildPlan] = []
 
 func _get_priority() -> int:
@@ -22,4 +23,4 @@ func _get_name() -> String:
     return player.player_name;
 
 func _get_build_plan() -> Array[BuildPlan]:
-    return build_plan
+    return build_plan if not build_paused else []

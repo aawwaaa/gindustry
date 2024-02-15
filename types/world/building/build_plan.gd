@@ -20,8 +20,8 @@ var building: bool = false
 var build_progress: float = 0
 var build_finished: bool = false
 
-func load_data(stream: Stream) -> void:
-    pass
-
-func save_data(stream: Stream) -> void:
-    pass
+# func load_data(stream: Stream) -> void:
+#     pass
+# 
+# func save_data(stream: Stream) -> void:
+#     pass

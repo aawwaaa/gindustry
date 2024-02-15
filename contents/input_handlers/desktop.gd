@@ -2,6 +2,9 @@ class_name DesktopInputHandler
 extends InputHandler
 
 static var keys = {}
+static var signals = {
+    "build_ui": {},
+}
 
 var camera_position: Vector2;
 var camera_rotation: float;
@@ -28,6 +31,18 @@ func _handle_process(_delta: float) -> void:
     if entity: update_debug_message()
     if controller: update_move()
     if target: update_camera()
+
+func _load_ui(node: Control) -> void:
+    merge_build_ui_signals(signals["build_ui"])
+    Utils.connect_signal_by_table(GameUI.instance.build_ui, signals["build_ui"])
+
+func _unload_ui(node: Control) -> void:
+    Utils.disconnect_signal_by_table(GameUI.instance.build_ui, signals["build_ui"])
+
+func merge_build_ui_signals(table: Dictionary) -> void:
+    table.merge({
+        
+    })
 
 func handle_unhandled_input_event_mouse_button(event: InputEventMouseButton) -> void:
     if event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
