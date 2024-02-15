@@ -6,6 +6,7 @@ var world: World:
     get: return Game.get_world_or_null(world_id)
     set(v): world_id = v.world_id if v else 0
 var pos: Vector2i
+var rotation: float
 
 var breaking: bool = false
 var paused: bool = false

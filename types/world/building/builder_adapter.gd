@@ -24,13 +24,18 @@ func update_building(controller: Controller, _adapter: ControllerAdapter) -> voi
     var build_plan = controller._get_build_plan()
     for unit in units:
         unit.current_building_plan = null
+    var removes = []
     for plan in build_plan:
-        build_plan_process(plan)
+        build_plan_process(plan, removes)
+    for remove in removes:
+        build_plan.erase(remove)
 
-func build_plan_process(plan: BuildPlan) -> void:
+func build_plan_process(plan: BuildPlan, removes: Array[BuildPlan]) -> void:
     plan.building = false
     if plan.paused: return
-    if not plan.check_passed: return
+    if not plan.check_passed:
+        removes.append(plan)
+        return
     if plan.world != entity_node.world: return
     var accessible = false
     for unit in units:
@@ -73,7 +78,7 @@ func should_place_build_shadow(plan: BuildPlan, tile: Tile) -> bool:
 func place_build_shadow(plan: BuildPlan, tile: Tile) -> bool:
     var shadow = plan.building_type.create_shadow()
     shadow.building_config = plan.building_config
-    shadow.position = plan.pos * Global.TILE_SIZE + Vector2(Tile.HALF_TILE)
+    shadow.position = Tile.to_world_pos(plan.pos)
     shadow.rotation = plan.rotation
     plan.world.add_temp_node(shadow)
     var result = shadow._check_build()

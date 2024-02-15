@@ -116,6 +116,10 @@ func update_child_visible() -> void:
     %Cancel.visible = has_schematic or has_build_plan or selected_building_type != null
 
 func _on_cancel_pressed() -> void:
+    if has_schematic:
+        build_plan_operate.emit("clear");
+        has_schematic = false
+        return
     if has_build_plan:
         build_plan_operate.emit("cancel");
         has_build_plan = false
