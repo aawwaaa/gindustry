@@ -11,6 +11,10 @@ func _handle_process(_delta: float) -> void:
 func _handle_unhandled_input(event: InputEvent) -> void:
     if event is InputEventMouseButton: handle_unhandled_input_event_mouse_button(event)
 
+func handle_unhandled_input_event_mouse_button(event: InputEventMouseButton) -> void:
+    if event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
+        handle_camera_zoom(event)
+
 func update_camera() -> void:
     camera_position = controller.get_target_attribute("position")
     camera_rotation = controller.get_target_attribute("rotation")

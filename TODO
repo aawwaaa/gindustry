@@ -64,7 +64,7 @@
     [X] UI
 [X] PlayerController._get_build_plan
 [ ] InputHandler处理build_plan
-[ ] 2. 建筑建造预览
+[X] 2. 建筑建造预览
 [X] 3. 多方块建筑定义
 [ ] 4. 建筑放置
 [ ] 5. 建筑拆除

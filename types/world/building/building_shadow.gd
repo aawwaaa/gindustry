@@ -26,6 +26,7 @@ var build_progress: float:
     set = set_build_progress
 var full_build: bool = false
 var building_config: Variant:
+    get = _get_building_config,
     set = _set_building_config
 
 func _check_build() -> bool:
@@ -96,7 +97,10 @@ func _ready() -> void:
             diffs[id] = (diffs[id] - base) * 2
         polygons_full_points.append(diffs)
 
-func _set_building_config(config: Variant):
+func _get_building_config() -> Variant:
+    return building_config
+
+func _set_building_config(config: Variant) -> void:
     building_config = config;
 
 func _on_collision_area_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:

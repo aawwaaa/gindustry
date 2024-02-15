@@ -28,6 +28,10 @@ var has_build_plan: bool = false:
     set(v):
         has_build_plan = v
         update_child_visible()
+var has_schematic: bool = false:
+    set(v):
+        has_schematic = v
+        update_child_visible()
 
 func _ready() -> void:
     building_button_group = ButtonGroup.new();
@@ -108,8 +112,8 @@ func _on_pause_pressed() -> void:
     build_paused_changed.emit(build_paused);
 
 func update_child_visible() -> void:
-    %SchematicTools.visible = has_build_plan
-    %Cancel.visible = has_build_plan or selected_building_type != null
+    %SchematicTools.visible = has_schematic
+    %Cancel.visible = has_schematic or has_build_plan or selected_building_type != null
 
 func _on_cancel_pressed() -> void:
     if has_build_plan:
