@@ -14,7 +14,9 @@ func _init(par:techNode,requirements:Array[Item],con:unlockableContent,need:bool
 	content=con
 	finishedRequirements=[]
 	for it in requirements:
-		var item=Item.new(it.item_type,0)
+		var item=Item.new()
+		item.item_type = it.item_type
+		item.amount = it.amount
 		finishedRequirements.append(item)
 		itemsMap[it.item_type.index]=it.item_type
 	if par==null:
@@ -36,5 +38,7 @@ func load_data(stream:Stream):
 		var index=stream.get_16()
 		var item=itemsMap.get(index)
 		var amount=stream.get_16()
-		var i=Item.new(item,amount)
+		var i=Item.new()
+		i.item_type = item
+		i.amount = amount
 		finishedRequirements.append(i)

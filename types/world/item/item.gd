@@ -6,9 +6,6 @@ const INF_AMOUNT = 2 << 32 - 1
 var item_type: ItemType
 var amount: int = 0
 
-func _init(type:ItemType,a:int):
-	item_type=type
-	amount=a;
 func _ready() -> void:
     %Icon.texture = item_type.texture
 
