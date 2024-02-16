@@ -1,15 +1,15 @@
-class_name techNode
-var content:unlockableContent
+class_name TechNode
+var content:UnlockableContent
 var depth:int
 var name:String
 var requiresUnlock:bool
-var parent:techNode
-var children:Array[techNode]=[]
+var parent:TechNode
+var children:Array[TechNode]=[]
 var finishedRequirements:Array[Item]=[]
 var itemsMap:={}
 var requirements:Array[Item]=[]
 
-func _init(par:techNode,requirements:Array[Item],con:unlockableContent,need:bool):
+func _init(par:TechNode,requirements:Array[Item],con:UnlockableContent,need:bool):
 	requiresUnlock=need
 	content=con
 	finishedRequirements=[]
