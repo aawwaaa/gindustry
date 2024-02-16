@@ -9,5 +9,6 @@ region = Rect2(64, 0, 32, 32)
 
 [resource]
 script = ExtResource("1_g8iku")
+order = 12
 icon = SubResource("AtlasTexture_3exf7")
 id = "transportation"

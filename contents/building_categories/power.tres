@@ -9,5 +9,6 @@ region = Rect2(96, 0, 32, 32)
 
 [resource]
 script = ExtResource("1_lbwwu")
+order = 13
 icon = SubResource("AtlasTexture_p3goj")
 id = "power"

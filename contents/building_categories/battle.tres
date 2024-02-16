@@ -9,5 +9,6 @@ region = Rect2(0, 0, 32, 32)
 
 [resource]
 script = ExtResource("2_mllqs")
+order = 10
 icon = SubResource("AtlasTexture_ttvsd")
 id = "battle"

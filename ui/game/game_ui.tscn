@@ -41,6 +41,7 @@ unique_name_in_owner = true
 layout_mode = 2
 
 [node name="BuildUI" parent="." instance=ExtResource("4_ik2wa")]
+unique_name_in_owner = true
 layout_mode = 1
 
 [node name="InputHandlerUI" type="Control" parent="."]

@@ -1,3 +1,4 @@
+class_name BuildUI
 extends Control
 
 signal rotation_changed(rotation: int);
@@ -66,9 +67,13 @@ func load_categories() -> void:
     for child in %BuildingCategories.get_children():
         child.queue_free();
 
+    var ordered: Array = Contents.contents_type_indexed["building_category"].duplicate()
+
+    ordered.sort_custom(func(a, b): return a.order < b.order)
+
     var first: BuildingCategory
 
-    for category in Contents.contents_type_indexed["building_category"]:
+    for category in ordered:
         var button = Button.new();
         button.icon = category.icon;
         button.button_group = building_category_button_group;

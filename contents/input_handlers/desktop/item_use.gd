@@ -8,7 +8,7 @@ var enabled: bool = true:
     set(v): enabled = v; update_item_use()
 var activate: bool = false;
 
-func _handle_input(event: InputEvent) -> void:
+func handle_input(event: InputEvent) -> void:
     if event is InputEventMouse: handle_input_event_mouse(event) 
 
 func handle_input_event_mouse(event: InputEventMouse) -> void:
@@ -19,6 +19,7 @@ func handle_input_event_mouse(event: InputEventMouse) -> void:
 
 func handle_item_use_mouse(world_pos: Vector2) -> void:
     item_use_position = world_pos
+    update_item_use()
     if Input.is_action_just_pressed("item_use_confirm"):
         confirm_item_use()
 

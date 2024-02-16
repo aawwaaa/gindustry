@@ -10,6 +10,7 @@ var rotation: float
 
 var breaking: bool = false
 var paused: bool = false
+var preview_name: String = ""
 
 var building_type_index: int
 var building_type: BuildingType:

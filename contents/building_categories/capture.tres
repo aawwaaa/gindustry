@@ -9,5 +9,6 @@ region = Rect2(32, 0, 32, 32)
 
 [resource]
 script = ExtResource("1_8eu0b")
+order = 11
 icon = SubResource("AtlasTexture_kyl7w")
 id = "capture"

@@ -7,12 +7,11 @@ var building_type: BuildingType
 
 var layer: int = 0:
     set = set_layer;
-@export var floor_collision_mask_begin: int;
-@export var floor_collision_mask_end: int;
 @export var collision_mask_begin: int;
 @export var collision_mask_end: int;
 @export var collision: AnimatableBody2D
 @export var collision_area: Area2D
+@export var shape_cast: ShapeCast2D
 @export var floors: Node2D;
 @export var display_polygons: Node2D;
 @export var display_sprite: Sprite2D;
@@ -24,21 +23,19 @@ var polygons_full_points: Array[PackedVector2Array] = []
 
 var build_progress: float:
     set = set_build_progress
+var disable_collision: bool = false
 var full_build: bool = false
 var building_config: Variant:
     get = _get_building_config,
     set = _set_building_config
 
 func _check_build() -> bool:
-    if collision_area.get_overlapping_bodies().size() > (1 if build_progress != 0 else 0):
+    shape_cast.force_shapecast_update()
+    if shape_cast.is_colliding():
         return false
-    var floor_count = 0;
-    for area2d in floors.get_children():
-        if area2d.get_overlapping_bodies().size() > 0:
-            floor_count += 1
-    if floor_count < floors.size(): return false
     for tile_pos in tiles:
         var tile = world.get_tile_or_null(tile_pos)
+        if not tile: return false
         if not tile.can_build_on(building_type): return false
     return true
 
@@ -66,7 +63,7 @@ func set_build_progress(v: float) -> void:
         for point_id in range(points.size()):
             var point = points[point_id]
             polygon.polygon[point_id + 1] = base + point * v
-    collision.process_mode = PROCESS_MODE_DISABLED if v == 0 else PROCESS_MODE_INHERIT
+    collision.process_mode = PROCESS_MODE_DISABLED if v == 0 or disable_collision else PROCESS_MODE_INHERIT
 
 func set_layer(v: int) -> void:
     layer = v
@@ -76,17 +73,12 @@ func set_layer(v: int) -> void:
     collision.collision_layer = mask
     collision_area.collision_mask = mask
     collision_area.collision_layer = mask
-    if not is_instance_valid(floors): return
-    var floor_mask = Entity.get_collision_mask_static(layer,
-            floor_collision_mask_begin, floor_collision_mask_end);
-    for area2d in floors.get_children():
-        area2d.collision_mask = floor_mask
-        area2d.collision_layer = floor_mask
+    if not is_instance_valid(shape_cast): return
+    shape_cast.collision_mask = mask
 
 func _ready() -> void:
     collision_area.monitorable = false
     for area2d in floors.get_children():
-        area2d.monitorable = false
         var pos = (area2d.position / Global.TILE_SIZE) \
                 .rotated(global_rotation - world.global_rotation).floor()
         tiles.append(pos)

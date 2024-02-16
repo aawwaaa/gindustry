@@ -116,6 +116,7 @@ func set_overlay(new_overlay_type: Overlay, new_overlay_data = new_overlay_type.
         set_special_data()
 
 func can_build_on(building_type: BuildingType) -> bool:
+    if not floor_type: return false
     if floor_type and not floor_type.can_build_on(self, building_type): return false
     if overlay_type and not overlay_type.can_build_on(self, building_type): return false
     if building and not building._can_be_replaced_by(building_type): return false

@@ -8,6 +8,7 @@ signal contents_loaded();
 static var instance: GameUI;
 @onready var player_inventory: PlayerInventory = $PlayerInventory
 @onready var pause_menu: PauseMenu = %PauseMenu
+@onready var build_ui: BuildUI = %BuildUI
 @onready var debug: Label = %Debug
 @onready var input_handler_ui: Control = %InputHandlerUI
 

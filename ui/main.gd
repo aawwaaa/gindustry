@@ -91,6 +91,7 @@ func start_load() -> void:
     GameUI.instance = %GameUI
     
     %GameUI.loaded()
+    progress.call(5);
+    
     Global.game_ui_input_handler = %GameUI.input_handler_ui
     Global.set_input_handler()
-    progress.call(5);

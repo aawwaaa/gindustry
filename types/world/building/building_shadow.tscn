@@ -2,12 +2,11 @@
 
 [ext_resource type="Script" path="res://types/world/building/building_shadow.gd" id="1_2quqi"]
 
-[node name="Shadow" type="Node2D" node_paths=PackedStringArray("collision", "collision_area", "floors", "display_polygons", "display_sprite", "marks")]
+[node name="Shadow" type="Node2D" node_paths=PackedStringArray("collision", "collision_area", "shape_cast", "floors", "display_polygons", "display_sprite", "marks")]
 script = ExtResource("1_2quqi")
-floor_collision_mask_begin = -1
-floor_collision_mask_end = -1
 collision = NodePath("AnimatableBody2D")
 collision_area = NodePath("CollisionArea")
+shape_cast = NodePath("ShapeCast2D")
 floors = NodePath("Floors")
 display_polygons = NodePath("DisplayPolygons")
 display_sprite = NodePath("Sprite2D")
@@ -28,6 +27,11 @@ metadata/_edit_group_ = true
 visible = false
 metadata/_edit_lock_ = true
 metadata/_edit_group_ = true
+
+[node name="ShapeCast2D" type="ShapeCast2D" parent="."]
+visible = false
+target_position = Vector2(0, 24)
+metadata/_edit_lock_ = true
 
 [node name="DisplayPolygons" type="Node2D" parent="."]
 metadata/_edit_lock_ = true

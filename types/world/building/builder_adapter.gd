@@ -24,7 +24,7 @@ func update_building(controller: Controller, _adapter: ControllerAdapter) -> voi
     var build_plan = controller._get_build_plan()
     for unit in units:
         unit.current_building_plan = null
-    var removes = []
+    var removes: Array[BuildPlan] = []
     for plan in build_plan:
         build_plan_process(plan, removes)
     for remove in removes:
@@ -34,7 +34,6 @@ func build_plan_process(plan: BuildPlan, removes: Array[BuildPlan]) -> void:
     plan.building = false
     if plan.paused: return
     if not plan.check_passed:
-        removes.append(plan)
         return
     if plan.world != entity_node.world: return
     var accessible = false

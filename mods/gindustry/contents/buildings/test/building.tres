@@ -9,7 +9,7 @@
 
 [sub_resource type="Resource" id="Resource_bdwam"]
 script = ExtResource("4_5omtw")
-item_type_id = "Gindustry_copper"
+item_type_id = "gindustry_items_copper"
 amount = 4
 args = {}
 

@@ -31,6 +31,8 @@ func _handle_unhandled_input(event: InputEvent) -> void:
 func _handle_input(event: InputEvent) -> void:
     if event is InputEventMouse: handle_input_event_mouse(event)
     if event is InputEventKey: handle_input_event_key(event)
+    item_use.handle_input(event)
+    build.handle_input(event)
     
 func _handle_process(_delta: float) -> void:
     if entity: update_debug_message()

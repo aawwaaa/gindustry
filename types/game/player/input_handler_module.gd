@@ -10,7 +10,7 @@ var controller: PlayerController:
 var target: ControllerAdapter:
     get: return handler.target
 var entity: Entity:
-    get: return target.entity
+    get: return handler.entity
 
 func _init(handler: InputHandler) -> void:
     self.handler = handler
