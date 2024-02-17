@@ -131,6 +131,9 @@ func add_temp_node(node: Node2D) -> void:
 func remove_temp_node(node: Node2D) -> void:
     %TempNodes.remove_child(node)
 
+func get_temp_node(node_path: NodePath) -> Node2D:
+    return %TempNodes.get_node(node_path)
+
 const current_data_version = 0;
 
 func load_data(stream: Stream) -> void:

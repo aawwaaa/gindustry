@@ -125,12 +125,14 @@ func _on_cancel_pressed() -> void:
         build_plan_operate.emit("clear");
         has_schematic = false
         return
+    if selected_building_type:
+        selected_building_type = null
+        building_button_group.get_pressed_button().button_pressed = false
+        return
     if has_build_plan:
         build_plan_operate.emit("cancel");
         has_build_plan = false
         return
-    selected_building_type = null
-    building_button_group.get_pressed_button().button_pressed = false
 
 func _on_vertical_flip_pressed() -> void:
     build_plan_operate.emit("vertical-flip");

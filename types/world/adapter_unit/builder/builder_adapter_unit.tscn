@@ -1,6 +1,19 @@
-[gd_scene load_steps=2 format=3 uid="uid://hvdgkm4im0s7"]
+[gd_scene load_steps=6 format=3 uid="uid://hvdgkm4im0s7"]
 
 [ext_resource type="Script" path="res://types/world/adapter_unit/builder/builder_adapter_unit.gd" id="1_v2ws7"]
+[ext_resource type="Texture2D" uid="uid://bdpoolp50c86t" path="res://assets/adapter_units/build_unit.png" id="2_ebgd0"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wdyve"]
+atlas = ExtResource("2_ebgd0")
+region = Rect2(11, 11, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e2xp5"]
+atlas = ExtResource("2_ebgd0")
+region = Rect2(40, 8, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yjik4"]
+atlas = ExtResource("2_ebgd0")
+region = Rect2(72, 8, 16, 16)
 
 [node name="BuilderAdapterUnit" type="Node2D"]
 script = ExtResource("1_v2ws7")
@@ -10,13 +23,16 @@ script = ExtResource("1_v2ws7")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 unique_name_in_owner = true
 
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_wdyve")
+
 [node name="CanvasGroup" type="CanvasGroup" parent="."]
 unique_name_in_owner = true
 visible = false
 
 [node name="Begin" type="Line2D" parent="CanvasGroup"]
 unique_name_in_owner = true
-z_index = 1
+z_index = 8
 points = PackedVector2Array(0, 0, 0, 0.001)
 default_color = Color(0.521569, 0.513726, 0, 1)
 begin_cap_mode = 2
@@ -24,7 +40,7 @@ end_cap_mode = 2
 
 [node name="End" type="Line2D" parent="CanvasGroup"]
 unique_name_in_owner = true
-z_index = 1
+z_index = 8
 points = PackedVector2Array(0, 0, 0, 0.001)
 default_color = Color(0.521569, 0.513726, 0, 1)
 begin_cap_mode = 2
@@ -32,9 +48,21 @@ end_cap_mode = 2
 
 [node name="Line" type="Line2D" parent="CanvasGroup"]
 unique_name_in_owner = true
-z_index = 2
-points = PackedVector2Array(0, 0)
+z_index = 8
+points = PackedVector2Array(0, 0, 0, 0)
 width = 2.0
 default_color = Color(0.878431, 0.878431, 0, 1)
 begin_cap_mode = 2
 end_cap_mode = 2
+
+[node name="PlaceIcon" type="Sprite2D" parent="CanvasGroup"]
+unique_name_in_owner = true
+visible = false
+z_index = 16
+texture = SubResource("AtlasTexture_e2xp5")
+
+[node name="BreakIcon" type="Sprite2D" parent="CanvasGroup"]
+unique_name_in_owner = true
+visible = false
+z_index = 16
+texture = SubResource("AtlasTexture_yjik4")

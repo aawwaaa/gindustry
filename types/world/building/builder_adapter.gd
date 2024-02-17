@@ -23,22 +23,26 @@ func get_effectity() -> float:
 func update_building(controller: Controller, _adapter: ControllerAdapter) -> void:
     var build_plan = controller._get_build_plan()
     for unit in units:
-        unit.current_building_plan = null
+        unit.current_build_plan = null
     var removes: Array[BuildPlan] = []
     for plan in build_plan:
         build_plan_process(plan, removes)
     for remove in removes:
         build_plan.erase(remove)
 
+func _process(delta: float) -> void:
+    for unit in units:
+        unit.process(delta)
+
 func build_plan_process(plan: BuildPlan, removes: Array[BuildPlan]) -> void:
     plan.building = false
     if plan.paused: return
     if not plan.check_passed:
         return
-    if plan.world != entity_node.world: return
+    if plan.world_id != entity_node.world.world_id: return
     var accessible = false
     for unit in units:
-        if unit.check_access_range(plan.world, plan.pos):
+        if unit.check_access_range(plan.world, Tile.to_world_pos(plan.pos)):
             accessible = true
             break
     if not accessible: return
@@ -52,7 +56,7 @@ func build_plan_process(plan: BuildPlan, removes: Array[BuildPlan]) -> void:
             return
         for unit in units:
             if unit.current_build_plan == null:
-                unit.current_building_plan = plan
+                unit.current_build_plan = plan
                 plan.building = true
                 return
     if should_place_build_shadow(plan, tile) \
@@ -60,7 +64,7 @@ func build_plan_process(plan: BuildPlan, removes: Array[BuildPlan]) -> void:
         plan.check_passed = false
         return
     for unit in units:
-        if unit.current_building_plan == null:
+        if unit.current_build_plan == null:
             unit.current_build_plan = plan
             plan.building = true
             return
@@ -79,7 +83,12 @@ func place_build_shadow(plan: BuildPlan, tile: Tile) -> bool:
     shadow.building_config = plan.building_config
     shadow.position = Tile.to_world_pos(plan.pos)
     shadow.rotation = plan.rotation
+    shadow.pos = plan.pos
+    shadow.disable_collision = true
+    shadow.layer = entity_node.layer
+    shadow.world = plan.world
     plan.world.add_temp_node(shadow)
+    shadow.build_progress = 0
     var result = shadow._check_build()
     shadow.queue_free()
     if not result: return false

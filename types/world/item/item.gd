@@ -65,7 +65,7 @@ func _get_cost() -> float:
     return item_type.cost * amount
 
 func _get_amount(cost: float) -> int:
-    return roundi(cost / item_type.cost)
+    return floori(cost / item_type.cost)
 
 static func load_from(stream: Stream) -> Item:
     var data_item_type = Contents.get_content_by_index(stream.get_32()) as ItemType;

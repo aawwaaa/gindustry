@@ -46,6 +46,11 @@ var building_shadow: BuildingShadowContainer:
                 if entity and entity.main_node is BuildingShadowContainer \
                 else null
 
+var pre_confirm_building_name: String:
+    set(v):
+        pre_confirm_building_name = v
+        set_special_data()
+
 static func floor_to_tile_grid(pos: Vector2) -> Vector2i:
     return (pos / Global.TILE_SIZE).floor() * Global.TILE_SIZE
 
@@ -60,7 +65,7 @@ func set_special_data() -> void:
         return;
     has_special_data = true;
     Game.create_temp_tile();
-    chunk.tiles[tile_pos] = self;
+    chunk.tiles[tile_chunk_pos] = self;
 
 func load_from_tilemap() -> void:
     var floors = world.get_floors_node();

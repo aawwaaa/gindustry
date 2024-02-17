@@ -16,7 +16,7 @@ var building_type_index: int
 var building_type: BuildingType:
     get: return Contents.get_content_by_index(building_type_index)
     set(v): building_type_index = v.index if v else 0
-var building_config: Variant
+var building_config: Variant = null
 
 var check_passed: bool = true
 var building: bool = false

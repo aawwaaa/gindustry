@@ -20,6 +20,8 @@ func _ready() -> void:
     layer_changed.connect(_on_layer_changed)
     shadow = building_type.create_shadow()
     shadow.world = world
+    shadow.pos = tile_pos
+    shadow.rot = main_node.rotation
     shadow.building_config = building_config
     shadow.layer = layer
     shadow_container.add_child(shadow)

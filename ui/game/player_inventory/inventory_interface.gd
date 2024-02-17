@@ -34,5 +34,4 @@ func _on_slot_request_swap(slot: int) -> void:
     request_swap.emit(inventory, slot)
 
 func _on_inventory_slot_changed(slot_id: int, item_type_changed: bool) -> void:
-    if item_type_changed:
-        slots_nodes[slot_id].changed(item_type_changed)
+    slots_nodes[slot_id].changed(item_type_changed)

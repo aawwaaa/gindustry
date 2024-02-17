@@ -18,6 +18,8 @@ var layer: int = 0:
 @export var marks: Node2D;
 
 var world: World
+var pos: Vector2i;
+var rot: float;
 var tiles: PackedVector2Array = []
 var polygons_full_points: Array[PackedVector2Array] = []
 
@@ -29,15 +31,38 @@ var building_config: Variant:
     get = _get_building_config,
     set = _set_building_config
 
-func _check_build() -> bool:
+func _check_build(check_pre_confirm: bool = false) -> bool:
     shape_cast.force_shapecast_update()
     if shape_cast.is_colliding():
         return false
     for tile_pos in tiles:
-        var tile = world.get_tile_or_null(tile_pos)
+        var tile = world.get_tile_or_null(tile_pos + Vector2(pos))
         if not tile: return false
         if not tile.can_build_on(building_type): return false
+        if check_pre_confirm:
+            if tile.pre_confirm_building_name != "" \
+                    and tile.pre_confirm_building_name != name: return false
     return true
+
+func _handle_break(unit: BuilderAdapterUnit) -> void:
+    var shadow = world.get_tile_or_null(pos).set_building_shadow(building_type, rot, building_config)
+    for item in shadow.filled_items:
+        item.queue_free()
+    shadow.filled_items = shadow.missing_items
+    shadow.missing_items = []
+
+func pre_confirm_build() -> void:
+    for tile_pos in tiles:
+        var tile = world.get_tile_or_null(tile_pos + Vector2(pos))
+        if not tile: continue
+        tile.pre_confirm_building_name = self.name
+
+func cancel_pre_confirm_build() -> void:
+    for tile_pos in tiles:
+        var tile = world.get_tile_or_null(tile_pos + Vector2(pos))
+        if not tile: continue
+        if tile.pre_confirm_building_name != name: continue
+        tile.pre_confirm_building_name = ""
 
 func _set_check_build_result(result: bool) -> void:
     if result:
@@ -77,7 +102,6 @@ func set_layer(v: int) -> void:
     shape_cast.collision_mask = mask
 
 func _ready() -> void:
-    collision_area.monitorable = false
     for area2d in floors.get_children():
         var pos = (area2d.position / Global.TILE_SIZE) \
                 .rotated(global_rotation - world.global_rotation).floor()

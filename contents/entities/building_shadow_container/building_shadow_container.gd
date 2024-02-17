@@ -24,17 +24,21 @@ func calcuate_missing_items() -> void:
     for item in building_type.get_requirements():
         var amount = 0
         for fitem in filled_items:
-            if fitem._is_same_item(item):
+            if item._is_same_item(fitem):
                 amount = fitem.amount
-                return
+                break
         amount = item.amount - amount
         var found = false
+        var removes: Array[Item] = []
         for mitem in missing_items:
-            if mitem._is_same_item(item):
+            if item._is_same_item(mitem):
                 mitem.amount = amount
                 found = true
-                if amount == 0: mitem.queue_free()
+                if amount == 0: removes.append(mitem)
                 break
+        for remove in removes:
+            missing_items.erase(remove)
+            remove.queue_free()
         if found or amount == 0: continue
         var missing_item = item._copy_type()
         missing_item.amount = amount
@@ -47,9 +51,9 @@ func calcuate_building_progress(do_operate = true) -> void:
     var current_cost = 0
     for fitem in filled_items:
         current_cost += fitem._get_cost()
-        shadow.progress = current_cost / total_cost
+        shadow.build_progress = current_cost / total_cost
     if not do_operate: return
-    if current_cost == total_cost:
+    if current_cost >= total_cost:
         shadow.finish_build()
         return
     if current_cost == 0:
@@ -71,28 +75,37 @@ func fill_item(item: Item) -> Item:
         filled_items.append(item._split_to(missing_amount, null, true))
     calcuate_missing_items()
     calcuate_building_progress()
+    if shadow.build_progress == 1:
+        entity.world.get_tile_or_null(entity.tile_pos).set_building(building_type, rotation, building_config)
     return item
 
-func remove_item(total_cost: int) -> Array[Item]:
+func remove_item(total_cost: float) -> Dictionary:
     var removed_items: Array[Item] = []
     var emptys: Array[Item] = []
     for item in filled_items:
         var removeable_cost = min(item._get_cost(), total_cost)
         var amount = item._get_amount(removeable_cost)
-        total_cost -= removeable_cost
-        removed_items.append(item._split_to(amount, null, true))
+        var splited = item._split_to(amount, null, true)
+        total_cost -= splited._get_cost()
+        removed_items.append(splited)
         if item._is_empty(): emptys.append(item)
+        if total_cost <= 0: break
     for item in emptys: filled_items.erase(item)
     calcuate_missing_items()
     calcuate_building_progress()
-    return removed_items
+    if shadow.build_progress == 0:
+        entity.world.get_tile_or_null(entity.tile_pos).clear_building()
+    return {"removed_items": removed_items, "costs": total_cost}
 
 func _ready() -> void:
     shadow = building_type.create_shadow()
     shadow.world = entity.world
+    shadow.pos = entity.tile_pos
+    shadow.rot = rotation
     shadow.building_config = building_config
     _on_entity_layer_changed(entity.layer, -1)
     add_child(shadow)
+    shadow.build_progress = 0
     calcuate_missing_items()
     calcuate_building_progress(false)
     if should_place: place()

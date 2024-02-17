@@ -30,7 +30,8 @@ func _on_input_handler_controller_target_entity_changed(entity: Entity, from: En
     default_inventory_panel_inst.entity = entity
 
 func _input(event: InputEvent) -> void:
-    Global.input_handler._input(event)
+    if event is InputEventKey:
+        Global.input_handler._input(event)
 
 func toggle_inventory() -> void:
     if not visible or not default_inventory_panel_inst.is_inside_tree():

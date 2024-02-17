@@ -11,16 +11,17 @@ var activate: bool = false;
 func handle_input(event: InputEvent) -> void:
     if event is InputEventMouse: handle_input_event_mouse(event) 
 
-func handle_input_event_mouse(event: InputEventMouse) -> void:
+func handle_unhandled_input(event: InputEvent) -> void:
+    if event is InputEventMouse: handle_input_event_mouse(event, true) 
+
+func handle_input_event_mouse(event: InputEventMouse, unhandled: bool = false) -> void:
     var pos = event.position
     var trans = Game.camera_node.get_viewport_transform()
     var world_pos = trans.affine_inverse() * pos
-    if entity: handle_item_use_mouse(world_pos)
-
-func handle_item_use_mouse(world_pos: Vector2) -> void:
+    if not entity: return
     item_use_position = world_pos
     update_item_use()
-    if Input.is_action_just_pressed("item_use_confirm"):
+    if unhandled and Input.is_action_just_pressed("item_use_confirm"):
         confirm_item_use()
 
 func update_item_use() -> void:

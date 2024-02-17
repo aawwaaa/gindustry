@@ -8,4 +8,4 @@ extends AdapterUnitType
 @export var build_speed: float = 1
 
 func _get_adapter_unit_scene() -> PackedScene:
-    return load("res://types/world/entity/adapter_unit/builder/builder_adapter_unit.tscn")
+    return load("res://types/world/adapter_unit/builder/builder_adapter_unit.tscn")

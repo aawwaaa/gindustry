@@ -26,7 +26,8 @@ func _ready() -> void:
     })
 
 func _handle_unhandled_input(event: InputEvent) -> void:
-    pass
+    item_use.handle_unhandled_input(event)
+    build.handle_unhandled_input(event)
 
 func _handle_input(event: InputEvent) -> void:
     if event is InputEventMouse: handle_input_event_mouse(event)

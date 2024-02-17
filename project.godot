@@ -83,7 +83,7 @@ locale/test="zh"
 
 [layer_names]
 
-2d_physics/layer_24="Effectity Field"
+2d_physics/layer_24="Fields"
 
 [physics]
 
