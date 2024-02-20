@@ -44,20 +44,14 @@ func calcuate_missing_items() -> void:
         missing_item.amount = amount
         missing_items.append(missing_item)
 
-func calcuate_building_progress(do_operate = true) -> void:
+func calcuate_building_progress() -> void:
     var total_cost = 0
     for item in building_type.get_requirements():
         total_cost += item._get_cost()
     var current_cost = 0
     for fitem in filled_items:
         current_cost += fitem._get_cost()
-        shadow.build_progress = current_cost / total_cost
-    if not do_operate: return
-    if current_cost >= total_cost:
-        shadow.finish_build()
-        return
-    if current_cost == 0:
-        destroy();
+    shadow.build_progress = current_cost / total_cost
 
 func fill_item(item: Item) -> Item:
     var missing_amount = 0
@@ -76,7 +70,9 @@ func fill_item(item: Item) -> Item:
     calcuate_missing_items()
     calcuate_building_progress()
     if shadow.build_progress == 1:
-        entity.world.get_tile_or_null(entity.tile_pos).set_building(building_type, rotation, building_config)
+        entity.world.get_tile_or_null(entity.tile_pos) \
+                .set_building(building_type, rotation, building_config)
+
     return item
 
 func remove_item(total_cost: float) -> Dictionary:
@@ -85,29 +81,35 @@ func remove_item(total_cost: float) -> Dictionary:
     for item in filled_items:
         var removeable_cost = min(item._get_cost(), total_cost)
         var amount = item._get_amount(removeable_cost)
+        if amount <= 0: continue
         var splited = item._split_to(amount, null, true)
         total_cost -= splited._get_cost()
         removed_items.append(splited)
         if item._is_empty(): emptys.append(item)
         if total_cost <= 0: break
     for item in emptys: filled_items.erase(item)
-    calcuate_missing_items()
-    calcuate_building_progress()
+    if not removed_items.is_empty():
+        calcuate_missing_items()
+        calcuate_building_progress()
     if shadow.build_progress == 0:
         entity.world.get_tile_or_null(entity.tile_pos).clear_building()
     return {"removed_items": removed_items, "costs": total_cost}
+
+func _handle_destroy() -> void:
+    pass
 
 func _ready() -> void:
     shadow = building_type.create_shadow()
     shadow.world = entity.world
     shadow.pos = entity.tile_pos
-    shadow.rot = rotation
     shadow.building_config = building_config
     _on_entity_layer_changed(entity.layer, -1)
     add_child(shadow)
+    shadow.rot = rotation
     shadow.build_progress = 0
+    shadow.input.connect(_on_shadow_input)
     calcuate_missing_items()
-    calcuate_building_progress(false)
+    calcuate_building_progress()
     if should_place: place()
     if should_destroy: destroy()
 
@@ -122,21 +124,18 @@ func place() -> void:
         should_place = true
         return
     should_place = false
-    for pos in shadow.tiles:
-        var tile = entity.world.get_tile_or_null(entity.tile_pos + pos)
-        if not tile: continue
-        tile.building_ref = entity.entity_id 
-
+    shadow.place(false, entity.entity_id)
+    
 func destroy() -> void:
     if not shadow:
         should_destroy = true
         return
     should_destroy = false
-    for pos in shadow.tiles:
-        var tile = entity.world.get_tile_or_null(entity.tile_pos + pos)
-        if not tile: continue
-        tile.building_ref = 0
-    entity.remove()
+    shadow.destroy(false, entity.entity_id)
+
+func _on_shadow_input(event: InputEvent) -> void:
+    Global.input_handler.call_input_processor("build", "_on_building_shadow_container_input", \
+            [self, event])
 
 const current_data_version: int = 0
 
@@ -148,11 +147,10 @@ func _on_entity_on_load_data(stream: Stream) -> void:
     building_config = building_type._load_config(stream)
     filled_items = []
     for _1 in range(stream.get_16()):
-        var item = Item.new()
-        item.load_data(stream)
+        var item = Item.load_from(stream)
         filled_items.append(item)
     calcuate_missing_items()
-    calcuate_building_progress(false)
+    calcuate_building_progress()
 
 func _on_entity_on_save_data(stream: Stream) -> void:
     stream.store_16(current_data_version);
@@ -161,4 +159,4 @@ func _on_entity_on_save_data(stream: Stream) -> void:
     building_type._save_config(building_config, stream)
     stream.store_16(filled_items.size())
     for item in filled_items:
-        item.save_data(stream)
+        item.save_to(stream)

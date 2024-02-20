@@ -50,6 +50,8 @@ func update_build_target() -> void:
 
 func process_build() -> void:
     var tile = current_build_plan.world.get_tile_or_null(current_build_plan.pos)
+    if tile.building: current_build_plan.build_finished = true
+    if not tile.building_shadow: return
     var missings = tile.building_shadow.missing_items
     var split_amounts: Array[int] = []
     split_amounts.resize(missings.size())
@@ -76,6 +78,8 @@ func process_build() -> void:
 func process_break() -> void: 
     var tile = current_build_plan.world.get_tile_or_null(current_build_plan.pos)
     if tile.building:
+        var result = tile.building._handle_break(self)
+        if not result: return
         tile.building.shadow._handle_break(self)
         return
     var result = tile.building_shadow.remove_item(overflowed_costs)
@@ -84,5 +88,6 @@ func process_break() -> void:
         if not item._is_empty(): adapter.item_source._handle_overflow_item(item)
     overflowed_costs = result["costs"]
     if tile.building_ref == 0: current_build_plan.build_finished = true
-    elif tile.building_shadow: current_build_plan.build_progress = 1 - tile.building_shadow.shadow.build_progress
+    elif tile.building_shadow:
+        current_build_plan.build_progress = 1 - tile.building_shadow.shadow.build_progress
 

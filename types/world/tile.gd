@@ -57,8 +57,8 @@ static func floor_to_tile_grid(pos: Vector2) -> Vector2i:
 static func to_tile_pos(pos: Vector2) -> Vector2i:
     return (pos / Global.TILE_SIZE).floor()
 
-static func to_world_pos(pos: Vector2) -> Vector2:
-    return pos * Global.TILE_SIZE + Vector2(HALF_TILE)
+static func to_world_pos(pos: Vector2, offset: Vector2 = HALF_TILE) -> Vector2:
+    return pos * Global.TILE_SIZE + offset
 
 func set_special_data() -> void:
     if has_special_data:
@@ -132,14 +132,16 @@ func clear_building() -> void:
     if building_shadow:
         var shadow = building_shadow
         shadow.destroy()
+        shadow.entity.remove()
         building_ref = 0
         return
     var inst = building
     inst.destroy()
     inst.remove()
+    building_ref = 0
 
 func set_building(type: BuildingType, rotation: float = 0, config: Variant = type._get_default_config() if type else null) -> Building:
-    if building: clear_building()
+    if building or building_shadow: clear_building()
     if not type: return
     var inst = type.create_entity()
     inst.main_node.position = tile_pos * Global.TILE_SIZE + HALF_TILE
@@ -150,7 +152,7 @@ func set_building(type: BuildingType, rotation: float = 0, config: Variant = typ
     return inst
 
 func set_building_shadow(type: BuildingType, rotation: float = 0, config: Variant = type._get_default_config() if type else null) -> BuildingShadowContainer:
-    if building: clear_building()
+    if building or building_shadow: clear_building()
     if not type: return
     var container = Builtin.entity["building_shadow_container"].create_entity().main_node
     container.building_type = type

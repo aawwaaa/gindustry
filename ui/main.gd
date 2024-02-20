@@ -1,5 +1,5 @@
 class_name MainNode
-extends Control
+extends Node2D
 
 func _ready() -> void:
     get_tree().root.process_mode = Node.PROCESS_MODE_ALWAYS
@@ -11,31 +11,31 @@ func _ready() -> void:
     start_load();
 
 func back_to_menu() -> void:
-    for node in $Windows.get_children():
+    for node in %Windows.get_children():
         node.hide();
     %GameUI.hide()
-    $Loading.visible = false;
-    $MainMenu.visible = true;
+    %Loading.visible = false;
+    %MainMenu.visible = true;
 
 func hide_all() -> void:
-    for node in $Windows.get_children():
+    for node in %Windows.get_children():
         node.hide();
     %GameUI.hide_ui()
-    $Loading.visible = false;
-    $MainMenu.visible = false;
+    %Loading.visible = false;
+    %MainMenu.visible = false;
 
 func show_game_ui() -> void:
-    for node in $Windows.get_children():
+    for node in %Windows.get_children():
         node.hide();
     %GameUI.show_ui()
-    $Loading.visible = false;
-    $MainMenu.visible = false;
+    %Loading.visible = false;
+    %MainMenu.visible = false;
 
 func open_window(window_name: String) -> void:
-    $Windows.get_node(window_name).show()
+    %Windows.get_node(window_name).show()
 
 func get_window_node(window_name: String) -> Control:
-    return $Windows.get_node(window_name)
+    return %Windows.get_node(window_name)
 
 func get_default_input_handler() -> String:
     return "desktop"
@@ -46,8 +46,8 @@ func _on_saves_pressed() -> void:
 
 func progress_changed(_1, part: int, all: int) -> void:
     if part == all:
-        $Loading.visible = false;
-        $MainMenu.visible = true;
+        %Loading.visible = false;
+        %MainMenu.visible = true;
         Headless.apply_args_from_cmdline()
 
 func init_configs() -> void:
@@ -69,20 +69,20 @@ func start_load() -> void:
             info.enabled = false;
         await get_tree().create_timer(3).timeout;
         progress.call(5);
-        $Windows/Mods.load_mod_list();
+        %Windows/Mods.load_mod_list();
         return;
     
     Global.load_configs();
-    $Windows/Settings.load_tabs()
+    %Windows/Settings.load_tabs()
 
     var content_list = preload("res://contents/content_list.gd").new();
     await content_list.start_load()
     await Mods.load_mods();
     Saves.load_saves();
     
-    $Windows/Mods.load_mod_list();
-    $Windows/NewGame.load_presets();
-    $Windows/Saves.load_saves();
+    %Windows/Mods.load_mod_list();
+    %Windows/NewGame.load_presets();
+    %Windows/Saves.load_saves();
 
     Game.worlds_node = %Worlds;
     Game.camera_base_node = %CameraBase

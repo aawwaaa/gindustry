@@ -18,6 +18,7 @@ func _init_preset() -> void:
     var test_entity_1 = Gindustry.entities["test_entity_1"].create_entity()
     test_entity_1.main_node.position = Vector2(200, 200)
     world.add_entity(test_entity_1);
+    return
 
     world.get_tile_or_null(Vector2i(-8, -8)) \
             .set_building(Gindustry.buildings["test"])
@@ -46,7 +47,7 @@ func _init_after_world_load() -> void:
     
     for type in ["copper", "lead", "titanium", "thorium", "coal", "sand"]:
         var item = Gindustry.items[type].create_item()
-        item.amount = 20
+        item.amount = 80
         player_entity.get_adapter("item")._add_item(item)
 
 func _load_preset() -> void:

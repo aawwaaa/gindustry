@@ -55,6 +55,8 @@ func create_temp_tile() -> void:
 func reset_game() -> void:
     signal_reset_game.emit();
     save_preset = null
+    world_inc_id = 1;
+    entity_inc_id = 1;
     worlds = {};
     root_world = null;
     for world in worlds_node.get_children():

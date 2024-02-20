@@ -75,8 +75,9 @@
 [X] BuildPlan处理
 
 [X] Container tile_pos!
-[ ] 建筑拆除 bug修复
-[ ] 点击BuildingShadowContainer继续建造
+[X] 建造拆除 区域显示
+[X] 建筑拆除 bug修复
+[X] 点击BuildingShadowContainer继续建造
 
 [ ] 6. 带物品的建筑拆除
 [ ] 7. 掉落物

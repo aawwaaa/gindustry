@@ -1,6 +1,5 @@
-[gd_scene load_steps=10 format=3 uid="uid://cx8o3df6tuhy8"]
+[gd_scene load_steps=9 format=3 uid="uid://cx8o3df6tuhy8"]
 
-[ext_resource type="Theme" uid="uid://di2hbon1k01vp" path="res://assets/ui/global_theme.tres" id="1_jpvbi"]
 [ext_resource type="Script" path="res://ui/main.gd" id="1_w18yf"]
 [ext_resource type="PackedScene" uid="uid://btxboyi6ctpxq" path="res://ui/loading.tscn" id="2_jpl0v"]
 [ext_resource type="PackedScene" uid="uid://fm4ff8ar5nm0" path="res://ui/main_menu.tscn" id="3_q04lv"]
@@ -10,42 +9,16 @@
 [ext_resource type="PackedScene" uid="uid://c7uj4kdkhepli" path="res://ui/game/game_ui.tscn" id="8_8l6oa"]
 [ext_resource type="PackedScene" uid="uid://bpse7iuci88lr" path="res://ui/menus/saves/saves.tscn" id="8_ysqt5"]
 
-[node name="Main" type="Control"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme = ExtResource("1_jpvbi")
+[node name="Main" type="Node2D"]
 script = ExtResource("1_w18yf")
 
-[node name="GameContainer" type="SubViewportContainer" parent="."]
-process_mode = 1
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-stretch = true
-
-[node name="Game" type="SubViewport" parent="GameContainer"]
-unique_name_in_owner = true
-handle_input_locally = false
-canvas_item_default_texture_filter = 0
-size = Vector2i(1152, 648)
-render_target_update_mode = 4
-
-[node name="Worlds" type="Node2D" parent="GameContainer/Game"]
+[node name="Worlds" type="Node2D" parent="."]
 unique_name_in_owner = true
 
-[node name="CameraBase" type="Node2D" parent="GameContainer/Game"]
+[node name="CameraBase" type="Node2D" parent="."]
 unique_name_in_owner = true
 
-[node name="Camera" type="Camera2D" parent="GameContainer/Game/CameraBase"]
+[node name="Camera" type="Camera2D" parent="CameraBase"]
 unique_name_in_owner = true
 ignore_rotation = false
 position_smoothing_enabled = true
@@ -53,52 +26,53 @@ position_smoothing_speed = 20.0
 rotation_smoothing_enabled = true
 rotation_smoothing_speed = 30.0
 
-[node name="Loading" parent="." instance=ExtResource("2_jpl0v")]
-layout_mode = 1
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="MainMenu" parent="." instance=ExtResource("3_q04lv")]
+[node name="Loading" parent="CanvasLayer" instance=ExtResource("2_jpl0v")]
+unique_name_in_owner = true
+
+[node name="MainMenu" parent="CanvasLayer" instance=ExtResource("3_q04lv")]
+unique_name_in_owner = true
 visible = false
-layout_mode = 1
 
-[node name="NewGame" type="Button" parent="MainMenu"]
+[node name="NewGame" type="Button" parent="CanvasLayer/MainMenu"]
 layout_mode = 2
 text = "MainMenu_NewGame"
 
-[node name="Saves" type="Button" parent="MainMenu"]
+[node name="Saves" type="Button" parent="CanvasLayer/MainMenu"]
 layout_mode = 2
 text = "MainMenu_Saves"
 
-[node name="Mods" type="Button" parent="MainMenu"]
+[node name="Mods" type="Button" parent="CanvasLayer/MainMenu"]
 layout_mode = 2
 text = "MainMenu_Mods"
 
-[node name="Settings" type="Button" parent="MainMenu"]
+[node name="Settings" type="Button" parent="CanvasLayer/MainMenu"]
 layout_mode = 2
 text = "MainMenu_Settings"
 
-[node name="Windows" type="Control" parent="."]
+[node name="Windows" type="Control" parent="CanvasLayer"]
+unique_name_in_owner = true
+layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
 
-[node name="NewGame" parent="Windows" instance=ExtResource("5_cyego")]
+[node name="NewGame" parent="CanvasLayer/Windows" instance=ExtResource("5_cyego")]
 visible = false
 
-[node name="Mods" parent="Windows" instance=ExtResource("4_av7vb")]
+[node name="Mods" parent="CanvasLayer/Windows" instance=ExtResource("4_av7vb")]
 visible = false
 
-[node name="Settings" parent="Windows" instance=ExtResource("5_r7vc2")]
+[node name="Settings" parent="CanvasLayer/Windows" instance=ExtResource("5_r7vc2")]
 visible = false
 
-[node name="Saves" parent="Windows" instance=ExtResource("8_ysqt5")]
+[node name="Saves" parent="CanvasLayer/Windows" instance=ExtResource("8_ysqt5")]
 visible = false
 
-[node name="GameUI" parent="." instance=ExtResource("8_8l6oa")]
+[node name="GameUI" parent="CanvasLayer" instance=ExtResource("8_8l6oa")]
 unique_name_in_owner = true
 visible = false
-layout_mode = 1
 
-[connection signal="pressed" from="MainMenu/NewGame" to="Windows/NewGame" method="show"]
-[connection signal="pressed" from="MainMenu/Saves" to="." method="_on_saves_pressed"]
-[connection signal="pressed" from="MainMenu/Mods" to="Windows/Mods" method="show"]
-[connection signal="pressed" from="MainMenu/Settings" to="Windows/Settings" method="show"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/NewGame" to="CanvasLayer/Windows/NewGame" method="show"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/Saves" to="." method="_on_saves_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/Mods" to="CanvasLayer/Windows/Mods" method="show"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/Settings" to="CanvasLayer/Windows/Settings" method="show"]

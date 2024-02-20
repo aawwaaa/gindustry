@@ -7,9 +7,8 @@
 segments = PackedVector2Array(-12, -44, 12, -44, -44, -12, 44, -12, 20, 24, 44, 24)
 
 [node name="Shadow" instance=ExtResource("0_q8n3c")]
-
-[node name="Floors" parent="." index="0"]
-visible = true
+collision_mask_begin = 0
+collision_mask_end = 0
 
 [node name="Area2D" type="Marker2D" parent="Floors" index="0"]
 position = Vector2(0, -32)

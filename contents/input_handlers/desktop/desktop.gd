@@ -19,6 +19,7 @@ func _ready() -> void:
     add_child(item_use)
     build = DesktopInputHandler_Build.new(self)
     add_child(build)
+    input_processors["build"] = build
 
     keys.merge({
         "open_pause_menu": GameUI.instance.pause_menu.toggle_pause_menu.bind(),

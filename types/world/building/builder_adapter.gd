@@ -51,17 +51,24 @@ func build_plan_process(plan: BuildPlan, removes: Array[BuildPlan]) -> void:
         plan.check_passed = false
         return
     if plan.breaking:
-        if tile.building_ref == 0:
-            plan.build_finished = true
-            return
-        for unit in units:
-            if unit.current_build_plan == null:
-                unit.current_build_plan = plan
-                plan.building = true
-                return
+        process_break(plan, tile)
+    else:
+        process_build(plan, tile)
+
+func process_build(plan: BuildPlan, tile: Tile) -> void:
     if should_place_build_shadow(plan, tile) \
             and not place_build_shadow(plan, tile):
         plan.check_passed = false
+        return
+    for unit in units:
+        if unit.current_build_plan == null:
+            unit.current_build_plan = plan
+            plan.building = true
+            return
+
+func process_break(plan: BuildPlan, tile: Tile) -> void:
+    if tile.building_ref == 0:
+        plan.build_finished = true
         return
     for unit in units:
         if unit.current_build_plan == null:
@@ -79,6 +86,7 @@ func should_place_build_shadow(plan: BuildPlan, tile: Tile) -> bool:
     return false
 
 func place_build_shadow(plan: BuildPlan, tile: Tile) -> bool:
+    if not plan.building_type: return false
     var shadow = plan.building_type.create_shadow()
     shadow.building_config = plan.building_config
     shadow.position = Tile.to_world_pos(plan.pos)

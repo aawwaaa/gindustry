@@ -96,13 +96,13 @@ func _on_rotation_pressed() -> void:
 func _on_break_toggled(toggled_on: bool) -> void:
     if toggled_on == true: build_mode = "break";
     if not toggled_on:
-        if %Copy.pressed: build_mode = "copy";
+        if %Copy.button_pressed: build_mode = "copy";
         else: build_mode = "place";
 
 func _on_copy_toggled(toggled_on: bool) -> void:
     if toggled_on == true: build_mode = "copy";
     if not toggled_on:
-        if %Break.pressed: build_mode = "break";
+        if %Break.button_pressed: build_mode = "break";
         else: build_mode = "place";
 
 func _on_confirm_pressed() -> void:
@@ -113,7 +113,7 @@ func _on_schematic_pressed() -> void:
 
 func _on_pause_pressed() -> void:
     build_paused = not build_paused;
-    %Pause.icon = pause_icon if build_paused else resume_icon
+    %Pause.icon = resume_icon if build_paused else pause_icon
     build_paused_changed.emit(build_paused);
 
 func update_child_visible() -> void:

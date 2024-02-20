@@ -21,10 +21,10 @@ func _ready() -> void:
     shadow = building_type.create_shadow()
     shadow.world = world
     shadow.pos = tile_pos
-    shadow.rot = main_node.rotation
     shadow.building_config = building_config
     shadow.layer = layer
     shadow_container.add_child(shadow)
+    shadow.rot = main_node.rotation
     shadow.finish_build()
 
     if should_place: place()
@@ -39,10 +39,7 @@ func place() -> void:
         should_place = true
         return
     should_place = false
-    for pos in shadow.tiles:
-        var tile = world.get_tile_or_null(tile_pos + pos)
-        if not tile: continue
-        tile.building_ref = entity_id
+    shadow.place(false, entity_id)
     placed.emit()
 
 func destroy() -> void:
@@ -50,11 +47,15 @@ func destroy() -> void:
         should_destroy = true
         return
     should_destroy = false
-    for pos in shadow.tiles:
-        var tile = world.get_tile_or_null(tile_pos + pos)
-        if not tile: continue
-        tile.building_ref = 0
+    shadow.destroy(false, entity_id)
     destroyed.emit()
+
+func _handle_break(unit: BuilderAdapterUnit) -> bool:
+    if not accept_access(unit.adapter.entity_node.main_node): return false
+    return true
+
+func _handle_destroy() -> void:
+    pass
 
 func _can_be_replaced_by(building_type: BuildingType) -> bool:
     return self.building_type._can_be_replaced_by(self, building_type)

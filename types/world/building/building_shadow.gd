@@ -19,7 +19,17 @@ var layer: int = 0:
 
 var world: World
 var pos: Vector2i;
-var rot: float;
+var rot: float:
+    set(v):
+        var delta = v - rot
+        if delta <= PI / 90: return
+        rot = v
+        var new_tiles = PackedVector2Array()
+        for tile_pos in tiles:
+            var new_pos = tile_pos.rotated(delta).round()
+            new_tiles.append(new_pos)
+        tiles = new_tiles
+
 var tiles: PackedVector2Array = []
 var polygons_full_points: Array[PackedVector2Array] = []
 
@@ -48,21 +58,26 @@ func _handle_break(unit: BuilderAdapterUnit) -> void:
     var shadow = world.get_tile_or_null(pos).set_building_shadow(building_type, rot, building_config)
     for item in shadow.filled_items:
         item.queue_free()
+    shadow.shadow.build_progress = 1
     shadow.filled_items = shadow.missing_items
-    shadow.missing_items = []
+    shadow.missing_items = [] as Array[Item]
 
-func pre_confirm_build() -> void:
+func place(pre_confirm: bool = true, value: Variant = self.name) -> void:
     for tile_pos in tiles:
         var tile = world.get_tile_or_null(tile_pos + Vector2(pos))
         if not tile: continue
-        tile.pre_confirm_building_name = self.name
+        if pre_confirm: tile.pre_confirm_building_name = self.name
+        else: tile.building_ref = value
 
-func cancel_pre_confirm_build() -> void:
+func destroy(pre_confirm: bool = true, value: Variant = self.name) -> void:
     for tile_pos in tiles:
         var tile = world.get_tile_or_null(tile_pos + Vector2(pos))
         if not tile: continue
-        if tile.pre_confirm_building_name != name: continue
-        tile.pre_confirm_building_name = ""
+        if pre_confirm:
+            if tile.pre_confirm_building_name != value: continue
+            tile.pre_confirm_building_name = ""
+        else:
+            tile.building_ref = 0   
 
 func _set_check_build_result(result: bool) -> void:
     if result:
@@ -103,8 +118,7 @@ func set_layer(v: int) -> void:
 
 func _ready() -> void:
     for area2d in floors.get_children():
-        var pos = (area2d.position / Global.TILE_SIZE) \
-                .rotated(global_rotation - world.global_rotation).floor()
+        var pos = (area2d.position / Global.TILE_SIZE).floor()
         tiles.append(pos)
     for polygon in display_polygons.get_children():
         var base = polygon.polygon[0]
@@ -112,6 +126,7 @@ func _ready() -> void:
         for id in range(diffs.size()):
             diffs[id] = (diffs[id] - base) * 2
         polygons_full_points.append(diffs)
+    collision_area.visible = true
 
 func _get_building_config() -> Variant:
     return building_config

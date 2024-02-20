@@ -5,6 +5,7 @@ signal input_handler_changed(handler: InputHandler, from: InputHandler);
 
 const CHUNK_SIZE = 16;
 const TILE_SIZE = 32;
+const TILE_SIZE_VECTOR = Vector2i(TILE_SIZE, TILE_SIZE);
 
 const MAX_LAYERS = 8;
 const MAX_LAYERS_MASK = (1 << MAX_LAYERS) - 1

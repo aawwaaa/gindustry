@@ -2,6 +2,7 @@ class_name DesktopInputHandler_Build
 extends InputHandlerModule
 
 const BREAK_FLAG_TEXTURE = preload("res://assets/break_flag.png")
+var break_drag_range: Line2D = Line2D.new()
 
 var signals = {}
 
@@ -54,6 +55,9 @@ func load_ui(node: Control) -> void:
         "build_plan_operate": _on_build_plan_operate.bind()
     })
     Utils.connect_signal_by_table(GameUI.instance.build_ui, signals)
+    break_drag_range.default_color = Color(1, 0.2, 0.05, 1)
+    break_drag_range.width = Global.TILE_SIZE / 8
+    break_drag_range.closed = true
 
 func unload_ui(node: Control) -> void:
     Utils.disconnect_signal_by_table(GameUI.instance.build_ui, signals)
@@ -84,6 +88,7 @@ func update_building_shadow() -> void:
         building_shadow.layer = entity.layer
         building_shadow.build_progress = 1
     building_shadow.rotation = ui.current_rotation_rad
+    building_shadow.rot = ui.current_rotation_rad
     building_shadow.position = Tile.to_world_pos(building_shadow_position)
     building_shadow.pos = building_shadow_position
     var check_result = building_shadow._check_build()
@@ -96,7 +101,7 @@ func update_build_plan() -> void:
         plan.paused = ui.build_paused
         if not plan.check_passed: removes.append(plan)
         if plan.build_finished: removes.append(plan)
-        if plan.building and not plan.breaking and plan.preview_name != "":
+        if plan.building and plan.preview_name != "":
             plan.world.get_temp_node(plan.preview_name).queue_free()
             plan.preview_name = ""
 
@@ -134,10 +139,10 @@ func handle_place_drag(event: InputEventMouse, world_pos: Vector2) -> void:
             current_shadow = building_type.create_shadow()
             current_shadow.world = entity.world
             current_shadow.rotation = ui.current_rotation_rad
-            current_shadow.rot = ui.current_rotation_rad
             current_shadow.layer = entity.layer
             current_shadow.disable_collision = true
             entity.world.add_temp_node(current_shadow) 
+            current_shadow.rot = ui.current_rotation_rad
             current_shadow.build_progress = 1
         var tile_pos = building_drag_begin + current_pos
         current_shadow.pos = tile_pos
@@ -157,6 +162,7 @@ func handle_break_drag(event: InputEventMouse, world_pos: Vector2) -> void:
     if event is InputEventMouseButton and event.is_pressed():
         building_drag_begin = Tile.to_tile_pos(world_pos)
         dragging = true
+        entity.world.add_temp_node(break_drag_range)
     if not dragging: return
     building_drag_end = Tile.to_tile_pos(world_pos)
     for flag in break_drag_buffer.values():
@@ -166,9 +172,16 @@ func handle_break_drag(event: InputEventMouse, world_pos: Vector2) -> void:
             mini(building_drag_begin.y, building_drag_end.y))
     var end = Vector2i(maxi(building_drag_begin.x, building_drag_end.x), \
             maxi(building_drag_begin.y, building_drag_end.y))
+    break_drag_range.clear_points()
+    break_drag_range.add_point(Tile.to_world_pos(begin, Vector2.ZERO))
+    break_drag_range.add_point(Tile.to_world_pos(Vector2( \
+        begin.x, end.y), Vector2.DOWN * Global.TILE_SIZE))
+    break_drag_range.add_point(Tile.to_world_pos(end, Global.TILE_SIZE_VECTOR))
+    break_drag_range.add_point(Tile.to_world_pos(Vector2( \
+        end.x, begin.y), Vector2.RIGHT * Global.TILE_SIZE))
     var current_pos = begin
-    while current_pos.y < end.y:
-        while current_pos.x < end.x:
+    while current_pos.y <= end.y:
+        while current_pos.x <= end.x:
             var tile = entity.world.get_tile_or_null(current_pos)
             if tile.building_ref != 0 and not break_drag_buffer.has(tile.building_ref):
                 var flag = Sprite2D.new()
@@ -176,10 +189,12 @@ func handle_break_drag(event: InputEventMouse, world_pos: Vector2) -> void:
                 flag.position = Tile.to_world_pos(current_pos)
                 entity.world.add_temp_node(flag)
                 break_drag_buffer[tile.building_ref] = flag
+            current_pos.x += 1
         current_pos.x = begin.x
         current_pos.y += 1
     if event is InputEventMouseButton and not event.is_pressed():
         dragging = false
+        entity.world.remove_temp_node(break_drag_range)
         confirm_break_drag()
         
 func handle_copy_drag(event: InputEventMouse, world_pos: Vector2) -> void:
@@ -192,7 +207,7 @@ func confirm_build_drag() -> void:
     var buffer = building_drag_buffer.duplicate()
     var current = buffer.pop_front()
     if not current: return
-    current.pre_confirm_build()
+    current.place()
     current.world.add_temp_node(current)
     building_buffer.append(current)
     while buffer.size() > 0:
@@ -203,9 +218,9 @@ func confirm_build_drag() -> void:
             continue
         building_buffer.append(next)
         current = next
-        next.pre_confirm_build()
+        next.place()
     for node in building_drag_buffer:
-        node.cancel_pre_confirm_build()
+        node.destroy()
     building_drag_buffer.clear()
     buffer_updated()
 
@@ -251,11 +266,12 @@ func confirm_build() -> void:
         if not entity:
             break_buffer[entity_ref].queue_free()
             continue
-        var tile_pos = Tile.to_tile_pos(entity.position)
-        if exists_build_plan.has(tile_pos):
-            controller.build_plan.erase(exists_build_plan[tile_pos])
+        var main_node = entity.main_node
+        if exists_build_plan.has(entity.tile_pos):
+            exists_build_plan[entity.tile_pos].check_passed = false
         var plan = BuildPlan.new()
-        plan.pos = tile_pos
+        plan.world = entity.world
+        plan.pos = entity.tile_pos
         plan.breaking = true
         plan.preview_name = break_buffer[entity_ref].name
         plan.paused = ui.build_paused
@@ -268,6 +284,18 @@ func _on_build_plan_operate(operation: String) -> void:
         building_buffer.clear()
         break_buffer.clear()
     if operation == "cancel":
-        controller.build_plan.clear()
+        for plan in controller.build_plan:
+            plan.check_passed = false
     # todo scematic operation
 
+func _on_building_shadow_container_input(container: BuildingShadowContainer, event: InputEvent) -> void:
+    var ui = GameUI.instance.build_ui
+    if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
+        var plan = BuildPlan.new()
+        plan.building_type = container.building_type
+        plan.pos = container.entity.tile_pos
+        plan.rotation = container.rotation
+        plan.world = container.entity.world
+        plan.building_config = container.building_config
+        plan.paused = ui.build_paused
+        controller.build_plan.push_front(plan)

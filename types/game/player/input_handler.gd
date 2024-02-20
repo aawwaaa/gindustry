@@ -21,6 +21,8 @@ static func register_input_handler(id: String, meta: InputHandlerMeta) -> void:
 signal controller_target_changed(target: ControllerAdapter, from: ControllerAdapter)
 signal controller_target_entity_changed(entity: Entity, from: Entity)
 
+var input_processors: Dictionary = {}
+
 var player: Player:
     get: return Game.current_player
 var controller: PlayerController:
@@ -40,6 +42,11 @@ func _unload_ui(node: Control) -> void:
 func _ready() -> void:
     Game.current_player_changed.connect(_on_player_changed)
 
+func call_input_processor(name: StringName, func_name: StringName, args: Array = []) -> void:
+    if not input_processors.has(name): return
+    var processor = input_processors[name]
+    if not processor or not processor.has_method(func_name): return
+    processor[func_name].callv(args)
 
 func _on_player_changed(player: Player, from: Player) -> void:
     Utils.signal_dynamic_connect(controller, from.get_controller() if from else null,
