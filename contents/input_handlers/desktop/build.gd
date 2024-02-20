@@ -70,7 +70,8 @@ func update_building_shadow() -> void:
     if ui.build_mode != "place": selected = null
     if not enabled: selected = null
     if not selected and building_shadow:
-        building_shadow.queue_free()
+        if is_instance_valid(building_shadow):
+            building_shadow.queue_free()
         building_shadow = null
         return
     if not selected: return
@@ -183,7 +184,7 @@ func handle_break_drag(event: InputEventMouse, world_pos: Vector2) -> void:
     while current_pos.y <= end.y:
         while current_pos.x <= end.x:
             var tile = entity.world.get_tile_or_null(current_pos)
-            if tile.building_ref != 0 and not break_drag_buffer.has(tile.building_ref):
+            if tile and tile.building_ref != 0 and not break_drag_buffer.has(tile.building_ref):
                 var flag = Sprite2D.new()
                 flag.texture = BREAK_FLAG_TEXTURE
                 flag.position = Tile.to_world_pos(current_pos)

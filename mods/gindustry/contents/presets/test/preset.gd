@@ -11,8 +11,8 @@ func _show_description(node: ScrollContainer) -> void:
 func _init_preset() -> void:
     var world = Game.create_world();
     world.chunk_load_source = chunk_load_source.new();
-    for x in range(-2, 3):
-        for y in range(-2, 3):
+    for x in range(0, 1):
+        for y in range(0, 1):
             await world.get_chunk(Vector2i(x, y))
 
     var test_entity_1 = Gindustry.entities["test_entity_1"].create_entity()

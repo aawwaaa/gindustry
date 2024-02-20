@@ -64,6 +64,7 @@ func reset_game() -> void:
     current_player = null;
     Players.reset_players();
     set_paused.rpc(false)
+    create_temp_tile()
     
     Players.reset_players()
     Controller._on_game_signal_reset_game();

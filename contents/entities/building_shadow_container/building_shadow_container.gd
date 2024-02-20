@@ -149,8 +149,6 @@ func _on_entity_on_load_data(stream: Stream) -> void:
     for _1 in range(stream.get_16()):
         var item = Item.load_from(stream)
         filled_items.append(item)
-    calcuate_missing_items()
-    calcuate_building_progress()
 
 func _on_entity_on_save_data(stream: Stream) -> void:
     stream.store_16(current_data_version);

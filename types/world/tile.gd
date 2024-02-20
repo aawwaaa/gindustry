@@ -46,7 +46,7 @@ var building_shadow: BuildingShadowContainer:
                 if entity and entity.main_node is BuildingShadowContainer \
                 else null
 
-var pre_confirm_building_name: String:
+var pre_confirm_building_name: String = "":
     set(v):
         pre_confirm_building_name = v
         set_special_data()
@@ -174,11 +174,11 @@ func set_redirect(target: World, pos: Vector2i = Vector2i.ZERO) -> void:
 
 const current_data_version = 1;
 
-func load_data(stream: Stream) -> void:
+func load_data(stream: Stream, no_special_data: bool = false) -> void:
     var version = stream.get_16();
     # version 0
     if version < 0: return;
-    has_special_data = true;
+    has_special_data = not no_special_data;
     enable_redirect = stream.get_8() == 1;
     if enable_redirect:
         redirect_world = stream.get_32();

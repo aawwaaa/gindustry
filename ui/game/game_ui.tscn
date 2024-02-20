@@ -58,3 +58,4 @@ mouse_filter = 2
 [connection signal="contents_loaded" from="." to="BuildUI" method="_on_game_ui_contents_loaded"]
 [connection signal="ui_hidden" from="." to="PlayerInventory" method="_on_game_ui_ui_hidden"]
 [connection signal="ui_hidden" from="." to="PauseMenu" method="_on_game_ui_ui_hidden"]
+[connection signal="ui_hidden" from="." to="BuildUI" method="_on_game_ui_ui_hidden"]

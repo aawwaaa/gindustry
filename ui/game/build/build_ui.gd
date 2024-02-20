@@ -151,3 +151,8 @@ func _on_save_pressed() -> void:
 
 func _on_game_ui_contents_loaded() -> void:
     load_categories()
+
+func _on_game_ui_ui_hidden() -> void:
+    selected_building_type = null
+    has_build_plan = false
+    has_schematic = false

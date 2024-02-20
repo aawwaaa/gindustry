@@ -54,6 +54,7 @@ func remove_player(player: Player) -> void:
     player.queue_free()
 
 func reset_players() -> void:
+    player_inc_id = 1
     player_datas = {}
     player_tokens = {}
     players = {}

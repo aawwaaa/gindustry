@@ -58,7 +58,7 @@ func load_data(stream: Stream) -> void:
                 init_tile_for(Vector2i(x, y), stream);
             else:
                 Game.temp_tile.init_tile(self, Vector2i(x, y))
-                Game.temp_tile.load_data(stream);
+                Game.temp_tile.load_data(stream, true);
 
 func save_data(stream: Stream) -> void:
     stream.store_16(current_data_version)
