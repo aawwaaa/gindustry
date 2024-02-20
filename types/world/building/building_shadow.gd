@@ -15,7 +15,8 @@ var layer: int = 0:
 @export var floors: Node2D;
 @export var display_polygons: Node2D;
 @export var display_sprite: Sprite2D;
-@export var marks: Node2D;
+@export var marks: Dictionary = {};
+var marks_poses: Dictionary = {}
 
 var world: World
 var pos: Vector2i;
@@ -127,6 +128,10 @@ func _ready() -> void:
             diffs[id] = (diffs[id] - base) * 2
         polygons_full_points.append(diffs)
     collision_area.visible = true
+    for key in marks:
+        marks_poses[key] = []
+        for child in marks[key].get_children():
+            marks_poses[key].append((child.position / Global.TILE_SIZE).floor())
 
 func _get_building_config() -> Variant:
     return building_config

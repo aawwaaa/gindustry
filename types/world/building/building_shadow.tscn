@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://types/world/building/building_shadow.gd" id="1_2quqi"]
 
-[node name="Shadow" type="Node2D" node_paths=PackedStringArray("collision", "collision_area", "shape_cast", "floors", "display_polygons", "display_sprite", "marks")]
+[node name="Shadow" type="Node2D" node_paths=PackedStringArray("collision", "collision_area", "shape_cast", "floors", "display_polygons", "display_sprite")]
 script = ExtResource("1_2quqi")
 collision = NodePath("AnimatableBody2D")
 collision_area = NodePath("CollisionArea")
@@ -10,7 +10,6 @@ shape_cast = NodePath("ShapeCast2D")
 floors = NodePath("Floors")
 display_polygons = NodePath("DisplayPolygons")
 display_sprite = NodePath("Sprite2D")
-marks = NodePath("Marks")
 
 [node name="Floors" type="Node2D" parent="."]
 metadata/_edit_group_ = true
@@ -33,8 +32,6 @@ metadata/_edit_lock_ = true
 
 [node name="DisplayPolygons" type="Node2D" parent="."]
 metadata/_edit_lock_ = true
-
-[node name="Marks" type="Node2D" parent="."]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 modulate = Color(1, 1, 1, 0.498039)
