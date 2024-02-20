@@ -79,6 +79,8 @@
 [X] 建筑拆除 bug修复
 [X] 点击BuildingShadowContainer继续建造
 
+[ ] BuildingShadowContainer存档/读档 bug 修复
+
 [ ] 6. 带物品的建筑拆除
 [ ] 7. 掉落物
 [ ] 8. 建筑复制
