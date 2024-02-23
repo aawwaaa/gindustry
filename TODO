@@ -81,6 +81,7 @@
 
 [X] BuildingShadowContainer存档/读档 bug 修复
 
+[ ] ConsumeAPI(获取需要的物品/液体类型)
 [ ] SettingsGroup defaults
 
 [ ] BuildingType rotation
