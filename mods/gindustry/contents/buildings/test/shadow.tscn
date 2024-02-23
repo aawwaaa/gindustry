@@ -55,5 +55,5 @@ texture = ExtResource("3_q2igq")
 texture_offset = Vector2(48, 48)
 polygon = PackedVector2Array(48, 48, 0, 48, 48, 0)
 
-[node name="Sprite2D" parent="." index="6"]
+[node name="Sprite2D" parent="." index="5"]
 texture = ExtResource("3_q2igq")
