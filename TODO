@@ -81,7 +81,7 @@
 
 [X] BuildingShadowContainer存档/读档 bug 修复
 
-[ ] ConsumeAPI(获取需要的物品/液体类型)
+[ ] ConsumeAPI(获取需要的物品/液体/自定义类型的类型和数量)
 [ ] SettingsGroup defaults
 
 [ ] BuildingType rotation
@@ -135,7 +135,7 @@
 [ ] 化工厂 | I II
 [ ] 炼油厂 | I II
 
-[ ] 火力发电机 涡轮发电机 太阳能 RTG
+[X] 火力发电机 涡轮发电机 太阳能 RTG
 [ ] 温差发电机 核反应堆 核聚变堆
 
 [ ] 机枪炮塔 | 普通 高速
