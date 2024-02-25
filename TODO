@@ -86,6 +86,9 @@
 
 [ ] BuildingType rotation
 [ ] 建筑 部件系统(ComponentAdapter: Vector2i -> Component)
+    hasComponent(pos, rotation, type)
+    checkComponentOperate
+    doComponentOperate
 
 [ ] 6. 带物品的建筑拆除
 [ ] 7. 掉落物
@@ -136,7 +139,7 @@
 [ ] 炼油厂 | I II
 
 [X] 火力发电机 涡轮发电机 太阳能 RTG
-[ ] 温差发电机 核反应堆 涡轮机 核聚变堆
+[X] 温差发电机 核反应堆 涡轮机
 
 [ ] 机枪炮塔 | 普通 高速
 [ ] 液体炮塔 | 普通 广域
