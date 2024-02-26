@@ -83,6 +83,8 @@ locale/test="zh"
 
 [layer_names]
 
+2d_render/layer_1="World"
+2d_render/layer_16="Minimap"
 2d_physics/layer_24="Fields"
 
 [physics]

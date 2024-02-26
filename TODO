@@ -111,6 +111,15 @@
     has_component(pos, rotation, type)
     get_component(pos, rotation, type)
 
+[ ] Recipe
+    required_build_attributes
+    name
+    icon
+    color
+    data etc.
+
+[ ] alt显示
+
 [ ] 6. 带物品的建筑拆除
 [ ] 7. 掉落物
 [ ] 8. 建筑复制
@@ -155,7 +164,7 @@
 [X] 泵 | 普通(需要水) 地下(不需要水, 20/s) 深层(不需要水, 80/s)
 
 [X] 熔炉 | 普通 高级 电力
-[ ] 组装机 | I II III
+[X] 组装机 | I II III
 [ ] 化工厂 | I II
 [ ] 炼油厂 | I
 [ ] 粉碎机 | I
