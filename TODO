@@ -83,12 +83,33 @@
 
 [ ] ConsumeAPI(获取需要的物品/液体/自定义类型的类型和数量)
 [ ] SettingsGroup defaults
+[ ] TypedItem
+    Content._get_index
+    Content._set_index
+[ ] PackedItemStack
+    get_item() -> Item
+[ ] Types
+    [ ] Type
+        get_type_name() -> String
+        name: string
+    register_type
+    get_all_types(type_name: String)
+    get_type(type_name: String, name: String)
+[ ] BuildingCategory -> Type
+[ ] 展开所有content(使用独立的.tres描述)(Floor, ItemType, etc.)
+[ ] BuildingAttributeType extends Type
+[ ] BuildingAttribute
+    get_type() -> BuildingAttributeType
+[ ] BuildingType.attributes
+    BuildingType.attributes_dict
+    content_registed: 为attributes_dict赋值
+    Building.has_attribute(type: BuildingAttributeType) -> BuildingType.has_attribute
+    Building.get_attribute(type: BuildingAttributeType) -> BuildingType.get_attribute
 
 [ ] BuildingType rotation
 [ ] 建筑 部件系统(ComponentAdapter: Vector2i -> Component)
-    hasComponent(pos, rotation, type)
-    checkComponentOperate
-    doComponentOperate
+    has_component(pos, rotation, type)
+    get_component(pos, rotation, type)
 
 [ ] 6. 带物品的建筑拆除
 [ ] 7. 掉落物
@@ -136,7 +157,10 @@
 [X] 熔炉 | 普通 高级 电力
 [ ] 组装机 | I II III
 [ ] 化工厂 | I II
-[ ] 炼油厂 | I II
+[ ] 炼油厂 | I
+[ ] 粉碎机 | I
+[ ] 压缩机 | I
+[ ] 离心机 | I II
 
 [X] 火力发电机 涡轮发电机 太阳能 RTG
 [X] 温差发电机 核反应堆 涡轮机
