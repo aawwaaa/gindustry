@@ -67,7 +67,7 @@ func load_categories() -> void:
     for child in %BuildingCategories.get_children():
         child.queue_free();
 
-    var ordered: Array = Contents.contents_type_indexed["building_category"].duplicate()
+    var ordered: Array = Types.get_types(BuildingCategory.TYPE).values().duplicate()
 
     ordered.sort_custom(func(a, b): return a.order < b.order)
 

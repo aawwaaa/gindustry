@@ -30,6 +30,7 @@ Multiplayer="*res://scripts/game/multiplayer.gd"
 MultiplayerServer="*res://scripts/game/multiplayer_server.gd"
 Saves="*res://scripts/game/saves.gd"
 Headless="*res://scripts/headless.gd"
+Types="*res://scripts/game/types.gd"
 
 [display]
 

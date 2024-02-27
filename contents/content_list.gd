@@ -12,6 +12,10 @@ func start_load() -> void:
         "tr_name": "InputHandler_desktop",
     }))
 
+    await load_type("resource_type_types", [
+        "building_category.tres"
+    ])
+
     await load_content(building_category, "building_categories/", [
         "battle.tres",
         "capture.tres",
@@ -33,3 +37,8 @@ func load_content(to: Dictionary, prefix: String, paths: Array[String]) -> void:
     for content in results:
         Contents.register_content(content)
         to[content.id] = content
+
+func load_type(prefix: String, paths: Array[String]) -> void:
+    var results = await Utils.load_contents_async("res://contents/" + prefix, paths)
+    for type in results:
+        Types.register_type(type)

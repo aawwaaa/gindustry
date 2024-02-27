@@ -106,14 +106,14 @@
     Content._set_index
 [ ] PackedItemStack
     get_item() -> Item
-[ ] Types
-    [ ] Type
+[X] Types
+    [X] Type
         get_type_name() -> String
         name: string
     register_type
     get_all_types(type_name: String)
     get_type(type_name: String, name: String)
-[ ] BuildingCategory -> Type
+[X] BuildingCategory -> Type
 [ ] 展开所有content(使用独立的.tres描述)(Floor, ItemType, etc.)
 [ ] BuildingAttributeType extends Type
 [ ] BuildingAttribute

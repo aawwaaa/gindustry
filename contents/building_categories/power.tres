@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="BuildingCategory" load_steps=4 format=3 uid="uid://bs5rjmekqox1i"]
 
 [ext_resource type="Texture2D" uid="uid://bfnno2826v8pe" path="res://assets/building_category_icons.png" id="1_jgde8"]
-[ext_resource type="Script" path="res://types/contents/building_category.gd" id="1_lbwwu"]
+[ext_resource type="Script" path="res://types/resource_types/building_category.gd" id="1_lbwwu"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p3goj"]
 atlas = ExtResource("1_jgde8")
@@ -11,4 +11,4 @@ region = Rect2(96, 0, 32, 32)
 script = ExtResource("1_lbwwu")
 order = 13
 icon = SubResource("AtlasTexture_p3goj")
-id = "power"
+name = "power"

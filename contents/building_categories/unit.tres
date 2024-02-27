@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="BuildingCategory" load_steps=4 format=3 uid="uid://d2jyhagx2goto"]
 
-[ext_resource type="Script" path="res://types/contents/building_category.gd" id="1_o11e7"]
+[ext_resource type="Script" path="res://types/resource_types/building_category.gd" id="1_o11e7"]
 [ext_resource type="Texture2D" uid="uid://bfnno2826v8pe" path="res://assets/building_category_icons.png" id="1_v2xko"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6o1xa"]
@@ -11,4 +11,4 @@ region = Rect2(160, 0, 32, 32)
 script = ExtResource("1_o11e7")
 order = 15
 icon = SubResource("AtlasTexture_6o1xa")
-id = "unit"
+name = "units"
