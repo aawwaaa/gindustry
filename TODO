@@ -82,7 +82,25 @@
 [X] BuildingShadowContainer存档/读档 bug 修复
 
 [ ] ConsumeAPI(获取需要的物品/液体/自定义类型的类型和数量)
-[ ] SettingsGroup defaults
+    [ ] ConsumerType
+    [ ] Consumer
+        _get_type() -> ConsumerType
+        _should_begin(building: Building) -> bool
+        _process_begin(building: Building) -> void
+        _get_effectity(building: Building, delta: float) -> float
+        _process(building: Building, delta: float, effectity: float) -> void
+        _process_break(building: Building) -> void
+        _process_finish(building: Building) -> void
+        _display_ui(building: Building, node: Node) -> void
+        _check_recipe(building: Building, block: Block) -> void
+    [ ] Building._get_consumers()
+[ ] Recipe
+    get_consumers()
+    check_attributes(building: Building)
+    [ ] ItemsConsumer
+    [ ] LiquidConsumer
+    [ ] PowerConsumer
+[X] SettingsGroup defaults
 [ ] TypedItem
     Content._get_index
     Content._set_index
@@ -111,14 +129,11 @@
     has_component(pos, rotation, type)
     get_component(pos, rotation, type)
 
-[ ] Recipe
-    required_build_attributes
-    name
-    icon
-    color
-    data etc.
-
 [ ] alt显示
+[ ] TileOre[WithData]
+    [ ] TileOreType
+    [ ] [Floor/Overlay].ores/ore_with_data
+    [ ] TileOre_ItemOre
 
 [ ] 6. 带物品的建筑拆除
 [ ] 7. 掉落物

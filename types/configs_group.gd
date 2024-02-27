@@ -2,6 +2,7 @@ class_name ConfigsGroup
 extends Resource
 
 var dict: Dictionary
+var defaults: Dictionary = {}
 
 static func load_from(stream: Stream):
     var group = ConfigsGroup.new();
@@ -29,10 +30,13 @@ func copy():
     new_inst.dict = dict.duplicate(false);
     return new_inst;
 
-func g(key: String, default_value: Variant = null) -> Variant:
+func g(key: String, default_value: Variant = defaults[key] if defaults.has(key) else null) -> Variant:
     if not dict.has(key):
         dict[key] = default_value;
     return dict[key];
 
 func p(key: String, value: Variant) -> void:
     dict[key] = value;
+
+func set_defaults(defaults: Dictionary) -> void:
+    self.defaults.merge(defaults)

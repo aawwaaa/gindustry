@@ -5,6 +5,7 @@ signal signal_init_game();
 signal signal_game_loaded();
 signal signal_back_to_menu();
 
+signal save_meta_changed(meta: SaveMeta);
 signal current_player_changed(player: Player, from: Player);
 
 var in_game: bool = false;
@@ -22,7 +23,10 @@ var save_preset: Preset:
         if save_preset:
             save_preset._disable_preset();
         save_preset = v
-var save_meta: SaveMeta;
+var save_meta: SaveMeta:
+    set(v):
+        save_meta = v
+        save_meta_changed.emit(v)
 var save_configs: ConfigsGroup = ConfigsGroup.new();
 
 var temp_tile: Tile;
@@ -66,7 +70,6 @@ func reset_game() -> void:
     set_paused.rpc(false)
     create_temp_tile()
     
-    Players.reset_players()
     Controller._on_game_signal_reset_game();
     Entity._on_game_signal_reset_game();
 
