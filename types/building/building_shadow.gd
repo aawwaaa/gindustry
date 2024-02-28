@@ -20,14 +20,14 @@ var marks_poses: Dictionary = {}
 
 var world: World
 var pos: Vector2i;
-var rot: float:
+var rot: int:
     set(v):
         var delta = v - rot
-        if delta <= PI / 90: return
+        if delta == 0: return
         rot = v
         var new_tiles = PackedVector2Array()
         for tile_pos in tiles:
-            var new_pos = tile_pos.rotated(delta).round()
+            var new_pos = tile_pos.rotated(Tile.to_entity_rot(delta)).round()
             new_tiles.append(new_pos)
         tiles = new_tiles
 
@@ -141,3 +141,20 @@ func _set_building_config(config: Variant) -> void:
 
 func _on_collision_area_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
     input.emit(event)
+
+func _update_position(options: Dictionary = {}) -> void:
+    if options.has("building_config"):
+        self.building_config = options["building_config"]
+    if options.has("world"):
+        self.world = options["world"]
+    if options.has("position"):
+        self.position = Tile.to_world_pos(options["position"])
+        pos = options["position"]
+    if options.has("rotation") and building_type.get_rotatable():
+        self.rotation = Tile.to_entity_rot(options["rotation"])
+        rot = options["rotation"]
+    if options.has("layer"):
+        self.layer = options["layer"]
+
+func update_position(options: Dictionary = {}) -> void:
+    _update_position(options)

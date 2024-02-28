@@ -83,15 +83,17 @@ func update_building_shadow() -> void:
         building_shadow = null
     if not building_shadow:
         building_shadow = selected.create_shadow()
-        building_shadow.world = entity.world
+        building_shadow.update_position({
+            "world": entity.world,
+            "layer": entity.layer
+        })
         building_shadow.disable_collision = true
         entity.world.add_temp_node(building_shadow)
-        building_shadow.layer = entity.layer
         building_shadow.build_progress = 1
-    building_shadow.rotation = ui.current_rotation_rad
-    building_shadow.rot = ui.current_rotation_rad
-    building_shadow.position = Tile.to_world_pos(building_shadow_position)
-    building_shadow.pos = building_shadow_position
+    building_shadow.update_position({
+        "position": building_shadow_position,
+        "rotation": ui.current_rotation
+    })
     var check_result = building_shadow._check_build()
     building_shadow._set_check_build_result(check_result)
 
@@ -138,16 +140,18 @@ func handle_place_drag(event: InputEventMouse, world_pos: Vector2) -> void:
     while current_pos.length_squared() <= drag_vector.length_squared():
         if not current_shadow:
             current_shadow = building_type.create_shadow()
-            current_shadow.world = entity.world
-            current_shadow.rotation = ui.current_rotation_rad
-            current_shadow.layer = entity.layer
+            current_shadow.update_position({
+                "world": entity.world,
+                "layer": entity.layer,
+                "rotation": ui.current_rotation
+            })
             current_shadow.disable_collision = true
             entity.world.add_temp_node(current_shadow) 
-            current_shadow.rot = ui.current_rotation_rad
             current_shadow.build_progress = 1
         var tile_pos = building_drag_begin + current_pos
-        current_shadow.pos = tile_pos
-        current_shadow.position = Tile.to_world_pos(tile_pos)
+        current_shadow.update_position({
+            "position": tile_pos
+        })
         if current_shadow._check_build():
             building_drag_buffer.append(current_shadow)
             current_shadow = null
@@ -248,14 +252,13 @@ func confirm_build() -> void:
     var exists_build_plan: Dictionary = {}
     for plan in controller.build_plan:
         if plan.world != entity.world: continue
-        exists_build_plan[plan.pos] = plan
+        exists_build_plan[plan.position] = plan
     for shadow in building_buffer:
         if not shadow._check_build(): continue
-        var tile_pos = Tile.to_tile_pos(shadow.position)
         var plan = BuildPlan.new()
         plan.building_type = shadow.building_type
-        plan.pos = tile_pos
-        plan.rotation = shadow.rotation
+        plan.position = shadow.pos
+        plan.rotation = shadow.rot
         plan.world = entity.world
         plan.building_config = shadow.building_config
         plan.paused = ui.build_paused
@@ -272,7 +275,7 @@ func confirm_build() -> void:
             exists_build_plan[entity.tile_pos].check_passed = false
         var plan = BuildPlan.new()
         plan.world = entity.world
-        plan.pos = entity.tile_pos
+        plan.position = entity.tile_pos
         plan.breaking = true
         plan.preview_name = break_buffer[entity_ref].name
         plan.paused = ui.build_paused
@@ -294,8 +297,8 @@ func _on_building_shadow_container_input(container: BuildingShadowContainer, eve
     if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
         var plan = BuildPlan.new()
         plan.building_type = container.building_type
-        plan.pos = container.entity.tile_pos
-        plan.rotation = container.rotation
+        plan.position = container.shadow.pos
+        plan.rotation = container.shadow.rot
         plan.world = container.entity.world
         plan.building_config = container.building_config
         plan.paused = ui.build_paused

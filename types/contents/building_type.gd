@@ -59,3 +59,9 @@ func _get_attribute(type: BuildingAttributeType) -> BuildingAttribute:
 
 func get_attribute(type: BuildingAttributeType) -> BuildingAttribute:
     return _get_attribute(type)
+
+func _get_rotatable() -> bool:
+    return false
+
+func get_rotatable() -> bool:
+    return _get_rotatable()

@@ -124,7 +124,7 @@
     - Building.has_attribute(type: BuildingAttributeType) -> BuildingType.has_attribute
     Building.get_attribute(type: BuildingAttributeType) -> BuildingType.get_attribute
 
-[ ] BuildingType rotation
+[X] BuildingType rotatable
 [ ] 建筑 部件系统(ComponentAdapter: Vector2i -> Component)
     has_component(pos, rotation, type)
     get_component(pos, rotation, type)

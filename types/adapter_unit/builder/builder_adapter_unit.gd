@@ -38,7 +38,7 @@ func update_build_target() -> void:
     if not current_build_plan:
         %CanvasGroup.visible = false
         return
-    var pos = to_local(Tile.to_world_pos(current_build_plan.pos))
+    var pos = to_local(Tile.to_world_pos(current_build_plan.position))
     %CanvasGroup.visible = true
     %Line.points[1] = pos
     %End.points[0] = pos
@@ -49,7 +49,7 @@ func update_build_target() -> void:
     %BreakIcon.visible = current_build_plan.breaking
 
 func process_build() -> void:
-    var tile = current_build_plan.world.get_tile_or_null(current_build_plan.pos)
+    var tile = current_build_plan.world.get_tile_or_null(current_build_plan.position)
     if tile.building: current_build_plan.build_finished = true
     if not tile.building_shadow: return
     var missings = tile.building_shadow.missing_items
@@ -76,7 +76,7 @@ func process_build() -> void:
     else: current_build_plan.build_progress = tile.building_shadow.shadow.build_progress
 
 func process_break() -> void: 
-    var tile = current_build_plan.world.get_tile_or_null(current_build_plan.pos)
+    var tile = current_build_plan.world.get_tile_or_null(current_build_plan.position)
     if tile.building:
         var result = tile.building._handle_break(self)
         if not result: return

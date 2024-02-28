@@ -60,6 +60,12 @@ static func to_tile_pos(pos: Vector2) -> Vector2i:
 static func to_world_pos(pos: Vector2, offset: Vector2 = HALF_TILE) -> Vector2:
     return pos * Global.TILE_SIZE + offset
 
+static func to_entity_rot(rot: int) -> float:
+    return rot * PI * 0.5
+
+static func to_tile_rot(rotation: float) -> int:
+    return round(rotation / PI * 2)
+
 func set_special_data() -> void:
     if has_special_data:
         return;

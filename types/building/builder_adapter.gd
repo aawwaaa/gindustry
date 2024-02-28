@@ -42,11 +42,11 @@ func build_plan_process(plan: BuildPlan, removes: Array[BuildPlan]) -> void:
     if plan.world_id != entity_node.world.world_id: return
     var accessible = false
     for unit in units:
-        if unit.check_access_range(plan.world, Tile.to_world_pos(plan.pos)):
+        if unit.check_access_range(plan.world, Tile.to_world_pos(plan.position)):
             accessible = true
             break
     if not accessible: return
-    var tile = plan.world.get_tile_or_null(plan.pos)
+    var tile = plan.world.get_tile_or_null(plan.position)
     if tile == null:
         plan.check_passed = false
         return
@@ -80,21 +80,22 @@ func should_place_build_shadow(plan: BuildPlan, tile: Tile) -> bool:
     if not tile.building_shadow: return true
     var shadow = tile.building_shadow
     if shadow.building_type != plan.building_type: return true
-    if Tile.to_tile_pos(shadow.position) != plan.pos: return true
-    if shadow.rotation - plan.rotation > PI / 180: return true
+    if shadow.shadow.pos != plan.position: return true
+    if shadow.shadow.rot != plan.rotation: return true
     # TODO team check
     return false
 
 func place_build_shadow(plan: BuildPlan, tile: Tile) -> bool:
     if not plan.building_type: return false
     var shadow = plan.building_type.create_shadow()
-    shadow.building_config = plan.building_config
-    shadow.position = Tile.to_world_pos(plan.pos)
-    shadow.rotation = plan.rotation
-    shadow.pos = plan.pos
+    shadow.update_position({
+        "building_config": plan.building_config,
+        "position": plan.position,
+        "rotation": plan.rotation,
+        "world": plan.world,
+        "layer": entity_node.layer
+    })
     shadow.disable_collision = true
-    shadow.layer = entity_node.layer
-    shadow.world = plan.world
     plan.world.add_temp_node(shadow)
     shadow.build_progress = 0
     var result = shadow._check_build()
