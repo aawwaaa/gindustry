@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bhx8swqwnh2i2"]
 
-[ext_resource type="Script" path="res://types/world/fields/effectity/effectity_adapter.gd" id="1_1vrwl"]
+[ext_resource type="Script" path="res://types/fields/effectity/effectity_adapter.gd" id="1_1vrwl"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_8a433"]
 radius = 8.0

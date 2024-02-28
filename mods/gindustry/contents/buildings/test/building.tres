@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cpwbq7b4r4vob" path="res://mods/gindustry/assets/buildings/test_build.png" id="3_2i6mf"]
 [ext_resource type="PackedScene" uid="uid://c5s4tsla3ll5n" path="res://mods/gindustry/contents/buildings/test/shadow.tscn" id="3_o3ck7"]
 [ext_resource type="Resource" uid="uid://ckdxq0ogtny06" path="res://mods/gindustry/contents/items/copper.tres" id="5_cfo4c"]
-[ext_resource type="Script" path="res://types/world/item/packed_item_stack.gd" id="6_j2lc1"]
+[ext_resource type="Script" path="res://types/item/packed_item_stack.gd" id="6_j2lc1"]
 
 [sub_resource type="Resource" id="Resource_ikphi"]
 script = ExtResource("6_j2lc1")
@@ -20,6 +20,7 @@ icon = ExtResource("3_2i6mf")
 shadow = ExtResource("3_o3ck7")
 category = ExtResource("1_2gn62")
 requirements = Array[ExtResource("6_j2lc1")]([SubResource("Resource_ikphi")])
+attributes = Array[Resource("res://types/building/building_attribute.gd")]([])
 entity_scene = ExtResource("2_cmy5s")
 controllable = false
 id = "test"

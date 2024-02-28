@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://8jmdlnmmjhan"]
 
-[ext_resource type="Script" path="res://types/world/fields/effectity/effectity_field.gd" id="1_2w84k"]
+[ext_resource type="Script" path="res://types/fields/effectity/effectity_field.gd" id="1_2w84k"]
 
 [node name="EffectityField" type="Node2D"]
 script = ExtResource("1_2w84k")
