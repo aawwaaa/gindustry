@@ -1,7 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://c5s4tsla3ll5n"]
 
-[ext_resource type="PackedScene" uid="uid://dowx2nq7aicx4" path="res://types/world/building/building_shadow.tscn" id="0_q8n3c"]
+[ext_resource type="PackedScene" uid="uid://dowx2nq7aicx4" path="res://types/building/building_shadow.tscn" id="0_q8n3c"]
 [ext_resource type="Texture2D" uid="uid://cpwbq7b4r4vob" path="res://mods/gindustry/assets/buildings/test_build.png" id="3_q2igq"]
+
 
 [sub_resource type="ConcavePolygonShape2D" id="ConcavePolygonShape2D_s2vsi"]
 segments = PackedVector2Array(-12, -44, 12, -44, -44, -12, 44, -12, 20, 24, 44, 24)

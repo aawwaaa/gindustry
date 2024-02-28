@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=3 uid="uid://dowx2nq7aicx4"]
 
-[ext_resource type="Script" path="res://types/world/building/building_shadow.gd" id="1_2quqi"]
+[ext_resource type="Script" path="res://types/building/building_shadow.gd" id="1_2quqi"]
+
 
 [node name="Shadow" type="Node2D" node_paths=PackedStringArray("collision", "collision_area", "shape_cast", "floors", "display_polygons", "display_sprite")]
 script = ExtResource("1_2quqi")

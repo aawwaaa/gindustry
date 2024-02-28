@@ -3,9 +3,9 @@ extends Resource
 
 @export var name: String
 
-func _get_type() -> ResourceTypeType:
+func _get_type() -> ResourceType:
     return null
 
-func get_type() -> ResourceTypeType:
+func get_type() -> ResourceType:
     return _get_type()
 

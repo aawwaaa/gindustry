@@ -60,6 +60,12 @@ func _handle_destroy() -> void:
 func _can_be_replaced_by(building_type: BuildingType) -> bool:
     return self.building_type._can_be_replaced_by(self, building_type)
 
+func _get_attribute(type: BuildingAttributeType) -> BuildingAttribute:
+    return building_type.get_attribute(type)
+
+func get_attribute(type: BuildingAttributeType) -> BuildingAttribute:
+    return _get_attribute(type)
+
 func _load_data(stream: Stream) -> void:
     Utils.load_data_with_version(stream, [func():
         building_type = Contents.get_content_by_index(stream.get_64()) as BuildingType

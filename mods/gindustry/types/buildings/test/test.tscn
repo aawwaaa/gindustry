@@ -1,7 +1,8 @@
 [gd_scene load_steps=3 format=3 uid="uid://dsemh3wutwhcn"]
 
 [ext_resource type="Script" path="res://mods/gindustry/types/buildings/test/test.gd" id="1_b6n70"]
-[ext_resource type="Script" path="res://types/world/building/building.gd" id="2_bm8uh"]
+[ext_resource type="Script" path="res://types/building/building.gd" id="2_bm8uh"]
+
 
 [node name="Test" type="Node2D" node_paths=PackedStringArray("entity")]
 script = ExtResource("1_b6n70")

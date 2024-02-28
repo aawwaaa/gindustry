@@ -1,5 +1,5 @@
 class_name ResourceTypeType
-extends "res://types/resource_type.gd"
+extends ResourceType
 
 var types: Dictionary:
     get: return Types.get_types(self)

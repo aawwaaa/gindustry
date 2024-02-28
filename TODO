@@ -115,13 +115,13 @@
     get_type(type_name: String, name: String)
 [X] BuildingCategory -> Type
 [X] 展开所有content(使用独立的.tres描述)(Floor, ItemType, etc.)
-[ ] BuildingAttributeType extends Type
-[ ] BuildingAttribute
+[X] BuildingAttributeType extends Type
+[X] BuildingAttribute
     get_type() -> BuildingAttributeType
-[ ] BuildingType.attributes
+[X] BuildingType.attributes
     BuildingType.attributes_dict
     content_registed: 为attributes_dict赋值
-    Building.has_attribute(type: BuildingAttributeType) -> BuildingType.has_attribute
+    - Building.has_attribute(type: BuildingAttributeType) -> BuildingType.has_attribute
     Building.get_attribute(type: BuildingAttributeType) -> BuildingType.get_attribute
 
 [ ] BuildingType rotation

@@ -1,7 +1,7 @@
 class_name ItemType
 extends Content
 
-const ITEM_SCENE = preload("res://types/world/item/item.tscn")
+const ITEM_SCENE = preload("res://types/item/item.tscn")
 
 var item_scene: PackedScene:
     get = _get_item_scene
