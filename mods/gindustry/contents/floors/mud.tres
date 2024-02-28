@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Gindustry_Floor" load_steps=3 format=3 uid="uid://dys37h1euvjv"]
+
+[ext_resource type="Script" path="res://mods/gindustry/types/floors/floor.gd" id="1_v52kw"]
+[ext_resource type="Texture2D" uid="uid://dtg5xqpysl1xa" path="res://mods/gindustry/assets/floors.png" id="2_d3s62"]
+
+[resource]
+script = ExtResource("1_v52kw")
+tilemap_texture = ExtResource("2_d3s62")
+collision_type = "ground"
+tile_coords = Vector2i(4, 0)
+id = "mud"
+options = {}

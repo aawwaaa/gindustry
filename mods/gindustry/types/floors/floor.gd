@@ -1,15 +1,38 @@
-extends Gindustry_TemplateFloor
+class_name Gindustry_Floor
+extends Floor
 
-static var default_options_floor = {
-    "collision_type": "ground"
-};
+static var default_tile_alter_ids: Array[int] = []:
+    get:
+        if default_tile_alter_ids.size() == 0:
+            for layer_id in range(Global.MAX_LAYERS):
+                default_tile_alter_ids.append(layer_id)
+        return default_tile_alter_ids
 
-func _get_type_id() -> String:
-    return "floor";
+static func apply_collision_type(collision_type: String, source: TileSetAtlasSource, pos: Vector2i) -> void:
+    match collision_type:
+        "ground":
+            for layer_id in range(Global.MAX_LAYERS):
+                var data = source.get_tile_data(pos, layer_id);
+                data.add_collision_polygon(layer_id);
+                data.set_collision_polygon_points(layer_id, 0, Floor.WHOLE_TILE_POLYGON_POINTS)
+        "space":
+            # layer 0
+            var data = source.get_tile_data(pos, 0);
+            data.add_collision_polygon(0);
+            data.set_collision_polygon_points(0, 0, Floor.WHOLE_TILE_POLYGON_POINTS)
+            data.add_collision_polygon(1);
+            data.set_collision_polygon_points(1, 0, Floor.WHOLE_TILE_POLYGON_POINTS)
+        "water":
+            # it's empty
+            pass
+        "none":
+            # it's empty too
+            pass
 
-func _init_by_mod(content_id: String, source: TileSetAtlasSource, pos: Vector2i, args: Array) -> Dictionary:
-    var options = super._init_by_mod(content_id, source, pos, args);
-    options.merge(default_options_floor);
-    
-    Gindustry_TemplateFloor.apply_collision_type(options["collision_type"], source, pos);
-    return options
+@export var tilemap_texture: Texture2D;
+@export_enum("ground", "water", "space", "none") var collision_type: String = "ground";
+
+func _init_source(source: TileSetAtlasSource) -> void:
+    self.tile_alter_ids = default_tile_alter_ids
+    Gindustry_Floor.apply_collision_type(collision_type, source, tile_coords)
+

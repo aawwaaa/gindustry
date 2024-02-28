@@ -1,29 +1,14 @@
 [gd_resource type="Resource" script_class="BuildingCategory" load_steps=4 format=3 uid="uid://b713hj0gydy2v"]
 
+[ext_resource type="Script" path="res://types/resource_types/building_category.gd" id="1_d1hhu"]
 [ext_resource type="Texture2D" uid="uid://bfnno2826v8pe" path="res://assets/building_category_icons.png" id="1_hy1c4"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_kyl7w"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_pu5ar"]
 atlas = ExtResource("1_hy1c4")
 region = Rect2(32, 0, 32, 32)
 
-[sub_resource type="GDScript" id="GDScript_wnons"]
-script/source = "class_name BuildingCategory
-extends ResourceType
-
-const TYPE = preload(\"res://contents/resource_type_types/building_category.tres\")
-
-@export var order: int = 0
-@export var icon: Texture2D = load(\"res://assets/asset-not-found.png\")
-
-var building_types: Array[BuildingType] = []
-
-func _get_type() -> ResourceTypeType:
-    return TYPE
-
-"
-
 [resource]
-script = SubResource("GDScript_wnons")
+script = ExtResource("1_d1hhu")
 order = 11
-icon = SubResource("AtlasTexture_kyl7w")
+icon = SubResource("AtlasTexture_pu5ar")
 name = "capture"

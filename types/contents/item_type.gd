@@ -1,15 +1,22 @@
 class_name ItemType
 extends Content
 
-@export var item_scene: PackedScene
+const ITEM_SCENE = preload("res://types/world/item/item.tscn")
 
-@export var texture: Texture2D = load("res://assets/asset-not-found.png")
-@export var max_stack: int = 100
-@export var cost: int = 1
+var item_scene: PackedScene:
+    get = _get_item_scene
 
-@export var useable: bool = false
-@export var use_scene: PackedScene
-@export var allow_use_out_of_access_range: bool = false
+var texture: Texture2D:
+    get = get_texture
+var max_stack: int:
+    get = get_max_stack
+var cost: int:
+    get = get_cost
+
+var useable: bool:
+    get: return use_scene != null
+var use_scene: PackedScene:
+    get = _get_use_scene
 
 func create_item() -> Item:
     var inst = item_scene.instantiate()
@@ -21,3 +28,27 @@ func get_tr_name() -> String:
 
 func _get_content_type() -> String:
     return "item"
+
+func _get_item_scene() -> PackedScene:
+    return ITEM_SCENE
+
+func _get_use_scene() -> PackedScene:
+    return null
+
+func _get_texture() -> Texture2D:
+    return null
+
+func _get_max_stack() -> int:
+    return 100
+
+func _get_cost() -> int:
+    return 1
+
+func get_texture() -> Texture2D:
+    return _get_texture()
+
+func get_max_stack() -> int:
+    return _get_max_stack()
+
+func get_cost() -> int:
+    return _get_cost()

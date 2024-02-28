@@ -12,7 +12,7 @@ const WHOLE_TILE_POLYGON_POINTS = [
 var tile_source_id: int;
 
 @export var tile_coords: Vector2i;
-@export var tile_alter_ids: Array[int] = [];
+var tile_alter_ids: Array[int] = [];
 
 static var source_id_to_coords_to_content = {}
 

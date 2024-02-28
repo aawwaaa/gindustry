@@ -101,10 +101,10 @@
     [ ] LiquidConsumer
     [ ] PowerConsumer
 [X] SettingsGroup defaults
-[ ] TypedItem
+[X] TypedItem
     Content._get_index
     Content._set_index
-[ ] PackedItemStack
+[X] PackedItemStack
     get_item() -> Item
 [X] Types
     [X] Type
@@ -114,7 +114,7 @@
     get_all_types(type_name: String)
     get_type(type_name: String, name: String)
 [X] BuildingCategory -> Type
-[ ] 展开所有content(使用独立的.tres描述)(Floor, ItemType, etc.)
+[X] 展开所有content(使用独立的.tres描述)(Floor, ItemType, etc.)
 [ ] BuildingAttributeType extends Type
 [ ] BuildingAttribute
     get_type() -> BuildingAttributeType

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Gindustry_Overlay" load_steps=3 format=3 uid="uid://barqh4by07g4u"]
+
+[ext_resource type="Script" path="res://mods/gindustry/types/overlays/overlay.gd" id="1_642r1"]
+[ext_resource type="Texture2D" uid="uid://c4xvsgkd5uk5e" path="res://mods/gindustry/assets/overlays.png" id="2_gig6i"]
+
+[resource]
+script = ExtResource("1_642r1")
+tilemap_texture = ExtResource("2_gig6i")
+collision_type = "none"
+tile_coords = Vector2i(2, 0)
+id = "ore_titanium"
+options = {}

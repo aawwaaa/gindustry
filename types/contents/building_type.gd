@@ -5,7 +5,7 @@ extends EntityType
 @export var shadow: PackedScene
 
 @export var category: BuildingCategory
-@export var requirements: Array[TypedItemStack] = []
+@export var requirements: Array[PackedItemStack] = []
 
 var requirements_cache: Array[Item] = []
 

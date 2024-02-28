@@ -25,17 +25,13 @@ func _mod_init() -> void:
 func _load_contents() -> void:
     var content_list = load(root+"/scripts/content_list.gd").new()
     # items
-    logger.info(tr("Loader_ModLoad_Items"))
-    var items_image = (await Utils.load_contents_async(root+"/assets", ["/items.png"]))[0];
-    await load_texture_atlas(items_image, Vector2i(32, 32), content_list.items, root+"/types/items/", "items_", items)
+    await load_items(content_list.items)
 
     # floors
     logger.info(tr("Loader_ModLoad_Blocks"))
-    var floors_image = (await Utils.load_contents_async(root+"/assets", ["/floors.png"]))[0];
-    await load_floors(floors_image, content_list.floors, root+"/types/floors/", "floor_", floors)
+    await load_floors(content_list.floors, root+"/types/floors/", floors)
     # overlays
-    var overlays_image = (await Utils.load_contents_async(root+"/assets", ["/overlays.png"]))[0];
-    await load_floors(overlays_image, content_list.overlays, root+"/types/overlays/", "overlay_", overlays)
+    await load_floors(content_list.overlays, root+"/types/overlays/", overlays)
     # buildings
     await load_buildings(content_list.buildings)
 
@@ -67,54 +63,35 @@ func load_types(scripts_dir: String) -> Dictionary:
         types[inst._get_type_id()] = script;
     return types
 
-func load_texture_atlas(image: Texture2D, size: Vector2i, list: Dictionary, scripts_dir: String, prefix: String, target: Dictionary) -> void:
-    var types = await load_types(scripts_dir)
-    var width = image.get_width();
-    var height = image.get_height();
-    var keys = list.keys()
-    @warning_ignore("integer_division")
-    for y in range(height / size.y):
-        @warning_ignore("integer_division")
-        for x in range(width / size.x):
-            var current = keys.pop_front();
-            var args: Array = list[current]
-            if args[0] == "skip":
-                continue
-            var atlas = AtlasTexture.new()
-            atlas.atlas = image
-            atlas.region = Rect2i(Vector2i(x, y) * size, size);
-            var content = types[args[0]].new();
-            content._init_by_mod(prefix + current, atlas, args);
-            Contents.register_content(content);
-            target[current] = content;
-
-func load_floors(image: Texture2D, list: Dictionary, scripts_dir: String, prefix: String, target: Dictionary) -> void:
-    var floor_types = await load_types(scripts_dir)
-    var source = TileSetAtlasSource.new();
-    source.texture = image;
-    source.texture_region_size = Vector2i(Global.TILE_SIZE, Global.TILE_SIZE);
-    var width = image.get_width();
-    var height = image.get_height();
-    var keys = list.keys()
+func load_floors(list: Array[String], prefix: String, target: Dictionary) -> void:
+    var contents = await Utils.load_contents_async(prefix, list);
+    var sorted_by_tilemap_texture: Dictionary = {}
+    for content in contents:
+        var texture = content.tilemap_texture
+        if not sorted_by_tilemap_texture.has(texture):
+            sorted_by_tilemap_texture[texture] = []
+        sorted_by_tilemap_texture[texture].append(content)
     var tile_set = load("res://types/contents/floors.tres");
-    var source_id = tile_set.add_source(source);
-    @warning_ignore("integer_division")
-    for y in range(height / source.texture_region_size.y):
-        @warning_ignore("integer_division")
-        for x in range(width / source.texture_region_size.x):
-            var current = keys.pop_front();
-            var args: Array = list[current]
-            if args[0] == "skip":
-                continue
-            var pos = Vector2i(x, y);
-            source.create_tile(pos);
+    for texture in sorted_by_tilemap_texture:
+        var source = TileSetAtlasSource.new();
+        source.texture = texture;
+        source.texture_region_size = Vector2i(Global.TILE_SIZE, Global.TILE_SIZE);
+        var source_id = tile_set.add_source(source);
+        for content in sorted_by_tilemap_texture[texture]:
+            source.create_tile(content.tile_coords)
             for id in range(1, Global.MAX_LAYERS):
-                source.create_alternative_tile(pos, id);
-            var content = floor_types[args[0]].new();
-            content._init_by_mod(prefix + current, source, pos, args);
-            content.tile_source_id = source_id;
+                source.create_alternative_tile(content.tile_coords, id);
+            content.tile_source_id = source_id
+            content._init_by_mod(source)
             Contents.register_content(content);
-            target[current] = content;
+            target[content.id] = content;
+
+func load_items(list: Array[String]) -> void:
+    logger.info(tr("Loader_ModLoad_Items"))
+    var items_contents = await Utils.load_contents_async(root+"/contents/items", list);
+    for item in items_contents:
+        items[item.id] = item;
+        Contents.register_content(item)
 
 func load_entities(list: Array[String]) -> void:
     logger.info(tr("Loader_ModLoad_Entities"))
