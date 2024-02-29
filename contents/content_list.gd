@@ -1,8 +1,6 @@
 class_name Builtin
 extends Node
 
-static var building_category: Dictionary = {}
-
 static var entity: Dictionary = {}
 
 func start_load() -> void:
@@ -12,11 +10,14 @@ func start_load() -> void:
         "tr_name": "InputHandler_desktop",
     }))
 
-    await load_type("resource_type_types", [
-        "building_category.tres"
+    await load_type("resource_types/", [
+        "building_category.tres",
+        "building_attribute.tres"
     ])
-
-    await load_content(building_category, "building_categories/", [
+    await load_type("building_attributes/", [
+        "assembler.tres"
+    ])
+    await load_type("building_categories/", [
         "battle.tres",
         "capture.tres",
         "transportation.tres",
@@ -28,6 +29,7 @@ func start_load() -> void:
         "research.tres",
         "misc.tres",
     ])
+
     await load_content(entity, "entities/", [
         "building_shadow_container/entity.tres",
     ])

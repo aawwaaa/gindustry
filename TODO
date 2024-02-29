@@ -82,17 +82,19 @@
 [X] BuildingShadowContainer存档/读档 bug 修复
 
 [ ] ConsumeAPI(获取需要的物品/液体/自定义类型的类型和数量)
-    [ ] ConsumerType
-    [ ] Consumer
+    [X] ConsumerType
+    [X] Consumer
         _get_type() -> ConsumerType
         _should_begin(building: Building) -> bool
         _process_begin(building: Building) -> void
         _get_effectity(building: Building, delta: float) -> float
-        _process(building: Building, delta: float, effectity: float) -> void
+        _process_update(building: Building, delta: float, effectity: float) -> void
         _process_break(building: Building) -> void
         _process_finish(building: Building) -> void
         _display_ui(building: Building, node: Node) -> void
-        _check_recipe(building: Building, block: Block) -> void
+        _check_recipe(building: Building) -> void
+    [ ] ConsumerStateMachine
+        consumers: Array[Consumer]
     [ ] Building._get_consumers()
 [ ] Recipe
     get_consumers()
@@ -125,9 +127,44 @@
     Building.get_attribute(type: BuildingAttributeType) -> BuildingType.get_attribute
 
 [X] BuildingType rotatable
-[ ] 建筑 部件系统(ComponentAdapter: Vector2i -> Component)
-    has_component(pos, rotation, type)
-    get_component(pos, rotation, type)
+[ ] 液体系统
+[ ] 建筑 adapters:
+    BuildingType: has_building_adapters
+    get_adapter_at(position: Vector2, facing: int, type: String) -> EntityAdapter
+[ ] 建筑 部件系统(ComponentsAdapter)
+    load_nodes(nodes: Node);
+    [ ] Component
+        prop building -> Building
+        prop main_node -> Node2D
+        sides: bitfield
+        pos: Vector2
+        rot: int
+        _process_update
+        _handle_get_data(name: String) -> Variant
+        _handle_transfer(name: String, args: Array) -> Variant
+        _check_transfer(name: String, args: Array) -> bool
+        _accept_transfer(name: String) -> bool
+    [ ] ItemSource/LiquidSource/etc...
+        _request_item(filters: Array[ItemFilter]) -> Item
+        _handle_overflow(item: Item) -> void
+        [ ] ItemSource_ItemAdapter, ItemSource_Inventory, ItemSource_Function
+        [ ] LiquidSource_LiquidAdapter, LiquidSource_Function
+    [ ] ItemTarget/LiquidTarget/etc...
+        _handle_item(item: Item) -> Item
+        _handle_overflow(item: Item) -> void
+        [ ] ItemTarget_ItemAdapter, etc.
+        [ ] Liquid etc.
+    [ ] ItemFilter/LiquidFilter/etc...
+        _filte(item: Item) -> bool
+    [ ] ConveyorPort
+        source: ItemSource
+        target: ItemTarget
+        mode: input/output/input_output
+        filters: Array[ItemFilter]
+    [ ] LiquidPort
+        source: LiquidSource
+        etc.
+
 
 [ ] alt显示
 [ ] TileOre[WithData]
