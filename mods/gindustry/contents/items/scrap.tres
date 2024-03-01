@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="GeneralItemType" load_steps=4 format=3 uid="uid://cvs0p8koow7u"]
 
-[ext_resource type="Script" path="res://types/contents/general_item_type.gd" id="1_6fvxn"]
+[ext_resource type="Script" path="res://types/item/general_item_type.gd" id="1_6fvxn"]
 [ext_resource type="Texture2D" uid="uid://dpwr765fhcbd7" path="res://mods/gindustry/assets/items.png" id="2_heklb"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jcd4q"]

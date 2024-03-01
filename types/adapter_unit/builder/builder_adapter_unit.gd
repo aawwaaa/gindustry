@@ -82,6 +82,7 @@ func process_break() -> void:
         if not result: return
         tile.building.shadow._handle_break(self)
         return
+    if not tile.building_shadow: return
     var result = tile.building_shadow.remove_item(overflowed_costs)
     for item in result["removed_items"]:
         item = adapter.item_source._add_item(item)

@@ -42,15 +42,19 @@ func _unload_ui(node: Control) -> void:
 func _ready() -> void:
     Game.current_player_changed.connect(_on_player_changed)
 
+func _accept_input(name: StringName, func_name: StringName, args: Array = []) -> bool:
+    return true
+
 func call_input_processor(name: StringName, func_name: StringName, args: Array = []) -> void:
     if not input_processors.has(name): return
+    if not _accept_input(name, func_name, args): return
     var processor = input_processors[name]
     if not processor or not processor.has_method(func_name): return
     processor[func_name].callv(args)
 
 func _on_player_changed(player: Player, from: Player) -> void:
     Utils.signal_dynamic_connect(controller, from.get_controller() if from else null,
-        "target_changed", _on_controller_target_changed)
+            "target_changed", _on_controller_target_changed)
     _on_controller_target_changed(target, from.get_controller().target if from else null)
 
 func _on_controller_target_changed(target: ControllerAdapter, from: ControllerAdapter) -> void:

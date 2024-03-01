@@ -47,6 +47,10 @@ func _load_ui(node: Control) -> void:
 func _unload_ui(node: Control) -> void:
     build.unload_ui(node)
 
+func _accept_input(name: StringName, func_name: StringName, args: Array = []) -> bool:
+    if name == "build" and item_use.activate: return false
+    return true
+
 func handle_input_event_mouse(event: InputEventMouse) -> void:
     var pos = event.position
     var trans = Game.camera_node.get_viewport_transform()

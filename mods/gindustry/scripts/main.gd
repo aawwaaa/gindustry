@@ -29,9 +29,9 @@ func _load_contents() -> void:
 
     # floors
     logger.info(tr("Loader_ModLoad_Blocks"))
-    await load_floors(content_list.floors, root+"/types/floors/", floors)
+    await load_floors(content_list.floors, root+"/contents/floors", floors)
     # overlays
-    await load_floors(content_list.overlays, root+"/types/overlays/", overlays)
+    await load_floors(content_list.overlays, root+"/contents/overlays", overlays)
     # buildings
     await load_buildings(content_list.buildings)
 
@@ -82,7 +82,8 @@ func load_floors(list: Array[String], prefix: String, target: Dictionary) -> voi
             for id in range(1, Global.MAX_LAYERS):
                 source.create_alternative_tile(content.tile_coords, id);
             content.tile_source_id = source_id
-            content._init_by_mod(source)
+            if content is Gindustry_Floor or content is Gindustry_Overlay:
+                content._init_source(source)
             Contents.register_content(content);
             target[content.id] = content;
 

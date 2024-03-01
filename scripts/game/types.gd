@@ -6,6 +6,9 @@ var types: Dictionary = {}
 func register_type(type: ResourceType) -> void:
     if type is ResourceTypeType:
         resource_type_types[type.name] = type
+        if not types.has(type):
+            types[type] = {}
+        return
     if not types.has(type.get_type()):
         types[type.get_type()] = {}
     types[type.get_type()][type.name] = type

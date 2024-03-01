@@ -48,7 +48,7 @@ func progress_changed(_1, part: int, all: int) -> void:
     if part == all:
         %Loading.visible = false;
         %MainMenu.visible = true;
-        Global.states.set_state(Global.States.MAIN_MENU);
+        Global.state.set_state(Global.States.MAIN_MENU);
         Headless.apply_args_from_cmdline()
 
 func init_configs() -> void:

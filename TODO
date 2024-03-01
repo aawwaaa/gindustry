@@ -96,7 +96,7 @@
     [X] ConsumerStateMachine
         consumers: Array[Consumer]
     [X] Building._get_consumers()
-[ ] Recipe
+[X] Recipe
     get_consumers()
     check_building(building: Building)
     [ ] ItemsConsumer

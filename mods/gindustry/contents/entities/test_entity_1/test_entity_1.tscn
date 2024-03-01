@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://mods/gindustry/contents/entities/test_entity_1/test_entity_1.gd" id="1_1fkk2"]
 [ext_resource type="Texture2D" uid="uid://bpamijghl1a1b" path="res://mods/gindustry/assets/simple_entities.png" id="2_jcxak"]
-[ext_resource type="Script" path="res://types/world/entity/entity.gd" id="3_k606n"]
+[ext_resource type="Script" path="res://types/entity/entity.gd" id="3_k606n"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j4j55"]
 atlas = ExtResource("2_jcxak")

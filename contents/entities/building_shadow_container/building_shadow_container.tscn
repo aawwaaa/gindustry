@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://8xf5hsaj7jk1"]
 
-[ext_resource type="Script" path="res://types/world/entity/entity.gd" id="1_70ccx"]
+[ext_resource type="Script" path="res://types/entity/entity.gd" id="1_70ccx"]
 [ext_resource type="Script" path="res://contents/entities/building_shadow_container/building_shadow_container.gd" id="1_s2tmb"]
 
 [node name="BuildingShadowContainer" type="Node2D" node_paths=PackedStringArray("entity")]
