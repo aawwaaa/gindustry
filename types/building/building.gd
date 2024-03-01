@@ -66,6 +66,18 @@ func _get_attribute(type: BuildingAttributeType) -> BuildingAttribute:
 func get_attribute(type: BuildingAttributeType) -> BuildingAttribute:
     return _get_attribute(type)
 
+func _get_consumers() -> Array[Consumer]:
+    return [] as Array[Consumer]
+
+func get_consumers() -> Array[Consumer]:
+    return _get_consumers()
+
+func _get_providers() -> Array[Provider]:
+    return [] as Array[Provider]
+
+func get_providers() -> Array[Provider]:
+    return _get_providers()
+
 func _load_data(stream: Stream) -> void:
     Utils.load_data_with_version(stream, [func():
         building_type = Contents.get_content_by_index(stream.get_64()) as BuildingType

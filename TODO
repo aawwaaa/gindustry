@@ -95,10 +95,10 @@
         _check_recipe(building: Building) -> void
     [X] ConsumerStateMachine
         consumers: Array[Consumer]
-    [ ] Building._get_consumers()
+    [X] Building._get_consumers()
 [ ] Recipe
     get_consumers()
-    check_attributes(building: Building)
+    check_building(building: Building)
     [ ] ItemsConsumer
     [ ] LiquidConsumer
     [ ] PowerConsumer

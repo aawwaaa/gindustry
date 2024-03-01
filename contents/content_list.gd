@@ -12,7 +12,9 @@ func start_load() -> void:
 
     await load_type("resource_types/", [
         "building_category.tres",
-        "building_attribute.tres"
+        "building_attribute.tres",
+        "consumer_type.tres",
+        "provider_type.tres",
     ])
     await load_type("building_attributes/", [
         "assembler.tres"

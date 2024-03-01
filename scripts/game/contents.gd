@@ -1,5 +1,7 @@
 extends Node
 
+signal content_registed(content: Content)
+
 var contents: Array[Content] = []
 var contents_indexed = {}
 var contents_type_indexed = {}
@@ -24,6 +26,7 @@ func register_content(content: Content) -> void:
         for callback in contents_wait[content.full_id]:
             callback.call(content);
         contents_wait.erase(content.full_id)
+    content_registed.emit(content)
 
 func wait_for_content(full_id: String, callback: Callable) -> void:
     if not contents_wait.has(full_id):

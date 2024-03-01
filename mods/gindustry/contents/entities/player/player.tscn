@@ -8,7 +8,6 @@
 [ext_resource type="Script" path="res://types/item/inventory.gd" id="5_tdurn"]
 [ext_resource type="Script" path="res://types/adapter_unit/builder/builder_adapter_unit_type.gd" id="6_2y0pv"]
 
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_jktfm"]
 radius = 384.0
 

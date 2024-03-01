@@ -55,3 +55,9 @@ func _check_recipe(building: Building) -> bool:
 func check_recipe(building: Building) -> bool:
     return _check_recipe(building)
 
+func _pre_check_recipe(building_type: BuildingType) -> bool:
+    return true
+
+func pre_check_recipe(building_type: BuildingType) -> bool:
+    return _pre_check_recipe(building_type)
+
