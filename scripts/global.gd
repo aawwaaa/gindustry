@@ -10,8 +10,16 @@ const TILE_SIZE_VECTOR = Vector2i(TILE_SIZE, TILE_SIZE);
 const MAX_LAYERS = 8;
 const MAX_LAYERS_MASK = (1 << MAX_LAYERS) - 1
 
+enum States{
+    LOADING,
+    MAIN_MENU,
+    PRESET_CONFIG,
+    GAME,
+}
+
 var main: MainNode
 var game_ui_input_handler: Control
+var state: StateMachine
 
 var configs: ConfigsGroup;
 var logger: Log.Logger;
@@ -24,6 +32,8 @@ var config_value_changed = false
 func _ready() -> void:
     logger = Log.register_log_source(tr("Global_LogSource"));
     configs = ConfigsGroup.new();
+    state = StateMachine.new()
+    state.set_state(States.LOADING)
 
 func set_input_handler(name: String = "") -> void:
     if name != "":
@@ -82,3 +92,4 @@ func save_configs() -> void:
     var stream = FileStream.new(access);
     configs.save_configs(stream);
     access.close();
+

@@ -25,9 +25,10 @@ func load_preset(preset: Preset) -> void:
     logger.info(tr("Presets_LoadPreset {name}") \
         .format({name = tr(preset.get_tr_name())}))
     Global.main.hide_all();
+    Global.state.set_state(Global.States.PRESET_CONFIG)
     var result = await preset._pre_config_preset();
     if not result:
-        Global.main.back_to_menu()
+
         return
     Game.init_game()
     Game.save_preset = preset

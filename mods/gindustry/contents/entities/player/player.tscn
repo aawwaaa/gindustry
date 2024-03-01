@@ -2,11 +2,11 @@
 
 [ext_resource type="Script" path="res://mods/gindustry/contents/entities/player/player.gd" id="1_0kf5p"]
 [ext_resource type="Texture2D" uid="uid://bpamijghl1a1b" path="res://mods/gindustry/assets/simple_entities.png" id="1_2daoq"]
-[ext_resource type="Script" path="res://types/world/entity/entity.gd" id="3_byptf"]
-[ext_resource type="Script" path="res://types/world/entity/controller_adapter.gd" id="4_ltlka"]
+[ext_resource type="Script" path="res://types/entity/entity.gd" id="3_byptf"]
+[ext_resource type="Script" path="res://types/entity/controller_adapter.gd" id="4_ltlka"]
 [ext_resource type="Script" path="res://types/building/builder_adapter.gd" id="5_6aijs"]
-[ext_resource type="Script" path="res://types/world/item/inventory.gd" id="5_tdurn"]
-[ext_resource type="Script" path="res://types/world/adapter_unit/builder/builder_adapter_unit_type.gd" id="6_2y0pv"]
+[ext_resource type="Script" path="res://types/item/inventory.gd" id="5_tdurn"]
+[ext_resource type="Script" path="res://types/adapter_unit/builder/builder_adapter_unit_type.gd" id="6_2y0pv"]
 
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jktfm"]
