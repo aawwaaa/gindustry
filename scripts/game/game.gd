@@ -84,8 +84,10 @@ func game_loaded() -> void:
     signal_game_loaded.emit();
     Global.main.show_game_ui();
     in_game = true;
+    Global.state.set_state(Global.States.GAME)
 
 func back_to_menu() -> void:
+    Global.state.set_state(Global.States.MAIN_MENU)
     Multiplayer.disconnect_multiplayer()
     signal_back_to_menu.emit();
     reset_game()

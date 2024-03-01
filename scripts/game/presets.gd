@@ -28,7 +28,7 @@ func load_preset(preset: Preset) -> void:
     Global.state.set_state(Global.States.PRESET_CONFIG)
     var result = await preset._pre_config_preset();
     if not result:
-
+        Global.state.set_state(Global.States.MAIN_MENU)
         return
     Game.init_game()
     Game.save_preset = preset

@@ -93,7 +93,7 @@
         _process_finish(building: Building) -> void
         _display_ui(building: Building, node: Node) -> void
         _check_recipe(building: Building) -> void
-    [ ] ConsumerStateMachine
+    [X] ConsumerStateMachine
         consumers: Array[Consumer]
     [ ] Building._get_consumers()
 [ ] Recipe
