@@ -5,6 +5,7 @@ signal placed()
 signal destroyed()
 
 @export var shadow_container: Node2D
+@export var has_building_adapters: bool = false
 
 var building_type: BuildingType:
     get: return entity_type if entity_type is BuildingType else null
@@ -54,11 +55,20 @@ func _handle_break(unit: BuilderAdapterUnit) -> bool:
     if not accept_access(unit.adapter.entity_node.main_node): return false
     return true
 
+func handle_break(unit: BuilderAdapterUnit) -> bool:
+    return _handle_break(unit)
+
 func _handle_destroy() -> void:
     pass
 
+func handle_destroy() -> void:
+    _handle_destroy()
+
 func _can_be_replaced_by(building_type: BuildingType) -> bool:
     return self.building_type._can_be_replaced_by(self, building_type)
+
+func can_be_replaced_by(building_type: BuildingType) -> bool:
+    return _can_be_replaced_by(building_type)
 
 func _get_attribute(type: BuildingAttributeType) -> BuildingAttribute:
     return building_type.get_attribute(type)
@@ -77,6 +87,16 @@ func _get_providers() -> Array[Provider]:
 
 func get_providers() -> Array[Provider]:
     return _get_providers()
+
+func _get_adapter_at(pos: Vector2i, rot: int, type: String) -> EntityAdapter:
+    return null
+
+func get_adapter_at(pos: Vector2i, rot: int, type: String) -> EntityAdapter:
+    if not has_building_adapters: return null
+    var delta = pos - shadow.pos
+    var shadow_rotation = Tile.to_entity_rot(shadow.rot)
+    var rotated = delta.rotated(-shadow_rotation)
+    return _get_adapter_at(rotated, shadow_rotation, type)
 
 func _load_data(stream: Stream) -> void:
     Utils.load_data_with_version(stream, [func():

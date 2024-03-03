@@ -16,3 +16,12 @@ func _load_data(stream: Stream) -> void:
 
 func _save_data(stream: Stream) -> void:
     pass
+
+func init_unit() -> void:
+    _init_unit()
+
+func load_data(stream: Stream) -> void:
+    _load_data(stream)
+
+func save_data(stream: Stream) -> void:
+    _save_data(stream)

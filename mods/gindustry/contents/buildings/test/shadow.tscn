@@ -29,7 +29,6 @@ polygon = PackedVector2Array(-12, -44, 12, -44, 12, -12, 44, -12, 44, 44, 20, 44
 sync_to_physics = false
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="AnimatableBody2D" index="0"]
-visible = false
 polygon = PackedVector2Array(-16, -48, 16, -48, 16, -16, 48, -16, 48, 48, 16, 48, 16, 16, -48, 16, -48, -16, -16, -16)
 
 [node name="ShapeCast2D" parent="." index="3"]

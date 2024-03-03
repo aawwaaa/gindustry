@@ -13,7 +13,7 @@ func _enter_tree() -> void:
     for marker in builder_unit_positions:
         if marker.get_child_count() != 0: continue
         var unit = builder_type.create_adapter_unit(self)
-        unit._init_unit()
+        unit.init_unit()
         units.append(unit)
         marker.add_child(unit)
 
@@ -98,7 +98,7 @@ func place_build_shadow(plan: BuildPlan, tile: Tile) -> bool:
     shadow.disable_collision = true
     plan.world.add_temp_node(shadow)
     shadow.build_progress = 0
-    var result = shadow._check_build()
+    var result = shadow.check_build()
     shadow.queue_free()
     if not result: return false
     tile.set_building_shadow(plan.building_type, plan.rotation, plan.building_config)
@@ -116,12 +116,12 @@ func _load_data(stream: Stream) -> void:
                 units.append(unit)
                 mark.add_child(unit)
             var unit = units[index]
-            unit._load_data(stream),
+            unit.load_data(stream),
     ])
 
 func _save_data(stream: Stream) -> void:
     Utils.save_data_with_version(stream, [func():
         stream.store_16(units.size())
         for unit in units:
-            unit._save_data(stream),
+            unit.save_data(stream),
     ])

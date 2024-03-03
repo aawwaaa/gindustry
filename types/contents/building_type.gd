@@ -51,8 +51,20 @@ func _load_config(stream: Stream) -> Variant:
 func _save_config(config: Variant, stream: Stream) -> void:
     pass
 
+func get_default_config() -> Variant:
+    return _get_default_config()
+
+func load_config(stream: Stream) -> Variant:
+    return _load_config(stream)
+
+func save_config(config: Variant, stream: Stream) -> void:
+    return _save_config(config, stream)
+
 func _can_be_replaced_by(building: Building, building_type: BuildingType) -> bool:
     return false
+
+func can_be_replaced_by(building: Building, building_type: BuildingType) -> bool:
+    return _can_be_replaced_by(building, building_type)
 
 func _get_attribute(type: BuildingAttributeType) -> BuildingAttribute:
     return attributes_dict[type] if attributes_dict.has(type) else null

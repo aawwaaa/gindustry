@@ -24,14 +24,14 @@ func calcuate_missing_items() -> void:
     for item in building_type.get_requirements():
         var amount = 0
         for fitem in filled_items:
-            if item._is_same_item(fitem):
+            if item.is_same_item(fitem):
                 amount = fitem.amount
                 break
         amount = item.amount - amount
         var found = false
         var removes: Array[Item] = []
         for mitem in missing_items:
-            if item._is_same_item(mitem):
+            if item.is_same_item(mitem):
                 mitem.amount = amount
                 found = true
                 if amount == 0: removes.append(mitem)
@@ -40,33 +40,33 @@ func calcuate_missing_items() -> void:
             missing_items.erase(remove)
             remove.queue_free()
         if found or amount == 0: continue
-        var missing_item = item._copy_type()
+        var missing_item = item.copy_type()
         missing_item.amount = amount
         missing_items.append(missing_item)
 
 func calcuate_building_progress() -> void:
     var total_cost = 0
     for item in building_type.get_requirements():
-        total_cost += item._get_cost()
+        total_cost += item.get_cost()
     var current_cost = 0
     for fitem in filled_items:
-        current_cost += fitem._get_cost()
+        current_cost += fitem.get_cost()
     shadow.build_progress = current_cost / total_cost
 
 func fill_item(item: Item) -> Item:
     var missing_amount = 0
     for mitem in missing_items:
-        if mitem._is_same_item(item):
+        if mitem.is_same_item(item):
             missing_amount = mitem.amount
             break
     var found = false
     for fitem in filled_items:
-        if fitem._is_same_item(item):
-            item._split_to(missing_amount, fitem, true)
+        if fitem.is_same_item(item):
+            item.split_to(missing_amount, fitem, true)
             found = true
             break
     if not found:
-        filled_items.append(item._split_to(missing_amount, null, true))
+        filled_items.append(item.split_to(missing_amount, null, true))
     calcuate_missing_items()
     calcuate_building_progress()
     if shadow.build_progress == 1:
@@ -79,13 +79,13 @@ func remove_item(total_cost: float) -> Dictionary:
     var removed_items: Array[Item] = []
     var emptys: Array[Item] = []
     for item in filled_items:
-        var removeable_cost = min(item._get_cost(), total_cost)
-        var amount = item._get_amount(removeable_cost)
+        var removeable_cost = min(item.get_cost(), total_cost)
+        var amount = item.get_amount_by_cost(removeable_cost)
         if amount <= 0: continue
-        var splited = item._split_to(amount, null, true)
-        total_cost -= splited._get_cost()
+        var splited = item.split_to(amount, null, true)
+        total_cost -= splited.get_cost()
         removed_items.append(splited)
-        if item._is_empty(): emptys.append(item)
+        if item.is_empty(): emptys.append(item)
         if total_cost <= 0: break
     for item in emptys: filled_items.erase(item)
     if not removed_items.is_empty():
@@ -144,7 +144,7 @@ func _on_entity_on_load_data(stream: Stream) -> void:
     # version 0
     if version < 0: return;
     building_type = Contents.get_content_by_index(stream.get_64()) as BuildingType
-    building_config = building_type._load_config(stream)
+    building_config = building_type.load_config(stream)
     filled_items = []
     for _1 in range(stream.get_16()):
         var item = Item.load_from(stream)
@@ -154,7 +154,7 @@ func _on_entity_on_save_data(stream: Stream) -> void:
     stream.store_16(current_data_version);
     # version 0
     stream.store_64(building_type.index)
-    building_type._save_config(building_config, stream)
+    building_type.save_config(building_config, stream)
     stream.store_16(filled_items.size())
     for item in filled_items:
         item.save_to(stream)

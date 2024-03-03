@@ -81,7 +81,7 @@
 
 [X] BuildingShadowContainer存档/读档 bug 修复
 
-[ ] ConsumeAPI(获取需要的物品/液体/自定义类型的类型和数量)
+[X] ConsumeAPI(获取需要的物品/液体/自定义类型的类型和数量)
     [X] ConsumerType
     [X] Consumer
         _get_type() -> ConsumerType
@@ -128,9 +128,12 @@
 
 [X] BuildingType rotatable
 [ ] 液体系统
-[ ] 建筑 adapters:
+[X] 建筑 adapters:
     BuildingType: has_building_adapters
     get_adapter_at(position: Vector2, facing: int, type: String) -> EntityAdapter
+[ ] ItemAdapter等可以与其他Adapter交互
+    item_targets
+    item_sources
 [ ] 建筑 部件系统(ComponentsAdapter)
     load_nodes(nodes: Node);
     [ ] Component

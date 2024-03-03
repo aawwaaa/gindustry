@@ -58,18 +58,18 @@ func process_build() -> void:
     split_amounts.fill(0)
     var item_index = 0
     for missing in missings:
-        var used_costs = minf(missing._get_cost(), overflowed_costs)
-        var amount = mini(missing.amount, missing._get_amount(used_costs))
+        var used_costs = minf(missing.get_cost(), overflowed_costs)
+        var amount = mini(missing.amount, missing.get_amount_by_cost(used_costs))
         split_amounts[item_index] = amount
         item_index += 1
     for index in split_amounts.size():
         if split_amounts[index] <= 0: continue
-        var removed = adapter.item_source._remove_item(missings[index], split_amounts[index])
-        var removed_costs = removed._get_cost()
+        var removed = adapter.item_source.remove_item(missings[index], split_amounts[index])
+        var removed_costs = removed.get_cost()
         var left = tile.building_shadow.fill_item(removed)
-        var left_costs = left._get_cost()
-        if not left._is_empty(): left = adapter.item_source._add_item(left)
-        if not left._is_empty(): adapter.item_source._handle_overflow_item(left)
+        var left_costs = left.get_cost()
+        if not left.is_empty(): left = adapter.item_source.add_item(left)
+        if not left.is_empty(): adapter.item_source.handle_overflow_item(left)
         overflowed_costs -= removed_costs - left_costs
         if overflowed_costs <= 0: break
     if tile.building_shadow == null: current_build_plan.build_finished = true
@@ -78,15 +78,15 @@ func process_build() -> void:
 func process_break() -> void: 
     var tile = current_build_plan.world.get_tile_or_null(current_build_plan.position)
     if tile.building:
-        var result = tile.building._handle_break(self)
+        var result = tile.building.handle_break(self)
         if not result: return
-        tile.building.shadow._handle_break(self)
+        tile.building.shadow.handle_break(self)
         return
     if not tile.building_shadow: return
     var result = tile.building_shadow.remove_item(overflowed_costs)
     for item in result["removed_items"]:
-        item = adapter.item_source._add_item(item)
-        if not item._is_empty(): adapter.item_source._handle_overflow_item(item)
+        item = adapter.item_source.add_item(item)
+        if not item.is_empty(): adapter.item_source.handle_overflow_item(item)
     overflowed_costs = result["costs"]
     if tile.building_ref == 0: current_build_plan.build_finished = true
     elif tile.building_shadow:

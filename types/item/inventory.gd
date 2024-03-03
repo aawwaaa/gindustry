@@ -26,7 +26,7 @@ func handle_operation(operate: String, args: Array) -> void:
             var item = get_slot(hand_slot)
             if not item or not await item._useable(entity_node, world, position):
                 return
-            var use = item._create_use(entity_node, world)
+            var use = item.create_use(entity_node, world)
             use.inventory = self
             use.slot = hand_slot
             use._set_position(position)
@@ -46,16 +46,27 @@ func _accept_item(item: Item) -> bool:
     return true
     
 func _accept_item_amount(item: Item) -> int:
-    return Item.INF_AMOUNT
+    var amount = 0;
+    for slot in slots.size():
+        if is_slot_has_item(slot):
+            amount += slots[slot].get_available_merge_amount(item)
+        else:
+            amount += item.get_max_stack_amount()
+
+    return amount
 
 func _offer_items() -> Array[Item]:
-    return slots.filter(func(item): return item != null and not item._is_empty())
+    var items: Array[Item] = []
+    for slot in slots.size():
+        if not is_slot_has_item(slot): continue
+        items.append(slot)
+    return items
 
 func is_slot_has_item(slot: int) -> bool:
     if slot >= slots.size(): return false
     if slots[slot] == null: return false
     if not is_instance_valid(slots[slot]): return false
-    return not slots[slot]._is_empty()
+    return not slots[slot].is_empty()
 
 func get_slot(slot: int) -> Item:
     if not is_slot_has_item(slot):
@@ -83,7 +94,7 @@ func swap_with_other_hand(slot: int, other: Inventory = self) -> void:
 func _add_item(item: Item) -> Item:
     var amount = 0
     for index in slots.size():
-        if item._is_empty():
+        if item.is_empty():
             break
         if hand_slot == index:
             continue
@@ -101,15 +112,15 @@ func _add_item(item: Item) -> Item:
     return item
 
 func _remove_item(template: Item, amount: int = template.amount) -> Item:
-    var item = template._copy_type();
+    var item = template.copy_type();
     for index in slots.size():
         var left = amount - item.amount
         if not is_slot_has_item(index):
             continue
         if item._is_same_item(slots[index]):
             slots[index]._split_to(left, item, true)
-            inventory_slot_changed.emit(index, slots[index]._is_empty())
-    if not item._is_empty():
+            inventory_slot_changed.emit(index, slots[index].is_empty())
+    if not item.is_empty():
         item_removed.emit(item, amount)
     return item
 

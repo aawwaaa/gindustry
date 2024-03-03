@@ -94,7 +94,7 @@ func update_building_shadow() -> void:
         "position": building_shadow_position,
         "rotation": ui.current_rotation
     })
-    var check_result = building_shadow._check_build()
+    var check_result = building_shadow.check_build()
     building_shadow._set_check_build_result(check_result)
 
 func update_build_plan() -> void:
@@ -152,7 +152,7 @@ func handle_place_drag(event: InputEventMouse, world_pos: Vector2) -> void:
         current_shadow.update_position({
             "position": tile_pos
         })
-        if current_shadow._check_build():
+        if current_shadow.check_build():
             building_drag_buffer.append(current_shadow)
             current_shadow = null
         current_pos += step
@@ -218,7 +218,7 @@ func confirm_build_drag() -> void:
     while buffer.size() > 0:
         var next = buffer.pop_front()
         next.world.add_temp_node(next)
-        if not next._check_build(true):
+        if not next.check_build(true):
             next.queue_free()
             continue
         building_buffer.append(next)
@@ -254,7 +254,7 @@ func confirm_build() -> void:
         if plan.world != entity.world: continue
         exists_build_plan[plan.position] = plan
     for shadow in building_buffer:
-        if not shadow._check_build(): continue
+        if not shadow.check_build(): continue
         var plan = BuildPlan.new()
         plan.building_type = shadow.building_type
         plan.position = shadow.pos

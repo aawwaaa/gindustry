@@ -39,6 +39,10 @@ window/stretch/aspect="expand"
 window/custom=""
 window/version="1.0.0"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gindustry_tools/plugin.cfg")
+
 [input]
 
 move_up={

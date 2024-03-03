@@ -55,6 +55,9 @@ func _check_build(check_pre_confirm: bool = false) -> bool:
                     and tile.pre_confirm_building_name != name: return false
     return true
 
+func check_build(check_pre_confirm: bool = false) -> bool:
+    return _check_build(check_pre_confirm)
+
 func _handle_break(unit: BuilderAdapterUnit) -> void:
     var shadow = world.get_tile_or_null(pos).set_building_shadow(building_type, rot, building_config)
     for item in shadow.filled_items:
@@ -62,6 +65,9 @@ func _handle_break(unit: BuilderAdapterUnit) -> void:
     shadow.shadow.build_progress = 1
     shadow.filled_items = shadow.missing_items
     shadow.missing_items = [] as Array[Item]
+
+func handle_break(unit: BuilderAdapterUnit) -> void:
+    return _handle_break(unit)
 
 func place(pre_confirm: bool = true, value: Variant = self.name) -> void:
     for tile_pos in tiles:

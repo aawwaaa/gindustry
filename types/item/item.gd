@@ -13,6 +13,9 @@ func _copy_type() -> Item:
     var new_item = item_type.create_item()
     return new_item
 
+func copy_type() -> Item:
+    return _copy_type()
+
 func _apply_type(typed: TypedItem) -> void:
     pass
 
@@ -34,33 +37,73 @@ func _is_same_item(another: Item) -> bool:
 func _is_empty() -> bool:
     return amount <= 0
 
+func is_same_item(another: Item) -> bool:
+    return _is_same_item(another)
+
+func is_empty() -> bool:
+    return _is_empty()
+
+func _get_max_stack_amount() -> int:
+    return item_type.max_stack
+
+func get_max_stack_amount() -> int:
+    return _get_max_stack_amount()
+
+func _get_available_merge_amount(type: Item) -> int:
+    return get_max_stack_amount() - amount
+
+func get_available_merge_amount(type: Item) -> int:
+    return _get_available_merge_amount(type)
+
+func _get_merge_amount(source: Item, override_max_stack: bool = false, merge_amount: int = source.amount) -> int:
+    merge_amount = min(merge_amount, source.amount)
+    var available = get_available_merge_amount(source)
+    var transfer = min(available, merge_amount) if not override_max_stack else merge_amount
+    return transfer 
+
+func get_merge_amount(source: Item, override_max_stack: bool = false, merge_amount: int = source.amount) -> int:
+    if not is_same_item(source):
+        return 0
+    return _get_merge_amount(source, override_max_stack, merge_amount)
+
 func _split_to(merge_amount: int, target: Item = null, override_max_stack: bool = false) -> Item:
-    if target == null or not is_instance_valid(target): target = _copy_type()
-    target._merge_from(self, override_max_stack, merge_amount)
+    target.merge_from(self, override_max_stack, merge_amount)
     return target
 
+func split_to(merge_amount: int, target: Item = null, override_max_stack: bool = false) -> Item:
+    if target == null or not is_instance_valid(target): target = copy_type()
+    return _split_to(merge_amount, target, override_max_stack)
+
 func _merge_from(source: Item, override_max_stack: bool = false, merge_amount: int = source.amount) -> Item:
-    if not _is_same_item(source):
-        return source
-    merge_amount = min(merge_amount, source.amount)
-    var available = item_type.max_stack - amount
-    var transfer = min(available, merge_amount) if not override_max_stack else merge_amount
+    var transfer = get_merge_amount(source, override_max_stack, merge_amount)
     amount += transfer
     source.amount -= transfer
-    if source._is_empty():
+    return source
+
+func merge_from(source: Item, override_max_stack: bool = false, merge_amount: int = source.amount) -> Item:
+    if not is_same_item(source):
+        return source
+    source = _merge_from(source, override_max_stack, merge_amount)
+    if source.is_empty():
         source.queue_free()
         return null
     return source
 
 func _useable_no_await(entity: Entity, world: World, target_position: Vector2) -> bool:
-    if not item_type.useable: return false
     return true
 
+func useable_no_await(entity: Entity, world: World, target_position: Vector2) -> bool:
+    if not item_type.useable: return false
+    return _useable_no_await(entity, world, target_position)
+
 func _useable(entity: Entity, world: World, target_position: Vector2) -> bool:
-    if not _useable_no_await(entity, world, target_position): return false
     if not await entity.check_access_range(world, target_position):
         return false
     return true
+
+func useable(entity: Entity, world: World, target_position: Vector2) -> bool:
+    if not useable_no_await(entity, world, target_position): return false
+    return await _useable(entity, world, target_position)
 
 func _create_use(entity: Entity, world: World) -> ItemUse:
     var use = item_type.use_scene.instantiate()
@@ -70,11 +113,20 @@ func _create_use(entity: Entity, world: World) -> ItemUse:
     world.add_temp_node(use)
     return use
 
+func create_use(entity: Entity, world: World) -> ItemUse:
+    return _create_use(entity, world)
+
 func _get_cost() -> float:
     return item_type.cost * amount
 
 func _get_amount(cost: float) -> int:
     return floori(cost / item_type.cost)
+
+func get_cost() -> float:
+    return _get_cost()
+
+func get_amount_by_cost(cost: float) -> int:
+    return _get_amount(cost)
 
 static func load_from(stream: Stream) -> Item:
     var data_item_type = Contents.get_content_by_index(stream.get_32()) as ItemType;
