@@ -5,6 +5,7 @@ extends Node2D
 const DEFAULT_TEXTURE = preload("res://types/building/building_component_default_texture.tres")
 enum Sides{ right = 1, down = 2, left = 4, up = 8 }
 const SIDE_TO_ROT = [0, 0, 1, 2, 2, 3, 3, 3, 3]
+const ROT_TO_SIDE = [1, 2, 4, 8]
 
 @export_flags("right", "down", "left", "up") var sides: int = 0:
     set(v):
@@ -44,6 +45,9 @@ func _ready() -> void:
 func init_component(pos: Vector2i, rot: int) -> void:
     self.pos = pos
     self.rot = rot
+
+func has_side(side: Sides) -> bool:
+    return sides & side != 0
 
 func _get_transfer_type() -> String:
     return "none"

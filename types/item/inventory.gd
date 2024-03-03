@@ -75,7 +75,7 @@ func get_slot(slot: int) -> Item:
 
 func swap_with_other_hand(slot: int, other: Inventory = self) -> void:
     if not other.is_slot_has_item(other.hand_slot) or \
-            (is_slot_has_item(slot) and not slots[slot]._is_same_item(other.slots[other.hand_slot])):
+            (is_slot_has_item(slot) and not slots[slot].is_same_item(other.slots[other.hand_slot])):
         if not is_slot_has_item(slot):
             return
         var item = get_slot(slot)
@@ -87,7 +87,7 @@ func swap_with_other_hand(slot: int, other: Inventory = self) -> void:
         inventory_slot_changed.emit(slot, true)
         return
     var other_item = other.get_slot(other.hand_slot)
-    slots[slot] = other_item._split_to(other_item.amount, get_slot(slot))
+    slots[slot] = other_item.split_to(other_item.amount, get_slot(slot))
     other.inventory_slot_changed.emit(other.hand_slot, true)
     inventory_slot_changed.emit(slot, true)
 
@@ -100,10 +100,10 @@ func _add_item(item: Item) -> Item:
             continue
         var last_amount = item.amount
         if not is_slot_has_item(index):
-            slots[index] = item._split_to(Item.INF_AMOUNT)
+            slots[index] = item.split_to(Item.INF_AMOUNT)
             inventory_slot_changed.emit(index, true)
-        elif slots[index]._is_same_item(item):
-            slots[index]._merge_from(item)
+        elif slots[index].is_same_item(item):
+            slots[index].merge_from(item)
             inventory_slot_changed.emit(index, false)
         var delta = last_amount - item.amount
         amount += delta
@@ -117,8 +117,8 @@ func _remove_item(template: Item, amount: int = template.amount) -> Item:
         var left = amount - item.amount
         if not is_slot_has_item(index):
             continue
-        if item._is_same_item(slots[index]):
-            slots[index]._split_to(left, item, true)
+        if item.is_same_item(slots[index]):
+            slots[index].split_to(left, item, true)
             inventory_slot_changed.emit(index, slots[index].is_empty())
     if not item.is_empty():
         item_removed.emit(item, amount)
@@ -127,7 +127,7 @@ func _remove_item(template: Item, amount: int = template.amount) -> Item:
 func remove_items(templates: Array[Item]) -> Array[Item]:
     var removed_items = []
     for template in templates:
-        removed_items.append(_remove_item(template))
+        removed_items.append(remove_item(template))
     return removed_items
 
 func _check_item(template: Item, target_amount = template.amount) -> bool:
@@ -136,7 +136,7 @@ func _check_item(template: Item, target_amount = template.amount) -> bool:
 func check_items(templates: Array[Item]) -> bool:
     var passed = true
     for template in templates:
-        if not _check_item(template):
+        if not check_item(template):
             passed = false;
             break
     return passed
@@ -146,7 +146,7 @@ func _get_item_amount(template: Item) -> int:
     for index in slots.size():
         if not is_slot_has_item(index):
             continue
-        if template._is_same_item(slots[index]):
+        if template.is_same_item(slots[index]):
             amount += slots[index].amount
     return amount
 

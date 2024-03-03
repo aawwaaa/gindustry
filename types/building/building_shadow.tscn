@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://types/building/building_shadow.gd" id="1_2quqi"]
 
-
 [node name="Shadow" type="Node2D" node_paths=PackedStringArray("collision", "collision_area", "shape_cast", "floors", "display_polygons", "display_sprite")]
 script = ExtResource("1_2quqi")
 collision = NodePath("AnimatableBody2D")

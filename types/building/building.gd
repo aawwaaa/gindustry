@@ -98,6 +98,15 @@ func get_adapter_at(pos: Vector2i, rot: int, type: String) -> EntityAdapter:
     var rotated = delta.rotated(-shadow_rotation)
     return _get_adapter_at(rotated, shadow_rotation, type)
 
+func get_component_at(pos: Vector2i, rot: int, type: String) -> BuildingComponent:
+    if not shadow.pos_to_component.has(pos): return null
+    if not shadow.pos_to_component[pos].has(type): return null
+    var component: BuildingComponent = shadow.pos_to_component[pos][type]
+    rot = (rot + 3 - shadow.rot) % 4
+    var side = BuildingComponent.ROT_TO_SIDE[rot]
+    if not component.has_side(side): return null
+    return component
+
 func _load_data(stream: Stream) -> void:
     Utils.load_data_with_version(stream, [func():
         building_type = Contents.get_content_by_index(stream.get_64()) as BuildingType

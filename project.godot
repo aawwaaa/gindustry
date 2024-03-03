@@ -32,6 +32,10 @@ Saves="*res://scripts/game/saves.gd"
 Headless="*res://scripts/headless.gd"
 Types="*res://scripts/game/types.gd"
 
+[debug]
+
+gdscript/warnings/enable=false
+
 [display]
 
 window/stretch/mode="canvas_items"

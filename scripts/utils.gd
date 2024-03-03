@@ -67,7 +67,7 @@ func load_contents_async(header: String, contents_input: Array[String]) -> Array
         for content in removes:
             contents.remove_at(contents.find(content));
         removes = [];
-        await get_tree().create_timer(0.001).timeout
+        await get_tree().process_frame
     return output
 
 func merge_translations(translation: Translation):
