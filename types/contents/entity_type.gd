@@ -1,9 +1,13 @@
 class_name EntityType
 extends Content
 
-@export var entity_scene: PackedScene
+@export var entity_scene: PackedScene:
+    get: return entity_scene if entity_scene else _get_default_entity_type()
 
 @export var controllable: bool = false;
+
+func _get_default_entity_type() -> PackedScene:
+    return null
 
 func create_entity(init: bool = true) -> Entity:
     var inst = entity_scene.instantiate();

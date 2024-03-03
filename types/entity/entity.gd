@@ -51,7 +51,7 @@ var entity_id: int:
     get = get_layer,
     set = set_layer;
 
-var tile_pos: Vector2:
+var tile_pos: Vector2i:
     get: return (main_node.position / Global.TILE_SIZE).floor()
 
 static func _on_game_signal_reset_game() -> void:

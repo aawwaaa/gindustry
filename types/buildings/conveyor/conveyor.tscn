@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://dc53le3s6y6fe"]
+
+[ext_resource type="Script" path="res://types/buildings/conveyor/conveyor.gd" id="1_vfafw"]
+[ext_resource type="Script" path="res://types/buildings/conveyor/conveyor_building.gd" id="2_o4u5b"]
+[ext_resource type="Script" path="res://types/buildings/conveyor/conveyor_item_adapter.gd" id="3_h66cj"]
+
+[node name="Conveyor" type="Node2D"]
+script = ExtResource("1_vfafw")
+
+[node name="Building" type="Node" parent="."]
+script = ExtResource("2_o4u5b")
+has_building_adapters = true
+adapters = {
+"item": NodePath("../ItemAdapter")
+}
+layer_follow_world = true
+layer = 1
+
+[node name="ItemAdapter" type="Node" parent="." node_paths=PackedStringArray("main_node", "entity_node")]
+script = ExtResource("3_h66cj")
+main_node = NodePath("..")
+entity_node = NodePath("../Building")

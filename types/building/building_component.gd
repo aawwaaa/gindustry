@@ -64,18 +64,18 @@ func _handle_get_data(name: String) -> Variant:
 func get_data(name: String) -> Variant:
     return _handle_get_data(name)
 
-func _check_transfer(name: String, args: Array = []) -> bool:
+func _check_transfer(name: String, source: Building, source_component: BuildingComponent, args: Array = []) -> bool:
     return true
 
-func check_transfer(name: String, args: Array = []) -> bool:
+func check_transfer(name: String, source: Building, source_component: BuildingComponent, args: Array = []) -> bool:
     if name != get_transfer_type(): return false
-    return _check_transfer(name, args)
+    return _check_transfer(name, source, source_component, args)
 
-func _handle_transfer(name: String, args: Array = []) -> Variant:
+func _handle_transfer(name: String, source: Building, source_component: BuildingComponent, args: Array = []) -> Variant:
     return null
 
-func handle_transfer(name: String, args: Array = []) -> Variant:
-    return _handle_transfer(name, args)
+func handle_transfer(name: String, source: Building, source_component: BuildingComponent, args: Array = []) -> Variant:
+    return _handle_transfer(name, source, source_component, args)
 
 func _process(delta: float) -> void:
     if Engine.is_editor_hint(): return

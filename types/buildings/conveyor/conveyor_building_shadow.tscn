@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://d3ui6igsxudwl"]
+
+[ext_resource type="PackedScene" uid="uid://dowx2nq7aicx4" path="res://types/building/building_shadow.tscn" id="1_f6uwa"]
+[ext_resource type="Script" path="res://types/buildings/conveyor/conveyor_building_shadow.gd" id="2_hlksb"]
+
+[node name="Shadow" instance=ExtResource("1_f6uwa")]
+script = ExtResource("2_hlksb")
+
+[node name="CollisionArea" parent="." index="1"]
+visible = true
