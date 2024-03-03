@@ -26,7 +26,7 @@ func _ready() -> void:
     shadow.layer = layer
     shadow_container.add_child(shadow)
     shadow.rot = main_node.rotation
-    shadow.finish_build()
+    shadow.finish_build(self)
 
     if should_place: place()
     if should_destroy: destroy()

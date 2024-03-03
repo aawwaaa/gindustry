@@ -16,7 +16,12 @@ var layer: int = 0:
 @export var display_polygons: Node2D;
 @export var display_sprite: Sprite2D;
 @export var marks: Dictionary = {};
+@export var components: Dictionary = {}
 var marks_poses: Dictionary = {}
+var component_nodes: Dictionary = {}
+var pos_to_component: Dictionary = {}
+
+# todo init components
 
 var world: World
 var pos: Vector2i;
@@ -92,13 +97,24 @@ func _set_check_build_result(result: bool) -> void:
     else:
         display_sprite.modulate = Color(1.0, 0.2, 0.2, 0.5)
 
-func finish_build() -> void:
+func finish_build(building: Building) -> void:
     if full_build: return
     build_progress = 1
     full_build = true
     floors.queue_free()
     display_polygons.queue_free()
     display_sprite.modulate = Color(1.0, 1.0, 1.0, 1.0)
+    for group in self.components.keys():
+        var node = get_node(self.components[group])
+        var components = node.get_children()
+        for component in components:
+            var pos = get_tile_pos(component)
+            component.building = building
+            component.init_component(pos, rot)
+            if not pos_to_component.has(pos):
+                pos_to_component[pos] = {}
+            pos_to_component[pos][component.get_transfer_type()] = component
+        component_nodes[group] = components
 
 func set_build_progress(v: float) -> void:
     if full_build: return
@@ -138,6 +154,11 @@ func _ready() -> void:
         marks_poses[key] = []
         for child in marks[key].get_children():
             marks_poses[key].append((child.position / Global.TILE_SIZE).floor())
+
+func get_tile_pos(node: Node2D) -> Vector2i:
+    var local_pos = (node.position / Global.TILE_SIZE).floor()
+    var rotated = Vector2(local_pos).rotated(Tile.to_entity_rot(rot)).round()
+    return rotated + pos
 
 func _get_building_config() -> Variant:
     return building_config

@@ -131,22 +131,19 @@
 [X] 建筑 adapters:
     BuildingType: has_building_adapters
     get_adapter_at(position: Vector2, facing: int, type: String) -> EntityAdapter
-[ ] ItemAdapter等可以与其他Adapter交互
+[X] ItemAdapter等可以与其他Adapter交互
     item_targets
-    item_sources
 [ ] 建筑 部件系统(ComponentsAdapter)
     load_nodes(nodes: Node);
-    [ ] Component
+    [X] Component
         prop building -> Building
         prop main_node -> Node2D
         sides: bitfield
         pos: Vector2
-        rot: int
         _process_update
         _handle_get_data(name: String) -> Variant
         _handle_transfer(name: String, args: Array) -> Variant
         _check_transfer(name: String, args: Array) -> bool
-        _accept_transfer(name: String) -> bool
     [ ] ItemSource/LiquidSource/etc...
         _request_item(filters: Array[ItemFilter]) -> Item
         _handle_overflow(item: Item) -> void

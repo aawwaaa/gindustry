@@ -11,6 +11,13 @@ const SIDE_TO_ROT = [0, 0, 1, 2, 2, 3, 3, 3, 3]
         sides = v
         queue_redraw()
 
+var building: Building
+var main_node: Node2D:
+    get: return building.main_node
+
+var pos: Vector2i
+var rot: int
+
 func _get_side_texture(side: Sides) -> Texture2D:
     return DEFAULT_TEXTURE
 
@@ -34,3 +41,38 @@ func _draw() -> void:
 func _ready() -> void:
     queue_redraw()
 
+func init_component(pos: Vector2i, rot: int) -> void:
+    self.pos = pos
+    self.rot = rot
+
+func _get_transfer_type() -> String:
+    return "none"
+
+func get_transfer_type() -> String:
+    return _get_transfer_type()
+
+func _process_update(delta: float) -> void:
+    pass
+
+func _handle_get_data(name: String) -> Variant:
+    return null
+
+func get_data(name: String) -> Variant:
+    return _handle_get_data(name)
+
+func _check_transfer(name: String, args: Array = []) -> bool:
+    return true
+
+func check_transfer(name: String, args: Array = []) -> bool:
+    if name != get_transfer_type(): return false
+    return _check_transfer(name, args)
+
+func _handle_transfer(name: String, args: Array = []) -> Variant:
+    return null
+
+func handle_transfer(name: String, args: Array = []) -> Variant:
+    return _handle_transfer(name, args)
+
+func _process(delta: float) -> void:
+    if Engine.is_editor_hint(): return
+    _process_update(delta)
