@@ -11,6 +11,10 @@ var building_type: BuildingType:
     get: return entity_type if entity_type is BuildingType else null
 var building_config: Variant
 var shadow: BuildingShadow
+var shadow_inited: bool = false;
+
+var pos: Vector2i;
+var rot: int;
 
 var should_place: bool = false
 var should_destroy: bool = false
@@ -19,14 +23,18 @@ func _ready() -> void:
     super._ready()
 
     layer_changed.connect(_on_layer_changed)
+    main_node.position = Tile.to_world_pos(pos)
+    main_node.rotation = Tile.to_entity_rot(rot)
     shadow = building_type.create_shadow()
     shadow.world = world
-    shadow.pos = tile_pos
+    shadow.pos = pos
     shadow.building_config = building_config
     shadow.layer = layer
+    await get_tree().process_frame
     shadow_container.add_child(shadow)
-    shadow.rot = main_node.rotation
+    shadow.rot = rot
     shadow.finish_build(self)
+    shadow_inited = true
 
     if should_place: place()
     if should_destroy: destroy()
@@ -36,7 +44,7 @@ func _on_layer_changed(layer: int, from: int) -> void:
     shadow.layer = layer
 
 func place() -> void:
-    if not shadow:
+    if not shadow_inited:
         should_place = true
         return
     should_place = false
@@ -44,7 +52,7 @@ func place() -> void:
     placed.emit()
 
 func destroy() -> void:
-    if not shadow:
+    if not shadow_inited:
         should_destroy = true
         return
     should_destroy = false

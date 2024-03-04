@@ -13,8 +13,6 @@ unique_name_in_owner = true
 [node name="Building" type="Node" parent="." node_paths=PackedStringArray("shadow_container", "main_node")]
 script = ExtResource("2_bm8uh")
 shadow_container = NodePath("../ShadowContainer")
-has_building_adapters = null
 main_node = NodePath("..")
-adapters = null
 layer_follow_world = true
 layer = 1

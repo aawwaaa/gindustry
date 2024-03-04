@@ -13,6 +13,9 @@ var should_destroy: bool = false
 var filled_items: Array[Item] = []
 var missing_items: Array[Item] = []
 
+var pos: Vector2i
+var rot: int
+
 func get_entity() -> Entity:
     return entity
 
@@ -51,7 +54,8 @@ func calcuate_building_progress() -> void:
     var current_cost = 0
     for fitem in filled_items:
         current_cost += fitem.get_cost()
-    shadow.build_progress = current_cost / total_cost
+    if total_cost == 0: shadow.build_progress = 1
+    else: shadow.build_progress = current_cost / total_cost
 
 func fill_item(item: Item) -> Item:
     var missing_amount = 0
@@ -65,13 +69,13 @@ func fill_item(item: Item) -> Item:
             item.split_to(missing_amount, fitem, true)
             found = true
             break
-    if not found:
+    if not found and item:
         filled_items.append(item.split_to(missing_amount, null, true))
     calcuate_missing_items()
     calcuate_building_progress()
     if shadow.build_progress == 1:
-        entity.world.get_tile_or_null(entity.tile_pos) \
-                .set_building(building_type, rotation, building_config)
+        entity.world.get_tile_or_null(pos) \
+                .set_building(building_type, rot, building_config)
 
     return item
 
@@ -91,21 +95,23 @@ func remove_item(total_cost: float) -> Dictionary:
     if not removed_items.is_empty():
         calcuate_missing_items()
         calcuate_building_progress()
-    if shadow.build_progress == 0:
+    if shadow.build_progress == 0 or filled_items.is_empty():
         entity.world.get_tile_or_null(entity.tile_pos).clear_building()
     return {"removed_items": removed_items, "costs": total_cost}
 
-func _handle_destroy() -> void:
+func handle_destroy() -> void:
     pass
 
 func _ready() -> void:
+    position = Tile.to_world_pos(pos)
+    rotation = Tile.to_entity_rot(rot)
     shadow = building_type.create_shadow()
     shadow.world = entity.world
-    shadow.pos = entity.tile_pos
+    shadow.pos = pos
     shadow.building_config = building_config
     _on_entity_layer_changed(entity.layer, -1)
     add_child(shadow)
-    shadow.rot = rotation
+    shadow.rot = rot
     shadow.build_progress = 0
     shadow.input.connect(_on_shadow_input)
     calcuate_missing_items()

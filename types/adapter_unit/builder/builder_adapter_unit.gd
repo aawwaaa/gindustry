@@ -72,6 +72,8 @@ func process_build() -> void:
         if not left.is_empty(): adapter.item_source.handle_overflow_item(left)
         overflowed_costs -= removed_costs - left_costs
         if overflowed_costs <= 0: break
+    if split_amounts.size() == 0:
+        tile.building_shadow.fill_item(null)
     if tile.building_shadow == null: current_build_plan.build_finished = true
     else: current_build_plan.build_progress = tile.building_shadow.shadow.build_progress
 

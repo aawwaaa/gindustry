@@ -1,10 +1,35 @@
-[gd_scene load_steps=3 format=3 uid="uid://d3ui6igsxudwl"]
+[gd_scene load_steps=5 format=3 uid="uid://d3ui6igsxudwl"]
 
 [ext_resource type="PackedScene" uid="uid://dowx2nq7aicx4" path="res://types/building/building_shadow.tscn" id="1_f6uwa"]
 [ext_resource type="Script" path="res://types/buildings/conveyor/conveyor_building_shadow.gd" id="2_hlksb"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_meys6"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bho5r"]
+size = Vector2(32, 31)
+
 [node name="Shadow" instance=ExtResource("1_f6uwa")]
 script = ExtResource("2_hlksb")
 
-[node name="CollisionArea" parent="." index="1"]
-visible = true
+[node name="Marker2D" type="Marker2D" parent="Floors" index="0"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionArea" index="0"]
+shape = SubResource("RectangleShape2D_meys6")
+
+[node name="ShapeCast2D" parent="." index="3"]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_bho5r")
+target_position = Vector2(0, 1)
+
+[node name="Polygon2D" type="Polygon2D" parent="DisplayPolygons" index="0"]
+polygon = PackedVector2Array(-16, -16, 0, -16, -16, 0)
+
+[node name="Polygon2D2" type="Polygon2D" parent="DisplayPolygons" index="1"]
+polygon = PackedVector2Array(16, -16, 0, -16, 16, 0)
+
+[node name="Polygon2D3" type="Polygon2D" parent="DisplayPolygons" index="2"]
+polygon = PackedVector2Array(-16, 16, -16, 0, 0, 16)
+
+[node name="Polygon2D4" type="Polygon2D" parent="DisplayPolygons" index="3"]
+polygon = PackedVector2Array(16, 16, 0, 16, 16, 0)

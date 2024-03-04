@@ -4,12 +4,16 @@
 [ext_resource type="Script" path="res://types/buildings/conveyor/conveyor_building.gd" id="2_o4u5b"]
 [ext_resource type="Script" path="res://types/buildings/conveyor/conveyor_item_adapter.gd" id="3_h66cj"]
 
-[node name="Conveyor" type="Node2D"]
+[node name="Conveyor" type="Node2D" node_paths=PackedStringArray("entity")]
 script = ExtResource("1_vfafw")
+entity = NodePath("Building")
+sides = 14
 
-[node name="Building" type="Node" parent="."]
+[node name="Building" type="Node" parent="." node_paths=PackedStringArray("shadow_container", "main_node")]
 script = ExtResource("2_o4u5b")
+shadow_container = NodePath("..")
 has_building_adapters = true
+main_node = NodePath("..")
 adapters = {
 "item": NodePath("../ItemAdapter")
 }

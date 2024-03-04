@@ -126,6 +126,8 @@
     - Building.has_attribute(type: BuildingAttributeType) -> BuildingType.has_attribute
     Building.get_attribute(type: BuildingAttributeType) -> BuildingType.get_attribute
 
+[X] BuildingShadow tiles
+
 [X] BuildingType rotatable
 [ ] 液体系统
 [X] 建筑 adapters:
@@ -165,7 +167,9 @@
         source: LiquidSource
         etc.
 
-
+[ ] 当前选择的建筑/物品显示
+[ ] 建筑点击ui(call InputHandler)
+[ ] 丢物品进建筑(建筑操作[位置, 物品, 类型])
 [ ] alt显示
 [ ] TileOre[WithData]
     [ ] TileOreType
@@ -192,6 +196,7 @@
 -- 方块 --
 
 [X] 传送带(带动画) 地下传送带 | 普通(黄, 4/s) 高速(红, 8/s) 急速(蓝, 16/s)
+    [ ] 少画了一种上方和下方连接的T形
 [X] 路由器 分类器 反向分类器 溢流门 反向溢流门 翻转器 均分器 交叉器
     [X] 读取器 切断器 分流器 反向分流器 | 3种类型
 [X] 机械臂 | 热能(灰) 电力(黄) 加长(红) 高速(蓝) 集装(绿) 堆叠(白)
@@ -200,6 +205,7 @@
 [X] 箱子 | I(16格) II(32格) III(64格) | 小(*1, 1*1) 中(*2, 2*2) 大(*3, 3*3) | 普通, 带传送带接口
 
 [X] 管道 | 普通(100/s, 黄) 高速(200/s, 红) 急速(400/s, 蓝) | 无向 隔离 地下
+    [ ] 上下连接
 [X] 管道泵 | 普通(100/s, 黄) 高速(200/s, 红) 急速(400/s, 蓝)
 [X] 储液罐 | I(8000) II(16000) III(32000) | 中型(*1, 2*2) 大型(*2, 3*3)
 

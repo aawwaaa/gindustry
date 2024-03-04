@@ -146,24 +146,24 @@ func clear_building() -> void:
     inst.remove()
     building_ref = 0
 
-func set_building(type: BuildingType, rotation: float = 0, config: Variant = type._get_default_config() if type else null) -> Building:
+func set_building(type: BuildingType, rot: int = 0, config: Variant = type._get_default_config() if type else null) -> Building:
     if building or building_shadow: clear_building()
     if not type: return
     var inst = type.create_entity()
-    inst.main_node.position = tile_pos * Global.TILE_SIZE + HALF_TILE
-    inst.main_node.rotation = rotation
+    inst.pos = tile_pos
+    inst.rot = rot
     inst.building_config = config
     world.add_entity(inst)
     inst.place()
     return inst
 
-func set_building_shadow(type: BuildingType, rotation: float = 0, config: Variant = type._get_default_config() if type else null) -> BuildingShadowContainer:
+func set_building_shadow(type: BuildingType, rot: int = 0, config: Variant = type._get_default_config() if type else null) -> BuildingShadowContainer:
     if building or building_shadow: clear_building()
     if not type: return
     var container = Builtin.entity["building_shadow_container"].create_entity().main_node
     container.building_type = type
-    container.position = tile_pos * Global.TILE_SIZE + HALF_TILE
-    container.rotation = rotation
+    container.pos = tile_pos
+    container.rot = rot
     world.add_entity(container.get_entity())
     container.shadow.building_config = config
     container.place()

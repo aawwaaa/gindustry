@@ -21,8 +21,6 @@ var marks_poses: Dictionary = {}
 var component_nodes: Dictionary = {}
 var pos_to_component: Dictionary = {}
 
-# todo init components
-
 var world: World
 var pos: Vector2i;
 var rot: int:
@@ -110,7 +108,7 @@ func finish_build(building: Building) -> void:
         for component in components:
             var pos = get_tile_pos(component)
             component.building = building
-            component.init_component(pos, rot)
+            component.init_component(pos)
             if not pos_to_component.has(pos):
                 pos_to_component[pos] = {}
             pos_to_component[pos][component.get_transfer_type()] = component

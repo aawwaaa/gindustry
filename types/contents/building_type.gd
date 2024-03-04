@@ -2,7 +2,8 @@ class_name BuildingType
 extends EntityType
 
 @export var icon: Texture2D = load("res://assets/asset-not-found.png")
-@export var shadow: PackedScene
+@export var shadow: PackedScene:
+    get: return shadow if shadow else _get_default_building_shadow()
 
 @export var category: BuildingCategory
 @export var requirements: Array[PackedItemStack] = []
@@ -11,6 +12,9 @@ extends EntityType
 var attributes_dict: Dictionary = {}
 
 var requirements_cache: Array[Item] = []
+
+func _get_default_building_shadow() -> PackedScene:
+    return null
 
 func get_requirements() -> Array[Item]:
     if requirements_cache.size() != 0: return requirements_cache

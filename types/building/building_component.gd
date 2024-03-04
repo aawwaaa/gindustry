@@ -17,7 +17,8 @@ var main_node: Node2D:
     get: return building.main_node
 
 var pos: Vector2i
-var rot: int
+var rot: int:
+    get: return building.shadow.rot
 
 func _get_side_texture(side: Sides) -> Texture2D:
     return DEFAULT_TEXTURE
@@ -42,9 +43,8 @@ func _draw() -> void:
 func _ready() -> void:
     queue_redraw()
 
-func init_component(pos: Vector2i, rot: int) -> void:
+func init_component(pos: Vector2i) -> void:
     self.pos = pos
-    self.rot = rot
 
 func has_side(side: Sides) -> bool:
     return sides & side != 0
