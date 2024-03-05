@@ -7,6 +7,19 @@ enum Sides{ right = 1, down = 2, left = 4, up = 8 }
 const SIDE_TO_ROT = [0, 0, 1, 2, 2, 3, 3, 3, 3]
 const ROT_TO_SIDE = [1, 2, 4, 8]
 
+static func revert_sides(sides: int) -> int:
+    var reverted = sides << 2
+    reverted = reverted & 0xf | (reverted >> 4)
+    return reverted
+
+static func rotate_sides(sides: int, rot: int) -> int:
+    var rotated = sides << rot
+    rotated = rotated & 0xf | (rotated >> 4)
+    return rotated
+
+static func revert_rot(rot: int) -> int:
+    return (rot+2) % 4
+
 @export_flags("right", "down", "left", "up") var sides: int = 0:
     set(v):
         sides = v
@@ -46,8 +59,12 @@ func _ready() -> void:
 func init_component(pos: Vector2i) -> void:
     self.pos = pos
 
+func _has_side(side: Sides) -> bool:
+    return (sides & side) != 0
+
 func has_side(side: Sides) -> bool:
-    return sides & side != 0
+    side = rotate_sides(side, self.rot)
+    return _has_side(side)
 
 func _get_transfer_type() -> String:
     return "none"
@@ -58,11 +75,11 @@ func get_transfer_type() -> String:
 func _process_update(delta: float) -> void:
     pass
 
-func _handle_get_data(name: String) -> Variant:
+func _handle_get_data(name: String, source: Building, source_component: BuildingComponent, args: Array = []) -> Variant:
     return null
 
-func get_data(name: String) -> Variant:
-    return _handle_get_data(name)
+func get_data(name: String, source: Building, source_component: BuildingComponent, args: Array = []) -> Variant:
+    return _handle_get_data(name, source, source_component, args)
 
 func _check_transfer(name: String, source: Building, source_component: BuildingComponent, args: Array = []) -> bool:
     return true
@@ -76,6 +93,21 @@ func _handle_transfer(name: String, source: Building, source_component: Building
 
 func handle_transfer(name: String, source: Building, source_component: BuildingComponent, args: Array = []) -> Variant:
     return _handle_transfer(name, source, source_component, args)
+
+func get_tile(side: Sides) -> Tile:
+    var rot = SIDE_TO_ROT[side] - self.rot
+    return building.world.get_tile_or_null(pos).get_near_tile(rot)
+
+func get_component(side: Sides, type: String = get_transfer_type()) -> BuildingComponent:
+    var rot = SIDE_TO_ROT[side] - self.rot
+    var tile = get_tile(side)
+    if not tile or not tile.building: return null
+    return tile.building.get_component_at(tile.tile_pos, revert_rot(rot), type)
+
+func get_building_side(building: Building, component: BuildingComponent = null) -> Sides:
+    var pos = component.pos if component else building.pos
+    var rot = Vector2(self.pos).direction_to(Vector2(pos))
+    return ROT_TO_SIDE[(Tile.to_tile_rot(rot) + 4 - self.rot) % 4]
 
 func _process(delta: float) -> void:
     if Engine.is_editor_hint(): return

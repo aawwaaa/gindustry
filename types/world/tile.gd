@@ -178,6 +178,11 @@ func set_redirect(target: World, pos: Vector2i = Vector2i.ZERO) -> void:
     redirect_target_tile = pos;
     set_special_data();
 
+func get_near_tile(rot: int) -> Tile:
+    var rad = Tile.to_entity_rot(rot)
+    var pos = tile_pos + Vector2i(Vector2.RIGHT.rotated(rad).round())
+    return world.get_tile_or_null(pos)
+
 const current_data_version = 1;
 
 func load_data(stream: Stream, no_special_data: bool = false) -> void:

@@ -110,7 +110,6 @@ func get_component_at(pos: Vector2i, rot: int, type: String) -> BuildingComponen
     if not shadow.pos_to_component.has(pos): return null
     if not shadow.pos_to_component[pos].has(type): return null
     var component: BuildingComponent = shadow.pos_to_component[pos][type]
-    rot = (rot + 3 - shadow.rot) % 4
     var side = BuildingComponent.ROT_TO_SIDE[rot]
     if not component.has_side(side): return null
     return component
