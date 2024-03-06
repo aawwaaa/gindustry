@@ -23,6 +23,6 @@ func _get_texture() -> Texture2D:
 func _get_max_stack() -> int:
     return target.max_stack
 
-func _get_cost() -> int:
+func _get_cost() -> float:
     return target.cost
 

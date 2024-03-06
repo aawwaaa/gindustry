@@ -1,3 +1,4 @@
+class_name EntityNode_Conveyor
 extends BuildingComponent
 
 enum Directions{
@@ -39,10 +40,10 @@ func _handle_get_data(name: String, source: Building, source_component: Building
 
 func update_ports() -> void:
     var up = get_component(Sides.up, "conveyor")
-    var left = get_component(Sides.left, "conveyor")
-    var down = get_component(Sides.down, "conveyor")
     var up_value = DisplayDirectons.up if up and up.get_data("output", entity, self) else 0
+    var left = get_component(Sides.left, "conveyor")
     var left_value = DisplayDirectons.left if left and left.get_data("output", entity, self) else 0
+    var down = get_component(Sides.down, "conveyor")
     var down_value = DisplayDirectons.down if down and down.get_data("output", entity, self) else 0
     var old = direction
     direction = up_value | left_value | down_value

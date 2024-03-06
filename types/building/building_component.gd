@@ -13,6 +13,9 @@ static func revert_sides(sides: int) -> int:
     return reverted
 
 static func rotate_sides(sides: int, rot: int) -> int:
+    if rot < 0:
+        var rotated = sides >> rot
+        return rotated | (sides & (0xf << rot)) >> rot
     var rotated = sides << rot
     rotated = rotated & 0xf | (rotated >> 4)
     return rotated
@@ -32,6 +35,12 @@ var main_node: Node2D:
 var pos: Vector2i
 var rot: int:
     get: return building.shadow.rot
+
+func apply_rot(rot: int) -> int:
+    return (rot + self.rot) % 4
+
+func unapply_rot(rot: int) -> int:
+    return (rot + 4 - self.rot) % 4
 
 func _get_side_texture(side: Sides) -> Texture2D:
     return DEFAULT_TEXTURE
@@ -95,19 +104,20 @@ func handle_transfer(name: String, source: Building, source_component: BuildingC
     return _handle_transfer(name, source, source_component, args)
 
 func get_tile(side: Sides) -> Tile:
-    var rot = SIDE_TO_ROT[side] - self.rot
-    return building.world.get_tile_or_null(pos).get_near_tile(rot)
+    var rot = apply_rot(SIDE_TO_ROT[side])
+    var base = building.world.get_tile_or_null(pos)
+    return base.get_near_tile(rot)
 
 func get_component(side: Sides, type: String = get_transfer_type()) -> BuildingComponent:
-    var rot = SIDE_TO_ROT[side] - self.rot
+    var rot = apply_rot(SIDE_TO_ROT[side])
     var tile = get_tile(side)
     if not tile or not tile.building: return null
     return tile.building.get_component_at(tile.tile_pos, revert_rot(rot), type)
 
 func get_building_side(building: Building, component: BuildingComponent = null) -> Sides:
     var pos = component.pos if component else building.pos
-    var rot = Vector2(self.pos).direction_to(Vector2(pos))
-    return ROT_TO_SIDE[(Tile.to_tile_rot(rot) + 4 - self.rot) % 4]
+    var rot = Vector2(self.pos).angle_to_point(Vector2(pos))
+    return ROT_TO_SIDE[unapply_rot(Tile.to_tile_rot(rot))]
 
 func _process(delta: float) -> void:
     if Engine.is_editor_hint(): return

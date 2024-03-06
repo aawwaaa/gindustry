@@ -1,7 +1,7 @@
 class_name BuildingShadow_Conveyor
 extends BuildingShadow
 
-var display_direction: int = Building_Conveyor.DisplayDirectons.left:
+var display_direction: int = EntityNode_Conveyor.DisplayDirectons.left:
     set = set_display_direction
 
 func get_animation_speed() -> float:
@@ -30,9 +30,9 @@ func _ready() -> void:
 func set_display_direction(v: int) -> void:
     var sprite: Sprite2D = display_sprite
     display_direction = v
-    var left = Building_Conveyor.DisplayDirectons.left
-    var up = Building_Conveyor.DisplayDirectons.up
-    var down = Building_Conveyor.DisplayDirectons.down
+    var left = EntityNode_Conveyor.DisplayDirectons.left
+    var up = EntityNode_Conveyor.DisplayDirectons.up
+    var down = EntityNode_Conveyor.DisplayDirectons.down
     var left_up = left | up
     var left_down = left | down
     var left_up_down = left | up | down

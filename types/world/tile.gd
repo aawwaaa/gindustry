@@ -180,7 +180,8 @@ func set_redirect(target: World, pos: Vector2i = Vector2i.ZERO) -> void:
 
 func get_near_tile(rot: int) -> Tile:
     var rad = Tile.to_entity_rot(rot)
-    var pos = tile_pos + Vector2i(Vector2.RIGHT.rotated(rad).round())
+    var delta = Vector2i(Vector2.RIGHT.rotated(rad).round())
+    var pos = tile_pos + delta
     return world.get_tile_or_null(pos)
 
 const current_data_version = 1;

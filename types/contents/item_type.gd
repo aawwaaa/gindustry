@@ -10,8 +10,6 @@ var texture: Texture2D:
     get = get_texture
 var max_stack: int:
     get = get_max_stack
-var cost: int:
-    get = get_cost
 
 var useable: bool:
     get: return use_scene != null
@@ -41,7 +39,7 @@ func _get_texture() -> Texture2D:
 func _get_max_stack() -> int:
     return 100
 
-func _get_cost() -> int:
+func _get_cost() -> float:
     return 1
 
 func get_texture() -> Texture2D:
@@ -50,5 +48,5 @@ func get_texture() -> Texture2D:
 func get_max_stack() -> int:
     return _get_max_stack()
 
-func get_cost() -> int:
+func get_cost() -> float:
     return _get_cost()

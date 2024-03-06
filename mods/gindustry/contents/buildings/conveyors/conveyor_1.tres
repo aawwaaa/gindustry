@@ -1,12 +1,20 @@
-[gd_resource type="Resource" script_class="BuildingType_Conveyor" load_steps=12 format=3 uid="uid://co0rvlk0j7rlx"]
+[gd_resource type="Resource" script_class="BuildingType_Conveyor" load_steps=14 format=3 uid="uid://co0rvlk0j7rlx"]
 
 [ext_resource type="Script" path="res://types/buildings/conveyor/conveyor_type.gd" id="1_d0bb8"]
 [ext_resource type="Resource" uid="uid://bqc777vs32a3j" path="res://contents/building_categories/transportation.tres" id="1_kb4w5"]
 [ext_resource type="Texture2D" uid="uid://d156o7bd2cux0" path="res://mods/gindustry/assets/buildings/conveyors/conveyor-1.png" id="3_2vls4"]
+[ext_resource type="Resource" uid="uid://ckdxq0ogtny06" path="res://mods/gindustry/contents/items/copper.tres" id="3_3p0u8"]
+[ext_resource type="Script" path="res://types/item/packed_item_stack.gd" id="4_txnnh"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_r4stg"]
 atlas = ExtResource("3_2vls4")
 region = Rect2(0, 64, 32, 32)
+
+[sub_resource type="Resource" id="Resource_3806t"]
+script = ExtResource("4_txnnh")
+item_type = ExtResource("3_3p0u8")
+amount = 1
+options = {}
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_44u33"]
 atlas = ExtResource("3_2vls4")
@@ -32,10 +40,6 @@ region = Rect2(0, 160, 256, 32)
 atlas = ExtResource("3_2vls4")
 region = Rect2(0, 192, 256, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_414l6"]
-atlas = ExtResource("3_2vls4")
-region = Rect2(0, 0, 256, 32)
-
 [resource]
 script = ExtResource("1_d0bb8")
 speed = 4.0
@@ -46,14 +50,14 @@ texture_left_down = SubResource("AtlasTexture_grn7t")
 texture_left_up_down = SubResource("AtlasTexture_ufmfc")
 texture_up = SubResource("AtlasTexture_n6yg4")
 texture_down = SubResource("AtlasTexture_44u33")
-texture_up_down = SubResource("AtlasTexture_414l6")
+texture_up_down = SubResource("AtlasTexture_ufmfc")
 texture_polygon_texture = ExtResource("3_2vls4")
 texture_polygon_texture_offset = Vector2(16, 80)
 hframes = 8
 vframes = 1
 icon = SubResource("AtlasTexture_r4stg")
 category = ExtResource("1_kb4w5")
-requirements = Array[Resource("res://types/item/packed_item_stack.gd")]([])
+requirements = Array[ExtResource("4_txnnh")]([SubResource("Resource_3806t")])
 attributes = Array[Resource("res://types/building/building_attribute.gd")]([])
 controllable = false
 id = "conveyor_1"

@@ -1,7 +1,7 @@
 extends ItemAdapter
 
-var conveyor: Building_Conveyor:
-    get: return main_node as Building_Conveyor
+var conveyor: EntityNode_Conveyor:
+    get: return main_node as EntityNode_Conveyor
 
 func _handle_overflow_item(item: Item) -> void:
     pass
