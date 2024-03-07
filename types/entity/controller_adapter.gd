@@ -5,7 +5,7 @@ signal controller_added(controller: Controller)
 signal controller_removed(controller: Controller)
 
 signal operation_received(operation: String, args: Array[Variant])
-signal remote_operation_received(from: ControllerAdapter, operation: String, args: Array[Variant])
+signal remote_operation_received(from: Entity, operation: String, args: Array[Variant])
 
 """
 默认控制器, 由0~length优先级依次递减
@@ -61,6 +61,10 @@ func operate(controller: Controller, operation: String, args: Array[Variant] = [
         return
     if operation not in available_operations:
         return
+    if operation == "adapter":
+        if args.size() < 2: return
+        entity_node.get_adapter(args[0])._handle_operation(args[1], args.slice(2))
+        return
     operation_received.emit(operation, args)
 
 func operate_remote(controller: Controller, operation: String, args: Array[Variant] = []) -> bool:
@@ -71,9 +75,13 @@ func operate_remote(controller: Controller, operation: String, args: Array[Varia
     var access_target = entity_node.access_target
     if not access_target:
         return false
+    if operation == "adapter":
+        if args.size() < 2: return false
+        access_target.get_entity().get_adapter(args[0])._handle_remote_operation(entity_node, args[1], args.slice(2))
+        return true
     if not access_target.get_entity().get_adapter("controller"):
         return false
-    access_target.get_entity().get_adapter("controller").remote_operation_received.emit(self, operation, args)
+    access_target.get_entity().get_adapter("controller").remote_operation_received.emit(entity_node, operation, args)
     return true
 
 func update_control(type: String, updater: Callable, append_args: Array = []) -> bool:

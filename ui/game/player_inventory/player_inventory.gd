@@ -77,4 +77,4 @@ func _on_panel_request_remote_operation(operation: String, args: Array[Variant])
     Game.current_player.get_controller().operate_remote_target(operation, args)
 
 func _on_inventory_interface_request_swap(inventory: Inventory, slot: int) -> void:
-    Game.current_player.get_controller().operate_target("inventory", ["swap_with_hand", slot])
+    Game.current_player.get_controller().operate_target("adapter", ["inventory", "swap_with_hand", slot])

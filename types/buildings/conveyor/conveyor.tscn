@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://dc53le3s6y6fe"]
+[gd_scene load_steps=5 format=3 uid="uid://dc53le3s6y6fe"]
 
 [ext_resource type="Script" path="res://types/buildings/conveyor/conveyor.gd" id="1_vfafw"]
 [ext_resource type="Script" path="res://types/buildings/conveyor/conveyor_building.gd" id="2_o4u5b"]
 [ext_resource type="Script" path="res://types/buildings/conveyor/conveyor_item_adapter.gd" id="3_h66cj"]
+[ext_resource type="Script" path="res://types/buildings/conveyor/conveyor_track.gd" id="4_36et4"]
 
 [node name="Conveyor" type="Node2D" node_paths=PackedStringArray("entity")]
 script = ExtResource("1_vfafw")
@@ -24,3 +25,9 @@ layer = 1
 script = ExtResource("3_h66cj")
 main_node = NodePath("..")
 entity_node = NodePath("../Building")
+
+[node name="Track" type="Node2D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("4_36et4")
+left_track_end = Vector2(0, -7)
+right_track_end = Vector2(0, 7)

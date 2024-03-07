@@ -183,7 +183,18 @@
 [ ] 9. 蓝图
 [ ] 10. 蓝图操作
 
+[ ] World.get_envorinment_at(pos: Vector2) -> Environment
+
 -- 物流, 流体, 能量(传送带, 分流器, 机械臂, 管道, 箱子, 电杆) --
+[ ] 传送带
+    [ ] 传送带
+    [ ] 传送带部件
+[ ] 箱子
+[ ] 机械臂
+[ ] 管道
+    O_x = \frac{V-\frac{S_n}{n}}{n} \times (\frac{P_x}{max(S_p, 1)}+50%)
+    P_x = P'_x \times k + (\frac{O_x}{max(S_O, 1)} - \frac{I_x}{max(S_I, 1)}) \times (1 - k)
+[ ] 能量节点
 -- 基础工业(矿机, 工厂, 发电机) --
 -- 基础单位(汽车, 移动炮塔, 基础火车) --
 -- 地图, 标记系统 --

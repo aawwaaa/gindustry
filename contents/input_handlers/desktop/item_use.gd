@@ -48,7 +48,7 @@ func update_item_use() -> void:
 func confirm_item_use() -> void:
     if not item_use:
         return
-    controller.operate_target("inventory", ["use_hand", entity.world, item_use_position])
+    controller.operate_target("adapter", ["inventory", "use_hand", entity.world, item_use_position])
     item_use.queue_free()
     item_use = null
 

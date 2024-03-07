@@ -12,3 +12,10 @@ func _save_data(stream: Stream) -> void:
 
 func _load_data(stream: Stream) -> void:
     pass
+
+func _handle_operation(operation: String, args: Array[Variant] = []) -> void:
+    pass
+
+func _handle_remote_operation(source: Entity, operation: String, args: Array[Variant] = []) -> void:
+    pass
+

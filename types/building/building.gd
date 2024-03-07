@@ -42,6 +42,8 @@ func _ready() -> void:
 func _on_layer_changed(layer: int, from: int) -> void:
     if not shadow: return
     shadow.layer = layer
+    main_node.z_as_relative = false
+    main_node.z_index = get_z_index(0)
 
 func place() -> void:
     if not shadow_inited:
