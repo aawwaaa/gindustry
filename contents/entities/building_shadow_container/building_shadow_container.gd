@@ -113,7 +113,8 @@ func _ready() -> void:
     add_child(shadow)
     shadow.rot = rot
     shadow.build_progress = 0
-    shadow.input.connect(_on_shadow_input)
+    shadow.mouse_entered.connect(entity._on_collision_object_2d_mouse_entered)
+    shadow.mouse_exited.connect(entity._on_collision_object_2d_mouse_exited)
     calcuate_missing_items()
     calcuate_building_progress()
     if should_place: place()
@@ -139,10 +140,6 @@ func destroy() -> void:
     should_destroy = false
     shadow.destroy(false, entity.entity_id)
 
-func _on_shadow_input(event: InputEvent) -> void:
-    Global.input_handler.call_input_processor("build", "_on_building_shadow_container_input", \
-            [self, event])
-
 const current_data_version: int = 0
 
 func _on_entity_on_load_data(stream: Stream) -> void:
@@ -164,3 +161,8 @@ func _on_entity_on_save_data(stream: Stream) -> void:
     stream.store_16(filled_items.size())
     for item in filled_items:
         item.save_to(stream)
+
+func _on_entity_input_operation(operation: String, args: Array) -> void:
+    if not operation == "continue_build": return
+    Global.input_handler.call_input_processor("build", "continue_build", [self])
+

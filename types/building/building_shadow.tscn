@@ -38,3 +38,5 @@ modulate = Color(1, 1, 1, 0.498039)
 metadata/_edit_lock_ = true
 
 [connection signal="input_event" from="CollisionArea" to="." method="_on_collision_area_input_event"]
+[connection signal="mouse_entered" from="CollisionArea" to="." method="_on_collision_area_mouse_entered"]
+[connection signal="mouse_exited" from="CollisionArea" to="." method="_on_collision_area_mouse_exited"]

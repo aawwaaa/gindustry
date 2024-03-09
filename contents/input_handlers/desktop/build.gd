@@ -292,14 +292,13 @@ func _on_build_plan_operate(operation: String) -> void:
             plan.check_passed = false
     # todo scematic operation
 
-func _on_building_shadow_container_input(container: BuildingShadowContainer, event: InputEvent) -> void:
+func continue_build(container: BuildingShadowContainer) -> void:
     var ui = GameUI.instance.build_ui
-    if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
-        var plan = BuildPlan.new()
-        plan.building_type = container.building_type
-        plan.position = container.shadow.pos
-        plan.rotation = container.shadow.rot
-        plan.world = container.entity.world
-        plan.building_config = container.building_config
-        plan.paused = ui.build_paused
-        controller.build_plan.push_front(plan)
+    var plan = BuildPlan.new()
+    plan.building_type = container.building_type
+    plan.position = container.shadow.pos
+    plan.rotation = container.shadow.rot
+    plan.world = container.entity.world
+    plan.building_config = container.building_config
+    plan.paused = ui.build_paused
+    controller.build_plan.push_front(plan)

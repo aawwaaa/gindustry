@@ -21,7 +21,7 @@ func handle_input_event_mouse(event: InputEventMouse, unhandled: bool = false) -
     if not entity: return
     item_use_position = world_pos
     update_item_use()
-    if unhandled and Input.is_action_just_pressed("item_use_confirm"):
+    if unhandled and Input.is_action_just_pressed("confirm_item_use"):
         confirm_item_use()
 
 func update_item_use() -> void:

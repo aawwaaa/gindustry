@@ -38,3 +38,6 @@ func _handle_input(event: InputEvent) -> void:
 
 func _handle_process(delta: float) -> void:
     pass
+
+func _handle_interact(target: Entity, input: InputEvent) -> bool:
+    return false

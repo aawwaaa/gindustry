@@ -35,6 +35,8 @@ func _ready() -> void:
     shadow.rot = rot
     shadow.finish_build(self)
     shadow_inited = true
+    shadow.mouse_entered.connect(_on_collision_object_2d_mouse_entered)
+    shadow.mouse_exited.connect(_on_collision_object_2d_mouse_exited)
 
     if should_place: place()
     if should_destroy: destroy()
@@ -98,7 +100,7 @@ func _get_providers() -> Array[Provider]:
 func get_providers() -> Array[Provider]:
     return _get_providers()
 
-func get_local_pos(tile_pos: Vector2) -> Vector2:
+func get_local_pos(tile_pos: Vector2i) -> Vector2i:
     var delta = tile_pos - self.tile_pos
     return delta.rotated(-Tile.to_entity_rot(shadow.rot))
 

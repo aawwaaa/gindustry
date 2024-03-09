@@ -7,6 +7,7 @@ signal on_load_data(stream: Stream);
 
 signal access_target_changed(target: Node2D, from: Node2D)
 signal access_from(source: Node2D, removed: bool)
+signal input_operation(operation: String, args: Array[Variant])
 
 static var entity_ref_targets: Dictionary = {}
 
@@ -196,6 +197,15 @@ func check_access_range(target_world: World, target_position: Vector2) -> bool:
 func remove() -> void:
     world.remove_entity(self)
     main_node.queue_free()
+
+func input_operate(operation: String, args: Array[Variant]) -> void:
+    input_operation.emit(operation, args)
+
+func _on_collision_object_2d_mouse_entered() -> void:
+    Global.input_handler.add_interacting_entity(self)
+
+func _on_collision_object_2d_mouse_exited() -> void:
+    Global.input_handler.remove_interacting_entity(self)
 
 static func load_from(stream: Stream) -> Entity:
     var data_entity_type = Contents.get_content_by_index(stream.get_32()) as EntityType;

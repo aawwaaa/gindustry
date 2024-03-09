@@ -22,6 +22,7 @@ signal controller_target_changed(target: ControllerAdapter, from: ControllerAdap
 signal controller_target_entity_changed(entity: Entity, from: Entity)
 
 var input_processors: Dictionary = {}
+var interacting_entities: Array[Entity] = []
 
 var player: Player:
     get: return Game.current_player
@@ -41,6 +42,18 @@ func _unload_ui(node: Control) -> void:
 
 func _ready() -> void:
     Game.current_player_changed.connect(_on_player_changed)
+    Game.signal_reset_game.connect(_on_reset_game)
+
+func _on_reset_game() -> void:
+    interacting_entities.clear()
+
+func add_interacting_entity(entity: Entity) -> void:
+    if entity in interacting_entities: return
+    interacting_entities.append(entity)
+
+func remove_interacting_entity(entity: Entity) -> void:
+    if entity not in interacting_entities: return
+    interacting_entities.erase(entity)
 
 func _accept_input(name: StringName, func_name: StringName, args: Array = []) -> bool:
     return true

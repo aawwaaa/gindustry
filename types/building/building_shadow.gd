@@ -2,6 +2,8 @@ class_name BuildingShadow
 extends Node2D
 
 signal input(event: InputEvent)
+signal mouse_exited()
+signal mouse_entered()
 
 var building_type: BuildingType
 
@@ -183,3 +185,10 @@ func _update_position(options: Dictionary = {}) -> void:
 
 func update_position(options: Dictionary = {}) -> void:
     _update_position(options)
+
+func _on_collision_area_mouse_exited() -> void:
+    mouse_exited.emit()
+
+func _on_collision_area_mouse_entered() -> void:
+    mouse_entered.emit()
+
