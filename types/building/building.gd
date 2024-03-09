@@ -98,6 +98,10 @@ func _get_providers() -> Array[Provider]:
 func get_providers() -> Array[Provider]:
     return _get_providers()
 
+func get_local_pos(tile_pos: Vector2) -> Vector2:
+    var delta = tile_pos - self.tile_pos
+    return delta.rotated(-Tile.to_entity_rot(shadow.rot))
+
 func _get_adapter_at(pos: Vector2i, rot: int, type: String) -> EntityAdapter:
     return null
 
