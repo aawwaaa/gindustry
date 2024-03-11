@@ -15,7 +15,7 @@ var hand_slot: int = 0
 
 var slots: Array[Item] = []
 
-func _handle_operation(operate: String, args: Array) -> void:
+func _handle_operation(operate: String, args: Array = []) -> void:
     match operate:
         "swap_with_hand":
             var slot: int = args[0]
@@ -33,7 +33,7 @@ func _handle_operation(operate: String, args: Array) -> void:
             use._use()
 
 
-func _handle_remote_operation(source: Entity, operate: String, args: Array) -> void:
+func _handle_remote_operation(source: Entity, operate: String, args: Array = []) -> void:
     match operate:
         "swap_with_other_hand":
             var slot: int = args[0]

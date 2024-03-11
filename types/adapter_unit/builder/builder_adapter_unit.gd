@@ -60,7 +60,6 @@ func process_build() -> void:
     for missing in missings:
         var used_costs = minf(missing.get_cost(), overflowed_costs)
         var amount = mini(missing.amount, missing.get_amount_by_cost(used_costs))
-        print(amount)
         split_amounts[item_index] = amount
         item_index += 1
     for index in split_amounts.size():

@@ -13,6 +13,6 @@ script = ExtResource("1_tw0cs")
 floor_type = ExtResource("1_51nof")
 item_texture = SubResource("AtlasTexture_umo2x")
 max_stack_amount = 100
-cost_per_item = 0.1
+cost_per_item = 1
 id = "copper"
 options = {}

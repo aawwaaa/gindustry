@@ -94,7 +94,7 @@ var speed: float
 var left_track: SingleTrack
 var right_track: SingleTrack
 
-func _ready() -> void:
+func _init() -> void:
     left_track = SingleTrack.new()
     right_track = SingleTrack.new()
     add_child(left_track)

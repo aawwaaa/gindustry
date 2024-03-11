@@ -55,6 +55,15 @@ func remove_interacting_entity(entity: Entity) -> void:
     if entity not in interacting_entities: return
     interacting_entities.erase(entity)
 
+func get_interacting_target() -> Entity:
+    if interacting_entities.size() == 0: return null
+    return interacting_entities.back()
+
+func interact_operate(operation: String, args: Array[Variant] = []) -> void:
+    var target = get_interacting_target()
+    if not target: return
+    target.input_operate(operation, args)
+
 func _accept_input(name: StringName, func_name: StringName, args: Array = []) -> bool:
     return true
 

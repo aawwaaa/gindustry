@@ -78,6 +78,7 @@ static func get_entity_by_ref_or_null(target_id: int) -> Entity:
 
 func _exit_tree() -> void:
     entity_ref_targets.erase(entity_id)
+    Global.input_handler.remove_interacting_entity(self)
 
 func get_world() -> World:
     if parent_entity:
@@ -198,7 +199,7 @@ func remove() -> void:
     world.remove_entity(self)
     main_node.queue_free()
 
-func input_operate(operation: String, args: Array[Variant]) -> void:
+func input_operate(operation: String, args: Array[Variant] = []) -> void:
     input_operation.emit(operation, args)
 
 func _on_collision_object_2d_mouse_entered() -> void:

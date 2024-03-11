@@ -166,7 +166,7 @@
     [ ] LiquidPort
         source: LiquidSource
         etc.
-[ ] Controller直接调用Adapter
+[X] Controller直接调用Adapter
 
 [ ] 当前选择的建筑/物品显示
 [ ] 建筑点击ui(call InputHandler)

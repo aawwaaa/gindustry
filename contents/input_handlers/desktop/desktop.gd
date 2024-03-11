@@ -5,7 +5,7 @@ var keys = {}
 
 var move: DesktopInputHandler_Movement
 var camera: DesktopInputHandler_Camera
-var item_use: DesktopInputHandler_ItemUse
+var item: DesktopInputHandler_Item
 var build: DesktopInputHandler_Build
 
 func _ready() -> void:
@@ -15,8 +15,8 @@ func _ready() -> void:
     add_child(move)
     camera = DesktopInputHandler_Camera.new(self)
     add_child(camera)
-    item_use = DesktopInputHandler_ItemUse.new(self)
-    add_child(item_use)
+    item = DesktopInputHandler_Item.new(self)
+    add_child(item)
     build = DesktopInputHandler_Build.new(self)
     add_child(build)
     input_processors["build"] = build
@@ -27,19 +27,19 @@ func _ready() -> void:
     })
 
 func _handle_unhandled_input(event: InputEvent) -> void:
-    item_use.handle_unhandled_input(event)
+    item.handle_unhandled_input(event)
     build.handle_unhandled_input(event)
 
 func _handle_input(event: InputEvent) -> void:
     if event is InputEventMouse: handle_input_event_mouse(event)
     if event is InputEventKey: handle_input_event_key(event)
-    item_use.handle_input(event)
+    item.handle_input(event)
     build.handle_input(event)
     
 func _handle_process(_delta: float) -> void:
     if entity: update_debug_message()
-    if build.activate and item_use.enabled: item_use.enabled = false
-    if not build.activate and not item_use.enabled: item_use.enabled = true
+    if build.activate and item.enabled: item.enabled = false
+    if not build.activate and not item.enabled: item.enabled = true
 
 func _load_ui(node: Control) -> void:
     build.load_ui(node)
@@ -48,7 +48,7 @@ func _unload_ui(node: Control) -> void:
     build.unload_ui(node)
 
 func _accept_input(name: StringName, func_name: StringName, args: Array = []) -> bool:
-    if name == "build" and item_use.activate: return false
+    if name == "build" and item.activate: return false
     return true
 
 func handle_input_event_mouse(event: InputEventMouse) -> void:

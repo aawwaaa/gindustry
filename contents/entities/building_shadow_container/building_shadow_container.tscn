@@ -13,6 +13,7 @@ main_node = NodePath("..")
 layer_follow_world = true
 layer = 1
 
+[connection signal="input_operation" from="Entity" to="." method="_on_entity_input_operation"]
 [connection signal="layer_changed" from="Entity" to="." method="_on_entity_layer_changed"]
 [connection signal="on_load_data" from="Entity" to="." method="_on_entity_on_load_data"]
 [connection signal="on_save_data" from="Entity" to="." method="_on_entity_on_save_data"]

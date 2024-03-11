@@ -48,6 +48,15 @@ func handle_input_event_mouse(event: InputEventMouse, unhandled: bool = false) -
     building_shadow_position = Tile.to_tile_pos(world_pos)
     if entity: update_building_shadow()
     if entity and unhandled: handle_drag(event, world_pos)
+    var interacting = handler.get_interacting_target()
+    if interacting and event is InputEventMouseButton and unhandled and event.pressed:
+        if interacting.main_node is BuildingShadowContainer:
+            handle_interact_with_building_shadow_container(event, interacting)
+
+
+func handle_interact_with_building_shadow_container(event: InputEventMouseButton, interacting: Entity) -> void:
+    if event.button_index == MOUSE_BUTTON_LEFT:
+        handler.interact_operate("continue_build", [])
 
 func load_ui(node: Control) -> void:
     signals.merge({

@@ -1,4 +1,4 @@
-class_name DesktopInputHandler_ItemUse
+class_name DesktopInputHandler_Item
 extends InputHandlerModule
 
 var item_use_position: Vector2;
