@@ -17,27 +17,15 @@ var slots: Array[Item] = []
 
 func _handle_operation(operate: String, args: Array = []) -> void:
     match operate:
-        "swap_with_hand":
-            var slot: int = args[0]
-            swap_with_other_hand(slot)
-        "use_hand":
-            var world: World = args[0]
-            var position: Vector2 = args[1]
-            var item = get_slot(hand_slot)
-            if not item or not await item._useable(entity_node, world, position):
-                return
-            var use = item.create_use(entity_node, world)
-            use.inventory = self
-            use.slot = hand_slot
-            use._set_position(position)
-            use._use()
+        "swap_with_hand": swap_with_other_hand(args[0])
+        "use_hand": use_hand(args[0], args[1])
+        "drop_item": drop_item(args[0], args[1])
+        "drop_item_at": drop_item_at(args[0], args[1], args[2])
 
 
 func _handle_remote_operation(source: Entity, operate: String, args: Array = []) -> void:
     match operate:
-        "swap_with_other_hand":
-            var slot: int = args[0]
-            swap_with_other_hand(slot, source.get_adapter("inventory"))
+        "swap_with_other_hand": swap_with_other_hand(args[0], source.get_adapter("inventory"))
 
 func _ready() -> void:
     slots_size = slots_size
@@ -72,6 +60,29 @@ func get_slot(slot: int) -> Item:
     if not is_slot_has_item(slot):
         return null
     return slots[slot]
+
+func use_hand(world: World, position: Vector2) -> void:
+    var item = get_slot(hand_slot)
+    if not item or not await item._useable(entity_node, world, position):
+        return
+    var use = item.create_use(entity_node, world)
+    use.inventory = self
+    use.slot = hand_slot
+    use._set_position(position)
+    use._use()
+
+func drop_item(target: Entity, type: String = "all") -> void:
+    if not entity_node.request_access_target(target.main_node): return
+    var item = get_slot(hand_slot)
+    var amount = item.amount if type == "all" else \
+            floori(item.amount / 2.0) if type == "half" else \
+            1 if type == "one" else 0
+    var splited = item.split_to(amount)
+    target.get_adapter("item").add_item(splited)
+    entity_node.clear_access_target()
+
+func drop_item_at(world: World, position: Vector2, type: String = "all") -> void:
+    pass
 
 func swap_with_other_hand(slot: int, other: Inventory = self) -> void:
     if not other.is_slot_has_item(other.hand_slot) or \

@@ -49,6 +49,7 @@ func get_target_attribute(key: String) -> Variant:
 
 @rpc("authority", "call_remote", "reliable")
 func operate_target_rpc(operation: String, args: Array[Variant] = []) -> void:
+    args = args.map(func(v): return get_tree().root.get_node(v) if v is NodePath else v)
     target.operate(self, operation, args)
 
 @rpc("authority", "call_remote", "reliable")
@@ -61,18 +62,21 @@ func clear_access_target_rpc() -> void:
 
 @rpc("authority", "call_remote", "reliable")
 func operate_remote_target_rpc(operation: String, args: Array[Variant] = []) -> bool:
+    args = args.map(func(v): return get_tree().root.get_node(v) if v is NodePath else v)
     return target.operate_remote(self, operation, args)
 
 func operate_target(operation: String, args: Array[Variant] = []) -> void:
+    args = args.map(func(v): return get_tree().root.get_path_to(v) if v is Node else v)
     MultiplayerServer.rpc_sync(self, "operate_target_rpc", [operation, args])
 
 func request_access_target(target: Node2D) -> void:
-    MultiplayerServer.rpc_sync(self, "request_access_target_rpc", [target.get_path_to(get_tree().root)])
+    MultiplayerServer.rpc_sync(self, "request_access_target_rpc", [get_tree().root.get_path_to(target)])
 
 func clear_access_target() -> void:
     MultiplayerServer.rpc_sync(self, "clear_access_target_rpc")
 
 func operate_remote_target(operation: String, args: Array[Variant] = []) -> void:
+    args = args.map(func(v): return get_tree().root.get_path_to(v) if v is Node else v)
     MultiplayerServer.rpc_sync(self, "operate_remote_target_rpc", [operation, args])
 
 @rpc("authority", "call_remote", "reliable")
