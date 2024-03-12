@@ -68,6 +68,7 @@ unique_name_in_owner = true
 script = ExtResource("4_ltlka")
 available_attributes = Array[String](["position", "rotation"])
 available_operations = Array[String](["inventory"])
+callback_get_attribute = &"get_attribute"
 main_node = NodePath("..")
 entity_node = NodePath("../Entity")
 

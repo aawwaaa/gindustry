@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://bqqrwkxmkqh7i"]
+
+[ext_resource type="Script" path="res://contents/buildings/dropped_item/dropped_item.gd" id="1_67ucp"]
+[ext_resource type="Script" path="res://types/item/inventory.gd" id="2_1shiw"]
+[ext_resource type="Script" path="res://contents/buildings/dropped_item/dropped_item_building.gd" id="2_vpol3"]
+[ext_resource type="Script" path="res://types/entity/inventory_panel_adapter.gd" id="4_8barh"]
+[ext_resource type="PackedScene" uid="uid://c5wyk4iqtd5r8" path="res://contents/buildings/dropped_item/inventory_panel.tscn" id="5_8pu5g"]
+
+[node name="DroppedItem" type="Node2D" node_paths=PackedStringArray("entity")]
+script = ExtResource("1_67ucp")
+entity = NodePath("Building")
+
+[node name="Building" type="Node" parent="." node_paths=PackedStringArray("shadow_container", "main_node")]
+script = ExtResource("2_vpol3")
+shadow_container = NodePath("..")
+main_node = NodePath("..")
+adapters = {
+"inventory": NodePath("../Inventory"),
+"item": NodePath("../Inventory"),
+"panel": NodePath("../InventoryPanelAdapter")
+}
+layer_follow_world = true
+layer = 1
+
+[node name="Inventory" type="Node" parent="." node_paths=PackedStringArray("main_node", "entity_node")]
+script = ExtResource("2_1shiw")
+slots_size = 4
+main_node = NodePath("..")
+entity_node = NodePath("../Building")
+
+[node name="InventoryPanelAdapter" type="Node" parent="." node_paths=PackedStringArray("main_node", "entity_node")]
+script = ExtResource("4_8barh")
+panel_scene = ExtResource("5_8pu5g")
+main_node = NodePath("..")
+entity_node = NodePath("../Building")
+
+[connection signal="inventory_slot_changed" from="Inventory" to="." method="_on_inventory_inventory_slot_changed"]

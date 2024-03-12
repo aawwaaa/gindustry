@@ -81,6 +81,9 @@ func drop_item(target: Entity, type: String = "all") -> void:
     target.get_adapter("item").add_item(splited)
     entity_node.clear_access_target()
 
+static func create_dropped_item_at(world: World, position: Vector2) -> void:
+    pass
+
 func drop_item_at(world: World, position: Vector2, type: String = "all") -> void:
     pass
 

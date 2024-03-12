@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="BuildingType" load_steps=6 format=3 uid="uid://be4t62wwdegkj"]
+
+[ext_resource type="Resource" uid="uid://ceig7jq8y8add" path="res://contents/building_categories/misc.tres" id="1_34xpj"]
+[ext_resource type="PackedScene" uid="uid://bqqrwkxmkqh7i" path="res://contents/buildings/dropped_item/dropped_item.tscn" id="2_705lp"]
+[ext_resource type="Texture2D" uid="uid://crwk21yk35jph" path="res://assets/buildings/dropped-item.png" id="3_2f0bl"]
+[ext_resource type="Script" path="res://types/contents/building_type.gd" id="4_kf6ac"]
+[ext_resource type="PackedScene" uid="uid://q3fnbrvk20t0" path="res://contents/buildings/dropped_item/shadow.tscn" id="5_60waw"]
+
+[resource]
+script = ExtResource("4_kf6ac")
+icon = ExtResource("3_2f0bl")
+shadow = ExtResource("5_60waw")
+category = ExtResource("1_34xpj")
+requirements = Array[Resource("res://types/item/packed_item_stack.gd")]([])
+attributes = Array[Resource("res://types/building/building_attribute.gd")]([])
+entity_scene = ExtResource("2_705lp")
+controllable = false
+id = "dropped_item"
+options = {}

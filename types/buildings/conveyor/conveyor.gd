@@ -38,6 +38,14 @@ func _handle_get_data(name: String, source: Building, source_component: Building
         "output": return side == Sides.right
     return super._handle_get_data(name, source, source_component, args)
 
+func get_adapter_at(pos: Vector2i, type: String) -> EntityAdapter:
+    if pos != Vector2i.ZERO or type != "item": return null
+    return entity.adapters["item"]
+
+func get_component_at(pos: Vector2i, rot: int, type: String) -> BuildingComponent:
+    if pos != entity.pos: return null
+    return self
+
 func update_ports() -> void:
     var up = get_component(Sides.up, "conveyor")
     var up_value = DisplayDirectons.up if up and up.get_data("output", entity, self) else 0

@@ -22,7 +22,13 @@ func handle_input_event_mouse(event: InputEventMouse, unhandled: bool = false) -
     item_use_position = world_pos
     update_item_use()
     if unhandled and Input.is_action_just_pressed("confirm_item_use"):
-        confirm_item_use()
+        confirm_item_use() 
+    var inventory = entity.get_adapter("inventory")
+    var item = inventory.get_slot(inventory.hand_slot)
+    if unhandled and item:
+        if Input.is_action_just_pressed("drop_an_item"): confirm_drop_item("one", world_pos)
+        if Input.is_action_just_pressed("drop_half_item"): confirm_drop_item("half", world_pos)
+        if Input.is_action_just_pressed("drop_all_item"): confirm_drop_item("all", world_pos)
 
 func update_item_use() -> void:
     var inventory = entity.get_adapter("inventory")
@@ -52,3 +58,16 @@ func confirm_item_use() -> void:
     item_use.queue_free()
     item_use = null
 
+func confirm_drop_item(type: String, pos: Vector2) -> void:
+    var interacting = handler.get_interacting_target()
+    if not interacting:
+        controller.operate_target("adapter", ["inventory", "drop_item_at", entity.world, pos, type])
+        return
+    handler.interact_operate("drop_item", [type, pos])
+
+func access_target_ui(target: Node2D) -> void:
+    controller.request_access_target(target)
+    GameUI.instance.player_inventory.show()
+
+func clear_access_target() -> void:
+    controller.clear_access_target()

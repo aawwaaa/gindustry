@@ -41,11 +41,7 @@ func get_attribute(key: String) -> Variant:
     return null
 
 func _on_controller_adapter_operation_received(operation: String, args: Array) -> void:
-    match operation:
-        "inventory":
-            %Inventory.handle_operation(args[0], args.slice(1))
-
-const current_data_version = 0
+    pass
 
 func _on_entity_on_load_data(stream: Stream) -> void:
     Utils.load_data_with_version(stream, [])

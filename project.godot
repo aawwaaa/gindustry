@@ -43,6 +43,11 @@ window/stretch/aspect="expand"
 window/custom=""
 window/version="1.0.0"
 
+[editor]
+
+movie_writer/movie_file="E:/workspace/out.avi"
+movie_writer/disable_vsync=true
+
 [editor_plugins]
 
 enabled=PackedStringArray()

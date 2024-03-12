@@ -23,6 +23,9 @@ signal remote_operation_received(from: Entity, operation: String, args: Array[Va
 @export var available_operations: Array[String] = [];
 @export var available_remote_operations: Array[String] = [];
 
+@export_group("callbacks", "callback_")
+@export var callback_get_attribute: StringName = "";
+
 func _ready() -> void:
     load_adapter()
 
@@ -32,7 +35,7 @@ func _check_access(controller: Controller) -> bool:
 func get_attribute(key: String) -> Variant:
     if not available_attributes.has(key):
         return null
-    return main_node.get_attribute(key)
+    return main_node.call(callback_get_attribute, key)
 
 func get_adapter_id() -> int:
     return entity_node.entity_id

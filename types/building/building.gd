@@ -5,7 +5,10 @@ signal placed()
 signal destroyed()
 
 @export var shadow_container: Node2D
-@export var has_building_adapters: bool = false
+@export_group("callbacks", "callback_")
+@export var callback_get_adapter_at: StringName = "";
+@export var callback_get_component_at: StringName = "";
+@export var callback_handle_break: StringName = ""
 
 var building_type: BuildingType:
     get: return entity_type if entity_type is BuildingType else null
@@ -65,6 +68,9 @@ func destroy() -> void:
 
 func _handle_break(unit: BuilderAdapterUnit) -> bool:
     if not accept_access(unit.adapter.entity_node.main_node): return false
+    if callback_handle_break != "" and not main_node.call(callback_handle_break, unit): return false
+    for adapter in adapters.values():
+        if not adapter._handle_break(unit): return false
     return true
 
 func handle_break(unit: BuilderAdapterUnit) -> bool:
@@ -104,19 +110,14 @@ func get_local_pos(tile_pos: Vector2i) -> Vector2i:
     var delta = tile_pos - self.tile_pos
     return delta.rotated(-Tile.to_entity_rot(shadow.rot))
 
-func _get_adapter_at(pos: Vector2i, rot: int, type: String) -> EntityAdapter:
-    return null
-
-func get_adapter_at(pos: Vector2i, rot: int, type: String) -> EntityAdapter:
-    if not has_building_adapters: return null
-    var delta = pos - shadow.pos
-    var shadow_rotation = Tile.to_entity_rot(shadow.rot)
-    var rotated = delta.rotated(-shadow_rotation)
-    return _get_adapter_at(rotated, shadow_rotation, type)
+func get_adapter_at(pos: Vector2i, type: String) -> EntityAdapter:
+    if callback_get_adapter_at == "": return null
+    return main_node.call(callback_get_adapter_at, get_local_pos(pos), type)
 
 func get_component_at(pos: Vector2i, rot: int, type: String) -> BuildingComponent:
     if not shadow.pos_to_component.has(pos): return null
     if not shadow.pos_to_component[pos].has(type): return null
+    if callback_get_component_at != "": return main_node.call(callback_get_component_at, pos, rot, type)
     var component: BuildingComponent = shadow.pos_to_component[pos][type]
     var side = BuildingComponent.ROT_TO_SIDE[rot]
     if not component.has_side(side): return null

@@ -10,3 +10,8 @@ func _on_entity_layer_changed(_layer: int, _from: int) -> void:
     var mask = get_entity().get_collision_mask(0, 0);
     collision_layer = mask;
     collision_mask = mask;
+
+# func _physics_process(delta: float) -> void:
+#     var player_pos = Game.current_player.get_controller().target.main_node.position
+#     var delta_vec = player_pos - position
+#     apply_force(delta_vec.normalized() * 1000)

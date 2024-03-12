@@ -12,6 +12,7 @@ func _on_close_requested() -> void:
     if Game.current_player:
         Game.current_player.get_controller().clear_access_target()
     hide()
+    Global.input_handler.call_input_processor("item", "clear_access_target")
 
 func _on_input_handler_changed(handler: InputHandler, from: InputHandler) -> void:
     Utils.signal_dynamic_connect(handler, from, "controller_target_entity_changed", \
@@ -39,6 +40,7 @@ func toggle_inventory() -> void:
         show()
     else:
         hide()
+        Global.input_handler.call_input_processor("item", "clear_access_target")
 
 func _on_controller_target_access_target_changed(target: Node2D, from: Node2D) -> void:
     load_info(target)

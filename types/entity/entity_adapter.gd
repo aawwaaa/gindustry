@@ -19,3 +19,6 @@ func _handle_operation(operation: String, args: Array[Variant] = []) -> void:
 func _handle_remote_operation(source: Entity, operation: String, args: Array[Variant] = []) -> void:
     pass
 
+func _handle_break(unit: BuilderAdapterUnit) -> bool:
+    return true
+

@@ -2,6 +2,7 @@ class_name Builtin
 extends Node
 
 static var entity: Dictionary = {}
+static var building: Dictionary = {}
 
 func start_load() -> void:
     Contents.current_loading_mod = Mod.new(load("res://contents/builtin.tres"))
@@ -34,6 +35,9 @@ func start_load() -> void:
 
     await load_content(entity, "entities/", [
         "building_shadow_container/entity.tres",
+    ])
+    await load_content(building, "buildings/", [
+        "dropped_item/building.tres",
     ])
 
 func load_content(to: Dictionary, prefix: String, paths: Array[String]) -> void:

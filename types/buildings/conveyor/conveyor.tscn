@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://dc53le3s6y6fe"]
 
 [ext_resource type="Script" path="res://types/buildings/conveyor/conveyor.gd" id="1_vfafw"]
-[ext_resource type="Script" path="res://types/buildings/conveyor/conveyor_building.gd" id="2_o4u5b"]
+[ext_resource type="Script" path="res://types/building/building.gd" id="2_5jnnk"]
 [ext_resource type="Script" path="res://types/buildings/conveyor/conveyor_item_adapter.gd" id="3_h66cj"]
 [ext_resource type="Script" path="res://types/buildings/conveyor/conveyor_track.gd" id="4_36et4"]
 
@@ -11,9 +11,10 @@ entity = NodePath("Building")
 sides = 14
 
 [node name="Building" type="Node" parent="." node_paths=PackedStringArray("shadow_container", "main_node")]
-script = ExtResource("2_o4u5b")
+script = ExtResource("2_5jnnk")
 shadow_container = NodePath("..")
-has_building_adapters = true
+callback_get_adapter_at = &"get_adapter_at"
+callback_get_component_at = &"get_component_at"
 main_node = NodePath("..")
 adapters = {
 "item": NodePath("../ItemAdapter")

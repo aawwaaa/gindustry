@@ -60,6 +60,9 @@ func process_build(plan: BuildPlan, tile: Tile) -> void:
             and not place_build_shadow(plan, tile):
         plan.check_passed = false
         return
+    if not tile.building_shadow.entity.accept_access(main_node):
+        plan.check_passed = false
+        return
     for unit in units:
         if unit.current_build_plan == null:
             unit.current_build_plan = plan
@@ -69,6 +72,12 @@ func process_build(plan: BuildPlan, tile: Tile) -> void:
 func process_break(plan: BuildPlan, tile: Tile) -> void:
     if tile.building_ref == 0:
         plan.build_finished = true
+        return
+    if tile.building and not tile.building.accept_access(main_node):
+        plan.check_passed = false
+        return
+    if tile.building_shadow and not tile.building_shadow.entity.accept_access(main_node):
+        plan.check_passed = false
         return
     for unit in units:
         if unit.current_build_plan == null:
