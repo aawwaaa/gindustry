@@ -50,8 +50,8 @@ class SettingsUIGroup extends RefCounted:
         node.add_child(body)
         var group = SettingsUIGroup.new(body)
         group.parent = self
-        childs_load.append(group.load.bind())
-        childs_save.append(group.save.bind())
+        childs_load.append(func(): group.load())
+        childs_save.append(func(): group.save())
         return group
 
     func label(text: String) -> Label:

@@ -134,17 +134,20 @@ func can_build_on(building_type: BuildingType) -> bool:
     if building_shadow: return false
     return true
 
-func clear_building() -> void:
+func clear_building(free: bool = true) -> void:
     if building_shadow:
         var shadow = building_shadow
         shadow.destroy()
         shadow.entity.remove()
+        if free: shadow.queue_free()
         building_ref = 0
         return
-    var inst = building
-    inst.destroy()
-    inst.remove()
-    building_ref = 0
+    if building:
+        var inst = building
+        inst.destroy()
+        inst.remove()
+        if free: inst.queue_free()
+        building_ref = 0
 
 func set_building(type: BuildingType, rot: int = 0, config: Variant = type._get_default_config() if type else null) -> Building:
     if building or building_shadow: clear_building()

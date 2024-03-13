@@ -69,8 +69,8 @@ func destroy() -> void:
 func _handle_break(unit: BuilderAdapterUnit) -> bool:
     if not accept_access(unit.adapter.entity_node.main_node): return false
     if callback_handle_break != "" and not main_node.call(callback_handle_break, unit): return false
-    for adapter in adapters.values():
-        if not adapter._handle_break(unit): return false
+    for adapter in adapters:
+        if not get_adapter(adapter)._handle_break(unit): return false
     return true
 
 func handle_break(unit: BuilderAdapterUnit) -> bool:

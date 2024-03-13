@@ -169,8 +169,9 @@
 [X] Controller直接调用Adapter
 
 [ ] 当前选择的建筑/物品显示
-[ ] 建筑点击ui(call InputHandler)
-[ ] 丢物品进建筑(建筑操作[位置, 物品, 类型])
+[X] 建筑点击ui(call InputHandler)
+[X] 丢物品进建筑(建筑操作[位置, 物品, 类型])
+[ ] configuring
 [ ] alt显示
 [ ] TileOre[WithData]
     [ ] TileOreType

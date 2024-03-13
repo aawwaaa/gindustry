@@ -9,8 +9,6 @@ func _ready() -> void:
     Global.input_handler_changed.connect(_on_input_handler_changed)
 
 func _on_close_requested() -> void:
-    if Game.current_player:
-        Game.current_player.get_controller().clear_access_target()
     hide()
     Global.input_handler.call_input_processor("item", "clear_access_target")
 
@@ -43,14 +41,14 @@ func toggle_inventory() -> void:
         Global.input_handler.call_input_processor("item", "clear_access_target")
 
 func _on_controller_target_access_target_changed(target: Node2D, from: Node2D) -> void:
-    load_info(target)
+    load_info(target.get_entity() if target else null)
 
-func load_info(access_target: Node2D) -> void:
+func load_info(access_target: Entity) -> void:
     for child in %Info.get_children():
+        %Info.remove_child(child)
         if child == default_inventory_panel_inst:
             child.request_operation.disconnect(_on_panel_request_operation)
             child.request_remote_operation.disconnect(_on_panel_request_remote_operation)
-            %Info.remove_child(child)
             continue
         child.queue_free()
     if access_target == null or not access_target.has_adapter("panel"):

@@ -33,6 +33,9 @@ var access_target: Node2D:
         var old = access_target
         access_target = v
         access_target_changed.emit(v, old)
+        if old: old.get_entity().access_sources.erase(self)
+        if v: v.get_entity().access_sources.push_back(self)
+var access_sources: Array[Entity] = []
 
 @export var access_range: Area2D;
 var world: World:
@@ -76,9 +79,12 @@ static func get_entity_by_ref_or_null(target_id: int) -> Entity:
         return entity_ref_targets[target_id]
     return null
 
-func _exit_tree() -> void:
-    entity_ref_targets.erase(entity_id)
-    Global.input_handler.remove_interacting_entity(self)
+func _notification(what: int) -> void:
+    if what == NOTIFICATION_PREDELETE:
+        for source in access_sources:
+            source.clear_access_target()
+        entity_ref_targets.erase(entity_id)
+        Global.input_handler.remove_interacting_entity(self)
 
 func get_world() -> World:
     if parent_entity:
@@ -154,15 +160,16 @@ func _ready() -> void:
 
 func _on_access_range_body_exited(body: Node2D) -> void:
     if body == access_target:
-        access_target = null
+        clear_access_target()
 
 func accept_access(_from: Node2D) -> bool:
     return true
 
 func request_access_target(body: Node2D) -> bool:
     if access_target == body:
+        access_target = access_target
         return true
-    if access_range and not access_range.get_overlapping_bodies().has(body):
+    if access_range and not check_access_range(body.get_entity().world, body.position):
         return false
     if not body.get_entity().accept_access(main_node):
         return false
@@ -172,7 +179,7 @@ func request_access_target(body: Node2D) -> bool:
 
 func clear_access_target() -> void:
     if access_target:
-        access_target.get_entity().access_to.emit(main_node, true)
+        access_target.get_entity().access_from.emit(main_node, true)
     access_target = null
 
 func check_access_range(target_world: World, target_position: Vector2) -> bool:
