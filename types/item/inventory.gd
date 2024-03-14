@@ -11,7 +11,7 @@ signal inventory_slot_changed(slot_id: int, item_type_changed: bool)
         if slots.size() != slots_size:
             slots.resize(slots_size)
 
-var hand_slot: int = 0
+@export var hand_slot: int = 0
 
 var slots: Array[Item] = [];
 
@@ -36,7 +36,7 @@ func _accept_item_amount(item: Item) -> int:
     var amount = 0;
     for slot in slots.size():
         if is_slot_has_item(slot):
-            amount += slots[slot].get_available_merge_amount(item)
+            amount += get_slot(slot).get_available_merge_amount(item)
         else:
             amount += item.get_max_stack_amount()
 
@@ -60,6 +60,19 @@ func get_slot(slot: int) -> Item:
         return null
     return slots[slot]
 
+func set_slot(slot: int, item: Item) -> void:
+    var old = slots[slot]
+    if item and item.is_empty(): item = null
+    slots[slot] = item
+    inventory_slot_changed.emit(slot, old != item)
+
+func update_slot(slot: int) -> void:
+    if slots[slot] and slots[slot].is_empty():
+        slots[slot] = null
+        inventory_slot_changed.emit(slot, true)
+        return
+    inventory_slot_changed.emit(slot, false)
+
 func use_hand(world: World, position: Vector2) -> void:
     var item = get_slot(hand_slot)
     if not item or not await item._useable(entity_node, world, position):
@@ -77,33 +90,36 @@ func drop_item(target: Entity, type: String = "all") -> void:
             floori(item.amount / 2.0) if type == "half" else \
             1 if type == "one" else 0
     var splited = item.split_to(amount)
-    target.get_adapter("item").add_item(splited)
+    var overflow = target.get_adapter("item").add_item(splited)
+    item.merge_from(overflow)
+    update_slot(hand_slot)
     entity_node.clear_access_target()
 
-static func create_dropped_item_at(world: World, position: Vector2) -> void:
-    pass
+static func create_dropped_item_at(world: World, position: Vector2) -> EntityNode_DroppedItem:
+    var tile_pos = Tile.to_tile_pos(position)
+    var tile = world.get_tile_or_null(tile_pos)
+    if tile.building_ref != 0: return tile.building.main_node \
+            if tile.building and tile.building.main_node is EntityNode_DroppedItem \
+            else null
+    var building = tile.set_building(Contents.get_content_by_id("builtin_building_dropped_item"))
+    return building.main_node
 
 func drop_item_at(world: World, position: Vector2, type: String = "all") -> void:
-    pass
+    var dropped_item = create_dropped_item_at(world, position)
+    drop_item(dropped_item.get_entity(), type)
 
 func swap_with_other_hand(slot: int, other: Inventory = self) -> void:
     if not other.is_slot_has_item(other.hand_slot) or \
-            (is_slot_has_item(slot) and not slots[slot].is_same_item(other.slots[other.hand_slot])):
+            (is_slot_has_item(slot) and not get_slot(slot).is_same_item(other.get_slot(other.hand_slot))):
         if not is_slot_has_item(slot):
             return
         var item = get_slot(slot)
-        slots[slot] = null
-        inventory_slot_changed.emit(slot, true)
-        slots[slot] = other.get_slot(other.hand_slot)
-        other.slots[other.hand_slot] = item if not item.is_empty() else null
-        other.inventory_slot_changed.emit(other.hand_slot, true)
-        inventory_slot_changed.emit(slot, true)
+        set_slot(slot, other.get_slot(other.hand_slot))
+        other.set_slot(other.hand_slot, item)
         return
     var other_item = other.get_slot(other.hand_slot)
-    slots[slot] = other_item.split_to(other_item.amount, get_slot(slot))
-    if other_item.is_empty(): other.slots[other.hand_slot] = null
-    other.inventory_slot_changed.emit(other.hand_slot, true)
-    inventory_slot_changed.emit(slot, true)
+    set_slot(slot, other_item.split_to(other_item.amount, get_slot(slot)))
+    other.update_slot(other.hand_slot)
 
 func _add_item(item: Item) -> Item:
     var amount = 0
@@ -114,10 +130,11 @@ func _add_item(item: Item) -> Item:
             continue
         var last_amount = item.amount
         if not is_slot_has_item(index):
-            slots[index] = item.split_to(Item.INF_AMOUNT)
+            set_slot(index, item.split_to(Item.INF_AMOUNT))
             inventory_slot_changed.emit(index, true)
-        elif slots[index].is_same_item(item):
-            slots[index].merge_from(item)
+        elif get_slot(index).is_same_item(item):
+            get_slot(index).merge_from(item)
+            update_slot(index)
             inventory_slot_changed.emit(index, false)
         var delta = last_amount - item.amount
         amount += delta
@@ -131,11 +148,9 @@ func _remove_item(template: Item, amount: int = template.amount) -> Item:
         var left = amount - item.amount
         if not is_slot_has_item(index):
             continue
-        if item.is_same_item(slots[index]):
-            slots[index].split_to(left, item, true)
-            var empty = slots[index].is_empty()
-            inventory_slot_changed.emit(index, empty)
-            if empty: slots[index] = null
+        if item.is_same_item(get_slot(index)):
+            get_slot(index).split_to(left, item, true)
+            update_slot(index)
     if not item.is_empty():
         item_removed.emit(item, amount)
     return item
@@ -162,9 +177,18 @@ func _get_item_amount(template: Item) -> int:
     for index in slots.size():
         if not is_slot_has_item(index):
             continue
-        if template.is_same_item(slots[index]):
-            amount += slots[index].amount
+        if template.is_same_item(get_slot(index)):
+            amount += get_slot(index).amount
     return amount
+
+func _handle_break(unit: BuilderAdapterUnit) -> bool:
+    for slot in slots.size():
+        if not is_slot_has_item(slot): continue
+        var item = get_slot(slot)
+        var item_adapter = unit.adapter.entity_node.get_adapter("item") as ItemAdapter
+        set_slot(slot, item_adapter.add_item(item))
+        if is_slot_has_item(slot): return false
+    return true
 
 func _should_save_data() -> bool:
     return true

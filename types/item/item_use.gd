@@ -20,6 +20,5 @@ func _use() -> void:
 
 func remove_items(amount: int) -> Item:
     var removed = item.split_to(amount)
-    inventory.inventory_slot_changed.emit(slot, true)
-    if item.is_empty(): inventory.slots[slot] = null
+    inventory.update_slot(slot)
     return removed

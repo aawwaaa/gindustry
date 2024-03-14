@@ -41,7 +41,6 @@ func calcuate_missing_items() -> void:
                 break
         for remove in removes:
             missing_items.erase(remove)
-            remove.queue_free()
         if found or amount == 0: continue
         var missing_item = item.copy_type()
         missing_item.amount = amount
@@ -119,12 +118,6 @@ func _ready() -> void:
     calcuate_building_progress()
     if should_place: place()
     if should_destroy: destroy()
-
-func _exit_tree() -> void:
-    for item in filled_items:
-        item.queue_free()
-    for item in missing_items:
-        item.queue_free()
 
 func place() -> void:
     if not shadow: 

@@ -26,6 +26,7 @@ layer = 1
 [node name="Inventory" type="Node" parent="." node_paths=PackedStringArray("main_node", "entity_node")]
 script = ExtResource("2_1shiw")
 slots_size = 4
+hand_slot = -1
 main_node = NodePath("..")
 entity_node = NodePath("../Building")
 

@@ -178,13 +178,13 @@
     [ ] [Floor/Overlay].ores/ore_with_data
     [ ] TileOre_ItemOre
 
-[ ] 6. 带物品的建筑拆除
-[ ] 7. 掉落物
+[X] 6. 带物品的建筑拆除
+[X] 7. 掉落物
     [X] Access
     [X] Panel
     [X] 物品丢失修复
-    [ ] 创建掉落物
-    [ ] 拆除
+    [X] 创建掉落物
+    [X] 拆除
 [ ] 8. 建筑复制
 [ ] 9. 蓝图
 [ ] 10. 蓝图操作
