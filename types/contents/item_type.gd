@@ -1,7 +1,7 @@
 class_name ItemType
 extends Content
 
-const DISPLAY_SCENE = preload("res://types/item/item_display.tscn")
+const ITEM_DISPLAY = preload("res://types/item/item_display.tscn")
 
 var max_stack: int:
     get = get_max_stack
@@ -32,7 +32,7 @@ func _get_texture() -> Texture2D:
     return null
 
 func _get_display() -> PackedScene:
-    return null
+    return ITEM_DISPLAY
 
 func _get_max_stack() -> int:
     return 100

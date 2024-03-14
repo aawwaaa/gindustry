@@ -8,7 +8,7 @@ func _ready() -> void:
     data_updated()
 
 func data_updated() -> void:
-    %Icon.texture = item.item_type.texture
+    %Icon.texture = item.item_type.get_texture()
 
 func _set_in_inventory(in_inventory: bool, inventory: Inventory) -> void:
     pass

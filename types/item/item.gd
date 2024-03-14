@@ -80,9 +80,7 @@ func merge_from(source: Item, override_max_stack: bool = false, merge_amount: in
     if not is_same_item(source):
         return source
     source = _merge_from(source, override_max_stack, merge_amount)
-    if source.is_empty():
-        source.queue_free()
-        return null
+    if source.is_empty(): return null
     return source
 
 func _useable_no_await(entity: Entity, world: World, target_position: Vector2) -> bool:
@@ -125,7 +123,7 @@ func get_amount_by_cost(cost: float) -> int:
     return _get_amount(cost)
 
 func create_display() -> ItemDisplay:
-    var display = item_type.get_display()
+    var display = item_type.get_display().instantiate()
     display.item = self
     return display
 

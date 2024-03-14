@@ -11,6 +11,5 @@ func _use() -> void:
     var tile = world.get_tile_or_null(tile_pos)
     if not tile: return queue_free()
     var removed = remove_items(1);
-    removed.queue_free()
     tile.set_floor(item.item_type.floor_type)
     queue_free()

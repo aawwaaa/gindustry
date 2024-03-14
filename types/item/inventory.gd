@@ -95,12 +95,13 @@ func swap_with_other_hand(slot: int, other: Inventory = self) -> void:
         slots[slot] = null
         inventory_slot_changed.emit(slot, true)
         slots[slot] = other.get_slot(other.hand_slot)
-        other.slots[other.hand_slot] = item
+        other.slots[other.hand_slot] = item if not item.is_empty() else null
         other.inventory_slot_changed.emit(other.hand_slot, true)
         inventory_slot_changed.emit(slot, true)
         return
     var other_item = other.get_slot(other.hand_slot)
     slots[slot] = other_item.split_to(other_item.amount, get_slot(slot))
+    if other_item.is_empty(): other.slots[other.hand_slot] = null
     other.inventory_slot_changed.emit(other.hand_slot, true)
     inventory_slot_changed.emit(slot, true)
 
@@ -132,7 +133,9 @@ func _remove_item(template: Item, amount: int = template.amount) -> Item:
             continue
         if item.is_same_item(slots[index]):
             slots[index].split_to(left, item, true)
-            inventory_slot_changed.emit(index, slots[index].is_empty())
+            var empty = slots[index].is_empty()
+            inventory_slot_changed.emit(index, empty)
+            if empty: slots[index] = null
     if not item.is_empty():
         item_removed.emit(item, amount)
     return item

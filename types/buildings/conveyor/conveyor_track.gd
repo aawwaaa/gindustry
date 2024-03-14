@@ -10,12 +10,9 @@ class SingleTrack extends Node2D:
     var items: Array[TrackItem] = []
 
     func add_item(item: Item, position: Vector2) -> void:
-        var track_item = TrackItem.new()
-        track_item.item = item
+        var track_item = TrackItem.new(self, item)
         track_item.position = position
-        track_item.track = self
         items.append(track_item)
-        add_child(item)
         track_item.position_updated()
 
     func item_reach(item: TrackItem) -> void:
@@ -27,19 +24,15 @@ class SingleTrack extends Node2D:
 
     func set_reached_item(item: Item) -> void:
         if reached_item: return
-        var track_item = TrackItem.new()
-        track_item.item = item
+        var track_item = TrackItem.new(self, item)
         track_item.position = Vector2.ZERO
-        track_item.track = self
         items.append(track_item)
-        add_child(item)
         track_item.position_updated()
         reached_item = track_item
 
     func remove_reached_item() -> void:
         if not reached_item: return
-        reached_item.item.position = Vector2.ZERO
-        remove_child(reached_item.item)
+        reached_item.remove()
         reached_item = null
 
     func process_update(speed: float, delta: float) -> void:
@@ -49,8 +42,15 @@ class SingleTrack extends Node2D:
 
 class TrackItem extends RefCounted:
     var item: Item
+    var display: ItemDisplay
     var position: Vector2
     var track: SingleTrack
+
+    func _init(track: SingleTrack, item: Item) -> void:
+        self.item = item
+        self.track = track
+        display = item.create_display()
+        track.add_child(display)
 
     func check_collide(other: TrackItem) -> bool:
         if track != other.track: return false
@@ -69,7 +69,7 @@ class TrackItem extends RefCounted:
         position_updated()
 
     func position_updated() -> void:
-        item.position = position + track.base_position
+        display.position = position + track.base_position
         if position.length_squared() < 1:
             track.item_reach(self)
 
@@ -80,6 +80,9 @@ class TrackItem extends RefCounted:
         var move_delta = Vector2((1 if position.x < 0 else -1) * x_length, \
                 (1 if position.y < 0 else -1) * y_length)
         try_move_to(position + move_delta)
+
+    func remove() -> void:
+        track.remove_child(display)
 
 var speed: float
 @export var left_track_end: Vector2:
