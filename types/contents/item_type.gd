@@ -1,13 +1,8 @@
 class_name ItemType
 extends Content
 
-const ITEM_SCENE = preload("res://types/item/item.tscn")
+const DISPLAY_SCENE = preload("res://types/item/item_display.tscn")
 
-var item_scene: PackedScene:
-    get = _get_item_scene
-
-var texture: Texture2D:
-    get = get_texture
 var max_stack: int:
     get = get_max_stack
 
@@ -17,7 +12,7 @@ var use_scene: PackedScene:
     get = _get_use_scene
 
 func create_item() -> Item:
-    var inst = item_scene.instantiate()
+    var inst = _get_item_script().new()
     inst.item_type = self
     return inst
 
@@ -27,13 +22,16 @@ func get_tr_name() -> String:
 func _get_content_type() -> String:
     return "item"
 
-func _get_item_scene() -> PackedScene:
-    return ITEM_SCENE
+func _get_item_script() -> GDScript:
+    return Item
 
 func _get_use_scene() -> PackedScene:
     return null
 
 func _get_texture() -> Texture2D:
+    return null
+
+func _get_display() -> PackedScene:
     return null
 
 func _get_max_stack() -> int:
@@ -44,6 +42,9 @@ func _get_cost() -> float:
 
 func get_texture() -> Texture2D:
     return _get_texture()
+
+func get_display() -> PackedScene:
+    return _get_display()
 
 func get_max_stack() -> int:
     return _get_max_stack()

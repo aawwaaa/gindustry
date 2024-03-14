@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://contents/buildings/dropped_item/dropped_item.gd" id="1_67ucp"]
 [ext_resource type="Script" path="res://types/item/inventory.gd" id="2_1shiw"]
-[ext_resource type="Script" path="res://contents/buildings/dropped_item/dropped_item_building.gd" id="2_vpol3"]
+[ext_resource type="Script" path="res://types/building/building.gd" id="2_qdcfd"]
 [ext_resource type="Script" path="res://types/entity/inventory_panel_adapter.gd" id="4_8barh"]
 [ext_resource type="PackedScene" uid="uid://c5wyk4iqtd5r8" path="res://contents/buildings/dropped_item/inventory_panel.tscn" id="5_8pu5g"]
 
@@ -11,8 +11,9 @@ script = ExtResource("1_67ucp")
 entity = NodePath("Building")
 
 [node name="Building" type="Node" parent="." node_paths=PackedStringArray("shadow_container", "main_node")]
-script = ExtResource("2_vpol3")
+script = ExtResource("2_qdcfd")
 shadow_container = NodePath("..")
+callback_get_adapter_at = &"get_adapter_at"
 main_node = NodePath("..")
 adapters = {
 "inventory": NodePath("../Inventory"),

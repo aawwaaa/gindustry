@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://duw1slmvr5ktl"]
 
-[ext_resource type="PackedScene" uid="uid://rqmyjdt5jn6l" path="res://types/world/item/item_use.tscn" id="1_wr3ic"]
-[ext_resource type="Script" path="res://mods/gindustry/types/items/test_item_use.gd" id="2_nti27"]
+[ext_resource type="PackedScene" uid="uid://rqmyjdt5jn6l" path="res://types/item/item_use.tscn" id="1_wr3ic"]
+[ext_resource type="Script" path="res://mods/gindustry/types/items/test_item/test_item_use.gd" id="2_nti27"]
 [ext_resource type="Texture2D" uid="uid://bpamijghl1a1b" path="res://mods/gindustry/assets/simple_entities.png" id="3_kbudt"]
 
 

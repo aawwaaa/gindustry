@@ -13,7 +13,7 @@ signal inventory_slot_changed(slot_id: int, item_type_changed: bool)
 
 var hand_slot: int = 0
 
-var slots: Array[Item] = []
+var slots: Array[Item] = [];
 
 func _handle_operation(operate: String, args: Array = []) -> void:
     match operate:
@@ -21,7 +21,6 @@ func _handle_operation(operate: String, args: Array = []) -> void:
         "use_hand": use_hand(args[0], args[1])
         "drop_item": drop_item(args[0], args[1])
         "drop_item_at": drop_item_at(args[0], args[1], args[2])
-
 
 func _handle_remote_operation(source: Entity, operate: String, args: Array = []) -> void:
     match operate:

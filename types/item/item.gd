@@ -1,13 +1,12 @@
 class_name Item
-extends Node2D
+extends RefCounted
 
 const INF_AMOUNT = 2 << 32 - 1
 
+signal data_updated()
+
 var item_type: ItemType
 var amount: int = 0
-
-func _ready() -> void:
-    %Icon.texture = item_type.texture
 
 func _copy_type() -> Item:
     var new_item = item_type.create_item()
@@ -27,9 +26,6 @@ func apply_type(type: TypedItem) -> void:
 
 func apply_stack(stack: PackedItemStack) -> void:
     _apply_stack(stack)
-
-func _set_in_inventory(in_inventory: bool, inventory: Inventory) -> void:
-    pass
 
 func _is_same_item(another: Item) -> bool:
     return another.item_type == item_type
@@ -127,6 +123,11 @@ func get_cost() -> float:
 
 func get_amount_by_cost(cost: float) -> int:
     return _get_amount(cost)
+
+func create_display() -> ItemDisplay:
+    var display = item_type.get_display()
+    display.item = self
+    return display
 
 static func load_from(stream: Stream) -> Item:
     var data_item_type = Contents.get_content_by_index(stream.get_32()) as ItemType;
