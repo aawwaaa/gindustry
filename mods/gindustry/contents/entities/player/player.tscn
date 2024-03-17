@@ -61,6 +61,7 @@ adapters = {
 }
 access_range = NodePath("../AccessRange")
 layer_follow_world = true
+z_index_offset = 16
 layer = 1
 
 [node name="ControllerAdapter" type="Node" parent="." node_paths=PackedStringArray("main_node", "entity_node")]

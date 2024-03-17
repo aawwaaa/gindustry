@@ -83,16 +83,26 @@ func use_hand(world: World, position: Vector2) -> void:
     use._set_position(position)
     use._use()
 
-func drop_item(target: Entity, type: String = "all") -> void:
-    if not entity_node.request_access_target(target.main_node): return
+func split_dropped_item(type: String = "all") -> Item:
     var item = get_slot(hand_slot)
     var amount = item.amount if type == "all" else \
-            floori(item.amount / 2.0) if type == "half" else \
+            ceili(item.amount / 2.0) if type == "half" else \
             1 if type == "one" else 0
     var splited = item.split_to(amount)
-    var overflow = target.get_adapter("item").add_item(splited)
-    item.merge_from(overflow)
+    return splited
+
+func merge_overflowed_dropped_item(overflow: Item) -> void:
+    if overflow != null:
+        var item = get_slot(hand_slot)
+        if not item: set_slot(hand_slot, overflow)
+        else: item.merge_from(overflow)
     update_slot(hand_slot)
+
+func drop_item(target: Entity, type: String = "all") -> void:
+    if not entity_node.request_access_target(target.main_node): return
+    var splited = split_dropped_item(type)
+    var overflow = target.get_adapter("item").add_item(splited)
+    merge_overflowed_dropped_item(overflow)
     entity_node.clear_access_target()
 
 static func create_dropped_item_at(world: World, position: Vector2) -> EntityNode_DroppedItem:

@@ -8,6 +8,7 @@ signal on_load_data(stream: Stream);
 signal access_target_changed(target: Node2D, from: Node2D)
 signal access_from(source: Node2D, removed: bool)
 signal input_operation(operation: String, args: Array[Variant])
+signal remote_operation(from: Entity, operation: String, args: Array[Variant])
 
 static var entity_ref_targets: Dictionary = {}
 
@@ -38,6 +39,8 @@ var access_target: Node2D:
 var access_sources: Array[Entity] = []
 
 @export var access_range: Area2D;
+@export var available_remote_operations: Array[String] = [];
+
 var world: World:
     get = get_world,
     set = set_world;
@@ -51,6 +54,8 @@ var entity_id: int:
 
 
 @export var layer_follow_world: bool = false
+@export var disable_auto_z_index: bool = false
+@export var z_index_offset: int = 0
 @export var layer: int:
     get = get_layer,
     set = set_layer;
@@ -92,9 +97,12 @@ func get_world() -> World:
     return world
 
 func get_layer() -> int:
-    if layer_follow_world:
-        if not world: return layer
-        return layer + world.layer
+    return layer
+
+func absolute_layer() -> int:
+    var layer = self.layer + (world.layer if world and layer_follow_world else 0)
+    if parent_entity:
+        return parent_entity.absolute_layer() + layer
     return layer
 
 func set_layer(v: int) -> void:
@@ -104,6 +112,9 @@ func set_layer(v: int) -> void:
         node.get_entity().set_layer(layer)
     if is_inside_tree():
         layer_changed.emit(layer, old);
+        if not disable_auto_z_index:
+            main_node.z_index = get_z_index(0) + z_index_offset
+            main_node.z_as_relative = false
 
 func set_world(v: World) -> void:
     if parent_entity:
@@ -115,6 +126,11 @@ func set_world(v: World) -> void:
     world.layer_changed.connect(_on_world_layer_changed);
     world.get_entities_node().add_child(main_node);
 
+func _on_world_layer_changed(new_layer: int, from: int) -> void:
+    if not layer_follow_world:
+        return;
+    set_layer(layer)
+
 func has_adapter(adapter: String) -> bool:
     return adapters.has(adapter)
 
@@ -122,7 +138,7 @@ func get_adapter(adapter: String) -> Node:
     return get_node(adapters[adapter]) if has_adapter(adapter) else null
 
 func get_collision_mask(begin: int, end: int) -> int:
-    return get_collision_mask_static(layer, begin, end)
+    return get_collision_mask_static(absolute_layer(), begin, end)
 
 static func get_collision_mask_static(layer: int, begin: int, end: int) -> int:
     begin = clampi(begin + layer, 0, Global.MAX_LAYERS);
@@ -130,11 +146,6 @@ static func get_collision_mask_static(layer: int, begin: int, end: int) -> int:
     var delta = end - begin + 1;
     var mask = (1 << delta) - 1;
     return mask << begin
-
-func _on_world_layer_changed(new_layer: int, from: int) -> void:
-    if not layer_follow_world:
-        return;
-    set_layer(layer - world.layer)
 
 func init_entity() -> void:
     entity_id = Game.entity_inc_id;
@@ -146,13 +157,13 @@ func init_entity() -> void:
             child.get_entity().init_entity()
 
 func get_z_index(offset: int) -> int:
-    return 32 * (world.layer + layer + offset)
+    return 32 * (absolute_layer() + offset)
 
 func _ready() -> void:
     for node in child_entities_main_node:
         node.get_entity().parent_entity = self
         if inited: node.get_entity().init_entity()
-    layer_changed.emit(layer, 0);
+    set_layer(layer)
     if entity_ref_targets.has(entity_id):
         for callback in entity_ref_targets[entity_id]:
             callback.call(self)
@@ -201,6 +212,19 @@ func check_access_range(target_world: World, target_position: Vector2) -> bool:
     # var result = bodies.has(body)
     # body.queue_free()
     # return result
+
+func operate_remote(operation: String, args: Array[Variant] = []) -> bool:
+    if not access_target:
+        return false
+    if operation == "adapter":
+        if args.size() < 2: return false
+        access_target.get_entity().get_adapter(args[0])._handle_remote_operation(self, args[1], args.slice(2))
+        return true
+    var remote = access_target.get_entity()
+    if operation not in remote.available_remote_operations:
+        return false
+    remote.remote_operation.emit(self, operation, args)
+    return true
 
 func remove() -> void:
     world.remove_entity(self)

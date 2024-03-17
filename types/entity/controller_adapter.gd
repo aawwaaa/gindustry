@@ -5,7 +5,6 @@ signal controller_added(controller: Controller)
 signal controller_removed(controller: Controller)
 
 signal operation_received(operation: String, args: Array[Variant])
-signal remote_operation_received(from: Entity, operation: String, args: Array[Variant])
 
 """
 默认控制器, 由0~length优先级依次递减
@@ -21,7 +20,6 @@ signal remote_operation_received(from: Entity, operation: String, args: Array[Va
 可用的操作, 会发出信号operation_received
 """
 @export var available_operations: Array[String] = [];
-@export var available_remote_operations: Array[String] = [];
 
 @export_group("callbacks", "callback_")
 @export var callback_get_attribute: StringName = "";
@@ -73,20 +71,7 @@ func operate(controller: Controller, operation: String, args: Array[Variant] = [
 func operate_remote(controller: Controller, operation: String, args: Array[Variant] = []) -> bool:
     if controller not in controllers:
         return false
-    var access_target = entity_node.access_target
-    if not access_target:
-        return false
-    if operation == "adapter":
-        if args.size() < 2: return false
-        access_target.get_entity().get_adapter(args[0])._handle_remote_operation(entity_node, args[1], args.slice(2))
-        return true
-    var remote_controller = access_target.get_entity().get_adapter("controller")
-    if not remote_controller:
-        return false
-    if operation not in remote_controller.available_remote_operations:
-        return false
-    remote_controller.remote_operation_received.emit(entity_node, operation, args)
-    return true
+    return entity_node.operate_remote(operation, args)
 
 func update_control(type: String, updater: Callable, append_args: Array = []) -> bool:
     for controller in controllers:

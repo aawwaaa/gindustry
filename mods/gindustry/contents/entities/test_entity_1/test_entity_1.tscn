@@ -32,6 +32,7 @@ unique_name_in_owner = true
 script = ExtResource("3_k606n")
 main_node = NodePath("..")
 layer_follow_world = true
+z_index_offset = 16
 layer = 1
 
 [connection signal="layer_changed" from="Entity" to="." method="_on_entity_layer_changed"]

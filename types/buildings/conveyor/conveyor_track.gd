@@ -15,6 +15,16 @@ class SingleTrack extends Node2D:
         items.append(track_item)
         track_item.position_updated()
 
+    func try_add_item(item: Item, position: Vector2) -> bool:
+        var track_item = TrackItem.new(self, item)
+        track_item.position = position
+        if track_item.check_collides():
+            track_item.remove()
+            return false
+        items.append(track_item)
+        track_item.position_updated()
+        return true
+
     func item_reach(item: TrackItem) -> void:
         if reached_item: return
         reached_item = item
@@ -50,6 +60,7 @@ class TrackItem extends RefCounted:
         self.item = item
         self.track = track
         display = item.create_display()
+        display.scale = ITEM_SCALE
         track.add_child(display)
 
     func check_collide(other: TrackItem) -> bool:
@@ -62,11 +73,15 @@ class TrackItem extends RefCounted:
     func try_move_to(new_position: Vector2) -> void:
         var old_position = position
         position = new_position
-        for item in track.items:
-            if check_collide(item):
-                position = old_position
-                break
+        if check_collides():
+            position = old_position
+            return
         position_updated()
+
+    func check_collides() -> bool:
+        for item in track.items:
+            if check_collide(item): return true
+        return false
 
     func position_updated() -> void:
         display.position = position + track.base_position
@@ -84,7 +99,11 @@ class TrackItem extends RefCounted:
     func remove() -> void:
         track.remove_child(display)
 
-var speed: float
+@export var main_node: Node2D
+
+var speed: float:
+    get: return main_node.call(callback_get_speed) if main_node.has_method(callback_get_speed) else 0.0
+
 @export var left_track_end: Vector2:
     set(v):
         left_track_end = v
@@ -93,6 +112,9 @@ var speed: float
     set(v):
         right_track_end = v
         right_track.base_position = v
+
+@export_group("callbacks", "callback_")
+@export var callback_get_speed: StringName = ""
 
 var left_track: SingleTrack
 var right_track: SingleTrack
