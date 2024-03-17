@@ -51,4 +51,6 @@ texture = SubResource("AtlasTexture_1s5ro")
 script = ExtResource("5_x6ap6")
 
 [connection signal="input_operation" from="Building" to="." method="_on_building_input_operation"]
+[connection signal="on_load_data" from="Building" to="." method="_on_building_on_load_data"]
+[connection signal="on_save_data" from="Building" to="." method="_on_building_on_save_data"]
 [connection signal="remote_operation" from="Building" to="." method="_on_building_remote_operation"]

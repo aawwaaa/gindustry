@@ -86,6 +86,7 @@ func clear_access_target() -> void:
 func access_and_operate(target: Node2D, operation: String, args: Array[Variant] = []) -> void:
     if not entity: return
     var current = entity.access_target
-    controller.request_access_target(target)
-    if entity.access_target == current: await entity.access_target_changed
+    controller.request_access_target.call_deferred(target)
+    await entity.access_target_changed
+    if not entity: return
     controller.operate_remote_target(operation, args)

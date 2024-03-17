@@ -271,7 +271,7 @@ func load_data(stream: Stream) -> void:
             entity.parent_entity = self
             entity.load_data(stream)
 
-        Entity.get_entity_by_ref(stream.get_64(), func(entity): access_target = entity),
+        Entity.get_entity_by_ref(stream.get_64(), func(entity): access_target = entity.main_node if entity else null),
     func():
         for _1 in range(stream.get_16()):
             var adapter_name: String = stream.get_string()
@@ -293,7 +293,7 @@ func save_data(stream: Stream) -> void:
             var entity = node.get_entity()
             entity.save_data(stream)
 
-        stream.store_64(0 if access_target == null else access_target.entity_id),
+        stream.store_64(0 if access_target == null else access_target.get_entity().entity_id),
     func():
         var should_save_adapters: Dictionary = {}
         var should_save_adapters_values = []

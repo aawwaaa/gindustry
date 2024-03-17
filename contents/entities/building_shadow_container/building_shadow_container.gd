@@ -140,6 +140,8 @@ func _on_entity_on_load_data(stream: Stream) -> void:
     # version 0
     if version < 0: return;
     building_type = Contents.get_content_by_index(stream.get_64()) as BuildingType
+    pos = stream.get_var()
+    rot = stream.get_8()
     building_config = building_type.load_config(stream)
     filled_items = []
     for _1 in range(stream.get_16()):
@@ -150,6 +152,8 @@ func _on_entity_on_save_data(stream: Stream) -> void:
     stream.store_16(current_data_version);
     # version 0
     stream.store_64(building_type.index)
+    stream.store_var(pos, true)
+    stream.store_8(rot)
     building_type.save_config(building_config, stream)
     stream.store_16(filled_items.size())
     for item in filled_items:

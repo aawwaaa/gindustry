@@ -126,11 +126,15 @@ func get_component_at(pos: Vector2i, rot: int, type: String) -> BuildingComponen
 func _load_data(stream: Stream) -> void:
     Utils.load_data_with_version(stream, [func():
         building_type = Contents.get_content_by_index(stream.get_64()) as BuildingType
+        pos = stream.get_var()
+        rot = stream.get_8()
         building_config = building_type._load_config(stream)
     ])
 
 func _save_data(stream: Stream) -> void:
     Utils.save_data_with_version(stream, [func():
         stream.store_64(building_type.index)
+        stream.store_var(pos, true)
+        stream.store_8(rot)
         building_type._save_config(building_config, stream)
     ])

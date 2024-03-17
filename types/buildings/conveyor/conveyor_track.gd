@@ -59,6 +59,18 @@ class SingleTrack extends Node2D:
         for item in items:
             item.process_move(speed, delta)
 
+    func save_data(stream: Stream) -> void:
+        stream.store_16(items.size())
+        for item in items:
+            stream.store_var(item.position, true)
+            item.item.save_to(stream)
+
+    func load_data(stream: Stream) -> void:
+        for _1 in stream.get_16():
+            var pos = stream.get_var()
+            var item = Item.load_from(stream)
+            add_item(item, pos)
+
 class TrackItem extends RefCounted:
     var item: Item
     var display: ItemDisplay
@@ -143,3 +155,11 @@ func _init() -> void:
 func _process(delta: float) -> void:
     left_track.process_update(speed, delta)
     right_track.process_update(speed, delta)
+
+func save_data(stream: Stream) -> void:
+    left_track.save_data(stream)
+    right_track.save_data(stream)
+
+func load_data(stream: Stream) -> void:
+    left_track.load_data(stream)
+    right_track.load_data(stream)

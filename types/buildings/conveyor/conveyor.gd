@@ -185,8 +185,12 @@ func get_speed() -> float:
     return building.building_type.speed
 
 func _on_building_on_save_data(stream: Stream) -> void:
-    Utils.save_data_with_version(stream, [])
+    Utils.save_data_with_version(stream, [func():
+        track.save_data(stream)
+    ])
 
 func _on_building_on_load_data(stream: Stream) -> void:
-    Utils.load_data_with_version(stream, [])
+    Utils.load_data_with_version(stream, [func():
+        track.load_data(stream)
+    ])
 

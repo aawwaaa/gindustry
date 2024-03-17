@@ -14,6 +14,7 @@ script = ExtResource("1_w18yf")
 
 [node name="Worlds" type="Node2D" parent="."]
 unique_name_in_owner = true
+process_mode = 1
 
 [node name="CameraBase" type="Node2D" parent="."]
 unique_name_in_owner = true

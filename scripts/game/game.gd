@@ -50,6 +50,7 @@ func _ready() -> void:
 func set_paused(v: bool) -> void:
     if not MultiplayerServer.is_peer_admin(multiplayer.get_remote_sender_id()):
         return
+    print(v)
     paused = v
     get_tree().paused = v
 
@@ -67,7 +68,7 @@ func reset_game() -> void:
         world.queue_free();
     current_player = null;
     Players.reset_players();
-    set_paused.rpc(false)
+    MultiplayerServer.rpc_sync(self, "set_paused", [false])
     create_temp_tile()
     
     Controller._on_game_signal_reset_game();

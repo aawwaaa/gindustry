@@ -10,58 +10,58 @@
 -- 存档/读档/多人游戏 --
 [X] 1. 保存/加载
 [=] 2. 多人游戏
-    [ ] Multiplayer.join
-    [ ] mod检查
+	[ ] Multiplayer.join
+	[ ] mod检查
 [=] 3. headless模式
-    [ ] 新游戏
-    [X] 加载游戏
-    [ ] 重新生成密钥
+	[ ] 新游戏
+	[X] 加载游戏
+	[ ] 重新生成密钥
 
 -- 建造系统(直接放置/需要建造) --
 [X] 玩家控制器跟据配置自动生成
-    玩家附带自身控制器类型
-    其他客户端生成PlayerControllerRemote
-    玩家客户端生成对应的控制器类型
-    [X] 4. GameUI由PlayerController控制
-        UI显示由Controller
-    [.] PlayerController向Player发送target_changed信号, Player转发
-    [X] Global提供set_input_handler(type: String)方法
-    [.] Player提供default_controller_type属性
-    [X] 1. InputHandler类型注册: controller: GDScript, tr_name: String
-    [X] 2. GameUI动态实例化: ControllerUI
-    [X] 3. 设置界面提供选项
-    [X] ! PlayerController拆分为InputHandler
-        InputHandler使用全局实例, 控制Game.current_controller(Game.current_player.get_controller())
-        玩家变更等由InputHandler处理
+	玩家附带自身控制器类型
+	其他客户端生成PlayerControllerRemote
+	玩家客户端生成对应的控制器类型
+	[X] 4. GameUI由PlayerController控制
+		UI显示由Controller
+	[.] PlayerController向Player发送target_changed信号, Player转发
+	[X] Global提供set_input_handler(type: String)方法
+	[.] Player提供default_controller_type属性
+	[X] 1. InputHandler类型注册: controller: GDScript, tr_name: String
+	[X] 2. GameUI动态实例化: ControllerUI
+	[X] 3. 设置界面提供选项
+	[X] ! PlayerController拆分为InputHandler
+		InputHandler使用全局实例, 控制Game.current_controller(Game.current_player.get_controller())
+		玩家变更等由InputHandler处理
 
 [X] 设置界面由程序生成
 
 [X] AdapterUnit
-    作为节点的子节点, 存在类型系统
-    基于场景, 无实体id但有实体引用
-    由Adapter生成
-    可保存数据但不可保存类型
+	作为节点的子节点, 存在类型系统
+	基于场景, 无实体id但有实体引用
+	由Adapter生成
+	可保存数据但不可保存类型
 
 [.] 玩家控制器处理点击
 [X] Tile控制是否可建造
 [X] 建筑覆盖
 [X] 建造模块
-    从控制适配器拉取建造列表 -> 建造适配器
-        目标位置无法访问: 跳过
-        目标位置不存在建筑虚影或类型/位置错误:
-            检查是否可放置
-                是: 替换为新建筑
-                否: 标记为cant_build
-        目标位置存在建筑虚影:
-            填充物品
-            建造完成: 标记为build_finished
+	从控制适配器拉取建造列表 -> 建造适配器
+		目标位置无法访问: 跳过
+		目标位置不存在建筑虚影或类型/位置错误:
+			检查是否可放置
+				是: 替换为新建筑
+				否: 标记为cant_build
+		目标位置存在建筑虚影:
+			填充物品
+			建造完成: 标记为build_finished
 [X] 建造消耗的物品列表
 [X] EffectityAdapter
 [X] 建造模块适配EffectityAdapter
 
 [X] 1. 建筑选择
-    [X] 建筑分类
-    [X] UI
+	[X] 建筑分类
+	[X] UI
 [X] PlayerController._get_build_plan
 [X] InputHandler处理build_plan
 [X] 2. 建筑建造预览
@@ -82,90 +82,90 @@
 [X] BuildingShadowContainer存档/读档 bug 修复
 
 [X] ConsumeAPI(获取需要的物品/液体/自定义类型的类型和数量)
-    [X] ConsumerType
-    [X] Consumer
-        _get_type() -> ConsumerType
-        _should_begin(building: Building) -> bool
-        _process_begin(building: Building) -> void
-        _get_effectity(building: Building, delta: float) -> float
-        _process_update(building: Building, delta: float, effectity: float) -> void
-        _process_break(building: Building) -> void
-        _process_finish(building: Building) -> void
-        _display_ui(building: Building, node: Node) -> void
-        _check_recipe(building: Building) -> void
-    [X] ConsumerStateMachine
-        consumers: Array[Consumer]
-    [X] Building._get_consumers()
+	[X] ConsumerType
+	[X] Consumer
+		_get_type() -> ConsumerType
+		_should_begin(building: Building) -> bool
+		_process_begin(building: Building) -> void
+		_get_effectity(building: Building, delta: float) -> float
+		_process_update(building: Building, delta: float, effectity: float) -> void
+		_process_break(building: Building) -> void
+		_process_finish(building: Building) -> void
+		_display_ui(building: Building, node: Node) -> void
+		_check_recipe(building: Building) -> void
+	[X] ConsumerStateMachine
+		consumers: Array[Consumer]
+	[X] Building._get_consumers()
 [X] Recipe
-    get_consumers()
-    check_building(building: Building)
-    [ ] ItemsConsumer
-    [ ] LiquidConsumer
-    [ ] PowerConsumer
+	get_consumers()
+	check_building(building: Building)
+	[ ] ItemsConsumer
+	[ ] LiquidConsumer
+	[ ] PowerConsumer
 [X] SettingsGroup defaults
 [X] TypedItem
-    Content._get_index
-    Content._set_index
+	Content._get_index
+	Content._set_index
 [X] PackedItemStack
-    get_item() -> Item
+	get_item() -> Item
 [X] Types
-    [X] Type
-        get_type_name() -> String
-        name: string
-    register_type
-    get_all_types(type_name: String)
-    get_type(type_name: String, name: String)
+	[X] Type
+		get_type_name() -> String
+		name: string
+	register_type
+	get_all_types(type_name: String)
+	get_type(type_name: String, name: String)
 [X] BuildingCategory -> Type
 [X] 展开所有content(使用独立的.tres描述)(Floor, ItemType, etc.)
 [X] BuildingAttributeType extends Type
 [X] BuildingAttribute
-    get_type() -> BuildingAttributeType
+	get_type() -> BuildingAttributeType
 [X] BuildingType.attributes
-    BuildingType.attributes_dict
-    content_registed: 为attributes_dict赋值
-    - Building.has_attribute(type: BuildingAttributeType) -> BuildingType.has_attribute
-    Building.get_attribute(type: BuildingAttributeType) -> BuildingType.get_attribute
+	BuildingType.attributes_dict
+	content_registed: 为attributes_dict赋值
+	- Building.has_attribute(type: BuildingAttributeType) -> BuildingType.has_attribute
+	Building.get_attribute(type: BuildingAttributeType) -> BuildingType.get_attribute
 
 [X] BuildingShadow tiles
 
 [X] BuildingType rotatable
 [ ] 液体系统
 [X] 建筑 adapters:
-    BuildingType: has_building_adapters
-    get_adapter_at(position: Vector2, facing: int, type: String) -> EntityAdapter
+	BuildingType: has_building_adapters
+	get_adapter_at(position: Vector2, facing: int, type: String) -> EntityAdapter
 [X] ItemAdapter等可以与其他Adapter交互
-    item_targets
+	item_targets
 [ ] 建筑 部件系统(ComponentsAdapter)
-    load_nodes(nodes: Node);
-    [X] Component
-        prop building -> Building
-        prop main_node -> Node2D
-        sides: bitfield
-        pos: Vector2
-        _process_update
-        _handle_get_data(name: String) -> Variant
-        _handle_transfer(name: String, args: Array) -> Variant
-        _check_transfer(name: String, args: Array) -> bool
-    [ ] ItemSource/LiquidSource/etc...
-        _request_item(filters: Array[ItemFilter]) -> Item
-        _handle_overflow(item: Item) -> void
-        [ ] ItemSource_ItemAdapter, ItemSource_Inventory, ItemSource_Function
-        [ ] LiquidSource_LiquidAdapter, LiquidSource_Function
-    [ ] ItemTarget/LiquidTarget/etc...
-        _handle_item(item: Item) -> Item
-        _handle_overflow(item: Item) -> void
-        [ ] ItemTarget_ItemAdapter, etc.
-        [ ] Liquid etc.
-    [ ] ItemFilter/LiquidFilter/etc...
-        _filte(item: Item) -> bool
-    [ ] ConveyorPort
-        source: ItemSource
-        target: ItemTarget
-        mode: input/output/input_output
-        filters: Array[ItemFilter]
-    [ ] LiquidPort
-        source: LiquidSource
-        etc.
+	load_nodes(nodes: Node);
+	[X] Component
+		prop building -> Building
+		prop main_node -> Node2D
+		sides: bitfield
+		pos: Vector2
+		_process_update
+		_handle_get_data(name: String) -> Variant
+		_handle_transfer(name: String, args: Array) -> Variant
+		_check_transfer(name: String, args: Array) -> bool
+	[ ] ItemSource/LiquidSource/etc...
+		_request_item(filters: Array[ItemFilter]) -> Item
+		_handle_overflow(item: Item) -> void
+		[ ] ItemSource_ItemAdapter, ItemSource_Inventory, ItemSource_Function
+		[ ] LiquidSource_LiquidAdapter, LiquidSource_Function
+	[ ] ItemTarget/LiquidTarget/etc...
+		_handle_item(item: Item) -> Item
+		_handle_overflow(item: Item) -> void
+		[ ] ItemTarget_ItemAdapter, etc.
+		[ ] Liquid etc.
+	[ ] ItemFilter/LiquidFilter/etc...
+		_filte(item: Item) -> bool
+	[ ] ConveyorPort
+		source: ItemSource
+		target: ItemTarget
+		mode: input/output/input_output
+		filters: Array[ItemFilter]
+	[ ] LiquidPort
+		source: LiquidSource
+		etc.
 [X] Controller直接调用Adapter
 
 [ ] 当前选择的建筑/物品显示
@@ -174,33 +174,34 @@
 [ ] configuring
 [ ] alt显示
 [ ] TileOre[WithData]
-    [ ] TileOreType
-    [ ] [Floor/Overlay].ores/ore_with_data
-    [ ] TileOre_ItemOre
+	[ ] TileOreType
+	[ ] [Floor/Overlay].ores/ore_with_data
+	[ ] TileOre_ItemOre
 
 [X] 6. 带物品的建筑拆除
 [X] 7. 掉落物
-    [X] Access
-    [X] Panel
-    [X] 物品丢失修复
-    [X] 创建掉落物
-    [X] 拆除
+	[X] Access
+	[X] Panel
+	[X] 物品丢失修复
+	[X] 创建掉落物
+	[X] 拆除
 [ ] 8. 建筑复制
 [ ] 9. 蓝图
 [ ] 10. 蓝图操作
 
 [ ] World.get_envorinment_at(pos: Vector2) -> Environment
-[ ] 丢物品bug修复(错位, 不能拆除的掉落物)
+[X] 丢物品bug修复(错位, 不能拆除的掉落物)
+[X] pause失效
 
 -- 物流, 流体, 能量(传送带, 分流器, 机械臂, 管道, 箱子, 电杆) --
 [X] 传送带
-    [X] 传送带
-    [ ] 传送带部件
+	[X] 传送带
+	[ ] 传送带部件
 [ ] 箱子
 [ ] 机械臂
 [ ] 管道
-    O_x = \frac{V-\frac{S_n}{n}}{n} \times (\frac{P_x}{max(S_p, 1)}+50%)
-    P_x = P'_x \times k + (\frac{O_x}{max(S_O, 1)} - \frac{I_x}{max(S_I, 1)}) \times (1 - k)
+	O_x = \frac{V-\frac{S_n}{n}}{n} \times (\frac{P_x}{max(S_p, 1)}+50%)
+	P_x = P'_x \times k + (\frac{O_x}{max(S_O, 1)} - \frac{I_x}{max(S_I, 1)}) \times (1 - k)
 [ ] 能量节点
 -- 基础工业(矿机, 工厂, 发电机) --
 -- 基础单位(汽车, 移动炮塔, 基础火车) --
@@ -215,16 +216,16 @@
 -- 方块 --
 
 [X] 传送带(带动画) 地下传送带 | 普通(黄, 4/s) 高速(红, 8/s) 急速(蓝, 16/s)
-    [ ] 少画了一种上方和下方连接的T形
+	[ ] 少画了一种上方和下方连接的T形
 [X] 路由器 分类器 反向分类器 溢流门 反向溢流门 翻转器 均分器 交叉器
-    [X] 读取器 切断器 分流器 反向分流器 | 3种类型
+	[X] 读取器 切断器 分流器 反向分流器 | 3种类型
 [X] 机械臂 | 热能(灰) 电力(黄) 加长(红) 高速(蓝) 集装(绿) 堆叠(白)
 
 [X] 物品 液体端口 接线柱(建筑, 电杆) 控制接口 信号接线柱 | 输入 输出 输入输出
 [X] 箱子 | I(16格) II(32格) III(64格) | 小(*1, 1*1) 中(*2, 2*2) 大(*3, 3*3) | 普通, 带传送带接口
 
 [X] 管道 | 普通(100/s, 黄) 高速(200/s, 红) 急速(400/s, 蓝) | 无向 隔离 地下
-    [ ] 上下连接
+	[ ] 上下连接
 [X] 管道泵 | 普通(100/s, 黄) 高速(200/s, 红) 急速(400/s, 蓝)
 [X] 储液罐 | I(8000) II(16000) III(32000) | 中型(*1, 2*2) 大型(*2, 3*3)
 
@@ -233,7 +234,7 @@
 [X] 电闸 二极管 电网读取器
 
 [X] 控制接口 信号节点 运算器 比较器 转换器 集成器 存储器 显示器
-    [X] 开关 输入器 探测器 无线信号传输器 电力猫 灯
+	[X] 开关 输入器 探测器 无线信号传输器 电力猫 灯
 
 [X] 机器人接口 | 供给(红) 缓存(黄) 请求(蓝) 提取(紫) 中转(绿)
 
