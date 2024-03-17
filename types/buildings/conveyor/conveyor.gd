@@ -74,6 +74,7 @@ func _on_building_remote_operation(source: Entity, operation: String, args: Arra
         handle_drop_item(source, type, pos)
 
 func handle_drop_item(source: Entity, type: String, pos: Vector2) -> void:
+    push_error("drop", source, type, pos)
     if not source.has_adapter("inventory"): return
     var inventory = source.get_adapter("inventory") as Inventory
     var item = inventory.split_dropped_item(type)
@@ -182,3 +183,10 @@ func handle_break(unit: BuilderAdapterUnit) -> bool:
 
 func get_speed() -> float:
     return building.building_type.speed
+
+func _on_building_on_save_data(stream: Stream) -> void:
+    Utils.save_data_with_version(stream, [])
+
+func _on_building_on_load_data(stream: Stream) -> void:
+    Utils.load_data_with_version(stream, [])
+
