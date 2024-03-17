@@ -67,6 +67,9 @@ func push_reached_items() -> void:
     if up_target_component:
         push_reached_item_for_track(up_target_component, down_up_track)
 
+func _get_tracks() -> Array[EntityNode_Conveyor_ConveyorTrack]:
+    return [left_right_track, down_up_track]
+
 func _process_update(delta: float) -> void:
     push_reached_items()
 

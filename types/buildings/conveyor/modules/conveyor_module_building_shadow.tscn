@@ -1,10 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://cj5jfkihcpdle"]
+[gd_scene load_steps=6 format=3 uid="uid://cj5jfkihcpdle"]
 
 [ext_resource type="PackedScene" uid="uid://dowx2nq7aicx4" path="res://types/building/building_shadow.tscn" id="1_0xfg2"]
 [ext_resource type="Script" path="res://types/buildings/conveyor/modules/conveyor_module_building_shadow.gd" id="2_ogd6a"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_75mpu"]
 size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_16771"]
+size = Vector2(28, 28)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bho5r"]
 size = Vector2(30, 30)
@@ -16,6 +19,9 @@ script = ExtResource("2_ogd6a")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionArea" index="0"]
 shape = SubResource("RectangleShape2D_75mpu")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatableBody2D" index="0"]
+shape = SubResource("RectangleShape2D_16771")
 
 [node name="ShapeCast2D" parent="." index="3"]
 position = Vector2(0, -0.5)

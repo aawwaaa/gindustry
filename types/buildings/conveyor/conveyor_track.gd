@@ -8,7 +8,11 @@ class SingleTrack extends Node2D:
     var base_position: Vector2
     var reached_item: TrackItem = null
     var items: Array[TrackItem] = []
-    var rotation_offset: float = 0
+    var rotation_offset: float = 0:
+        set(v):
+            rotation_offset = v
+            for item in items:
+                item.display.rotation = rotation_offset
 
     func add_item(item: Item, position: Vector2) -> void:
         var track_item = TrackItem.new(self, item)

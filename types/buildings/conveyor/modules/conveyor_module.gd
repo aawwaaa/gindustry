@@ -13,6 +13,9 @@ func _ready() -> void:
     building = entity as Building
     pos = entity.pos
     super._ready()
+    for track in get_tracks():
+        track.left_track.rotation_offset = -rotation
+        track.right_track.rotation_offset = -rotation
 
 func _draw() -> void:
     pass
@@ -51,13 +54,14 @@ func push_reached_item_for_track(target: BuildingComponent, track: EntityNode_Co
 func handle_break(unit: BuilderAdapterUnit) -> bool:
     var item_adapter = unit.adapter.entity_node.get_adapter("item") as ItemAdapter
     if not item_adapter: return false
-    for track in get_tracks():
-        var removes = []
-        for item in track.items:
-            item.item = item_adapter.add_item(item.item)
-            if not item.item or item.item.is_empty(): removes.append(item)
-        for remove in removes: remove.remove()
-        if track.items.size() > 0: return false
+    for track in get_tracks().map(func(track): return [track.left_track, track.right_track]):
+        for single_track in track:
+            var removes = []
+            for item in single_track.items:
+                item.item = item_adapter.add_item(item.item)
+                if not item.item or item.item.is_empty(): removes.append(item)
+            for remove in removes: remove.remove()
+            if single_track.items.size() > 0: return false
     return true
 
 func _get_tracks() -> Array[EntityNode_Conveyor_ConveyorTrack]:

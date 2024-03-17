@@ -72,7 +72,6 @@ func _has_side(side: Sides) -> bool:
     return (sides & side) != 0
 
 func has_side(side: Sides) -> bool:
-    side = rotate_sides(side, self.rot)
     return _has_side(side)
 
 func _get_transfer_type() -> String:
