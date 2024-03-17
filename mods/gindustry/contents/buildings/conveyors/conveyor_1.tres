@@ -42,7 +42,7 @@ region = Rect2(0, 192, 256, 32)
 
 [resource]
 script = ExtResource("1_d0bb8")
-speed = 4.0
+speed = 8.0
 animation_speed = 8.0
 texture_left = SubResource("AtlasTexture_8m3ui")
 texture_left_up = SubResource("AtlasTexture_2qxak")

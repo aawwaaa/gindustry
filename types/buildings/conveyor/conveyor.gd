@@ -2,7 +2,7 @@ class_name EntityNode_Conveyor
 extends BuildingComponent
 
 enum Directions{
-    left, right, center
+    left, right, drop_far, drop_near
 }
 enum DisplayDirectons{
     left = 1, up = 2, down = 4
@@ -19,6 +19,9 @@ func _ready() -> void:
     building = entity as Building
     pos = entity.pos
     super._ready()
+    track.left_track.rotation_offset = -rotation
+    track.right_track.rotation_offset = -rotation
+    update_ports()
 
 func _draw() -> void:
     pass
@@ -31,6 +34,7 @@ func _get_transfer_type() -> String:
 
 func _process_update(delta: float) -> void:
     update_ports()
+    push_reached_items()
 
 func _handle_get_data(name: String, source: Building, source_component: BuildingComponent, args: Array = []) -> Variant:
     var side = get_building_side(source, source_component)
@@ -88,17 +92,81 @@ func get_track(position: Vector2) -> EntityNode_Conveyor_ConveyorTrack.SingleTra
     if position.y > 0: return track.right_track
     return track.left_track
 
+"""
+up:  right D left
+          |||
+left:     VVV
+
+left  -> ==X=>
+drop  ->  X X  <- D
+right -> ==X=>
+
+          ^^^
+          |||
+down: left D right
+"""
+
+const SIDE_TO_DIRECTION_TO_POSITION = {
+    Sides.left: {
+        Directions.left: Vector2(-16, -7),
+        Directions.right: Vector2(-16, 7),
+        Directions.drop_far: Vector2(8, 0),
+        Directions.drop_near: Vector2(-8, 0),
+    },
+    Sides.right: {
+        Directions.drop_far: Vector2(-8, 0),
+        Directions.drop_near: Vector2(8, 0),
+    },
+    Sides.up: {
+        Directions.left: Vector2(7, -16),
+        Directions.right: Vector2(-7, -16),
+        Directions.drop_far: Vector2(0, 8),
+        Directions.drop_near: Vector2(0, -8),
+    },
+    Sides.down: {
+        Directions.left: Vector2(-7, 16),
+        Directions.right: Vector2(7, 16),
+        Directions.drop_far: Vector2(0, -8),
+        Directions.drop_near: Vector2(0, 8),
+    }
+}
+
+func get_drop_position(source_side: Sides, source_direction: Directions) -> Vector2:
+    return SIDE_TO_DIRECTION_TO_POSITION[source_side][source_direction]
+
 func _check_transfer(name: String, source: Building, source_component: BuildingComponent, args: Array = []) -> bool:
     var item: Item = args[0]
+    var source_side = get_building_side(source, source_component)
     var source_direction: Directions = args[1]
-    # todo
-    return true
+    if source_side == Sides.right and source_direction in [Directions.left, Directions.right]: return false
+    var position = get_drop_position(source_side, source_direction)
+    var track = get_track(position)
+    return track.test_position(position - track.base_position)
 
 func _handle_transfer(name: String, source: Building, source_component: BuildingComponent, args: Array = []) -> Variant:
     var item: Item = args[0]
+    var source_side = get_building_side(source, source_component)
     var source_direction: Directions = args[1]
-    # todo
-    return item
+    if source_side == Sides.right and source_direction in [Directions.left, Directions.right]: return false
+    var position = get_drop_position(source_side, source_direction)
+    var track = get_track(position)
+    var item_pos = position - track.base_position
+    var success = track.try_add_item(item, item_pos)
+    return null if success else item
+
+func push_reached_item_for(target: BuildingComponent, track: EntityNode_Conveyor_ConveyorTrack.SingleTrack, direction: Directions) -> void: 
+    if not track.reached_item: return
+    var item = track.get_reached_item()
+    if not target.check_transfer("conveyor", entity, self, [item, direction]): return
+    track.remove_reached_item()
+    var left = target.handle_transfer("conveyor", entity, self, [item, direction])
+    if left and not left.is_empty(): track.set_reached_item(left)
+
+func push_reached_items() -> void:
+    var target_component = get_component(Sides.right, "conveyor")
+    if not target_component: return
+    push_reached_item_for(target_component, track.left_track, Directions.left)
+    push_reached_item_for(target_component, track.right_track, Directions.right)
 
 func handle_break(unit: BuilderAdapterUnit) -> bool:
     return true

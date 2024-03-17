@@ -8,6 +8,7 @@ class SingleTrack extends Node2D:
     var base_position: Vector2
     var reached_item: TrackItem = null
     var items: Array[TrackItem] = []
+    var rotation_offset: float = 0
 
     func add_item(item: Item, position: Vector2) -> void:
         var track_item = TrackItem.new(self, item)
@@ -25,6 +26,13 @@ class SingleTrack extends Node2D:
         track_item.position_updated()
         return true
 
+    func test_position(position: Vector2) -> bool:
+        var item = TrackItem.new(self, null)
+        item.position = position
+        var result = not item.check_collides()
+        item.free()
+        return result
+
     func item_reach(item: TrackItem) -> void:
         if reached_item: return
         reached_item = item
@@ -33,6 +41,9 @@ class SingleTrack extends Node2D:
         return reached_item.item
 
     func set_reached_item(item: Item) -> void:
+        if item == null:
+            remove_reached_item()
+            return
         if reached_item: return
         var track_item = TrackItem.new(self, item)
         track_item.position = Vector2.ZERO
@@ -47,10 +58,9 @@ class SingleTrack extends Node2D:
 
     func process_update(speed: float, delta: float) -> void:
         for item in items:
-            if item == reached_item: continue
             item.process_move(speed, delta)
 
-class TrackItem extends RefCounted:
+class TrackItem extends Object:
     var item: Item
     var display: ItemDisplay
     var position: Vector2
@@ -59,7 +69,9 @@ class TrackItem extends RefCounted:
     func _init(track: SingleTrack, item: Item) -> void:
         self.item = item
         self.track = track
+        if not item: return
         display = item.create_display()
+        display.rotation = track.rotation_offset
         display.scale = ITEM_SCALE
         track.add_child(display)
 
@@ -67,7 +79,8 @@ class TrackItem extends RefCounted:
         if track != other.track: return false
         if other == self: return false
         var delta = position - other.position
-        if delta.abs() > ITEM_SIZE: return false
+        if absf(delta.x) > ITEM_SIZE.x / 2: return false
+        if absf(delta.y) > ITEM_SIZE.y / 2: return false
         return true
 
     func try_move_to(new_position: Vector2) -> void:
@@ -85,8 +98,6 @@ class TrackItem extends RefCounted:
 
     func position_updated() -> void:
         display.position = position + track.base_position
-        if position.length_squared() < 1:
-            track.item_reach(self)
 
     func process_move(speed: float, delta: float) -> void:
         var total_length = speed * delta
@@ -94,10 +105,16 @@ class TrackItem extends RefCounted:
         var x_length = minf(absf(position.x), total_length - y_length)
         var move_delta = Vector2((1 if position.x < 0 else -1) * x_length, \
                 (1 if position.y < 0 else -1) * y_length)
+        if move_delta == Vector2.ZERO:
+            track.item_reach(self)
+            return
         try_move_to(position + move_delta)
 
     func remove() -> void:
         track.remove_child(display)
+        display.queue_free()
+        track.items.erase(self)
+        free.call_deferred()
 
 @export var main_node: Node2D
 

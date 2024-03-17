@@ -115,9 +115,9 @@ func get_adapter_at(pos: Vector2i, type: String) -> EntityAdapter:
     return main_node.call(callback_get_adapter_at, get_local_pos(pos), type)
 
 func get_component_at(pos: Vector2i, rot: int, type: String) -> BuildingComponent:
+    if callback_get_component_at != "": return main_node.call(callback_get_component_at, pos, rot, type)
     if not shadow.pos_to_component.has(pos): return null
     if not shadow.pos_to_component[pos].has(type): return null
-    if callback_get_component_at != "": return main_node.call(callback_get_component_at, pos, rot, type)
     var component: BuildingComponent = shadow.pos_to_component[pos][type]
     var side = BuildingComponent.ROT_TO_SIDE[rot]
     if not component.has_side(side): return null
