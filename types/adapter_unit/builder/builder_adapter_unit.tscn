@@ -58,11 +58,11 @@ end_cap_mode = 2
 [node name="PlaceIcon" type="Sprite2D" parent="CanvasGroup"]
 unique_name_in_owner = true
 visible = false
-z_index = 16
+z_index = 31
 texture = SubResource("AtlasTexture_e2xp5")
 
 [node name="BreakIcon" type="Sprite2D" parent="CanvasGroup"]
 unique_name_in_owner = true
 visible = false
-z_index = 16
+z_index = 31
 texture = SubResource("AtlasTexture_yjik4")

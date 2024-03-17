@@ -169,6 +169,15 @@ func push_reached_items() -> void:
     push_reached_item_for(target_component, track.right_track, Directions.right)
 
 func handle_break(unit: BuilderAdapterUnit) -> bool:
+    var item_adapter = unit.adapter.entity_node.get_adapter("item") as ItemAdapter
+    if not item_adapter: return false
+    for track in [track.left_track, track.right_track]:
+        var removes = []
+        for item in track.items:
+            item.item = item_adapter.add_item(item.item)
+            if not item.item or item.item.is_empty(): removes.append(item)
+        for remove in removes: remove.remove()
+        if track.items.size() > 0: return false
     return true
 
 func get_speed() -> float:

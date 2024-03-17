@@ -30,7 +30,6 @@ class SingleTrack extends Node2D:
         var item = TrackItem.new(self, null)
         item.position = position
         var result = not item.check_collides()
-        item.free()
         return result
 
     func item_reach(item: TrackItem) -> void:
@@ -60,7 +59,7 @@ class SingleTrack extends Node2D:
         for item in items:
             item.process_move(speed, delta)
 
-class TrackItem extends Object:
+class TrackItem extends RefCounted:
     var item: Item
     var display: ItemDisplay
     var position: Vector2
@@ -114,7 +113,6 @@ class TrackItem extends Object:
         track.remove_child(display)
         display.queue_free()
         track.items.erase(self)
-        free.call_deferred()
 
 @export var main_node: Node2D
 

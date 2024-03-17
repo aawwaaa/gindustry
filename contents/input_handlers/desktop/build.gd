@@ -200,6 +200,8 @@ func handle_break_drag(event: InputEventMouse, world_pos: Vector2) -> void:
             if tile and tile.building_ref != 0 and not break_drag_buffer.has(tile.building_ref):
                 var flag = Sprite2D.new()
                 flag.texture = BREAK_FLAG_TEXTURE
+                flag.z_index = entity.get_z_index(0) + 31
+                flag.z_as_relative = false
                 flag.position = Tile.to_world_pos(current_pos)
                 entity.world.add_temp_node(flag)
                 break_drag_buffer[tile.building_ref] = flag
