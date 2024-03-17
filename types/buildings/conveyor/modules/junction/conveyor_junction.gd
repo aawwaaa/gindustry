@@ -4,7 +4,7 @@ extends EntityNode_ConveyorModule
 @export var left_right_track: EntityNode_Conveyor_ConveyorTrack;
 @export var down_up_track: EntityNode_Conveyor_ConveyorTrack;
 
-func get_track(side: Sides, position: Vector2) -> EntityNode_Conveyor_ConveyorTrack.SingleTrack:
+func _get_track(side: Sides, direction: Directions, position: Vector2) -> EntityNode_Conveyor_ConveyorTrack.SingleTrack:
     if side == Sides.left or side == Sides.right:
         if position.y > 0: return left_right_track.right_track
         return left_right_track.left_track
@@ -36,30 +36,11 @@ const SIDE_TO_DIRECTION_TO_POSITION = {
     },
 }
 
-func get_target_position(side: Sides, direction: Directions) -> Vector2:
+func _get_target_position(side: Sides, direction: Directions) -> Vector2:
     return SIDE_TO_DIRECTION_TO_POSITION[side][direction]
 
-func _check_transfer(name: String, source: Building, source_component: BuildingComponent, args: Array = []) -> bool:
-    var item: Item = args[0]
-    var source_side = get_building_side(source, source_component)
-    var source_direction: Directions = args[1]
-    var source_position: Vector2 = args[2].rotated(rotation)
-    if not SIDE_TO_DIRECTION_TO_POSITION[source_side].has(source_direction): return false
-    var position = get_target_position(source_side, source_direction)
-    var track = get_track(source_side, position)
-    return track.test_position(position - track.base_position + source_position)
-
-func _handle_transfer(name: String, source: Building, source_component: BuildingComponent, args: Array = []) -> Variant:
-    var item: Item = args[0]
-    var source_side = get_building_side(source, source_component)
-    var source_direction: Directions = args[1]
-    var source_position: Vector2 = args[2].rotated(rotation)
-    if not SIDE_TO_DIRECTION_TO_POSITION[source_side].has(source_direction): return false
-    var position = get_target_position(source_side, source_direction)
-    var track = get_track(source_side, position)
-    var item_pos = position - track.base_position + source_position
-    var success = track.try_add_item(item, item_pos)
-    return null if success else item
+func _is_vaild_source(source_side: Sides, source_direction: Directions) -> bool:
+    return SIDE_TO_DIRECTION_TO_POSITION[source_side].has(source_direction)
 
 func push_reached_items() -> void:
     var right_target_component = get_component(Sides.right, "conveyor")

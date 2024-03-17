@@ -30,6 +30,24 @@ class SingleTrack extends Node2D:
         track_item.position_updated()
         return true
 
+    func try_add_exists_item(track_item: TrackItem, position: Vector2) -> bool:
+        var old_track = track_item.track
+        var old_position = track_item.position
+        track_item.track = self
+        track_item.position = position
+        if track_item.check_collides():
+            track_item.track = old_track
+            track_item.position = old_position
+            return false
+        track_item.track = old_track
+        track_item.remove(false)
+        track_item.track = self
+        track_item.display.rotation = rotation_offset
+        add_child(track_item.display)
+        items.append(track_item)
+        track_item.position_updated()
+        return true
+
     func test_position(position: Vector2) -> bool:
         var item = TrackItem.new(self, null)
         item.position = position
@@ -40,17 +58,11 @@ class SingleTrack extends Node2D:
         if reached_item: return
         reached_item = item
 
-    func get_reached_item() -> Item:
-        return reached_item.item
-
-    func set_reached_item(item: Item) -> void:
-        if item == null:
-            remove_reached_item()
+    func set_reached_item(track_item: TrackItem) -> void:
+        if track_item == null:
+            reached_item = null
             return
         if reached_item: return
-        var track_item = TrackItem.new(self, item)
-        track_item.position = Vector2.ZERO
-        items.append(track_item)
         track_item.position_updated()
         reached_item = track_item
 
@@ -84,7 +96,7 @@ class TrackItem extends RefCounted:
     func _init(track: SingleTrack, item: Item) -> void:
         self.item = item
         self.track = track
-        if not item: return
+        if not item or not track: return
         display = item.create_display()
         display.rotation = track.rotation_offset
         display.scale = ITEM_SCALE
@@ -125,10 +137,13 @@ class TrackItem extends RefCounted:
             return
         try_move_to(position + move_delta)
 
-    func remove() -> void:
+    func remove(free_display = true) -> void:
         track.remove_child(display)
-        display.queue_free()
+        if free_display: display.queue_free()
         track.items.erase(self)
+
+static func create_track_item(item: Item) -> TrackItem:
+    return TrackItem.new(null, item)
 
 @export var main_node: Node2D
 
