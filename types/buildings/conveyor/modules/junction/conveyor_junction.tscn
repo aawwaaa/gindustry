@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://csa5woyhdcspd"]
+
+[ext_resource type="PackedScene" uid="uid://b26i8kffy01nw" path="res://types/buildings/conveyor/modules/conveyor_module.tscn" id="1_pthv4"]
+[ext_resource type="Script" path="res://types/buildings/conveyor/modules/junction/conveyor_junction.gd" id="2_3gwn1"]
+[ext_resource type="Script" path="res://types/buildings/conveyor/conveyor_track.gd" id="3_trv2f"]
+
+[node name="ConveyorJunction" node_paths=PackedStringArray("left_right_track", "down_up_track", "entity") instance=ExtResource("1_pthv4")]
+script = ExtResource("2_3gwn1")
+left_right_track = NodePath("Track1")
+down_up_track = NodePath("Track2")
+entity = NodePath("Building")
+
+[node name="Track1" type="Node2D" parent="." index="3" node_paths=PackedStringArray("main_node")]
+z_index = 2
+script = ExtResource("3_trv2f")
+main_node = NodePath("..")
+left_track_end = Vector2(16, -7)
+right_track_end = Vector2(16, 7)
+callback_get_speed = &"get_speed"
+
+[node name="Track2" type="Node2D" parent="." index="4" node_paths=PackedStringArray("main_node")]
+z_index = 2
+script = ExtResource("3_trv2f")
+main_node = NodePath("..")
+left_track_end = Vector2(-7, -16)
+right_track_end = Vector2(7, -16)
+callback_get_speed = &"get_speed"

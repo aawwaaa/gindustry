@@ -49,6 +49,7 @@ func get_adapter_at(pos: Vector2i, type: String) -> EntityAdapter:
 
 func get_component_at(pos: Vector2i, rot: int, type: String) -> BuildingComponent:
     if pos != entity.pos: return null
+    if type != get_transfer_type(): return null
     return self
 
 func update_ports() -> void:
@@ -74,7 +75,6 @@ func _on_building_remote_operation(source: Entity, operation: String, args: Arra
         handle_drop_item(source, type, pos)
 
 func handle_drop_item(source: Entity, type: String, pos: Vector2) -> void:
-    push_error("drop", source, type, pos)
     if not source.has_adapter("inventory"): return
     var inventory = source.get_adapter("inventory") as Inventory
     var item = inventory.split_dropped_item(type)
@@ -132,15 +132,15 @@ const SIDE_TO_DIRECTION_TO_POSITION = {
     }
 }
 
-func get_drop_position(source_side: Sides, source_direction: Directions) -> Vector2:
+func get_target_position(source_side: Sides, source_direction: Directions) -> Vector2:
     return SIDE_TO_DIRECTION_TO_POSITION[source_side][source_direction]
 
 func _check_transfer(name: String, source: Building, source_component: BuildingComponent, args: Array = []) -> bool:
     var item: Item = args[0]
     var source_side = get_building_side(source, source_component)
     var source_direction: Directions = args[1]
-    if source_side == Sides.right and source_direction in [Directions.left, Directions.right]: return false
-    var position = get_drop_position(source_side, source_direction)
+    if not SIDE_TO_DIRECTION_TO_POSITION[source_side].has(source_direction): return false
+    var position = get_target_position(source_side, source_direction)
     var track = get_track(position)
     return track.test_position(position - track.base_position)
 
@@ -149,7 +149,7 @@ func _handle_transfer(name: String, source: Building, source_component: Building
     var source_side = get_building_side(source, source_component)
     var source_direction: Directions = args[1]
     if source_side == Sides.right and source_direction in [Directions.left, Directions.right]: return false
-    var position = get_drop_position(source_side, source_direction)
+    var position = get_target_position(source_side, source_direction)
     var track = get_track(position)
     var item_pos = position - track.base_position
     var success = track.try_add_item(item, item_pos)

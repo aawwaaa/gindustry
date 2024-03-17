@@ -36,6 +36,11 @@ script = ExtResource("3_h66cj")
 main_node = NodePath("..")
 entity_node = NodePath("../Building")
 
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(2, 2)
+texture = SubResource("AtlasTexture_1s5ro")
+script = ExtResource("5_x6ap6")
+
 [node name="Track" type="Node2D" parent="." node_paths=PackedStringArray("main_node")]
 unique_name_in_owner = true
 z_index = 2
@@ -44,11 +49,6 @@ main_node = NodePath("..")
 left_track_end = Vector2(16, -7)
 right_track_end = Vector2(16, 7)
 callback_get_speed = &"get_speed"
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(2, 2)
-texture = SubResource("AtlasTexture_1s5ro")
-script = ExtResource("5_x6ap6")
 
 [connection signal="input_operation" from="Building" to="." method="_on_building_input_operation"]
 [connection signal="on_load_data" from="Building" to="." method="_on_building_on_load_data"]

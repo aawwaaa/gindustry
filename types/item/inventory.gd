@@ -116,6 +116,7 @@ static func create_dropped_item_at(world: World, position: Vector2) -> EntityNod
 
 func drop_item_at(world: World, position: Vector2, type: String = "all") -> void:
     var dropped_item = create_dropped_item_at(world, position)
+    if not dropped_item: return
     drop_item(dropped_item.get_entity(), type)
 
 func swap_with_other_hand(slot: int, other: Inventory = self) -> void:
