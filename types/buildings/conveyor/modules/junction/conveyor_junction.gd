@@ -43,19 +43,21 @@ func _check_transfer(name: String, source: Building, source_component: BuildingC
     var item: Item = args[0]
     var source_side = get_building_side(source, source_component)
     var source_direction: Directions = args[1]
+    var source_position: Vector2 = args[2].rotated(rotation)
     if not SIDE_TO_DIRECTION_TO_POSITION[source_side].has(source_direction): return false
     var position = get_target_position(source_side, source_direction)
     var track = get_track(source_side, position)
-    return track.test_position(position - track.base_position)
+    return track.test_position(position - track.base_position + source_position)
 
 func _handle_transfer(name: String, source: Building, source_component: BuildingComponent, args: Array = []) -> Variant:
     var item: Item = args[0]
     var source_side = get_building_side(source, source_component)
     var source_direction: Directions = args[1]
+    var source_position: Vector2 = args[2].rotated(rotation)
     if not SIDE_TO_DIRECTION_TO_POSITION[source_side].has(source_direction): return false
     var position = get_target_position(source_side, source_direction)
     var track = get_track(source_side, position)
-    var item_pos = position - track.base_position
+    var item_pos = position - track.base_position + source_position
     var success = track.try_add_item(item, item_pos)
     return null if success else item
 

@@ -139,28 +139,31 @@ func _check_transfer(name: String, source: Building, source_component: BuildingC
     var item: Item = args[0]
     var source_side = get_building_side(source, source_component)
     var source_direction: Directions = args[1]
+    var source_position: Vector2 = args[2].rotated(rotation)
     if not SIDE_TO_DIRECTION_TO_POSITION[source_side].has(source_direction): return false
     var position = get_target_position(source_side, source_direction)
     var track = get_track(position)
-    return track.test_position(position - track.base_position)
+    return track.test_position(position - track.base_position + source_position)
 
 func _handle_transfer(name: String, source: Building, source_component: BuildingComponent, args: Array = []) -> Variant:
     var item: Item = args[0]
     var source_side = get_building_side(source, source_component)
     var source_direction: Directions = args[1]
+    var source_position: Vector2 = args[2].rotated(rotation)
     if source_side == Sides.right and source_direction in [Directions.left, Directions.right]: return false
     var position = get_target_position(source_side, source_direction)
     var track = get_track(position)
-    var item_pos = position - track.base_position
+    var item_pos = position - track.base_position + source_position
     var success = track.try_add_item(item, item_pos)
     return null if success else item
 
 func push_reached_item_for(target: BuildingComponent, track: EntityNode_Conveyor_ConveyorTrack.SingleTrack, direction: Directions) -> void: 
     if not track.reached_item: return
     var item = track.get_reached_item()
-    if not target.check_transfer("conveyor", entity, self, [item, direction]): return
+    var position = track.reached_item.position.rotated(-rotation)
+    if not target.check_transfer("conveyor", entity, self, [item, direction, position]): return
     track.remove_reached_item()
-    var left = target.handle_transfer("conveyor", entity, self, [item, direction])
+    var left = target.handle_transfer("conveyor", entity, self, [item, direction, position])
     if left and not left.is_empty(): track.set_reached_item(left)
 
 func push_reached_items() -> void:

@@ -42,9 +42,10 @@ func get_component_at(pos: Vector2i, rot: int, type: String) -> BuildingComponen
 func push_reached_item_for(target: BuildingComponent, track: EntityNode_Conveyor_ConveyorTrack.SingleTrack, direction: EntityNode_Conveyor.Directions) -> void: 
     if not track.reached_item: return
     var item = track.get_reached_item()
-    if not target.check_transfer("conveyor", entity, self, [item, direction]): return
+    var position = track.reached_item.position.rotated(-rotation)
+    if not target.check_transfer("conveyor", entity, self, [item, direction, position]): return
     track.remove_reached_item()
-    var left = target.handle_transfer("conveyor", entity, self, [item, direction])
+    var left = target.handle_transfer("conveyor", entity, self, [item, direction, position])
     if left and not left.is_empty(): track.set_reached_item(left)
 
 func push_reached_item_for_track(target: BuildingComponent, track: EntityNode_Conveyor_ConveyorTrack) -> void:
