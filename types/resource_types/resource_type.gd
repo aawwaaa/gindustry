@@ -2,6 +2,7 @@ class_name ResourceType
 extends Resource
 
 @export var name: String
+var mod: Mod
 
 func _get_type() -> ResourceType:
     return null

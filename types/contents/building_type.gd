@@ -1,6 +1,8 @@
 class_name BuildingType
 extends EntityType
 
+const BUILDING_TYPE = preload("res://contents/content_types/building.tres")
+
 @export var icon: Texture2D = load("res://assets/asset-not-found.png")
 @export var shadow: PackedScene:
     get: return shadow if shadow else _get_default_building_shadow()
@@ -27,8 +29,8 @@ func get_requirements() -> Array[Item]:
 func get_tr_name() -> String:
     return Content.to_full_id(mod.mod_info.id, id, "Building")
 
-func _get_content_type() -> String:
-    return "building"
+func _get_content_type() -> ContentType:
+    return BUILDING_TYPE
 
 func create_shadow() -> BuildingShadow:
     var inst: BuildingShadow = shadow.instantiate()

@@ -137,7 +137,7 @@ func load_game(stream: Stream) -> void:
     save_configs = ConfigsGroup.load_from(stream);
     Contents.load_contents_mapping(stream);
 
-    save_preset = Contents.get_content_by_index(stream.get_64()) as Preset
+    save_preset = Types.get_type(Preset.TYPE, stream.get_string()) as Preset
     save_preset._load_preset_data(stream)
     save_preset._enable_preset()
     save_preset._load_preset()
@@ -163,7 +163,7 @@ func save_game(stream: Stream, to_client: bool = false) -> void:
     save_configs.save_configs(stream);
     Contents.save_contents_mapping(stream);
 
-    stream.store_64(save_preset.index)
+    stream.store_string(save_preset.name)
     save_preset._save_preset_data(stream)
 
     stream.store_32(world_inc_id)

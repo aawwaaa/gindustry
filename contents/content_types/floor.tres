@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="ContentType" load_steps=2 format=3 uid="uid://obh167qdaeoh"]
+
+[ext_resource type="Script" path="res://types/resource_types/content_type.gd" id="1_8a2gu"]
+
+[resource]
+script = ExtResource("1_8a2gu")
+name = "floor"

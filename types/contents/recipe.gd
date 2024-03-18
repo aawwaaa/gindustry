@@ -1,6 +1,8 @@
 class_name Recipe
 extends Content
 
+const RECIPE_TYPE = preload("res://contents/content_types/recipe.tres")
+
 @export var icon: Texture2D
 @export var consumers: Array[Consumer] = []
 @export var providers: Array[Provider] = []
@@ -8,8 +10,8 @@ extends Content
 func get_tr_name() -> String:
     return Content.to_full_id(mod.mod_info.id, id, "Recipe")
 
-func _get_content_type() -> String:
-    return "recipe"
+func _get_content_type() -> ContentType:
+    return RECIPE_TYPE
 
 func get_consumers() -> Array[Consumer]:
     return consumers

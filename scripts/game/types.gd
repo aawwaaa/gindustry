@@ -1,9 +1,13 @@
 extends Node
 
+@onready var log_source = Log.register_log_source("types")
+
 var resource_type_types: Dictionary = {}
 var types: Dictionary = {}
 
 func register_type(type: ResourceType) -> void:
+    log_source.debug("Load type: " + str(type.get_type().name, " ", type.name))
+    type.mod = Contents.current_loading_mod
     if type is ResourceTypeType:
         resource_type_types[type.name] = type
         if not types.has(type):

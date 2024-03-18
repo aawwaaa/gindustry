@@ -1,6 +1,7 @@
 class_name Overlay
 extends Content
 
+const OVERLAY_TYPE = preload("res://contents/content_types/overlay.tres")
 var tile_source_id: int;
 
 @export var tile_coords: Vector2i;
@@ -44,8 +45,8 @@ func get_tr_name() -> String:
 func apply_mod(mod_inst: Mod) -> void:
     super.apply_mod(mod_inst);
 
-func _get_content_type() -> String:
-    return "overlay"
+func _get_content_type() -> ContentType:
+    return OVERLAY_TYPE
 
 func _content_registed() -> void:
     if not source_id_to_coords_to_content.has(tile_source_id):

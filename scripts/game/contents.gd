@@ -2,6 +2,8 @@ extends Node
 
 signal content_registed(content: Content)
 
+@onready var log_source = Log.register_log_source("contents")
+
 var contents: Array[Content] = []
 var contents_indexed = {}
 var contents_type_indexed = {}
@@ -15,12 +17,14 @@ var current_loading_mod: Mod = null;
 
 func register_content(content: Content) -> void:
     content.apply_mod(current_loading_mod);
+    log_source.debug("Load content: " + content.full_id + " " + content.get_content_type().name)
     contents.append(content);
     contents_indexed[content.full_id] = content;
-    var type = content._get_content_type();
+    var type = content.get_content_type();
     if not contents_type_indexed.has(type):
         contents_type_indexed[type] = []
     contents_type_indexed[type].append(content)
+    type.register_content(content)
     content._content_registed();
     if contents_wait.has(content.full_id):
         for callback in contents_wait[content.full_id]:

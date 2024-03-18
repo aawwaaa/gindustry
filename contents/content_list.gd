@@ -16,6 +16,17 @@ func start_load() -> void:
         "building_attribute_type.tres",
         "consumer_type.tres",
         "provider_type.tres",
+        "content_type.tres",
+        "preset.tres",
+    ])
+    await load_type("content_types/", [
+        "building.tres",
+        "content.tres",
+        "entity.tres",
+        "floor.tres",
+        "item.tres",
+        "overlay.tres",
+        "recipe.tres",
     ])
     await load_type("building_attributes/", [
         "assembler.tres"

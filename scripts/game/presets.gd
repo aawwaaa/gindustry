@@ -11,7 +11,7 @@ class PresetGroup:
     
     func add(preset: Preset) -> void:
         presets.append(preset)
-        Contents.register_content(preset)
+        Types.register_type(preset)
 
 var preset_groups: Array[PresetGroup] = []
 

@@ -4,4 +4,4 @@
 
 [resource]
 script = ExtResource("1_d1soe")
-id = "test_preset"
+name = "test"

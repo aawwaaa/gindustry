@@ -1,6 +1,8 @@
 class_name Floor
 extends Content
 
+const FLOOR_TYPE = preload("res://contents/content_types/floor.tres")
+
 @warning_ignore("integer_division")
 const WHOLE_TILE_POLYGON_POINTS = [
     Vector2(- (Global.TILE_SIZE / 2), - (Global.TILE_SIZE / 2)),
@@ -52,8 +54,8 @@ func get_tr_name() -> String:
 func apply_mod(mod_inst: Mod) -> void:
     super.apply_mod(mod_inst);
 
-func _get_content_type() -> String:
-    return "floor"
+func _get_content_type() -> ContentType:
+    return FLOOR_TYPE
 
 func _content_registed() -> void:
     if not source_id_to_coords_to_content.has(tile_source_id):

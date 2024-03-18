@@ -1,5 +1,10 @@
 class_name Preset
-extends Content
+extends ResourceType
+
+const TYPE = preload("res://contents/resource_types/preset.tres")
+
+func _get_type() -> ResourceType:
+    return TYPE
 
 func _show_description(_node: ScrollContainer) -> void:
     pass
@@ -17,10 +22,7 @@ func _load_preset() -> void:
     pass
 
 func get_tr_name() -> String:
-    return Content.to_full_id(mod.mod_info.id, id, "preset")
-
-func _get_content_type() -> String:
-    return "preset"
+    return Content.to_full_id(mod.mod_info.id, name, "preset")
 
 func _enable_preset() -> void:
     pass

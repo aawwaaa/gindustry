@@ -1,6 +1,7 @@
 class_name ItemType
 extends Content
 
+const ITEM_TYPE = preload("res://contents/content_types/item.tres")
 const ITEM_DISPLAY = preload("res://types/item/item_display.tscn")
 
 var max_stack: int:
@@ -19,8 +20,8 @@ func create_item() -> Item:
 func get_tr_name() -> String:
     return Content.to_full_id(mod.mod_info.id, id, "Item")
 
-func _get_content_type() -> String:
-    return "item"
+func _get_content_type() -> ContentType:
+    return ITEM_TYPE
 
 func _get_item_script() -> GDScript:
     return Item
