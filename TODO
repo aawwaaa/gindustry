@@ -173,6 +173,8 @@
 [X] 丢物品进建筑(建筑操作[位置, 物品, 类型])
 [ ] configuring
 [ ] alt显示
+[ ] ItemDisplayGroup
+    [ ] Inventory适配
 [ ] TileOre[WithData]
 	[ ] TileOreType
 	[ ] [Floor/Overlay].ores/ore_with_data
@@ -198,14 +200,13 @@
 	[X] 传送带
 	[ ] 传送带部件
         [X] 交叉器
-        [ ] 路由器
+        [X] 路由器
         [ ] 分类器
         [ ] 反向分类器
         [ ] 溢流门
         [ ] 反向溢流门
         [ ] 翻转器
         [ ] 均分器
-        [ ] 交叉器
         [.] 读取器
         [.] 切断器
         [.] 切换器

@@ -34,7 +34,8 @@ const overlays: Array[String] = [
 const buildings: Array[String] = [
     "/test/building.tres",
     "/conveyors/conveyor_1/conveyor.tres",
-    "/conveyors/conveyor_1/junction.tres"
+    "/conveyors/conveyor_1/junction.tres",
+    "/conveyors/conveyor_1/router.tres"
 ]
 
 const entities: Array[String] = [

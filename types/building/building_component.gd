@@ -107,11 +107,11 @@ func get_tile(side: Sides) -> Tile:
     var base = building.world.get_tile_or_null(pos)
     return base.get_near_tile(rot)
 
-func get_component(side: Sides, type: String = get_transfer_type()) -> BuildingComponent:
+func get_component(side: Sides, type: String = get_transfer_type(), ignore_side = false) -> BuildingComponent:
     var rot = apply_rot(SIDE_TO_ROT[side])
     var tile = get_tile(side)
     if not tile or not tile.building: return null
-    return tile.building.get_component_at(tile.tile_pos, revert_rot(rot), type)
+    return tile.building.get_component_at(tile.tile_pos, revert_rot(rot), type, ignore_side)
 
 func get_building_side(building: Building, component: BuildingComponent = null) -> Sides:
     var pos = component.pos if component else building.pos

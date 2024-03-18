@@ -114,13 +114,13 @@ func get_adapter_at(pos: Vector2i, type: String) -> EntityAdapter:
     if callback_get_adapter_at == "": return null
     return main_node.call(callback_get_adapter_at, get_local_pos(pos), type)
 
-func get_component_at(pos: Vector2i, rot: int, type: String) -> BuildingComponent:
-    if callback_get_component_at != "": return main_node.call(callback_get_component_at, pos, rot, type)
+func get_component_at(pos: Vector2i, rot: int, type: String, ignore_side = false) -> BuildingComponent:
+    if callback_get_component_at != "": return main_node.call(callback_get_component_at, pos, rot, type, ignore_side)
     if not shadow.pos_to_component.has(pos): return null
     if not shadow.pos_to_component[pos].has(type): return null
     var component: BuildingComponent = shadow.pos_to_component[pos][type]
     var side = BuildingComponent.ROT_TO_SIDE[rot]
-    if not component.has_side(side): return null
+    if not ignore_side and not component.has_side(side): return null
     return component
 
 func _load_data(stream: Stream) -> void:

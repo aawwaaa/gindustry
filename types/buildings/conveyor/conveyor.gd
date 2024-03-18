@@ -49,7 +49,7 @@ func get_adapter_at(pos: Vector2i, type: String) -> EntityAdapter:
     if pos != Vector2i.ZERO or type != "item": return null
     return entity.adapters["item"]
 
-func get_component_at(pos: Vector2i, rot: int, type: String) -> BuildingComponent:
+func get_component_at(pos: Vector2i, rot: int, type: String, ignore_side = false) -> BuildingComponent:
     if pos != entity.pos: return null
     if type != get_transfer_type(): return null
     return self
@@ -142,6 +142,7 @@ func _check_transfer(name: String, source: Building, source_component: BuildingC
     var source_side = get_building_side(source, source_component)
     var source_direction: Directions = args[1]
     if not SIDE_TO_DIRECTION_TO_POSITION[source_side].has(source_direction): return false
+    if not item: return true
     var position = get_target_position(source_side, source_direction)
     var track = get_track(position)
     return track.test_position(item.position + position - track.base_position)
@@ -150,7 +151,8 @@ func _handle_transfer(name: String, source: Building, source_component: Building
     var item: TrackItem = args[0]
     var source_side = get_building_side(source, source_component)
     var source_direction: Directions = args[1]
-    if not SIDE_TO_DIRECTION_TO_POSITION[source_side].has(source_direction): return false
+    if not SIDE_TO_DIRECTION_TO_POSITION[source_side].has(source_direction): return item
+    if not item: return item
     var position = get_target_position(source_side, source_direction)
     var track = get_track(position)
     var item_pos = position - track.base_position

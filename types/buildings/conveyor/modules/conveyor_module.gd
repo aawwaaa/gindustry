@@ -35,7 +35,7 @@ func get_adapter_at(pos: Vector2i, type: String) -> EntityAdapter:
     if pos != Vector2i.ZERO or type != "item": return null
     return entity.adapters["item"]
 
-func get_component_at(pos: Vector2i, rot: int, type: String) -> BuildingComponent:
+func get_component_at(pos: Vector2i, rot: int, type: String, ignore_side = false) -> BuildingComponent:
     if pos != entity.pos: return null
     if type != get_transfer_type(): return null
     return self
@@ -54,6 +54,7 @@ func _check_transfer(name: String, source: Building, source_component: BuildingC
     var source_side = get_building_side(source, source_component)
     var source_direction: Directions = args[1]
     if not _is_vaild_source(source_side, source_direction): return false
+    if not item: return true
     var position = _get_target_position(source_side, source_direction)
     var track = _get_track(source_side ,source_direction, position)
     return track.test_position(item.position + position - track.base_position)
@@ -62,19 +63,21 @@ func _handle_transfer(name: String, source: Building, source_component: Building
     var item: TrackItem = args[0]
     var source_side = get_building_side(source, source_component)
     var source_direction: Directions = args[1]
-    if not _is_vaild_source(source_side, source_direction): return false
+    if not _is_vaild_source(source_side, source_direction): return item
+    if not item: return item
     var position = _get_target_position(source_side, source_direction)
     var track = _get_track(source_side, source_direction, position)
     var item_pos = position - track.base_position
     var success = track.try_add_exists_item(item, item_pos)
     return null if success else item
 
-func push_reached_item_for(target: BuildingComponent, track: EntityNode_Conveyor_ConveyorTrack.SingleTrack, direction: EntityNode_Conveyor.Directions) -> void: 
-    if not track.reached_item: return
+func push_reached_item_for(target: BuildingComponent, track: EntityNode_Conveyor_ConveyorTrack.SingleTrack, direction: EntityNode_Conveyor.Directions) -> bool: 
+    if not track.reached_item: return false
     var item = track.reached_item
-    if not target.check_transfer("conveyor", entity, self, [item, direction]): return
+    if not target.check_transfer("conveyor", entity, self, [item, direction]): return false
     var left = target.handle_transfer("conveyor", entity, self, [item, direction])
     track.set_reached_item(left)
+    return true
 
 func push_reached_item_for_track(target: BuildingComponent, track: EntityNode_Conveyor_ConveyorTrack) -> void:
     push_reached_item_for(target, track.left_track, Directions.left)

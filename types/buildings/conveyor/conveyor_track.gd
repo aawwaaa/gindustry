@@ -124,6 +124,7 @@ class TrackItem extends RefCounted:
         return false
 
     func position_updated() -> void:
+        if not is_instance_valid(display): return
         display.position = position + track.base_position
 
     func process_move(speed: float, delta: float) -> void:
