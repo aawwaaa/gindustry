@@ -175,6 +175,17 @@
 [ ] alt显示
 [ ] ItemDisplayGroup
     [ ] Inventory适配
+[ ] ContentSelector
+    [ ] ContentSelectorPanel
+        [ ] ItemTypeSelectorPanel
+        [ ] LiquidSelectorPanel
+        [ ] BuildingTypeSelectorType
+        [ ] EntityTypeSelectorPanel(用户友好型/只显示可建造单位)
+        [ ] FloorSelectorPanel
+        [ ] OverlaySelectorPanel
+        [ ] RecipeSelectorPanel
+    [ ] ItemSelector extends Inventory
+    [ ] ContentSelector
 [ ] TileOre[WithData]
 	[ ] TileOreType
 	[ ] [Floor/Overlay].ores/ore_with_data
