@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3 uid="uid://cwpw3gohiud0n"]
+
+[ext_resource type="Script" path="res://addons/gindustry_tools_contents_manager/contents_editor.gd" id="1_8yox2"]
+
+[node name="ContentsEditor" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8yox2")
+
+[node name="TabBar" type="TabBar" parent="."]
+layout_mode = 2
+tab_close_display_policy = 1
+drag_to_rearrange_enabled = true
+
+[node name="EditorsContainer" type="PanelContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="EditorsContainer"]
+layout_mode = 2
+
+[node name="Editors" type="VBoxContainer" parent="EditorsContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Button" type="Button" parent="EditorsContainer/ScrollContainer/Editors"]
+layout_mode = 2
+text = "12345"
+
+[node name="Label" type="Label" parent="EditorsContainer/ScrollContainer/Editors"]
+layout_mode = 2
+text = "12345"

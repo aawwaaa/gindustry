@@ -50,7 +50,11 @@ movie_writer/disable_vsync=true
 
 [editor_plugins]
 
-enabled=PackedStringArray()
+enabled=PackedStringArray("res://addons/gindustry_tools_contents_manager/plugin.cfg")
+
+[gindustry_tools]
+
+contents_manager/content_lists=[]
 
 [input]
 

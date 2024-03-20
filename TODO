@@ -190,6 +190,9 @@
 	[ ] TileOreType
 	[ ] [Floor/Overlay].ores/ore_with_data
 	[ ] TileOre_ItemOre
+[ ] ContentManager
+    [ ] ui
+    [ ] edit
 
 [X] 6. 带物品的建筑拆除
 [X] 7. 掉落物
