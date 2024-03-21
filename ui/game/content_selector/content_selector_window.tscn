@@ -1,12 +1,16 @@
-[gd_scene load_steps=5 format=3 uid="uid://qpxvgen0enlx"]
+[gd_scene load_steps=6 format=3 uid="uid://qpxvgen0enlx"]
 
 [ext_resource type="Script" path="res://ui/game/content_selector/content_selector_window.gd" id="1_jvm0o"]
+[ext_resource type="Texture2D" uid="uid://bs1xtb7wpji1c" path="res://assets/ui/icons/file.tres" id="2_ol81v"]
 [ext_resource type="Texture2D" uid="uid://b24hivrw2fe5n" path="res://assets/ui/icons/delete.tres" id="2_yn8x2"]
 [ext_resource type="Texture2D" uid="uid://3c3cfli0hgal" path="res://assets/ui/icons/cross.tres" id="3_ssf2t"]
 [ext_resource type="Texture2D" uid="uid://d4h3l85gk7ahu" path="res://assets/ui/icons/check.tres" id="4_j0vla"]
 
 [node name="ContentSelectorWindow" type="Window"]
 size = Vector2i(480, 560)
+unresizable = true
+borderless = true
+always_on_top = true
 script = ExtResource("1_jvm0o")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -15,15 +19,31 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/PanelContainer2"]
+layout_mode = 2
+size_flags_vertical = 0
+vertical_scroll_mode = 0
+
+[node name="ContentTypes" type="HBoxContainer" parent="VBoxContainer/PanelContainer2/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="VBoxContainer/PanelContainer2/ScrollContainer/ContentTypes"]
+layout_mode = 2
+icon = ExtResource("2_ol81v")
 
 [node name="SelectorPanels" type="VBoxContainer" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-
-[node name="ContentTypes" type="HBoxContainer" parent="VBoxContainer/SelectorPanels"]
-unique_name_in_owner = true
-layout_mode = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2

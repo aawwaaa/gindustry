@@ -52,6 +52,10 @@ movie_writer/disable_vsync=true
 
 contents_manager/content_lists=[]
 
+[gui]
+
+theme/custom="res://assets/ui/global_theme.tres"
+
 [input]
 
 move_up={

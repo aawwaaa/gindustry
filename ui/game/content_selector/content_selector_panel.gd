@@ -9,6 +9,9 @@ func _load_contents() -> void:
 func _set_selected(selected: Content) -> void:
     pass
 
+func _get_texture_for(content: Content) -> Texture2D:
+    return null
+
 func load_contents() -> void:
     _load_contents()
 
@@ -20,3 +23,6 @@ func show_panel() -> void:
 
 func set_selected(selected: Content) -> void:
     _set_selected(selected)
+
+func get_texture_for(content: Content) -> Texture2D:
+    return _get_texture_for(content)
