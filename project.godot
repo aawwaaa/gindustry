@@ -48,10 +48,6 @@ window/version="1.0.0"
 movie_writer/movie_file="E:/workspace/out.avi"
 movie_writer/disable_vsync=true
 
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/gindustry_tools_contents_manager/plugin.cfg")
-
 [gindustry_tools]
 
 contents_manager/content_lists=[]

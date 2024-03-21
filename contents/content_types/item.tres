@@ -1,7 +1,11 @@
-[gd_resource type="Resource" script_class="ContentType" load_steps=2 format=3 uid="uid://c1rd2dw2hj5i"]
+[gd_resource type="Resource" script_class="ContentType" load_steps=3 format=3 uid="uid://c1rd2dw2hj5i"]
 
 [ext_resource type="Script" path="res://types/resource_types/content_type.gd" id="1_kq2m3"]
 
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_psldm"]
+size = Vector2(32, 32)
+
 [resource]
 script = ExtResource("1_kq2m3")
+icon = SubResource("PlaceholderTexture2D_psldm")
 name = "item"

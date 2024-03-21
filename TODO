@@ -175,6 +175,10 @@
 [ ] alt显示
 [ ] ItemDisplayGroup
     [ ] Inventory适配
+[ ] BuildingType.default_building_category()
+[ ] EntityType.entity_category
+[ ] ItemType.item_category
+[ ] Recipe.category
 [ ] ContentSelector
     [ ] ContentSelectorPanel
         [ ] ItemTypeSelectorPanel
