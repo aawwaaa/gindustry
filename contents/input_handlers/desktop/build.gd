@@ -53,7 +53,6 @@ func handle_input_event_mouse(event: InputEventMouse, unhandled: bool = false) -
         if interacting.main_node is BuildingShadowContainer:
             handle_interact_with_building_shadow_container(event, interacting)
 
-
 func handle_interact_with_building_shadow_container(event: InputEventMouseButton, interacting: Entity) -> void:
     if event.button_index == MOUSE_BUTTON_LEFT:
         handler.interact_operate("continue_build", [])
@@ -94,7 +93,8 @@ func update_building_shadow() -> void:
         building_shadow = selected.create_shadow()
         building_shadow.update_position({
             "world": entity.world,
-            "layer": entity.layer
+            "layer": entity.layer,
+            "as_top": true
         })
         building_shadow.disable_collision = true
         entity.world.add_temp_node(building_shadow)
@@ -152,6 +152,7 @@ func handle_place_drag(event: InputEventMouse, world_pos: Vector2) -> void:
             current_shadow.update_position({
                 "world": entity.world,
                 "layer": entity.layer,
+                "as_top": true,
                 "rotation": ui.current_rotation
             })
             current_shadow.disable_collision = true

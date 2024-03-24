@@ -11,6 +11,7 @@ static var instance: GameUI;
 @onready var build_ui: BuildUI = %BuildUI
 @onready var debug: Label = %Debug
 @onready var input_handler_ui: Control = %InputHandlerUI
+@onready var content_selector: ContentSelectorLayer = %ContentSelectorLayer
 
 func _ready() -> void:
     instance = self

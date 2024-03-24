@@ -147,6 +147,9 @@ static func get_collision_mask_static(layer: int, begin: int, end: int) -> int:
     var mask = (1 << delta) - 1;
     return mask << begin
 
+static func get_z_index_static(layer: int) -> int:
+    return 32 * layer
+
 func init_entity() -> void:
     entity_id = Game.entity_inc_id;
     Game.entity_inc_id += 1;
@@ -157,7 +160,7 @@ func init_entity() -> void:
             child.get_entity().init_entity()
 
 func get_z_index(offset: int) -> int:
-    return 32 * (absolute_layer() + offset)
+    return get_z_index_static(absolute_layer() + offset)
 
 func _ready() -> void:
     for node in child_entities_main_node:

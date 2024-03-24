@@ -1,0 +1,103 @@
+[gd_scene load_steps=5 format=3 uid="uid://qpxvgen0enlx"]
+
+[ext_resource type="Script" path="res://ui/game/content_selector/content_selector_layer.gd" id="1_jvm0o"]
+[ext_resource type="Texture2D" uid="uid://b24hivrw2fe5n" path="res://assets/ui/icons/delete.tres" id="2_yn8x2"]
+[ext_resource type="Texture2D" uid="uid://3c3cfli0hgal" path="res://assets/ui/icons/cross.tres" id="3_ssf2t"]
+[ext_resource type="Texture2D" uid="uid://d4h3l85gk7ahu" path="res://assets/ui/icons/check.tres" id="4_j0vla"]
+
+[node name="ContentSelectorLayer" type="CanvasLayer"]
+layer = 2
+script = ExtResource("1_jvm0o")
+
+[node name="Panel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 480)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -123.5
+offset_top = -24.0
+offset_right = 123.5
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+
+[node name="PanelContainer3" type="PanelContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="DragButton" type="Button" parent="Panel/VBoxContainer/PanelContainer3"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+flat = true
+
+[node name="PanelContainer2" type="PanelContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBoxContainer/PanelContainer2"]
+layout_mode = 2
+size_flags_vertical = 0
+vertical_scroll_mode = 0
+
+[node name="ContentTypes" type="HBoxContainer" parent="Panel/VBoxContainer/PanelContainer2/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="SelectorPanels" type="VBoxContainer" parent="Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="CurrentSelected" type="TextureRect" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer/PanelContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+
+[node name="AmountSlider" type="HSlider" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1000.0
+step = 0.0
+
+[node name="Amount" type="LineEdit" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "1"
+virtual_keyboard_type = 2
+
+[node name="Clear" type="Button" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("2_yn8x2")
+
+[node name="Cancel" type="Button" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("3_ssf2t")
+
+[node name="Confirm" type="Button" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("4_j0vla")
+
+[connection signal="gui_input" from="Panel/VBoxContainer/PanelContainer3/DragButton" to="." method="_on_drag_button_gui_input"]
+[connection signal="value_changed" from="Panel/VBoxContainer/PanelContainer/HBoxContainer/AmountSlider" to="." method="_on_amount_slider_value_changed"]
+[connection signal="text_changed" from="Panel/VBoxContainer/PanelContainer/HBoxContainer/Amount" to="." method="_on_amount_text_changed"]
+[connection signal="pressed" from="Panel/VBoxContainer/PanelContainer/HBoxContainer/Clear" to="." method="_on_clear_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/PanelContainer/HBoxContainer/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/PanelContainer/HBoxContainer/Confirm" to="." method="_on_confirm_pressed"]

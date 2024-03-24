@@ -1,5 +1,5 @@
-class_name ContentSelectorWindow
-extends Window
+class_name ContentSelectorLayer
+extends CanvasLayer
 
 signal submit(content: Content, amount: float)
 
@@ -19,44 +19,57 @@ var current_type: ContentType = null
 var current_content: Content = null
 var current_amount: float = 1:
     set = set_current_amount
+var old_content: Content = null
+var old_amount: float = 1;
 var current_allow_float: bool = false
 
 func _on_game_ui_contents_loaded() -> void:
-    for content_type in Types.get_types(ContentType.TYPE).values() as Array[ContentType]:
-        if not content_type.selector_panel: return
+    var types = Types.get_types(ContentType.TYPE).values().duplicate() as Array[ContentType]
+    types.sort_custom(func(a, b): return a.order < b.order)
+    for content_type in types:
+        if not content_type.selector_panel: continue
+
+        var button = Button.new()
+        button.icon = content_type.icon
+        %ContentTypes.add_child(button)
+        button.pressed.connect(func(): show_content_type(content_type))
+
+        content_type_to_button[content_type] = button
+
         var instance = content_type.selector_panel.instantiate()
         %Panelcontainer.add_child(instance)
         instance.selected_changed.connect(_on_instance_selected_changed)
         instance.load_contents()
         instance.hide_panel()
 
-        # TODO generate button, signal
-
         content_type_to_panel[content_type] = instance
 
 func show_content_type(content_type: ContentType) -> void:
     if current_type:
         content_type_to_panel[current_type].hide_panel()
-        # TODO unselect button
+        content_type_to_button[current_type].button_pressed = false
     content_type_to_panel[content_type].show_panel()
+    content_type_to_button[content_type].button_pressed = true
     current_type = content_type
-    # TODO select button
 
 func select_content(content: Content, amount: float, allow_float: bool = false) -> SelectContentReturnValue:
+    old_content = content
+    old_amount = amount
     current_content = content
     current_amount = amount
     current_allow_float = allow_float
+    visible = true
     await submit
     return SelectContentReturnValue.new(current_content, current_amount)
 
 func set_current_content(value: Content) -> void:
+    current_content = value
     if value:
         show_content_type(value.get_type())
         var texture = content_type_to_panel[current_type].get_texture_for(value)
         %CurrentSelected.texture = texture
     else:
         %CurrentSelected.texture = null
-    current_content = value
 
 func set_current_amount(value: float) -> void:
     current_amount = value
@@ -84,12 +97,28 @@ func _on_amount_slider_value_changed(value: float) -> void:
     current_amount = value
 
 func _on_confirm_pressed() -> void:
-    pass # Replace with function body.
+    submit.emit(current_content, current_amount)
+    visible = false
 
 func _on_cancel_pressed() -> void:
-    pass # Replace with function body.
+    current_content = old_content
+    current_amount = old_amount
+    submit.emit(old_content, old_amount)
+    visible = false
 
 func _on_clear_pressed() -> void:
-    pass # Replace with function body.
+    submit.emit(null, 0)
+    visible = false
+
 func _on_instance_selected_changed(selected: Content) -> void:
-    pass
+    set_current_content(selected)
+
+func _on_drag_button_gui_input(event: InputEvent) -> void:
+    var velocity = Vector2.ZERO
+    if event is InputEventMouseMotion:
+        if event.button_mask & MOUSE_BUTTON_MASK_LEFT:
+            velocity = event.relative
+    if event is InputEventScreenDrag:
+        velocity = event.relative
+    if velocity != Vector2.ZERO:
+        %Panel.position += velocity

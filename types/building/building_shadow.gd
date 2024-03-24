@@ -182,6 +182,10 @@ func _update_position(options: Dictionary = {}) -> void:
         rot = options["rotation"]
     if options.has("layer"):
         self.layer = options["layer"]
+        if options.has("as_top"):
+            z_as_relative = false
+            z_index = Entity.get_z_index_static(layer + 1) - 1
+
 
 func update_position(options: Dictionary = {}) -> void:
     _update_position(options)

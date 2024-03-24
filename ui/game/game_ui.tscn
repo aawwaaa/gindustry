@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dkx3l5m02nde" path="res://ui/game/player_inventory/player_inventory.tscn" id="2_eemsh"]
 [ext_resource type="PackedScene" uid="uid://by7nnwa735mfp" path="res://ui/game/player_inventory/default_inventory_panel.tscn" id="3_fpt4v"]
 [ext_resource type="PackedScene" uid="uid://bkjiopb08w5no" path="res://ui/game/build/build_ui.tscn" id="4_ik2wa"]
-[ext_resource type="PackedScene" uid="uid://qpxvgen0enlx" path="res://ui/game/content_selector/content_selector_window.tscn" id="4_k1l3q"]
+[ext_resource type="PackedScene" uid="uid://qpxvgen0enlx" path="res://ui/game/content_selector/content_selector_layer.tscn" id="4_k1l3q"]
 [ext_resource type="PackedScene" uid="uid://cinollqc0t0s0" path="res://ui/game/pause_menu.tscn" id="4_kutpy"]
 
 [node name="GameUI" type="Control"]
@@ -23,8 +23,9 @@ script = ExtResource("1_8q3go")
 process_mode = 1
 default_inventory_panel = ExtResource("3_fpt4v")
 
-[node name="ContentSelectorWindow" parent="." instance=ExtResource("4_k1l3q")]
+[node name="ContentSelectorLayer" parent="." instance=ExtResource("4_k1l3q")]
 unique_name_in_owner = true
+visible = false
 
 [node name="PauseMenu" parent="." instance=ExtResource("4_kutpy")]
 unique_name_in_owner = true
@@ -59,8 +60,8 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
+[connection signal="contents_loaded" from="." to="ContentSelectorLayer" method="_on_game_ui_contents_loaded"]
 [connection signal="contents_loaded" from="." to="BuildUI" method="_on_game_ui_contents_loaded"]
-[connection signal="contents_loaded" from="." to="ContentSelectorWindow" method="_on_game_ui_contents_loaded"]
 [connection signal="ui_hidden" from="." to="PlayerInventory" method="_on_game_ui_ui_hidden"]
 [connection signal="ui_hidden" from="." to="PauseMenu" method="_on_game_ui_ui_hidden"]
 [connection signal="ui_hidden" from="." to="BuildUI" method="_on_game_ui_ui_hidden"]

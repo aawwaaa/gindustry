@@ -1,7 +1,14 @@
-[gd_resource type="Resource" script_class="ContentType" load_steps=2 format=3 uid="uid://obh167qdaeoh"]
+[gd_resource type="Resource" script_class="ContentType" load_steps=4 format=3 uid="uid://obh167qdaeoh"]
 
 [ext_resource type="Script" path="res://types/resource_types/content_type.gd" id="1_8a2gu"]
+[ext_resource type="Texture2D" uid="uid://bitk566038c3w" path="res://assets/content_types.png" id="1_ystlq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ecmsn"]
+atlas = ExtResource("1_ystlq")
+region = Rect2(32, 0, 32, 32)
 
 [resource]
 script = ExtResource("1_8a2gu")
+icon = SubResource("AtlasTexture_ecmsn")
+order = 11
 name = "floor"
