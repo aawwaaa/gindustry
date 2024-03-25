@@ -11,7 +11,7 @@ region = Rect2(0, 0, 32, 32)
 [resource]
 script = ExtResource("1_tw0cs")
 floor_type = ExtResource("1_51nof")
-item_texture = SubResource("AtlasTexture_umo2x")
+icon = SubResource("AtlasTexture_umo2x")
 max_stack_amount = 100
 cost_per_item = 1.0
 id = "copper"

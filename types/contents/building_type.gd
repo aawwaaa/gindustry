@@ -3,7 +3,7 @@ extends EntityType
 
 const BUILDING_TYPE = preload("res://contents/content_types/building.tres")
 
-@export var icon: Texture2D = load("res://assets/asset-not-found.png")
+@export var icon: Texture2D
 @export var shadow: PackedScene:
     get: return shadow if shadow else _get_default_building_shadow()
 

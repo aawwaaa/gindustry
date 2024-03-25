@@ -30,7 +30,7 @@ func _get_use_scene() -> PackedScene:
     return null
 
 func _get_texture() -> Texture2D:
-    return null
+    return icon
 
 func _get_display() -> PackedScene:
     return ITEM_DISPLAY

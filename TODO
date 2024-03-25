@@ -12,6 +12,9 @@
 [=] 2. 多人游戏
 	[ ] Multiplayer.join
 	[ ] mod检查
+    [ ] 世界分块传输
+    [ ] 打包数据分块传输
+    [ ] 由Time提供时间对打包的数据按顺序操作
 [=] 3. headless模式
 	[ ] 新游戏
 	[X] 加载游戏
@@ -197,6 +200,11 @@
 	[ ] TileOreType
 	[ ] [Floor/Overlay].ores/ore_with_data
 	[ ] TileOre_ItemOre
+[ ] TroubleDisplay
+    [ ] MissingFuel
+    [ ] PowerOverload
+    [ ] PowerDisconnected
+    [ ] SignalConflected
 [ ] ContentManager
     [ ] ui
     [ ] edit

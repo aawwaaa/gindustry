@@ -3,6 +3,8 @@ extends Resource
 
 @export var id: String;
 @export var options: Dictionary = {};
+@export var icon: Texture2D = load("res://assets/asset-not-found.png")
+
 var full_id: String;
 
 var index: int:

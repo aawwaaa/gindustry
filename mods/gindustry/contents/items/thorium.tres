@@ -9,7 +9,7 @@ region = Rect2(192, 0, 32, 32)
 
 [resource]
 script = ExtResource("1_jgruv")
-item_texture = SubResource("AtlasTexture_jcd4q")
+icon = SubResource("AtlasTexture_jcd4q")
 max_stack_amount = 100
 cost_per_item = 1
 id = "thorium"
