@@ -10,5 +10,5 @@ region = Rect2(64, 0, 32, 32)
 [resource]
 script = ExtResource("1_77tkn")
 icon = SubResource("AtlasTexture_tdjwg")
-order = 12
+order = 0
 name = "overlay"

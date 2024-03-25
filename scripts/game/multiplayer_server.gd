@@ -78,6 +78,12 @@ func ready_to_play() -> void:
     })
     send_sync_packets(id)
 
+func serialize(args: Array) -> Dictionary:
+    var types = Array()
+    types.resize(args.size())
+    types.fill(null)
+    return {"args": args, "types": types}
+
 func send_sync_packets(peer_id: int) -> void:
     if not peers.has(peer_id) or not peers[peer_id].joined:
         return
@@ -93,15 +99,20 @@ func rpc_sync(node: Node, method: String, args: Array = []) -> void:
     rpc_sync_server.rpc_id(1, node, method, args)
 
 @rpc("any_peer", "call_local", "reliable")
-func rpc_sync_server(node: Node, method: String, args: Array = []) -> void:
-    if multiplayer.get_remote_sender_id() != node.get_multiplayer_authority():
+func rpc_sync_server(node: NodePath, method: String, args: Array, types: Array) -> void:
+    var inst = get_tree().root.get_node(node)
+    if multiplayer.get_remote_sender_id() != inst.get_multiplayer_authority():
         return
-    var packed = [node, method, args]
+    var packed = [node, method, args, types]
     for peer in peers.keys():
         if not peers[peer].joined:
             peers[peer].packet_queue.append(packed)
             continue
         if peer == multiplayer.get_unique_id():
-            node.callv(method, args)
+            inst.callv(method, unserialize(args, types))
             continue
-        node.rpc_id.bindv(args).call(peer, method)
+        rpc_sync_client.rpc_id(peer, node, method, args, types)
+
+@rpc("authority", "call_remote", "reliable")
+func rpc_sync_client(node: NodePath, method: String, args: Array, types: Array) -> void:
+    pass

@@ -10,5 +10,5 @@ region = Rect2(192, 0, 32, 32)
 [resource]
 script = ExtResource("1_5fol8")
 icon = SubResource("AtlasTexture_j73fl")
-order = 20
+order = 0
 name = "entity"

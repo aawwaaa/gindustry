@@ -10,5 +10,5 @@ region = Rect2(96, 0, 32, 32)
 [resource]
 script = ExtResource("1_kq2m3")
 icon = SubResource("AtlasTexture_yaiqx")
-order = 15
+order = 0
 name = "item"

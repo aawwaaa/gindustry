@@ -10,5 +10,5 @@ region = Rect2(32, 0, 32, 32)
 [resource]
 script = ExtResource("1_8a2gu")
 icon = SubResource("AtlasTexture_ecmsn")
-order = 11
+order = 0
 name = "floor"
