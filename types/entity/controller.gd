@@ -49,12 +49,11 @@ func get_target_attribute(key: String) -> Variant:
 
 @rpc("authority", "call_remote", "reliable")
 func operate_target_rpc(operation: String, args: Array[Variant] = []) -> void:
-    args = args.map(func(v): return get_tree().root.get_node(v) if v is NodePath else v)
     target.operate(self, operation, args)
 
 @rpc("authority", "call_remote", "reliable")
-func request_access_target_rpc(target_path: NodePath) -> bool:
-    return target.entity_node.request_access_target(get_tree().root.get_node(target_path))
+func request_access_target_rpc(target: Node2D) -> bool:
+    return target.entity_node.request_access_target(target)
 
 @rpc("authority", "call_remote", "reliable")
 func clear_access_target_rpc() -> void:
@@ -62,32 +61,28 @@ func clear_access_target_rpc() -> void:
 
 @rpc("authority", "call_remote", "reliable")
 func operate_remote_target_rpc(operation: String, args: Array[Variant] = []) -> bool:
-    args = args.map(func(v): return get_tree().root.get_node(v) if v is NodePath else v)
     return target.operate_remote(self, operation, args)
 
 func operate_target(operation: String, args: Array[Variant] = []) -> void:
-    args = args.map(func(v): return get_tree().root.get_path_to(v) if v is Node else v)
     MultiplayerServer.rpc_sync(self, "operate_target_rpc", [operation, args])
 
 func request_access_target(target: Node2D) -> void:
-    MultiplayerServer.rpc_sync(self, "request_access_target_rpc", [get_tree().root.get_path_to(target)])
+    MultiplayerServer.rpc_sync(self, "request_access_target_rpc", [target])
 
 func clear_access_target() -> void:
     MultiplayerServer.rpc_sync(self, "clear_access_target_rpc")
 
 func operate_remote_target(operation: String, args: Array[Variant] = []) -> void:
-    args = args.map(func(v): return get_tree().root.get_path_to(v) if v is Node else v)
     MultiplayerServer.rpc_sync(self, "operate_remote_target_rpc", [operation, args])
 
 @rpc("authority", "call_remote", "reliable")
-func control_to_rpc(target_path: NodePath):
+func control_to_rpc(target: ControllerAdapter):
     if target:
         target.remove_controller(self)
-    var adapter = get_tree().root.get_node(target_path)
-    adapter.add_controller(self)
+    target.add_controller(self)
 
 func control_to(target: ControllerAdapter) -> void:
-    MultiplayerServer.rpc_sync(self, "control_to", [target.get_path_to(get_tree().root)])
+    MultiplayerServer.rpc_sync(self, "control_to", [target])
 
 @rpc("authority", "call_remote", "reliable")
 func control_to_id_rpc(target_id: int) -> void:

@@ -89,14 +89,25 @@ func send_sync_packets(peer_id: int) -> void:
         return
     if peer_id == multiplayer.get_unique_id():
         for packed in peers[peer_id].packet_queue:
-            packed[0].callv(packed[1], packed[2])
+            var node = packed[0]
+            var inst = get_tree().root.get_node(node)
+            var method = packed[1]
+            var args = packed[2]
+            var types = packed[3]
+            inst.callv(method, Serialize.unserialize_args(args, types))
     else:
         for packed in peers[peer_id].packet_queue:
-            packed[0].rpc_id.bindv(packed[2]).call(peer_id, packed[1])
+            var node = packed[0]
+            var method = packed[1]
+            var args = packed[2]
+            var types = packed[3]
+            rpc_sync_client.rpc_id(peer_id, node, method, args, types)
     peers[peer_id].packet_queue.clear()
 
 func rpc_sync(node: Node, method: String, args: Array = []) -> void:
-    rpc_sync_server.rpc_id(1, node, method, args)
+    var serialized = Serialize.serialize_args(args)
+    var path = node.get_path_to(get_tree().root)
+    rpc_sync_server.rpc_id(1, path, method, serialized["args"], serialized["types"])
 
 @rpc("any_peer", "call_local", "reliable")
 func rpc_sync_server(node: NodePath, method: String, args: Array, types: Array) -> void:
@@ -109,10 +120,11 @@ func rpc_sync_server(node: NodePath, method: String, args: Array, types: Array) 
             peers[peer].packet_queue.append(packed)
             continue
         if peer == multiplayer.get_unique_id():
-            inst.callv(method, unserialize(args, types))
+            inst.callv(method, Serialize.unserialize_args(args, types))
             continue
         rpc_sync_client.rpc_id(peer, node, method, args, types)
 
 @rpc("authority", "call_remote", "reliable")
-func rpc_sync_client(node: NodePath, method: String, args: Array, types: Array) -> void:
-    pass
+func rpc_sync_client(node: NodePath, method: String, args: Array, types: Array) -> void: 
+    var inst = get_tree().root.get_node(node)
+    inst.callv(method, Serialize.unserialize_args(args, types))

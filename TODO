@@ -179,6 +179,9 @@
 [ ] EntityType.entity_category
 [ ] ItemType.item_category
 [ ] Recipe.category
+[X] Serialize
+    [X] Serialize
+    [X] rpc_sync_serialize
 [ ] ContentSelector
     [ ] ContentSelectorPanel
         [ ] ItemTypeSelectorPanel
