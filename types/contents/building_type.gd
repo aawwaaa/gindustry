@@ -6,7 +6,7 @@ const BUILDING_TYPE = preload("res://contents/content_types/building.tres")
 @export var shadow: PackedScene:
     get: return shadow if shadow else _get_default_building_shadow()
 
-@export var category: BuildingCategory
+@export var building_category: BuildingCategory
 @export var requirements: Array[PackedItemStack] = []
 
 @export var attributes: Array[BuildingAttribute] = []
@@ -43,7 +43,7 @@ func create_entity(init: bool = true) -> Building:
 
 func apply_mod(mod_inst: Mod) -> void:
     super.apply_mod(mod_inst)
-    category.building_types.append(self)
+    building_category.building_types.append(self)
     for attribute in attributes:
         attributes_dict[attribute.get_type()] = attribute
 

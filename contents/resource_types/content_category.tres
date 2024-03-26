@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="ResourceTypeType" load_steps=2 format=3 uid="uid://dx1li76j6oxo8"]
+
+[ext_resource type="Script" path="res://types/resource_types/resource_type_type.gd" id="1_3kdvw"]
+
+[resource]
+script = ExtResource("1_3kdvw")
+name = "content_category"

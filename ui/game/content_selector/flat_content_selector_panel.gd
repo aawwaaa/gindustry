@@ -11,7 +11,9 @@ func _load_contents() -> void:
     group = ButtonGroup.new()
     group.allow_unpress = true
 
-    for content in content_type.contents:
+    var sorted = Content.sort_content_list(content_type.contents)
+
+    for content in sorted:
         var button = Button.new()
         button.icon = get_texture_for(content)
         button.toggle_mode = true

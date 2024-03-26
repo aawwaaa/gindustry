@@ -17,6 +17,7 @@ func start_load() -> void:
         "consumer_type.tres",
         "provider_type.tres",
         "content_type.tres",
+        "content_category.tres",
         "preset.tres",
     ])
     await load_type("content_types/", [
@@ -28,8 +29,11 @@ func start_load() -> void:
         "overlay.tres",
         "recipe.tres",
     ])
+    await load_type("content_categories/", [
+        "uncategoried.tres",
+    ])
     await load_type("building_attributes/", [
-        "assembler.tres"
+        "assembler.tres",
     ])
     await load_type("building_categories/", [
         "battle.tres",

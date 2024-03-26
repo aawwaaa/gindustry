@@ -43,7 +43,9 @@ func show_category(category: BuildingCategory) -> void:
     for child in %BuildingTypes.get_children():
         child.queue_free();
 
-    for building_type in category.building_types:
+    var sorted = Content.sort_content_list(category.building_types)
+
+    for building_type in sorted:
         var node = Control.new()
         node.custom_minimum_size = Vector2(48, 48)
         var button = Button.new();

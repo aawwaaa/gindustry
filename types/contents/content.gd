@@ -4,6 +4,7 @@ extends Resource
 @export var id: String;
 @export var options: Dictionary = {};
 @export var icon: Texture2D = load("res://assets/asset-not-found.png")
+@export var content_category: ContentCategory = load("res://contents/content_categories/uncategoried.tres")
 
 var full_id: String;
 
@@ -17,9 +18,15 @@ static func to_full_id(mod_id: String, content_id: String, insert: String = "") 
         return mod_id + "_" + insert + "_" + content_id;
     return mod_id + "_" + content_id;
 
+static func sort_content_list(list: Array) -> Array:
+    var sorted = list.duplicate()
+    sorted.sort_custom(func(a, b): return a.full_id.casecmp_to(b.full_id) == -1)
+    return sorted
+
 func apply_mod(mod_inst: Mod) -> void:
     mod = mod_inst;
     full_id = Content.to_full_id(mod.mod_info.id, id, get_content_type().name)
+    content_category.contents.append(self)
 
 func get_tr_name() -> String:
     return Content.to_full_id(mod.mod_info.id, id)

@@ -11,7 +11,7 @@ script = ExtResource("1_jvm0o")
 
 [node name="Panel" type="PanelContainer" parent="."]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(400, 480)
+custom_minimum_size = Vector2(480, 560)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -63,6 +63,7 @@ size_flags_vertical = 8
 layout_mode = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 
 [node name="CurrentSelected" type="TextureRect" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer/PanelContainer"]

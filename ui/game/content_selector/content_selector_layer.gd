@@ -34,7 +34,9 @@ func _on_game_ui_contents_loaded() -> void:
         if not first: first = content_type
 
         var button = Button.new()
+        button.toggle_mode = true
         button.icon = content_type.icon
+        button.focus_mode = Control.FOCUS_NONE
         %ContentTypes.add_child(button)
         button.pressed.connect(func(): show_content_type(content_type))
 
@@ -42,6 +44,7 @@ func _on_game_ui_contents_loaded() -> void:
 
         var instance = content_type.selector_panel.instantiate()
         instance.content_type = content_type
+        instance.size_flags_vertical = Control.SIZE_EXPAND_FILL
         %SelectorPanels.add_child(instance)
         instance.selected_changed.connect(_on_instance_selected_changed)
         instance.load_contents()
@@ -89,11 +92,10 @@ func update_filter() -> void:
 func set_current_content(value: Content) -> void:
     current_content = value
     if value:
-        show_content_type(value.get_type())
+        show_content_type(value.get_content_type())
         var texture = content_type_to_panel[current_type].get_texture_for(value)
         %CurrentSelected.texture = texture
     else:
-        show_content_type(null)
         %CurrentSelected.texture = null
 
 func set_current_amount(value: float) -> void:
