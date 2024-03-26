@@ -75,7 +75,7 @@ func load_floors(list: Array[String], prefix: String, target: Dictionary) -> voi
     for texture in sorted_by_tilemap_texture:
         var source = TileSetAtlasSource.new();
         source.texture = texture;
-        source.texture_region_size = Vector2i(Global.TILE_SIZE, Global.TILE_SIZE);
+        source.texture_region_size = Global.TILE_SIZE_VECTOR;
         var source_id = tile_set.add_source(source);
         for content in sorted_by_tilemap_texture[texture]:
             source.create_tile(content.tile_coords)
@@ -84,6 +84,10 @@ func load_floors(list: Array[String], prefix: String, target: Dictionary) -> voi
             content.tile_source_id = source_id
             if content is Gindustry_Floor or content is Gindustry_Overlay:
                 content._init_source(source)
+            var icon = AtlasTexture.new()
+            icon.atlas = texture
+            icon.region = Rect2(content.tile_coords * Global.TILE_SIZE_VECTOR, Global.TILE_SIZE_VECTOR)
+            content.icon = icon
             Contents.register_content(content);
             target[content.id] = content;
 

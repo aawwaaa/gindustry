@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://bogigwx26o75l"]
+
+[ext_resource type="Script" path="res://ui/game/content_selector/flat_content_selector_panel.gd" id="1_dyoc0"]
+
+[node name="FlatContentSelectorPanel" type="VBoxContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_dyoc0")
+
+[node name="Container" type="HFlowContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3

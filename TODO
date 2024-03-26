@@ -182,6 +182,7 @@
 [ ] EntityType.entity_category
 [ ] ItemType.item_category
 [ ] Recipe.category
+[ ] Adapter.adapter_name
 [X] Serialize
     [X] Serialize
     [X] rpc_sync_serialize
@@ -190,7 +191,7 @@
         [ ] ItemTypeSelectorPanel
         [ ] LiquidSelectorPanel
         [ ] BuildingTypeSelectorType
-        [ ] EntityTypeSelectorPanel(用户友好型/只显示可建造单位)
+        [ ] UnitTypeSelectorPanel(用户友好型/只显示可建造单位)
         [ ] FloorSelectorPanel
         [ ] OverlaySelectorPanel
         [ ] RecipeSelectorPanel
@@ -200,6 +201,9 @@
 	[ ] TileOreType
 	[ ] [Floor/Overlay].ores/ore_with_data
 	[ ] TileOre_ItemOre
+[ ] GraphAdpater
+    [ ] Graph
+    [ ] GraphAdpater
 [ ] TroubleDisplay
     [ ] MissingFuel
     [ ] PowerOverload

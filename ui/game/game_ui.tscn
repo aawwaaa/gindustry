@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dkx3l5m02nde" path="res://ui/game/player_inventory/player_inventory.tscn" id="2_eemsh"]
 [ext_resource type="PackedScene" uid="uid://by7nnwa735mfp" path="res://ui/game/player_inventory/default_inventory_panel.tscn" id="3_fpt4v"]
 [ext_resource type="PackedScene" uid="uid://bkjiopb08w5no" path="res://ui/game/build/build_ui.tscn" id="4_ik2wa"]
-[ext_resource type="PackedScene" uid="uid://qpxvgen0enlx" path="res://ui/game/content_selector/content_selector_layer.tscn" id="4_k1l3q"]
+[ext_resource type="PackedScene" uid="uid://ck815rqopv6fv" path="res://ui/game/content_selector/content_selector_layer.tscn" id="4_k1l3q"]
 [ext_resource type="PackedScene" uid="uid://cinollqc0t0s0" path="res://ui/game/pause_menu.tscn" id="4_kutpy"]
 
 [node name="GameUI" type="Control"]
@@ -25,7 +25,6 @@ default_inventory_panel = ExtResource("3_fpt4v")
 
 [node name="ContentSelectorLayer" parent="." instance=ExtResource("4_k1l3q")]
 unique_name_in_owner = true
-visible = false
 
 [node name="PauseMenu" parent="." instance=ExtResource("4_kutpy")]
 unique_name_in_owner = true

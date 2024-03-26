@@ -1,7 +1,8 @@
-[gd_resource type="Resource" script_class="ContentType" load_steps=4 format=3 uid="uid://cpigbdgxugggv"]
+[gd_resource type="Resource" script_class="ContentType" load_steps=5 format=3 uid="uid://cpigbdgxugggv"]
 
 [ext_resource type="Script" path="res://types/resource_types/content_type.gd" id="1_77tkn"]
 [ext_resource type="Texture2D" uid="uid://bitk566038c3w" path="res://assets/content_types.png" id="1_uwh3j"]
+[ext_resource type="PackedScene" uid="uid://bogigwx26o75l" path="res://ui/game/content_selector/flat_content_selector_panel.tscn" id="3_cuyus"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tdjwg"]
 atlas = ExtResource("1_uwh3j")
@@ -10,5 +11,6 @@ region = Rect2(64, 0, 32, 32)
 [resource]
 script = ExtResource("1_77tkn")
 icon = SubResource("AtlasTexture_tdjwg")
-order = 0
+selector_panel = ExtResource("3_cuyus")
+order = 16
 name = "overlay"

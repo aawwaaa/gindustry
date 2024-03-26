@@ -10,5 +10,5 @@ region = Rect2(0, 32, 32, 32)
 [resource]
 script = ExtResource("1_vlh1p")
 icon = SubResource("AtlasTexture_pe2dg")
-order = 0
+order = 22
 name = "building"

@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://qpxvgen0enlx"]
+[gd_scene load_steps=5 format=3 uid="uid://ck815rqopv6fv"]
 
 [ext_resource type="Script" path="res://ui/game/content_selector/content_selector_layer.gd" id="1_jvm0o"]
 [ext_resource type="Texture2D" uid="uid://b24hivrw2fe5n" path="res://assets/ui/icons/delete.tres" id="2_yn8x2"]
@@ -33,6 +33,7 @@ layout_mode = 2
 [node name="DragButton" type="Button" parent="Panel/VBoxContainer/PanelContainer3"]
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
+focus_mode = 0
 flat = true
 
 [node name="PanelContainer2" type="PanelContainer" parent="Panel/VBoxContainer"]
@@ -74,30 +75,38 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+focus_mode = 0
 max_value = 1000.0
-step = 0.0
+step = 0.1
+allow_greater = true
+allow_lesser = true
 
 [node name="Amount" type="LineEdit" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 1
 text = "1"
 virtual_keyboard_type = 2
 
 [node name="Clear" type="Button" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer"]
 layout_mode = 2
+focus_mode = 0
 icon = ExtResource("2_yn8x2")
 
 [node name="Cancel" type="Button" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer"]
 layout_mode = 2
+focus_mode = 0
 icon = ExtResource("3_ssf2t")
 
 [node name="Confirm" type="Button" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer"]
 layout_mode = 2
+focus_mode = 0
 icon = ExtResource("4_j0vla")
 
 [connection signal="gui_input" from="Panel/VBoxContainer/PanelContainer3/DragButton" to="." method="_on_drag_button_gui_input"]
 [connection signal="value_changed" from="Panel/VBoxContainer/PanelContainer/HBoxContainer/AmountSlider" to="." method="_on_amount_slider_value_changed"]
 [connection signal="text_changed" from="Panel/VBoxContainer/PanelContainer/HBoxContainer/Amount" to="." method="_on_amount_text_changed"]
+[connection signal="text_submitted" from="Panel/VBoxContainer/PanelContainer/HBoxContainer/Amount" to="." method="_on_amount_text_submitted"]
 [connection signal="pressed" from="Panel/VBoxContainer/PanelContainer/HBoxContainer/Clear" to="." method="_on_clear_pressed"]
 [connection signal="pressed" from="Panel/VBoxContainer/PanelContainer/HBoxContainer/Cancel" to="." method="_on_cancel_pressed"]
 [connection signal="pressed" from="Panel/VBoxContainer/PanelContainer/HBoxContainer/Confirm" to="." method="_on_confirm_pressed"]
