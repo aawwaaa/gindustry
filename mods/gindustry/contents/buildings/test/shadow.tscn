@@ -8,6 +8,10 @@ segments = PackedVector2Array(-12, -44, 12, -44, -44, -12, 44, -12, 20, 24, 44, 
 
 [node name="Shadow" instance=ExtResource("0_q8n3c")]
 
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." index="0"]
+visible = false
+polygon = PackedVector2Array(-16, -48, 16, -48, 16, -16, 48, -16, 48, 48, 16, 48, 16, 16, -48, 16, -48, -16, -16, -16)
+
 [node name="Area2D" type="Marker2D" parent="Floors" index="0"]
 position = Vector2(0, -32)
 
@@ -24,12 +28,6 @@ position = Vector2(32, 32)
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="CollisionArea" index="0"]
 polygon = PackedVector2Array(-12, -44, 12, -44, 12, -12, 44, -12, 44, 44, 20, 44, 20, 12, -44, 12, -44, -12, -12, -12)
-
-[node name="AnimatableBody2D" parent="." index="2"]
-sync_to_physics = false
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="AnimatableBody2D" index="0"]
-polygon = PackedVector2Array(-16, -48, 16, -48, 16, -16, 48, -16, 48, 48, 16, 48, 16, 16, -48, 16, -48, -16, -16, -16)
 
 [node name="ShapeCast2D" parent="." index="3"]
 shape = SubResource("ConcavePolygonShape2D_s2vsi")

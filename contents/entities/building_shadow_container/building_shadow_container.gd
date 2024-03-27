@@ -1,5 +1,5 @@
 class_name BuildingShadowContainer
-extends Node2D
+extends AnimatableBody2D
 
 @export var entity: Entity
 
@@ -110,6 +110,7 @@ func _ready() -> void:
     shadow.building_config = building_config
     _on_entity_layer_changed(entity.layer, -1)
     add_child(shadow)
+    shadow.collision_area.entity = self
     shadow.rot = rot
     shadow.build_progress = 0
     shadow.mouse_entered.connect(entity._on_collision_object_2d_mouse_entered)

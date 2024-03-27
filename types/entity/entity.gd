@@ -84,6 +84,13 @@ static func get_entity_by_ref_or_null(target_id: int) -> Entity:
         return entity_ref_targets[target_id]
     return null
 
+static func get_entity_by_collision_object(object: CollisionObject2D, use_parnet: bool = true) -> Entity:
+    if not object.has_method(&"get_entity"):
+        if use_parnet: 
+            return get_entity_by_collision_object(object.get_parent(), false)
+        return null
+    return object.call(&"get_entity")
+
 func _notification(what: int) -> void:
     if what == NOTIFICATION_PREDELETE:
         for source in access_sources:

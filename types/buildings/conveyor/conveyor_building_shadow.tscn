@@ -17,7 +17,7 @@ script = ExtResource("2_hlksb")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionArea" index="0"]
 shape = SubResource("RectangleShape2D_75mpu")
 
-[node name="ShapeCast2D" parent="." index="3"]
+[node name="ShapeCast2D" parent="." index="2"]
 position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_bho5r")
 target_position = Vector2(0, 1)

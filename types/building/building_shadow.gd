@@ -12,7 +12,7 @@ var layer: int = 0:
 @export var collision_mask_begin: int;
 @export var collision_mask_end: int;
 @export var collision: AnimatableBody2D
-@export var collision_area: Area2D
+@export var collision_area: EntityArea2D
 @export var shape_cast: ShapeCast2D
 @export var floors: Node2D;
 @export var display_polygons: Node2D;
@@ -104,6 +104,7 @@ func finish_build(building: Building) -> void:
     floors.queue_free()
     display_polygons.queue_free()
     display_sprite.modulate = Color(1.0, 1.0, 1.0, 1.0)
+    collision_area.entity = building
     for group in self.components.keys():
         var node = get_node(self.components[group])
         var components = node.get_children()

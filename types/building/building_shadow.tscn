@@ -1,10 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://dowx2nq7aicx4"]
+[gd_scene load_steps=3 format=3 uid="uid://dowx2nq7aicx4"]
 
 [ext_resource type="Script" path="res://types/building/building_shadow.gd" id="1_2quqi"]
+[ext_resource type="Script" path="res://types/entity/entity_area_2d.gd" id="2_yewmt"]
 
 [node name="Shadow" type="Node2D" node_paths=PackedStringArray("collision", "collision_area", "shape_cast", "floors", "display_polygons", "display_sprite")]
 script = ExtResource("1_2quqi")
-collision = NodePath("AnimatableBody2D")
+collision = NodePath("")
 collision_area = NodePath("CollisionArea")
 shape_cast = NodePath("ShapeCast2D")
 floors = NodePath("Floors")
@@ -17,11 +18,7 @@ metadata/_edit_lock_ = true
 
 [node name="CollisionArea" type="Area2D" parent="."]
 visible = false
-metadata/_edit_lock_ = true
-metadata/_edit_group_ = true
-
-[node name="AnimatableBody2D" type="AnimatableBody2D" parent="."]
-visible = false
+script = ExtResource("2_yewmt")
 metadata/_edit_lock_ = true
 metadata/_edit_group_ = true
 
