@@ -186,12 +186,13 @@
 [X] Serialize
     [X] Serialize
     [X] rpc_sync_serialize
+[ ] * 实体collision
 [ ] ContentSelector
     [X] ContentSelectorPanel
         [X] ItemTypeSelectorPanel
-        [X] LiquidSelectorPanel
+        [.] LiquidSelectorPanel
         [X] BuildingTypeSelectorType
-        [X] UnitTypeSelectorPanel(用户友好型/只显示可建造单位)
+        [.] UnitTypeSelectorPanel(用户友好型/只显示可建造单位)
         [X] FloorSelectorPanel
         [X] OverlaySelectorPanel
         [X] RecipeSelectorPanel
