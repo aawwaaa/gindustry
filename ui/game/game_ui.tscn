@@ -25,6 +25,7 @@ default_inventory_panel = ExtResource("3_fpt4v")
 
 [node name="ContentSelectorLayer" parent="." instance=ExtResource("4_k1l3q")]
 unique_name_in_owner = true
+visible = false
 
 [node name="PauseMenu" parent="." instance=ExtResource("4_kutpy")]
 unique_name_in_owner = true

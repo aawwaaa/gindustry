@@ -1,5 +1,5 @@
 class_name BuildingShadowContainer
-extends AnimatableBody2D
+extends Node2D
 
 @export var entity: Entity
 
@@ -110,11 +110,11 @@ func _ready() -> void:
     shadow.building_config = building_config
     _on_entity_layer_changed(entity.layer, -1)
     add_child(shadow)
-    shadow.collision_area.entity = self
+    shadow.entity = entity
     shadow.rot = rot
     shadow.build_progress = 0
-    shadow.mouse_entered.connect(entity._on_collision_object_2d_mouse_entered)
-    shadow.mouse_exited.connect(entity._on_collision_object_2d_mouse_exited)
+    shadow.input_mouse_entered.connect(entity._on_collision_object_2d_mouse_entered)
+    shadow.input_mouse_exited.connect(entity._on_collision_object_2d_mouse_exited)
     calcuate_missing_items()
     calcuate_building_progress()
     if should_place: place()

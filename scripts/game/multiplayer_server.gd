@@ -87,26 +87,21 @@ func serialize(args: Array) -> Dictionary:
 func send_sync_packets(peer_id: int) -> void:
     if not peers.has(peer_id) or not peers[peer_id].joined:
         return
-    if peer_id == multiplayer.get_unique_id():
-        for packed in peers[peer_id].packet_queue:
-            var node = packed[0]
+    for packed in peers[peer_id].packet_queue:
+        var node = packed[0]
+        var method = packed[1]
+        var args = packed[2]
+        var types = packed[3]
+        if peer_id == multiplayer.get_unique_id():
             var inst = get_tree().root.get_node(node)
-            var method = packed[1]
-            var args = packed[2]
-            var types = packed[3]
             inst.callv(method, Serialize.unserialize_args(args, types))
-    else:
-        for packed in peers[peer_id].packet_queue:
-            var node = packed[0]
-            var method = packed[1]
-            var args = packed[2]
-            var types = packed[3]
+        else:
             rpc_sync_client.rpc_id(peer_id, node, method, args, types)
     peers[peer_id].packet_queue.clear()
 
 func rpc_sync(node: Node, method: String, args: Array = []) -> void:
     var serialized = Serialize.serialize_args(args)
-    var path = node.get_path_to(get_tree().root)
+    var path = get_tree().root.get_path_to(node)
     rpc_sync_server.rpc_id(1, path, method, serialized["args"], serialized["types"])
 
 @rpc("any_peer", "call_local", "reliable")

@@ -17,11 +17,9 @@ entity = NodePath("Building")
 track = NodePath("Track")
 sides = 14
 
-[node name="AnimatableBody2D" type="AnimatableBody2D" parent="."]
-
 [node name="Building" type="Node" parent="." node_paths=PackedStringArray("shadow_container", "main_node")]
 script = ExtResource("2_5jnnk")
-shadow_container = NodePath("../AnimatableBody2D")
+shadow_container = NodePath("..")
 callback_get_adapter_at = &"get_adapter_at"
 callback_get_component_at = &"get_component_at"
 callback_handle_break = &"handle_break"

@@ -3,6 +3,7 @@ extends Node
 
 @export var main_node: Node2D
 @export var entity_node: Entity
+var adapter_name: String
 
 func _should_save_data() -> bool:
     return false

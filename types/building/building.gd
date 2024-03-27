@@ -38,8 +38,8 @@ func _ready() -> void:
     shadow.rot = rot
     shadow.finish_build(self)
     shadow_inited = true
-    shadow.mouse_entered.connect(_on_collision_object_2d_mouse_entered)
-    shadow.mouse_exited.connect(_on_collision_object_2d_mouse_exited)
+    shadow.input_mouse_entered.connect(_on_collision_object_2d_mouse_entered)
+    shadow.input_mouse_exited.connect(_on_collision_object_2d_mouse_exited)
 
     if should_place: place()
     if should_destroy: destroy()

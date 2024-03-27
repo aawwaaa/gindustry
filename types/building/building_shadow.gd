@@ -1,9 +1,9 @@
 class_name BuildingShadow
-extends Node2D
+extends AnimatableBody2D
 
 signal input(event: InputEvent)
-signal mouse_exited()
-signal mouse_entered()
+signal input_mouse_exited()
+signal input_mouse_entered()
 
 var building_type: BuildingType
 
@@ -11,7 +11,6 @@ var layer: int = 0:
     set = set_layer;
 @export var collision_mask_begin: int;
 @export var collision_mask_end: int;
-@export var collision: AnimatableBody2D
 @export var collision_area: EntityArea2D
 @export var shape_cast: ShapeCast2D
 @export var floors: Node2D;
@@ -19,6 +18,10 @@ var layer: int = 0:
 @export var display_sprite: Sprite2D;
 @export var marks: Dictionary = {};
 @export var components: Dictionary = {}
+var entity: Entity:
+    set(v):
+        entity = v
+        collision_area.entity = v
 var marks_poses: Dictionary = {}
 var component_nodes: Dictionary = {}
 var pos_to_component: Dictionary = {}
@@ -46,6 +49,9 @@ var full_build: bool = false
 var building_config: Variant:
     get = _get_building_config,
     set = _set_building_config
+
+func get_entity() -> Entity:
+    return entity
 
 func _check_build(check_pre_confirm: bool = false) -> bool:
     shape_cast.force_shapecast_update()
@@ -104,7 +110,7 @@ func finish_build(building: Building) -> void:
     floors.queue_free()
     display_polygons.queue_free()
     display_sprite.modulate = Color(1.0, 1.0, 1.0, 1.0)
-    collision_area.entity = building
+    entity = building
     for group in self.components.keys():
         var node = get_node(self.components[group])
         var components = node.get_children()
@@ -127,14 +133,14 @@ func set_build_progress(v: float) -> void:
         for point_id in range(points.size()):
             var point = points[point_id]
             polygon.polygon[point_id + 1] = base + point * v
-    collision.process_mode = PROCESS_MODE_DISABLED if v == 0 or disable_collision else PROCESS_MODE_INHERIT
+    self.process_mode = PROCESS_MODE_DISABLED if v == 0 or disable_collision else PROCESS_MODE_INHERIT
 
 func set_layer(v: int) -> void:
     layer = v
     var mask = Entity.get_collision_mask_static(layer,
             collision_mask_begin, collision_mask_end);
-    collision.collision_mask = mask
-    collision.collision_layer = mask
+    self.collision_mask = mask
+    self.collision_layer = mask
     collision_area.collision_mask = mask
     collision_area.collision_layer = mask
     if not is_instance_valid(shape_cast): return

@@ -16,7 +16,7 @@ item_icons = NodePath("ItemIcons")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionArea" index="0"]
 shape = SubResource("RectangleShape2D_3upml")
 
-[node name="ShapeCast2D" parent="." index="3"]
+[node name="ShapeCast2D" parent="." index="2"]
 shape = SubResource("RectangleShape2D_3upml")
 target_position = Vector2(0, 0)
 
@@ -40,10 +40,10 @@ texture = ExtResource("2_ib2ma")
 texture_offset = Vector2(16, 16)
 polygon = PackedVector2Array(14, 14, 0, 14, 14, 0)
 
-[node name="Sprite2D" parent="." index="5"]
+[node name="Sprite2D" parent="." index="4"]
 texture = ExtResource("2_ib2ma")
 
-[node name="ItemIcons" type="Node2D" parent="." index="6"]
+[node name="ItemIcons" type="Node2D" parent="." index="5"]
 scale = Vector2(0.4, 0.4)
 
 [node name="Marker2D" type="Marker2D" parent="ItemIcons" index="0"]

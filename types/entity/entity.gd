@@ -173,6 +173,8 @@ func _ready() -> void:
     for node in child_entities_main_node:
         node.get_entity().parent_entity = self
         if inited: node.get_entity().init_entity()
+    for adapter in adapters:
+        get_node(adapters[adapter]).adapter_name = adapter
     set_layer(layer)
     if entity_ref_targets.has(entity_id):
         for callback in entity_ref_targets[entity_id]:

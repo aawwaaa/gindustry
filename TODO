@@ -179,14 +179,17 @@
 [ ] ItemDisplayGroup
     [ ] Inventory适配
 [ ] BuildingType.default_building_category()
-[ ] EntityType.entity_category
-[ ] ItemType.item_category
-[ ] Recipe.category
-[ ] Adapter.adapter_name
+[ ] FloorShape
+    [ ] RectFloorShape
+    [ ] PolygonFloorShape
+[X] EntityType.entity_category
+[X] ItemType.item_category
+[X] Recipe.category
+[X] Adapter.adapter_name
 [X] Serialize
     [X] Serialize
     [X] rpc_sync_serialize
-[ ] * 实体collision
+[X] * 实体collision
 [ ] ContentSelector
     [X] ContentSelectorPanel
         [X] ItemTypeSelectorPanel

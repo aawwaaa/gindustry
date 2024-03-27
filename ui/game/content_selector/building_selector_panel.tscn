@@ -6,6 +6,3 @@
 [node name="CategoryContentSelectorPanel" instance=ExtResource("1_uofdq")]
 category_type = ExtResource("2_q1fcs")
 property_name_category_contents = &"building_types"
-
-[node name="PanelContainer" parent="." index="0"]
-custom_minimum_size = Vector2(0, 48)

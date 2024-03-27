@@ -17,8 +17,8 @@ class Serializer extends Object:
 class NodeSerializer extends Serializer:
     func _get_name() -> String: return "n"
     func _matched(object: Variant) -> bool: return object is Node
-    func _serialize(object: Variant) -> Variant: return object.get_path_to(Serialize.get_tree().root)
-    func _unserialize(object: Variant) -> Variant: return Serialize.get_tree().root.get_child(object)
+    func _serialize(object: Variant) -> Variant: return Serialize.get_tree().root.get_path_to(object)
+    func _unserialize(object: Variant) -> Variant: return Serialize.get_tree().root.get_node(object)
 
 class ContentSerializer extends Serializer:
     func _get_name() -> String: return "c"
@@ -44,7 +44,7 @@ func serialize_object(object: Variant) -> Dictionary:
         if not serializer.matched(object): continue
         return {
             "object": serializer.serialize(object),
-            "type": serializer.type()
+            "type": serializer.get_name()
         }
     return {
         "object": object,
@@ -56,8 +56,8 @@ func serialize_args(args: Array) -> Dictionary:
     var types = []
     for arg in args:
         var serialized = serialize_object(arg)
-        outs.push(serialized.object)
-        types.push(serialized.type)
+        outs.append(serialized.object)
+        types.append(serialized.type)
     return {"args": outs, "types": types}
 
 func unserialize_object(object: Variant, type: String) -> Variant:

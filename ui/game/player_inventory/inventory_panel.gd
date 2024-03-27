@@ -12,4 +12,4 @@ func set_entity(v: Entity) -> void:
     entity = v
 
 func handle_request_swap(inventory: Inventory, slot: int) -> void: 
-    request_remote_operation.emit("adapter", ["inventory", "swap_with_other_hand", slot])
+    request_remote_operation.emit("adapter", [inventory.adapter_name, "swap_with_other_hand", slot])

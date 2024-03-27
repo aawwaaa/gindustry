@@ -7,12 +7,9 @@
 script = ExtResource("1_b6n70")
 entity = NodePath("Building")
 
-[node name="ShadowContainer" type="AnimatableBody2D" parent="."]
-unique_name_in_owner = true
-
 [node name="Building" type="Node" parent="." node_paths=PackedStringArray("shadow_container", "main_node")]
 script = ExtResource("2_bm8uh")
-shadow_container = NodePath("../ShadowContainer")
+shadow_container = NodePath("..")
 main_node = NodePath("..")
 layer_follow_world = true
 layer = 1

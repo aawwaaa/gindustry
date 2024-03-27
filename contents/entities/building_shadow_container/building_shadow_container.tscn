@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://types/entity/entity.gd" id="1_70ccx"]
 [ext_resource type="Script" path="res://contents/entities/building_shadow_container/building_shadow_container.gd" id="1_s2tmb"]
 
-[node name="BuildingShadowContainer" type="AnimatableBody2D" node_paths=PackedStringArray("entity")]
+[node name="BuildingShadowContainer" type="Node2D" node_paths=PackedStringArray("entity")]
 script = ExtResource("1_s2tmb")
 entity = NodePath("Entity")
 

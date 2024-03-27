@@ -3,9 +3,9 @@
 [ext_resource type="Script" path="res://types/building/building_shadow.gd" id="1_2quqi"]
 [ext_resource type="Script" path="res://types/entity/entity_area_2d.gd" id="2_yewmt"]
 
-[node name="Shadow" type="Node2D" node_paths=PackedStringArray("collision", "collision_area", "shape_cast", "floors", "display_polygons", "display_sprite")]
+[node name="Shadow" type="AnimatableBody2D" node_paths=PackedStringArray("collision_area", "shape_cast", "floors", "display_polygons", "display_sprite")]
+sync_to_physics = false
 script = ExtResource("1_2quqi")
-collision = NodePath("")
 collision_area = NodePath("CollisionArea")
 shape_cast = NodePath("ShapeCast2D")
 floors = NodePath("Floors")
