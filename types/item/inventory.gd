@@ -21,10 +21,12 @@ func _handle_operation(operate: String, args: Array = []) -> void:
         "use_hand": use_hand(args[0], args[1])
         "drop_item": drop_item(args[0], args[1])
         "drop_item_at": drop_item_at(args[0], args[1], args[2])
+        _: super._handle_operation(operate, args)
 
 func _handle_remote_operation(source: Entity, operate: String, args: Array = []) -> void:
     match operate:
         "swap_with_hand": swap_with_other_hand(args[0], source.get_adapter("inventory"))
+        _: super._handle_remote_operation(source, operate, args)
 
 func _ready() -> void:
     slots_size = slots_size
