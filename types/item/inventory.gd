@@ -24,7 +24,7 @@ func _handle_operation(operate: String, args: Array = []) -> void:
 
 func _handle_remote_operation(source: Entity, operate: String, args: Array = []) -> void:
     match operate:
-        "swap_with_other_hand": swap_with_other_hand(args[0], source.get_adapter("inventory"))
+        "swap_with_hand": swap_with_other_hand(args[0], source.get_adapter("inventory"))
 
 func _ready() -> void:
     slots_size = slots_size

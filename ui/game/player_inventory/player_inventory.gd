@@ -20,10 +20,11 @@ func _on_input_handler_changed(handler: InputHandler, from: InputHandler) -> voi
 func _on_input_handler_controller_target_entity_changed(entity: Entity, from: Entity) -> void:
     Utils.signal_dynamic_connect(entity, from, "access_target_changed", \
             _on_controller_target_access_target_changed)
+    %InventoryInterface.entity = entity
     if entity and entity.has_adapter("inventory"):
-        %InventoryInterface.inventory = entity.get_adapter("inventory")
+        %InventoryInterface.adapter = entity.get_adapter("inventory")
     else:
-        %InventoryInterface.inventory = null
+        %InventoryInterface.adapter = null
     %InventoryInterface.load_inventory()
 
     default_inventory_panel_inst.entity = entity
@@ -62,7 +63,7 @@ func load_info(access_target: Entity) -> void:
         child.request_remote_operation.connect(_on_panel_request_remote_operation)
 
 func _on_game_ui_ui_hidden() -> void:
-    %InventoryInterface.inventory = null
+    %InventoryInterface.adapter = null
     %InventoryInterface.load_inventory()
     
     load_info(null)
@@ -76,5 +77,3 @@ func _on_panel_request_operation(operation: String, args: Array[Variant]) -> voi
 func _on_panel_request_remote_operation(operation: String, args: Array[Variant]) -> void:
     Game.current_player.get_controller().operate_remote_target(operation, args)
 
-func _on_inventory_interface_request_swap(inventory: Inventory, slot: int) -> void:
-    Game.current_player.get_controller().operate_target("adapter", ["inventory", "swap_with_hand", slot])

@@ -1,7 +1,8 @@
 [gd_resource type="Resource" script_class="EntityType" load_steps=3 format=3 uid="uid://lii5enpf4vqx"]
 
 [ext_resource type="PackedScene" uid="uid://8xf5hsaj7jk1" path="res://contents/entities/building_shadow_container/building_shadow_container.tscn" id="1_0bpin"]
-[ext_resource type="Script" path="res://types/contents/entity_type.gd" id="1_pejh2"]
+[ext_resource type="Script" path="res://types/entity/entity_type.gd" id="1_pejh2"]
+
 
 [resource]
 script = ExtResource("1_pejh2")

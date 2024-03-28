@@ -71,12 +71,11 @@ func load_floors(list: Array[String], prefix: String, target: Dictionary) -> voi
         if not sorted_by_tilemap_texture.has(texture):
             sorted_by_tilemap_texture[texture] = []
         sorted_by_tilemap_texture[texture].append(content)
-    var tile_set = load("res://types/contents/floors.tres");
     for texture in sorted_by_tilemap_texture:
         var source = TileSetAtlasSource.new();
         source.texture = texture;
         source.texture_region_size = Global.TILE_SIZE_VECTOR;
-        var source_id = tile_set.add_source(source);
+        var source_id = Floor.FLOORS.add_source(source);
         for content in sorted_by_tilemap_texture[texture]:
             source.create_tile(content.tile_coords)
             for id in range(1, Global.MAX_LAYERS):

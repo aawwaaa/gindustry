@@ -3,7 +3,6 @@ extends Content
 
 const RECIPE_TYPE = preload("res://contents/content_types/recipe.tres")
 
-@export var icon: Texture2D
 @export var consumers: Array[Consumer] = []
 @export var providers: Array[Provider] = []
 

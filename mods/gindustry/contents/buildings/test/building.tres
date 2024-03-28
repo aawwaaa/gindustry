@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="BuildingType" load_steps=9 format=3 uid="uid://cgmoqad23karh"]
 
 [ext_resource type="Resource" uid="uid://ceig7jq8y8add" path="res://contents/building_categories/misc.tres" id="1_2gn62"]
-[ext_resource type="Script" path="res://types/contents/building_type.gd" id="1_n844q"]
+[ext_resource type="Script" path="res://types/building/building_type.gd" id="1_n844q"]
 [ext_resource type="PackedScene" uid="uid://dsemh3wutwhcn" path="res://mods/gindustry/types/buildings/test/test.tscn" id="2_cmy5s"]
 [ext_resource type="Texture2D" uid="uid://cpwbq7b4r4vob" path="res://mods/gindustry/assets/buildings/test_build.png" id="3_2i6mf"]
 [ext_resource type="PackedScene" uid="uid://c5s4tsla3ll5n" path="res://mods/gindustry/contents/buildings/test/shadow.tscn" id="3_o3ck7"]

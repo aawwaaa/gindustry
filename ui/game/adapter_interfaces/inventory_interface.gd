@@ -1,29 +1,29 @@
-class_name UIInventoryInterface
-extends HFlowContainer
-
-signal request_swap(inventory: Inventory, slot: int)
+class_name InventoryInterface
+extends AdapterInterface
 
 static var ui_inventory_slot = load("res://ui/game/player_inventory/inventory_slot.tscn")
 
-@export var inventory: Inventory:
-    set(v):
-        if inventory:
-            inventory.inventory_slot_changed.disconnect(_on_inventory_slot_changed)
-        inventory = v
-        if inventory:
-            inventory.inventory_slot_changed.connect(_on_inventory_slot_changed)
-@export var inventory_adapter_name: String
-
+var inventory: Inventory:
+    get: return adapter as Inventory
 var slots_nodes: Array[UIInventorySlot] = []
+var slots_container: HFlowContainer
 
-func load_interface(entity: Entity) -> void:
-    if inventory_adapter_name != "":
-        inventory = entity.get_adapter(inventory_adapter_name)
+func _ready() -> void:
+    super._ready()
+    slots_container = HFlowContainer.new()
+    add_child(slots_container)
     load_inventory()
+
+func _set_adapter(v: EntityAdapter, old: EntityAdapter) -> void:
+    if old:
+        old.inventory_slot_changed.disconnect(_on_inventory_slot_changed)
+    if inventory:
+        inventory.inventory_slot_changed.connect(_on_inventory_slot_changed)
+    if interface_ready: load_inventory()
 
 func load_inventory() -> void:
     slots_nodes = []
-    for child in get_children():
+    for child in slots_container.get_children():
         child.queue_free()
     if not inventory:
         return
@@ -34,10 +34,10 @@ func load_inventory() -> void:
         slot.slot = index;
         slots_nodes[index] = slot
         slot.request_swap.connect(_on_slot_request_swap)
-        add_child(slot)
+        slots_container.add_child(slot)
 
 func _on_slot_request_swap(slot: int) -> void:
-    request_swap.emit(inventory, slot)
+    operate_adapter("swap_with_hand", [slot])
 
 func _on_inventory_slot_changed(slot_id: int, item_type_changed: bool) -> void:
     slots_nodes[slot_id].changed(item_type_changed)

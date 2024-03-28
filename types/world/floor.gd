@@ -2,6 +2,7 @@ class_name Floor
 extends Content
 
 const FLOOR_TYPE = preload("res://contents/content_types/floor.tres")
+const FLOORS = preload("res://types/world/floors.tres")
 
 @warning_ignore("integer_division")
 const WHOLE_TILE_POLYGON_POINTS = [
