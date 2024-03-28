@@ -198,8 +198,8 @@ func update_position(options: Dictionary = {}) -> void:
     _update_position(options)
 
 func _on_collision_area_mouse_exited() -> void:
-    mouse_exited.emit()
+    input_mouse_exited.emit()
 
 func _on_collision_area_mouse_entered() -> void:
-    mouse_entered.emit()
+    input_mouse_entered.emit()
 

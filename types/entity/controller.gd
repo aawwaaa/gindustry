@@ -53,7 +53,7 @@ func operate_target_rpc(operation: String, args: Array[Variant] = []) -> void:
 
 @rpc("authority", "call_remote", "reliable")
 func request_access_target_rpc(target: Node2D) -> bool:
-    return target.entity_node.request_access_target(target)
+    return self.target.entity_node.request_access_target(target)
 
 @rpc("authority", "call_remote", "reliable")
 func clear_access_target_rpc() -> void:

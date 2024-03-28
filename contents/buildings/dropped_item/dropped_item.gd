@@ -28,9 +28,6 @@ func _on_building_input_operation(operation: String, args: Array) -> void:
     if operation == "drop_item":
         Global.input_handler.call_input_processor("item", "accept_drop_item", [self, args])
 
-func init_inventory_panel(panel: InventoryPanel) -> void:
-    panel.interface.inventory = entity.get_adapter("inventory")
-
 func get_adapter_at(pos: Vector2i, type: String) -> EntityAdapter:
     if pos != Vector2i.ZERO or type != "item": return null
     return entity.adapters["item"]

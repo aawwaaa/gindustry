@@ -12,8 +12,14 @@ static var ui_inventory_slot = load("res://ui/game/player_inventory/inventory_sl
         inventory = v
         if inventory:
             inventory.inventory_slot_changed.connect(_on_inventory_slot_changed)
+@export var inventory_adapter_name: String
 
 var slots_nodes: Array[UIInventorySlot] = []
+
+func load_interface(entity: Entity) -> void:
+    if inventory_adapter_name != "":
+        inventory = entity.get_adapter(inventory_adapter_name)
+    load_inventory()
 
 func load_inventory() -> void:
     slots_nodes = []

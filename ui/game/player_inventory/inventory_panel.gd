@@ -1,6 +1,8 @@
 class_name InventoryPanel
 extends ScrollContainer
 
+@export var interfaces: Array[Control] = []
+
 var entity: Entity:
     set = set_entity;
 var main_node: Node2D
@@ -10,6 +12,8 @@ signal request_remote_operation(operation: String, args: Array[Variant])
 
 func set_entity(v: Entity) -> void:
     entity = v
+    for interface in interfaces:
+        interface.load_interface(v)
 
 func handle_request_swap(inventory: Inventory, slot: int) -> void: 
     request_remote_operation.emit("adapter", [inventory.adapter_name, "swap_with_other_hand", slot])
