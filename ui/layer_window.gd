@@ -7,7 +7,7 @@ const CLOSE_ICON = preload("res://assets/ui/icons/cross.tres")
 
 static var windows: Array[LayerWindow] = []
 
-var box: VBoxContainer
+var panel: PanelContainer
 var title_button: Button
 var close_button: Button
 
@@ -27,21 +27,30 @@ LayerWindow - Layer
 """
 
 func create_nodes() -> Container:
-    box = VBoxContainer.new()
+    panel = PanelContainer.new()
+    add_child(panel)
+
+    var box = VBoxContainer.new()
+    panel.add_child(box)
 
     var hbox = HBoxContainer.new()
     hbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     hbox.custom_minimum_size = Vector2(0, 32)
+    hbox.scale = Vector2(1, 0.5)
     box.add_child(hbox)
 
     title_button = Button.new()
     title_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    title_button.gui_input.connect(_on_title_button_gui_input)
+    title_button.focus_mode = Control.FOCUS_NONE
     hbox.add_child(title_button)
 
     close_button = Button.new()
-    close_button.icon = CLOSE_ICON
     close_button.custom_minimum_size = Vector2(32, 32)
+    close_button.icon = CLOSE_ICON
     close_button.pressed.connect(_on_close_pressed)
+    close_button.focus_mode = Control.FOCUS_NONE
+
     hbox.add_child(close_button)
 
     var container = Container.new()
@@ -61,12 +70,19 @@ func _enter_tree() -> void:
     var container = create_nodes()
     for child in childs:
         container.add_child(child)
+    iter_owner(container)
+
+func iter_owner(node: Node) -> void:
+    node.owner = self
+    for child in node.get_children(true):
+        iter_owner(child)
 
 func _ready() -> void:
-    windows.append(self)
+    windows.append(self) 
+    to_top()
     set_size(size)
     set_title(title)
-    to_top()
+    center()
 
 func to_top() -> void:
     windows.erase(self)
@@ -74,10 +90,41 @@ func to_top() -> void:
     for index in windows.size():
         windows[index].layer = index + 512
 
+func center() -> void:
+    if not panel: return
+    panel.anchors_preset = Control.PRESET_CENTER
+    panel.position = get_viewport().get_visible_rect().size / 2 - panel.size / 2
+
 func set_title(new_title: String) -> void:
-    title_button.text = new_title
     title = new_title
+    if not title_button: return
+    title_button.text = new_title
 
 func set_size(new_size: Vector2) -> void:
-    box.size = new_size + Vector2(0, 32)
     size = new_size
+    if not panel: return
+    panel.size = new_size + Vector2(0, 16)
+
+func show_window() -> void:
+    visible = true
+    to_top()
+
+func hide_window() -> void:
+    hide()
+
+func _on_title_button_gui_input(event: InputEvent) -> void:
+    var velocity = Vector2.ZERO
+    if event is InputEventMouseMotion:
+        if event.button_mask & MOUSE_BUTTON_MASK_LEFT:
+            velocity = event.relative
+    if event is InputEventScreenDrag:
+        velocity = event.relative
+    if velocity != Vector2.ZERO:
+        panel.position += velocity
+
+func _handle_input(event: InputEvent) -> void:
+    pass
+
+func _input(event: InputEvent) -> void:
+    if not visible: return
+    _handle_input(event)

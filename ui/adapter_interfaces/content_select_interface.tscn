@@ -16,6 +16,7 @@ text = "ContentSelectInterface_Whitelist"
 [node name="BlacklistEnabled" type="CheckButton" parent="BlacklistToggle"]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 0
 
 [node name="Label2" type="Label" parent="BlacklistToggle"]
 layout_mode = 2

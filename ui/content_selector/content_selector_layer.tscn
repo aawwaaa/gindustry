@@ -7,70 +7,49 @@
 
 [node name="ContentSelectorLayer" type="CanvasLayer"]
 script = ExtResource("1_jvm0o")
+title = "ContentSelectorLayer_Title"
+size = Vector2(480, 560)
 
-[node name="Panel" type="PanelContainer" parent="."]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(480, 560)
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -123.5
-offset_top = -24.0
-offset_right = 123.5
-offset_bottom = 24.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_right = 480.0
+offset_bottom = 560.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="PanelContainer3" type="PanelContainer" parent="Panel/VBoxContainer"]
-layout_mode = 2
-
-[node name="DragButton" type="Button" parent="Panel/VBoxContainer/PanelContainer3"]
-custom_minimum_size = Vector2(0, 16)
-layout_mode = 2
-focus_mode = 0
-flat = true
-
-[node name="PanelContainer2" type="PanelContainer" parent="Panel/VBoxContainer"]
-layout_mode = 2
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBoxContainer/PanelContainer2"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/PanelContainer2"]
 layout_mode = 2
 size_flags_vertical = 0
 vertical_scroll_mode = 0
 
-[node name="ContentTypes" type="HBoxContainer" parent="Panel/VBoxContainer/PanelContainer2/ScrollContainer"]
+[node name="ContentTypes" type="HBoxContainer" parent="VBoxContainer/PanelContainer2/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="SelectorPanels" type="VBoxContainer" parent="Panel/VBoxContainer"]
+[node name="SelectorPanels" type="VBoxContainer" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="PanelContainer" type="PanelContainer" parent="Panel/VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer/PanelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer"]
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/PanelContainer/HBoxContainer"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 
-[node name="CurrentSelected" type="TextureRect" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer/PanelContainer"]
+[node name="CurrentSelected" type="TextureRect" parent="VBoxContainer/PanelContainer/HBoxContainer/PanelContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="AmountSlider" type="HSlider" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer"]
+[node name="AmountSlider" type="HSlider" parent="VBoxContainer/PanelContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -81,32 +60,32 @@ step = 0.1
 allow_greater = true
 allow_lesser = true
 
-[node name="Amount" type="LineEdit" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer"]
+[node name="Amount" type="LineEdit" parent="VBoxContainer/PanelContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 1
 text = "1"
 virtual_keyboard_type = 2
 
-[node name="Clear" type="Button" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer"]
+[node name="Clear" type="Button" parent="VBoxContainer/PanelContainer/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 icon = ExtResource("2_yn8x2")
 
-[node name="Cancel" type="Button" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer"]
+[node name="Cancel" type="Button" parent="VBoxContainer/PanelContainer/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 icon = ExtResource("3_ssf2t")
 
-[node name="Confirm" type="Button" parent="Panel/VBoxContainer/PanelContainer/HBoxContainer"]
+[node name="Confirm" type="Button" parent="VBoxContainer/PanelContainer/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 icon = ExtResource("4_j0vla")
 
-[connection signal="gui_input" from="Panel/VBoxContainer/PanelContainer3/DragButton" to="." method="_on_drag_button_gui_input"]
-[connection signal="value_changed" from="Panel/VBoxContainer/PanelContainer/HBoxContainer/AmountSlider" to="." method="_on_amount_slider_value_changed"]
-[connection signal="text_changed" from="Panel/VBoxContainer/PanelContainer/HBoxContainer/Amount" to="." method="_on_amount_text_changed"]
-[connection signal="text_submitted" from="Panel/VBoxContainer/PanelContainer/HBoxContainer/Amount" to="." method="_on_amount_text_submitted"]
-[connection signal="pressed" from="Panel/VBoxContainer/PanelContainer/HBoxContainer/Clear" to="." method="_on_clear_pressed"]
-[connection signal="pressed" from="Panel/VBoxContainer/PanelContainer/HBoxContainer/Cancel" to="." method="_on_cancel_pressed"]
-[connection signal="pressed" from="Panel/VBoxContainer/PanelContainer/HBoxContainer/Confirm" to="." method="_on_confirm_pressed"]
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="value_changed" from="VBoxContainer/PanelContainer/HBoxContainer/AmountSlider" to="." method="_on_amount_slider_value_changed"]
+[connection signal="text_changed" from="VBoxContainer/PanelContainer/HBoxContainer/Amount" to="." method="_on_amount_text_changed"]
+[connection signal="text_submitted" from="VBoxContainer/PanelContainer/HBoxContainer/Amount" to="." method="_on_amount_text_submitted"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/HBoxContainer/Clear" to="." method="_on_clear_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/HBoxContainer/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/HBoxContainer/Confirm" to="." method="_on_confirm_pressed"]

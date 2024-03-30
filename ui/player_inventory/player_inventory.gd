@@ -1,15 +1,16 @@
 class_name PlayerInventory
-extends Window
+extends LayerWindow
 
 @export var default_inventory_panel: PackedScene;
 var default_inventory_panel_inst: PlayerInventoryPanel;
 
 func _ready() -> void:
+    super._ready()
     default_inventory_panel_inst = default_inventory_panel.instantiate()
     Global.input_handler_changed.connect(_on_input_handler_changed)
 
 func _on_close_requested() -> void:
-    hide()
+    hide_window()
     Global.input_handler.call_input_processor("item", "clear_access_target")
 
 func _on_input_handler_changed(handler: InputHandler, from: InputHandler) -> void:
@@ -29,16 +30,12 @@ func _on_input_handler_controller_target_entity_changed(entity: Entity, from: En
 
     default_inventory_panel_inst.entity = entity
 
-func _input(event: InputEvent) -> void:
-    if event is InputEventKey:
-        Global.input_handler._input(event)
-
 func toggle_inventory() -> void:
     if not visible or not default_inventory_panel_inst.is_inside_tree():
         load_info(null)
-        show()
+        show_window()
     else:
-        hide()
+        hide_window()
         Global.input_handler.call_input_processor("item", "clear_access_target")
 
 func _on_controller_target_access_target_changed(target: Node2D, from: Node2D) -> void:
@@ -67,7 +64,7 @@ func _on_game_ui_ui_hidden() -> void:
     %InventoryInterface.load_inventory()
     
     load_info(null)
-    hide()
+    hide_window()
 
     default_inventory_panel_inst._on_game_ui_ui_hidden()
 

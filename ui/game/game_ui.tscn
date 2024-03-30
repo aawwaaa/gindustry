@@ -20,6 +20,7 @@ mouse_filter = 2
 script = ExtResource("1_8q3go")
 
 [node name="PlayerInventory" parent="." instance=ExtResource("2_eemsh")]
+unique_name_in_owner = true
 process_mode = 1
 default_inventory_panel = ExtResource("3_fpt4v")
 

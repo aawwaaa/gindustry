@@ -1,7 +1,8 @@
 class_name ContentSelectorLayer
-extends CanvasLayer
+extends LayerWindow
 
 signal submit(content: Content, amount: float)
+
 
 class SelectContentReturnValue extends RefCounted:
     var content: Content
@@ -26,9 +27,6 @@ var current_allow_float: bool = false
 
 var in_use: bool = false
 var hide_by_ui: bool = false
-
-func _ready() -> void:
-    layer = 1024 + 4
 
 func _on_game_ui_contents_loaded() -> void:
     var types = Types.get_types(ContentType.TYPE).values().duplicate() as Array[ContentType]
@@ -77,12 +75,12 @@ func select_content(content: Content, amount: float, \
     in_use = true
     old_content = content
     old_amount = amount
-    current_content = content
+    set_current_content(content)
     current_amount = amount
     current_allow_float = allow_float
     current_filter = filter
     update_filter()
-    visible = true
+    show_window()
     await submit
     in_use = false
     if hide_by_ui:
@@ -139,30 +137,20 @@ func _on_amount_slider_value_changed(value: float) -> void:
 
 func _on_confirm_pressed() -> void:
     submit.emit(current_content, current_amount)
-    visible = false
+    hide_window()
 
 func _on_cancel_pressed() -> void:
     current_content = old_content
     current_amount = old_amount
     submit.emit(old_content, old_amount)
-    visible = false
+    hide_window()
 
 func _on_clear_pressed() -> void:
     submit.emit(null, 0)
-    visible = false
+    hide_window()
 
 func _on_instance_selected_changed(selected: Content) -> void:
     set_current_content(selected)
-
-func _on_drag_button_gui_input(event: InputEvent) -> void:
-    var velocity = Vector2.ZERO
-    if event is InputEventMouseMotion:
-        if event.button_mask & MOUSE_BUTTON_MASK_LEFT:
-            velocity = event.relative
-    if event is InputEventScreenDrag:
-        velocity = event.relative
-    if velocity != Vector2.ZERO:
-        %Panel.position += velocity
 
 func _on_amount_text_submitted(new_text: String) -> void:
     %Amount.release_focus()
@@ -171,10 +159,11 @@ func _on_game_ui_ui_hidden() -> void:
     if not in_use: return
     hide_by_ui = true
     submit.emit(current_content, current_type)
-    visible = false
+    hide_window()
     await get_tree().process_frame
     hide_by_ui = false
     current_filter = func(v): return true
     update_filter()
 
-
+func _on_close_requested() -> void:
+    _on_cancel_pressed()
