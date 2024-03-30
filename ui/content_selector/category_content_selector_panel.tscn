@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bicsore0vphnh"]
 
-[ext_resource type="Script" path="res://ui/game/content_selector/category_content_selector_panel.gd" id="1_dfjic"]
+[ext_resource type="Script" path="res://ui/content_selector/category_content_selector_panel.gd" id="1_dfjic"]
 [ext_resource type="Resource" uid="uid://dx1li76j6oxo8" path="res://contents/resource_types/content_category.tres" id="2_i34l5"]
 
 [node name="CategoryContentSelectorPanel" type="VBoxContainer"]

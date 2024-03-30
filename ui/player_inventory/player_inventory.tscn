@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dkx3l5m02nde"]
 
-[ext_resource type="Script" path="res://ui/game/player_inventory/player_inventory.gd" id="1_1is7l"]
-[ext_resource type="Script" path="res://ui/game/adapter_interfaces/inventory_interface.gd" id="2_5qd65"]
+[ext_resource type="Script" path="res://ui/player_inventory/player_inventory.gd" id="1_1is7l"]
+[ext_resource type="Script" path="res://ui/adapter_interfaces/inventory_interface.gd" id="2_5qd65"]
 
 [node name="PlayerInventory" type="Window"]
 title = "PlayerInventory_Inventory"

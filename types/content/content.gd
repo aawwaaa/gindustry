@@ -53,3 +53,6 @@ func get_index() -> int:
 
 func set_index(v: int) -> void:
     index = v
+
+func get_icon() -> Texture2D:
+    return icon

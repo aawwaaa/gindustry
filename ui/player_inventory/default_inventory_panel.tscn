@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://by7nnwa735mfp"]
 
-[ext_resource type="Script" path="res://ui/game/player_inventory/default_inventory_panel.gd" id="1_p0leg"]
+[ext_resource type="Script" path="res://ui/player_inventory/default_inventory_panel.gd" id="1_p0leg"]
 
 [node name="DefaultInventoryPanel" type="ScrollContainer"]
 anchors_preset = 15

@@ -19,10 +19,16 @@ var current_type: ContentType = null
 var current_content: Content = null
 var current_amount: float = 1:
     set = set_current_amount
-var current_filter: Callable; # (type: ContentType) -> bool
+var current_filter: Callable = func(v): return true; # (type: ContentType) -> bool
 var old_content: Content = null
 var old_amount: float = 1;
 var current_allow_float: bool = false
+
+var in_use: bool = false
+var hide_by_ui: bool = false
+
+func _ready() -> void:
+    layer = 1024 + 4
 
 func _on_game_ui_contents_loaded() -> void:
     var types = Types.get_types(ContentType.TYPE).values().duplicate() as Array[ContentType]
@@ -64,7 +70,11 @@ func show_content_type(content_type: ContentType) -> void:
     content_type_to_button[content_type].button_pressed = true
     current_type = content_type
 
-func select_content(content: Content, amount: float, allow_float: bool = false, filter: Callable = func(v): return true) -> SelectContentReturnValue:
+func select_content(content: Content, amount: float, \
+        allow_float: bool = false, filter: Callable = func(v): return true) -> SelectContentReturnValue:
+    if in_use:
+        submit.emit(current_content, current_amount)
+    in_use = true
     old_content = content
     old_amount = amount
     current_content = content
@@ -74,6 +84,9 @@ func select_content(content: Content, amount: float, allow_float: bool = false, 
     update_filter()
     visible = true
     await submit
+    in_use = false
+    if hide_by_ui:
+        return null
     return SelectContentReturnValue.new(current_content, current_amount)
 
 func update_filter() -> void:
@@ -153,3 +166,15 @@ func _on_drag_button_gui_input(event: InputEvent) -> void:
 
 func _on_amount_text_submitted(new_text: String) -> void:
     %Amount.release_focus()
+
+func _on_game_ui_ui_hidden() -> void:
+    if not in_use: return
+    hide_by_ui = true
+    submit.emit(current_content, current_type)
+    visible = false
+    await get_tree().process_frame
+    hide_by_ui = false
+    current_filter = func(v): return true
+    update_filter()
+
+

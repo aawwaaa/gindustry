@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://ddasuissnylhb"]
 
-[ext_resource type="PackedScene" uid="uid://bicsore0vphnh" path="res://ui/game/content_selector/category_content_selector_panel.tscn" id="1_uofdq"]
+[ext_resource type="PackedScene" uid="uid://bicsore0vphnh" path="res://ui/content_selector/category_content_selector_panel.tscn" id="1_uofdq"]
 [ext_resource type="Resource" uid="uid://c2couplqm6cy7" path="res://contents/resource_types/building_category.tres" id="2_q1fcs"]
 
 [node name="CategoryContentSelectorPanel" instance=ExtResource("1_uofdq")]

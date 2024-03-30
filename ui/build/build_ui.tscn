@@ -1,6 +1,6 @@
 [gd_scene load_steps=16 format=3 uid="uid://bkjiopb08w5no"]
 
-[ext_resource type="Script" path="res://ui/game/build/build_ui.gd" id="1_1mh4v"]
+[ext_resource type="Script" path="res://ui/build/build_ui.gd" id="1_1mh4v"]
 [ext_resource type="Texture2D" uid="uid://bnrgbbio2cewj" path="res://assets/ui/arrows.png" id="1_o3puo"]
 [ext_resource type="Texture2D" uid="uid://ds4ih5scc8o4r" path="res://assets/ui/icons/break.tres" id="2_ob47p"]
 [ext_resource type="Texture2D" uid="uid://djiadsqq65hkd" path="res://assets/ui/icons/copy.tres" id="3_6eicn"]

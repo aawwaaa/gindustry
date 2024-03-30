@@ -42,6 +42,8 @@ var current_player: Player:
         var old = current_player if current_player else null
         current_player = v
         current_player_changed.emit(v, old)
+var current_entity: Entity:
+    get: return current_player.get_controller().entity if current_player else null
 
 func _ready() -> void:
     create_temp_tile();

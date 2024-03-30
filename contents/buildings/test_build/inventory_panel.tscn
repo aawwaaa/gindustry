@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://b54dpcwt3oi7g"]
+
+[ext_resource type="PackedScene" uid="uid://tla3ex7l1nes" path="res://ui/player_inventory/inventory_panel.tscn" id="1_dlae4"]
+[ext_resource type="PackedScene" uid="uid://dryn40fc3rcmj" path="res://ui/adapter_interfaces/content_select_interface.tscn" id="2_wkg3w"]
+
+[node name="InventoryPanel" node_paths=PackedStringArray("interfaces") instance=ExtResource("1_dlae4")]
+interfaces = [NodePath("ContentSelectInterface")]
+
+[node name="ContentSelectInterface" parent="." index="0" instance=ExtResource("2_wkg3w")]
+layout_mode = 2
+size_flags_horizontal = 3
+adapter_name = "select"

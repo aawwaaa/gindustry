@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://bwgtwfxvf02uh"]
+
+[ext_resource type="Script" path="res://contents/buildings/test_build/test_build.gd" id="1_24k4r"]
+[ext_resource type="Script" path="res://types/building/building.gd" id="2_okqvj"]
+[ext_resource type="Script" path="res://types/entity/inventory_panel_adapter.gd" id="4_qtbpa"]
+[ext_resource type="PackedScene" uid="uid://b54dpcwt3oi7g" path="res://contents/buildings/test_build/inventory_panel.tscn" id="4_sra8l"]
+[ext_resource type="Script" path="res://types/content/content_select_adapter.gd" id="5_vx7an"]
+
+[node name="TestBuild" type="Node2D" node_paths=PackedStringArray("entity")]
+script = ExtResource("1_24k4r")
+entity = NodePath("Building")
+
+[node name="Building" type="Node" parent="." node_paths=PackedStringArray("shadow_container", "main_node")]
+script = ExtResource("2_okqvj")
+shadow_container = NodePath("..")
+main_node = NodePath("..")
+adapters = {
+"panel": NodePath("../InventoryPanelAdapter"),
+"select": NodePath("../ContentSelectAdapter")
+}
+layer_follow_world = true
+layer = 1
+
+[node name="InventoryPanelAdapter" type="Node" parent="." node_paths=PackedStringArray("main_node", "entity_node")]
+script = ExtResource("4_qtbpa")
+panel_scene = ExtResource("4_sra8l")
+main_node = NodePath("..")
+entity_node = NodePath("../Building")
+
+[node name="ContentSelectAdapter" type="Node" parent="." node_paths=PackedStringArray("main_node", "entity_node")]
+script = ExtResource("5_vx7an")
+allow_blacklist = true
+float_amount = true
+main_node = NodePath("..")
+entity_node = NodePath("../Building")
+
+[connection signal="input_operation" from="Building" to="." method="_on_building_input_operation"]

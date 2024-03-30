@@ -53,6 +53,7 @@ func start_load() -> void:
     ])
     await load_content(building, "buildings/", [
         "dropped_item/building.tres",
+        "test_build/building.tres",
     ])
 
 func load_content(to: Dictionary, prefix: String, paths: Array[String]) -> void:

@@ -1,7 +1,8 @@
 class_name ContentSelectAdapter
 extends EntityAdapter
 
-signal changed(slot: int)
+signal content_slot_changed(index: int, slot: ContentSelectSlot)
+signal blacklist_changed(enabled: bool)
 
 class ContentSelectSlot extends RefCounted:
     var content: Content
@@ -24,8 +25,8 @@ var blacklist: bool = false
 func init_slots(size: int) -> void:
     slots.resize(size)
     for index in size:
-        if slots[size] == null:
-            slots[size] = ContentSelectSlot.new()
+        if slots[index] == null:
+            slots[index] = ContentSelectSlot.new()
 
 func _ready() -> void:
     if slots.size() != slot_size: init_slots(slot_size)
@@ -45,8 +46,10 @@ func _handle_remote_operation(source: Entity, operation: String, args: Array = [
 
 func set_slot(index: int, content: Content, amount: float) -> void:
     if slot_size <= index or index < 0: return
+    if content and not filte_content_type(content.get_content_type()): return
     slots[index].content = content
     slots[index].amount = amount
+    content_slot_changed.emit(index, slots[index])
 
 func set_slot_from_hand(index: int, entity: Entity) -> void:
     if not entity.has_adapter("inventory"): return
@@ -57,6 +60,7 @@ func set_slot_from_hand(index: int, entity: Entity) -> void:
 func set_blacklist(enable: bool) -> void:
     if not allow_blacklist: return
     blacklist = enable
+    blacklist_changed.emit(enable)
 
 func has_content(content: Content, found = not blacklist) -> bool:
     for slot in slots:
@@ -71,6 +75,15 @@ func get_amount(content: Content) -> float:
 
 func get_amount_int(content: Content) -> int:
     return round(get_amount(content))
+
+func filte_content_type(content_type: ContentType) -> bool:
+    return true
+
+func get_float_amount() -> bool:
+    return float_amount
+
+func format_amount(amount: float) -> float:
+    return amount if get_float_amount() else roundf(amount)
 
 func _should_save_data() -> bool:
     return true

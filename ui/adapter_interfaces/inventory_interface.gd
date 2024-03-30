@@ -1,7 +1,7 @@
 class_name InventoryInterface
 extends AdapterInterface
 
-static var ui_inventory_slot = load("res://ui/game/player_inventory/inventory_slot.tscn")
+static var ui_inventory_slot = load("res://ui/player_inventory/inventory_slot.tscn")
 
 var inventory: Inventory:
     get: return adapter as Inventory

@@ -12,7 +12,7 @@ func _set_selected(selected: Content) -> void:
     pass
 
 func _get_texture_for(content: Content) -> Texture2D:
-    return content.icon
+    return content.get_icon()
 
 func load_contents() -> void:
     _load_contents()

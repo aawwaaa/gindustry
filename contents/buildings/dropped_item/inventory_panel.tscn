@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c5wyk4iqtd5r8"]
 
-[ext_resource type="PackedScene" uid="uid://tla3ex7l1nes" path="res://ui/game/player_inventory/inventory_panel.tscn" id="1_xm7o0"]
-[ext_resource type="Script" path="res://ui/game/adapter_interfaces/inventory_interface.gd" id="2_t85hd"]
+[ext_resource type="PackedScene" uid="uid://tla3ex7l1nes" path="res://ui/player_inventory/inventory_panel.tscn" id="1_xm7o0"]
+[ext_resource type="Script" path="res://ui/adapter_interfaces/inventory_interface.gd" id="2_t85hd"]
 
 [node name="InventoryPanel" node_paths=PackedStringArray("interfaces") instance=ExtResource("1_xm7o0")]
 anchors_preset = 15
