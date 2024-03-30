@@ -1,0 +1,99 @@
+[gd_scene load_steps=5 format=3 uid="uid://ck815rqopv6fv"]
+
+[ext_resource type="Script" path="res://ui/content_selector/content_selector_window.gd" id="1_rfe4f"]
+[ext_resource type="Texture2D" uid="uid://b24hivrw2fe5n" path="res://assets/ui/icons/delete.tres" id="2_gkgtg"]
+[ext_resource type="Texture2D" uid="uid://3c3cfli0hgal" path="res://assets/ui/icons/cross.tres" id="3_pvi28"]
+[ext_resource type="Texture2D" uid="uid://d4h3l85gk7ahu" path="res://assets/ui/icons/check.tres" id="4_v3uoj"]
+
+[node name="ContentSelectorWindow" type="Window"]
+title = "ContentSelectorWindow_Title"
+initial_position = 2
+size = Vector2i(480, 560)
+always_on_top = true
+script = ExtResource("1_rfe4f")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="PanelContainer2" type="PanelContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/VBoxContainer/PanelContainer2"]
+layout_mode = 2
+size_flags_vertical = 0
+vertical_scroll_mode = 0
+
+[node name="ContentTypes" type="HBoxContainer" parent="PanelContainer/VBoxContainer/PanelContainer2/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="SelectorPanels" type="VBoxContainer" parent="PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer/PanelContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+
+[node name="CurrentSelected" type="TextureRect" parent="PanelContainer/VBoxContainer/PanelContainer/HBoxContainer/PanelContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+
+[node name="AmountSlider" type="HSlider" parent="PanelContainer/VBoxContainer/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+focus_mode = 0
+max_value = 1000.0
+step = 0.1
+allow_greater = true
+allow_lesser = true
+
+[node name="Amount" type="LineEdit" parent="PanelContainer/VBoxContainer/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 1
+text = "1"
+virtual_keyboard_type = 2
+
+[node name="Clear" type="Button" parent="PanelContainer/VBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("2_gkgtg")
+
+[node name="Cancel" type="Button" parent="PanelContainer/VBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("3_pvi28")
+
+[node name="Confirm" type="Button" parent="PanelContainer/VBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("4_v3uoj")
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="value_changed" from="PanelContainer/VBoxContainer/PanelContainer/HBoxContainer/AmountSlider" to="." method="_on_amount_slider_value_changed"]
+[connection signal="text_changed" from="PanelContainer/VBoxContainer/PanelContainer/HBoxContainer/Amount" to="." method="_on_amount_text_changed"]
+[connection signal="text_submitted" from="PanelContainer/VBoxContainer/PanelContainer/HBoxContainer/Amount" to="." method="_on_amount_text_submitted"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/PanelContainer/HBoxContainer/Clear" to="." method="_on_clear_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/PanelContainer/HBoxContainer/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/PanelContainer/HBoxContainer/Confirm" to="." method="_on_confirm_pressed"]

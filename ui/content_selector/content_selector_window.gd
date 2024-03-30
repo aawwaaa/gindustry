@@ -1,8 +1,7 @@
-class_name ContentSelectorLayer
-extends LayerWindow
+class_name ContentSelectorWindow
+extends Window
 
 signal submit(content: Content, amount: float)
-
 
 class SelectContentReturnValue extends RefCounted:
     var content: Content
@@ -80,7 +79,7 @@ func select_content(content: Content, amount: float, \
     current_allow_float = allow_float
     current_filter = filter
     update_filter()
-    show_window()
+    show()
     await submit
     in_use = false
     if hide_by_ui:
@@ -137,17 +136,17 @@ func _on_amount_slider_value_changed(value: float) -> void:
 
 func _on_confirm_pressed() -> void:
     submit.emit(current_content, current_amount)
-    hide_window()
+    hide()
 
 func _on_cancel_pressed() -> void:
     current_content = old_content
     current_amount = old_amount
     submit.emit(old_content, old_amount)
-    hide_window()
+    hide()
 
 func _on_clear_pressed() -> void:
     submit.emit(null, 0)
-    hide_window()
+    hide()
 
 func _on_instance_selected_changed(selected: Content) -> void:
     set_current_content(selected)
@@ -159,7 +158,7 @@ func _on_game_ui_ui_hidden() -> void:
     if not in_use: return
     hide_by_ui = true
     submit.emit(current_content, current_type)
-    hide_window()
+    hide()
     await get_tree().process_frame
     hide_by_ui = false
     current_filter = func(v): return true

@@ -176,8 +176,13 @@
 [X] 丢物品进建筑(建筑操作[位置, 物品, 类型])
 [ ] configuring
 [ ] alt显示
-[ ] ItemDisplayGroup
+[ ] ContentDisplayGroup
     [ ] Inventory适配
+    [ ] ContentSelectAdapter
+    [ ] ItemSelectAdapter
+[ ] * BuildPlan序列化:
+    [ ] add_build_plan(plan)
+    [ ] remove_build_plan(pos)
 [ ] BuildingType.default_building_category()
 [ ] FloorShape
     [ ] RectFloorShape
@@ -201,7 +206,7 @@
         [X] OverlaySelectorPanel
         [X] RecipeSelectorPanel
     [ ] ItemSelector extends Inventory
-    [ ] ContentSelector
+    [X] ContentSelector
 [ ] TileOre[WithData]
 	[ ] TileOreType
 	[ ] [Floor/Overlay].ores/ore_with_data

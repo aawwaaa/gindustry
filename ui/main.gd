@@ -2,6 +2,8 @@ class_name MainNode
 extends Node2D
 
 func _ready() -> void:
+    get_viewport().gui_embed_subwindows = true
+
     get_tree().root.process_mode = Node.PROCESS_MODE_ALWAYS
 
     Log.progress_changed.connect(progress_changed);

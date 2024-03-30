@@ -10,9 +10,18 @@ signal destroyed()
 @export var callback_get_component_at: StringName = "";
 @export var callback_handle_break: StringName = ""
 
+@export var callback_get_config: StringName = "";
+@export var callback_set_config: StringName = "";
+
 var building_type: BuildingType:
     get: return entity_type if entity_type is BuildingType else null
-var building_config: Variant
+var building_config: Variant:
+    get: return main_node.call(callback_get_config) if callback_get_config != "" else building_config
+    set(v): 
+        if callback_set_config != "": 
+            main_node.call(callback_set_config, v)
+        else:
+            building_config = v
 var shadow: BuildingShadow
 var shadow_inited: bool = false;
 
