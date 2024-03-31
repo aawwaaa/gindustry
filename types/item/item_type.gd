@@ -52,3 +52,6 @@ func get_max_stack() -> int:
 
 func get_cost() -> float:
     return _get_cost()
+
+static func get_content(item: Item, ignore_empty_item: bool = false) -> ItemType:
+    return null if item and ignore_empty_item and item.is_empty() else item.item_type if item else null

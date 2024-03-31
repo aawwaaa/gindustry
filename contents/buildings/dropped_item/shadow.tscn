@@ -44,6 +44,7 @@ polygon = PackedVector2Array(14, 14, 0, 14, 14, 0)
 texture = ExtResource("2_ib2ma")
 
 [node name="ItemIcons" type="Node2D" parent="." index="5"]
+visible = false
 scale = Vector2(0.4, 0.4)
 
 [node name="Marker2D" type="Marker2D" parent="ItemIcons" index="0"]

@@ -177,7 +177,7 @@
 [ ] configuring
 [ ] alt显示
 [ ] * ContentDisplayGroup
-    [ ] Inventory适配
+    [X] Inventory适配
     [ ] ContentSelectAdapter
     [ ] ItemSelectAdapter
 [X] * BuildPlan序列化:

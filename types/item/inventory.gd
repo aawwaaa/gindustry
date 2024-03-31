@@ -13,6 +13,8 @@ signal inventory_slot_changed(slot_id: int, item_type_changed: bool)
 
 @export var hand_slot: int = 0
 
+@export var content_display_group: ContentDisplayGroup;
+
 var slots: Array[Item] = [];
 
 func _handle_operation(operate: String, args: Array = []) -> void:
@@ -57,6 +59,13 @@ func is_slot_has_item(slot: int) -> bool:
     if not is_instance_valid(slots[slot]): return false
     return not slots[slot].is_empty()
 
+func update_display_group() -> void:
+    if not content_display_group: return
+    if content_display_group.datas != slots:
+        content_display_group.content_getter = ItemType.get_content.bind(true)
+        content_display_group.datas = slots
+    content_display_group.update()
+
 func get_slot(slot: int) -> Item:
     if not is_slot_has_item(slot):
         return null
@@ -67,6 +76,7 @@ func set_slot(slot: int, item: Item) -> void:
     if item and item.is_empty(): item = null
     slots[slot] = item
     inventory_slot_changed.emit(slot, old != item)
+    if old != item: update_display_group()
 
 func update_slot(slot: int) -> void:
     if slots[slot] and slots[slot].is_empty():

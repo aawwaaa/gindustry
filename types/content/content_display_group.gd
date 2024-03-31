@@ -25,15 +25,22 @@ const AMOUNT_TO_POSITION_AND_SCALE = {
 
 const AMOUNT_TO_PANEL_SIZE = {
     0: Vector2(0, 0),
-    1: Vector2(16, 16),
+    1: Vector2(32, 32),
     2: Vector2(32, 16),
     3: Vector2(32, 32),
     4: Vector2(32, 32)
 }
 
 var panel_node: Panel
-var contents: Array = []
-var content_getter: Callable;
+var contents: Array[Content] = []
+var datas: Array = []
+var content_getter: Callable = do_nothing;
+
+func _ready() -> void:
+    scale *= 0.5
+
+static func do_nothing(v: Variant) -> Variant:
+    return v
 
 func update() -> void:
     # if >4 pick first 4
@@ -41,12 +48,17 @@ func update() -> void:
     for child in get_children():
         if child == panel_node: continue
         child.queue_free()
+    # filte
+    contents.resize(0)
+    for data in datas:
+        var content = content_getter.call(data)
+        if content: contents.append(content)
     # create new nodes
     var amount = min(4, contents.size())
     for i in range(amount):
         var content = contents[i]
         var node = Sprite2D.new()
-        node.texture = content.get_icon() if not content_getter else content_getter.call(content)
+        node.texture = content.get_icon()
         var props = AMOUNT_TO_POSITION_AND_SCALE[amount][i]
         node.position = props.position
         node.scale = props.scale
@@ -57,6 +69,8 @@ func update() -> void:
 func update_panel() -> void:
     if not panel_node:
         panel_node = Panel.new()
+        panel_node.focus_mode = Control.FOCUS_NONE
         add_child(panel_node)
     panel_node.size = AMOUNT_TO_PANEL_SIZE[min(4, contents.size())]
+    panel_node.position = -panel_node.size / 2
 
