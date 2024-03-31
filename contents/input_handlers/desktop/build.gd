@@ -109,8 +109,8 @@ func update_building_shadow() -> void:
 func update_build_plan() -> void:
     var ui = GameUI.instance.build_ui
     var removes: Array[BuildPlan] = []
+    controller.build_paused = ui.build_paused
     for plan in controller.build_plan:
-        plan.paused = ui.build_paused
         if not plan.check_passed: removes.append(plan)
         if plan.build_finished: removes.append(plan)
         if plan.building and plan.preview_name != "":
@@ -121,7 +121,7 @@ func update_build_plan() -> void:
         if not controller.build_plan.has(plan): continue
         if plan.preview_name != "":
             plan.world.get_temp_node(plan.preview_name).queue_free()
-        controller.build_plan.erase(plan)
+        controller.remove_build_plan(plan)
 
 func handle_drag(event: InputEventMouse, world_pos: Vector2) -> void:
     var ui = GameUI.instance.build_ui
@@ -273,9 +273,8 @@ func confirm_build() -> void:
         plan.rotation = shadow.rot
         plan.world = entity.world
         plan.building_config = shadow.building_config
-        plan.paused = ui.build_paused
         plan.preview_name = shadow.name
-        controller.build_plan.append(plan)
+        controller.add_build_plan(plan)
     building_buffer.clear()
     for entity_ref in break_buffer:
         var entity = Entity.get_entity_by_ref_or_null(entity_ref)
@@ -290,8 +289,7 @@ func confirm_build() -> void:
         plan.position = entity.tile_pos
         plan.breaking = true
         plan.preview_name = break_buffer[entity_ref].name
-        plan.paused = ui.build_paused
-        controller.build_plan.append(plan)
+        controller.add_build_plan(plan)
     break_buffer.clear()
 
 func _on_build_plan_operate(operation: String) -> void:
@@ -312,5 +310,4 @@ func continue_build(container: BuildingShadowContainer) -> void:
     plan.rotation = container.shadow.rot
     plan.world = container.entity.world
     plan.building_config = container.building_config
-    plan.paused = ui.build_paused
-    controller.build_plan.push_front(plan)
+    controller.add_build_plan(plan, true)

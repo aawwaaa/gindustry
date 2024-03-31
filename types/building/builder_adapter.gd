@@ -21,22 +21,19 @@ func get_effectity() -> float:
     return effectity_adapter.get_effectity() if effectity_adapter else 1
 
 func update_building(controller: Controller, _adapter: ControllerAdapter) -> void:
+    if controller._get_build_paused(): return
     var build_plan = controller._get_build_plan()
     for unit in units:
         unit.current_build_plan = null
-    var removes: Array[BuildPlan] = []
     for plan in build_plan:
-        build_plan_process(plan, removes)
-    for remove in removes:
-        build_plan.erase(remove)
+        build_plan_process(plan)
 
 func _process(delta: float) -> void:
     for unit in units:
         unit.process(delta)
 
-func build_plan_process(plan: BuildPlan, removes: Array[BuildPlan]) -> void:
+func build_plan_process(plan: BuildPlan) -> void:
     plan.building = false
-    if plan.paused: return
     if not plan.check_passed:
         return
     if plan.world_id != entity_node.world.world_id: return

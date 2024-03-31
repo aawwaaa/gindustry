@@ -6,6 +6,19 @@ var position: int = 0;
 
 func _init(arr: PackedByteArray): self.array = arr;
 
+func clear() -> void:
+    array = PackedByteArray()
+    position = 0
+
+func submit() -> PackedByteArray:
+    var data = array.slice(0, position)
+    clear()
+    return data
+
+func load(data: PackedByteArray) -> void:
+    array = data
+    position = 0
+
 func seek(data_len: int) -> void: position += data_len;
 
 func get_n(len: int = 1) -> int:
@@ -79,6 +92,5 @@ func store_double(value: float) -> void:
 func store_var(value: Variant, full: bool = false) -> void:
     var buffer = var_to_bytes_with_objects(value) if full else var_to_bytes(value)
     store_64(buffer.size())
-    append_at_position(buffer.size())
     array.append_array(buffer)
     position += buffer.size()

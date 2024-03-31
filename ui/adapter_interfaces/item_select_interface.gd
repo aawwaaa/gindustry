@@ -1,42 +1,42 @@
-class_name ContentSelectInterface
+class_name ItemSelectInterface
 extends AdapterInterface
 
-static var slot_scene = load("res://ui/adapter_interfaces/ui_content_select_slot.tscn")
+static var slot_scene = load("res://ui/adapter_interfaces/ui_item_select_slot.tscn")
 
 @onready var blacklist_toggle: HBoxContainer = %BlacklistToggle
 @onready var blacklist_enabled: CheckButton = %BlacklistEnabled
 @onready var slots_container: HFlowContainer = %Slots
 
 var slots: Array[UIContentSelectSlot] = []
-var content_select: ContentSelectAdapter:
-    get: return adapter as ContentSelectAdapter
+var item_select: ItemSelectAdapter:
+    get: return adapter as ItemSelectAdapter
 
 func _ready() -> void:
     super._ready()
     load_slots()
 
 func _set_adapter(v: EntityAdapter, old: EntityAdapter) -> void:
-    Utils.signal_dynamic_connect(v, old, &"content_slot_changed", _on_content_slot_changed)
+    Utils.signal_dynamic_connect(v, old, &"item_slot_changed", _on_item_slot_changed)
     Utils.signal_dynamic_connect(v, old, &"blacklist_changed", _on_blacklist_changed)
     if interface_ready: load_slots()
 
 func load_slots() -> void:
-    blacklist_toggle.visible = content_select.allow_blacklist if content_select else false
-    blacklist_enabled.set_pressed_no_signal(content_select.blacklist if content_select else false)
+    blacklist_toggle.visible = item_select.allow_blacklist if item_select else false
+    blacklist_enabled.set_pressed_no_signal(item_select.blacklist if item_select else false)
     slots = []
     for child in slots_container.get_children():
         child.queue_free()
-    if not content_select:
+    if not item_select:
         return
-    for index in content_select.slot_size:
-        var slot = slot_scene.instantiate() as UIContentSelectSlot
+    for index in item_select.slot_size:
+        var slot = slot_scene.instantiate() as UIItemSelectSlot
         slots_container.add_child(slot)
         slot.slot = index
-        slot.update_data(content_select.slots[index])
+        slot.update_data(item_select.slots[index])
         slot.pressed.connect(_on_slot_pressed)
         slots.append(slot)
 
-func _on_content_slot_changed(index: int, slot: ContentSelectAdapter.ContentSelectSlot) -> void:
+func _on_item_slot_changed(index: int, slot: ContentSelectAdapter.ContentSelectSlot) -> void:
     slots[index].update_data(slot)
 
 func _on_blacklist_changed(blacklist: bool) -> void:
@@ -51,10 +51,10 @@ func _on_slot_pressed(index: int) -> void:
         if inventory.is_slot_has_item(inventory.hand_slot):
             operate_adapter("set_slot_from_hand", [index])
             return
-    var slot = content_select.slots[index]
-    var result = await GameUI.instance.content_selector.select_content( \
-            slot.content, slot.amount, content_select.get_allow_float_amount(), \
-            content_select.filte_content_type)
+    var slot = item_select.slots[index]
+    var result = await GameUI.instance.item_selector.select_content( \
+            slot.item_type if item_select.is_slot_has_item(index) else null, 1, false, \
+            item_select.filte_content_type)
     if not result: return
-    operate_adapter("set_slot", [index, result.content, result.amount])
+    operate_adapter("set_slot", [index, result.content])
 

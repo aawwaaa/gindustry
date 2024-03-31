@@ -1,12 +1,28 @@
-[gd_scene load_steps=3 format=3 uid="uid://b54dpcwt3oi7g"]
+[gd_scene load_steps=4 format=3 uid="uid://b54dpcwt3oi7g"]
 
 [ext_resource type="PackedScene" uid="uid://tla3ex7l1nes" path="res://ui/player_inventory/inventory_panel.tscn" id="1_dlae4"]
 [ext_resource type="PackedScene" uid="uid://dryn40fc3rcmj" path="res://ui/adapter_interfaces/content_select_interface.tscn" id="2_wkg3w"]
+[ext_resource type="PackedScene" uid="uid://2eelfclmevqn" path="res://ui/adapter_interfaces/item_select_interface.tscn" id="3_simp6"]
 
 [node name="InventoryPanel" node_paths=PackedStringArray("interfaces") instance=ExtResource("1_dlae4")]
-interfaces = [NodePath("ContentSelectInterface")]
+interfaces = [NodePath("VBoxContainer/ContentSelectInterface")]
 
-[node name="ContentSelectInterface" parent="." index="0" instance=ExtResource("2_wkg3w")]
+[node name="VBoxContainer" type="VBoxContainer" parent="." index="0"]
+layout_mode = 2
+
+[node name="Content" type="Label" parent="VBoxContainer" index="0"]
+layout_mode = 2
+text = "Content"
+
+[node name="ContentSelectInterface" parent="VBoxContainer" index="1" instance=ExtResource("2_wkg3w")]
 layout_mode = 2
 size_flags_horizontal = 3
 adapter_name = "select"
+
+[node name="Item" type="Label" parent="VBoxContainer" index="2"]
+layout_mode = 2
+text = "Item"
+
+[node name="ItemSelectInterface" parent="VBoxContainer" index="3" instance=ExtResource("3_simp6")]
+layout_mode = 2
+adapter_name = "iselect "

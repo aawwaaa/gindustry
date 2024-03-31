@@ -17,6 +17,11 @@ enum States{
     GAME,
 }
 
+class Temp extends RefCounted:
+    var bas: ByteArrayStream = ByteArrayStream.new([])
+
+var temp: Temp = Temp.new()
+
 var main: MainNode
 var game_ui_input_handler: Control
 var state: StateMachine

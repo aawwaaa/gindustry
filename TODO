@@ -180,9 +180,9 @@
     [ ] Inventory适配
     [ ] ContentSelectAdapter
     [ ] ItemSelectAdapter
-[ ] * BuildPlan序列化:
-    [ ] add_build_plan(plan)
-    [ ] remove_build_plan(pos)
+[X] * BuildPlan序列化:
+    [X] add_build_plan(plan)
+    [X] remove_build_plan(pos)
 [ ] BuildingType.default_building_category()
 [ ] FloorShape
     [ ] RectFloorShape

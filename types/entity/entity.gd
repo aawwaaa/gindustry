@@ -25,6 +25,7 @@ var entity_type: EntityType;
     - builder(BuilderAdapter-建造)
 """
 @export var adapters: Dictionary = {}
+@export var adapters_array: Array[EntityAdapter] = []
 
 @export var child_entities_main_node: Array[Node2D];
 
@@ -139,6 +140,11 @@ func _on_world_layer_changed(new_layer: int, from: int) -> void:
     set_layer(layer)
 
 func has_adapter(adapter: String) -> bool:
+    if adapters_array.size() != 0:
+        for node in adapters_array:
+            adapters[node.adapter_name] = node
+        adapters_array = []
+
     return adapters.has(adapter)
 
 func get_adapter(adapter: String) -> Node:

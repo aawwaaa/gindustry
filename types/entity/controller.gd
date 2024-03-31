@@ -110,6 +110,9 @@ func _get_name() -> String:
 func _get_build_plan() -> Array[BuildPlan]:
     return []
 
+func _get_build_paused() -> bool:
+    return false
+
 const current_data_version = 0;
 
 func load_data(stream: Stream) -> void:

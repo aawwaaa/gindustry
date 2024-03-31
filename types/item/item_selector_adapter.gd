@@ -1,61 +1,47 @@
-class_name ContentSelectAdapter
+class_name ItemSelectAdapter
 extends EntityAdapter
 
-signal content_slot_changed(index: int, slot: ContentSelectSlot)
+signal item_slot_changed(index: int, slot: Item)
 signal blacklist_changed(enabled: bool)
-
-class ContentSelectSlot extends RefCounted:
-    var content: Content
-    var amount: float
-
-    func load_data(stream: Stream) -> void:
-        content = Contents.get_content_by_index(stream.get_64())
-        amount = stream.get_double()
-
-    func save_data(stream: Stream) -> void:
-        stream.store_64(content.index if content else 0)
-        stream.store_double(amount)
 
 @export var slot_size: int = 4
 @export var allow_blacklist: bool = false
-@export var allow_float_amount: bool = false
-var slots: Array[ContentSelectSlot] = []
+var slots: Array[Item] = []
 var blacklist: bool = false
 
 func init_slots(size: int) -> void:
     slots.resize(size)
-    for index in size:
-        if slots[index] == null:
-            slots[index] = ContentSelectSlot.new()
 
 func _ready() -> void:
     if slots.size() != slot_size: init_slots(slot_size)
 
 func _handle_operation(operation: String, args: Array = []) -> void:
     match operation:
-        "set_slot": set_slot(args[0], args[1], args[2])
+        "set_slot": set_slot(args[0], args[1])
         "set_blacklist": set_blacklist(args[0])
         _: super._handle_operation(operation, args)
 
 func _handle_remote_operation(source: Entity, operation: String, args: Array = []) -> void:
     match operation:
-        "set_slot": set_slot(args[0], args[1], args[2])
+        "set_slot": set_slot(args[0], args[1])
         "set_blacklist": set_blacklist(args[0])
         "set_slot_from_hand": set_slot_from_hand(args[0], source)
         _: super._handle_remote_operation(source, operation, args)
 
-func set_slot(index: int, content: Content, amount: float) -> void:
+func set_slot(index: int, type: ItemType, item: Item = null) -> void:
     if slot_size <= index or index < 0: return
-    if content and not filte_content_type(content.get_content_type()): return
-    slots[index].content = content
-    slots[index].amount = amount
-    content_slot_changed.emit(index, slots[index])
+    slots[index] = item if item else type.create_item() if type else null
+    if slots[index]: slots[index].amount = 1
+    item_slot_changed.emit(index, slots[index])
 
 func set_slot_from_hand(index: int, entity: Entity) -> void:
     if not entity.has_adapter("inventory"): return
     var inventory = entity.get_adapter("inventory") as Inventory
     var hand = inventory.get_slot(inventory.hand_slot)
-    set_slot(index, hand.item_type if hand else null, hand.amount if hand else 0)
+    set_slot(index, hand.item_type, hand.copy_type())
+
+func is_slot_has_item(slot: int) -> bool:
+    return slots[slot] != null and not slots[slot].is_empty()
 
 func set_blacklist(enable: bool) -> void:
     if not allow_blacklist: return
@@ -63,27 +49,27 @@ func set_blacklist(enable: bool) -> void:
     blacklist_changed.emit(enable)
 
 func has_content(content: Content, found = not blacklist) -> bool:
-    for slot in slots:
-        if slot.content == content: return found
+    for slot in slot_size:
+        if not is_slot_has_item(slot):
+            if content == null: return found
+            continue
+        if slots[slot].item_type == content: return found
     return not found
 
 func get_amount(content: Content) -> float:
-    var amount = 0
-    for slot in slots:
-        if slot.content == content: amount += slot.amount
-    return amount
+    return 0
 
 func get_amount_int(content: Content) -> int:
     return round(get_amount(content))
 
 func filte_content_type(content_type: ContentType) -> bool:
-    return true
+    return content_type == ItemType.ITEM_TYPE
 
 func get_allow_float_amount() -> bool:
-    return allow_float_amount
+    return false
 
 func format_amount(amount: float) -> float:
-    return amount if get_allow_float_amount() else roundf(amount)
+    return 1
 
 func _should_save_data() -> bool:
     return true
@@ -94,7 +80,8 @@ func _load_data(stream: Stream) -> void:
         slot_size = stream.get_32()
         init_slots(slot_size)
         for index in slot_size:
-            slots[index].load_data(stream)
+            if not stream.get_8(): continue
+            slots[index] = Item.load_from(stream)
     ])
 
 func _save_data(stream: Stream) -> void:
@@ -102,5 +89,9 @@ func _save_data(stream: Stream) -> void:
         stream.store_8(1 if blacklist else 0)
         stream.store_32(slot_size)
         for index in slot_size:
-            slots[index].save_data(stream)
+            if not slots[index]:
+                stream.store_8(0)
+                continue
+            stream.store_8(1)
+            slots[index].save_to(stream)
     ])
