@@ -176,7 +176,7 @@
 [X] 丢物品进建筑(建筑操作[位置, 物品, 类型])
 [ ] configuring
 [ ] alt显示
-[ ] ContentDisplayGroup
+[ ] * ContentDisplayGroup
     [ ] Inventory适配
     [ ] ContentSelectAdapter
     [ ] ItemSelectAdapter
@@ -196,7 +196,7 @@
     [X] rpc_sync_serialize
 [X] * 实体collision
 [ ] ConveyorModule.get_display_texture() - 传送带桥
-[ ] ContentSelector
+[X] ContentSelector
     [X] ContentSelectorPanel
         [X] ItemTypeSelectorPanel
         [.] LiquidSelectorPanel
@@ -205,7 +205,7 @@
         [X] FloorSelectorPanel
         [X] OverlaySelectorPanel
         [X] RecipeSelectorPanel
-    [ ] ItemSelector extends Inventory
+    [X] ItemSelector
     [X] ContentSelector
 [ ] TileOre[WithData]
 	[ ] TileOreType

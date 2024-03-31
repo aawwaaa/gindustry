@@ -102,6 +102,7 @@ func _get_tracks() -> Array[EntityNode_Conveyor_ConveyorTrack]:
 
 func _ready() -> void:
     super._ready()
+    await get_tree().process_frame
     update_ports()
 
 func _process_update(delta: float) -> void:

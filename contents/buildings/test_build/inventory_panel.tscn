@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://2eelfclmevqn" path="res://ui/adapter_interfaces/item_select_interface.tscn" id="3_simp6"]
 
 [node name="InventoryPanel" node_paths=PackedStringArray("interfaces") instance=ExtResource("1_dlae4")]
-interfaces = [NodePath("VBoxContainer/ContentSelectInterface")]
+interfaces = [NodePath("VBoxContainer/ContentSelectInterface"), NodePath("VBoxContainer/ItemSelectInterface")]
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." index="0"]
 layout_mode = 2
@@ -25,4 +25,4 @@ text = "Item"
 
 [node name="ItemSelectInterface" parent="VBoxContainer" index="3" instance=ExtResource("3_simp6")]
 layout_mode = 2
-adapter_name = "iselect "
+adapter_name = "iselect"

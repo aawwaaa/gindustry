@@ -23,6 +23,7 @@ func _ready() -> void:
     super._ready()
     track.left_track.rotation_offset = -rotation
     track.right_track.rotation_offset = -rotation
+    await get_tree().process_frame
     update_ports()
 
 func _draw() -> void:

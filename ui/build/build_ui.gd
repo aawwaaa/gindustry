@@ -46,18 +46,18 @@ func show_category(category: BuildingCategory) -> void:
     var sorted = Content.sort_content_list(category.building_types)
 
     for building_type in sorted:
-        var node = Control.new()
-        node.custom_minimum_size = Vector2(48, 48)
+#         var node = Control.new()
+#         node.custom_minimum_size = Vector2(48, 48)
         var button = Button.new();
         button.icon = building_type.icon;
         button.button_group = building_button_group;
-        button.scale = node.custom_minimum_size / button.icon.get_size();
+#         button.scale = node.custom_minimum_size / button.icon.get_size();
         button.focus_mode = Control.FOCUS_NONE
         button.toggle_mode = true
         if selected_building_type == building_type: button.button_pressed = true
         button.toggled.connect(set_selected_building_type.bind(building_type))
-        node.add_child(button)
-        %BuildingTypes.add_child(node);
+#         node.add_child(button)
+        %BuildingTypes.add_child(button);
 
 func set_selected_building_type(toggled: bool, building_type: BuildingType) -> void:
     if not toggled:
