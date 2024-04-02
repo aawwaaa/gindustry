@@ -139,14 +139,14 @@ func _on_confirm_pressed() -> void:
     hide()
 
 func _on_cancel_pressed() -> void:
-    current_content = old_content
+    set_current_content(old_content)
     current_amount = old_amount
     submit.emit(old_content, old_amount)
     hide()
 
 func _on_clear_pressed() -> void:
-    submit.emit(null, 0)
-    hide()
+    set_current_content(null)
+    current_amount = 0
 
 func _on_instance_selected_changed(selected: Content) -> void:
     set_current_content(selected)

@@ -16,6 +16,9 @@ class ContentSelectSlot extends RefCounted:
         stream.store_64(content.index if content else 0)
         stream.store_double(amount)
 
+    static func get_content(slot: ContentSelectSlot) -> Content:
+        return slot.content if slot.amount != 0 else null
+
 @export var slot_size: int = 4
 @export var allow_blacklist: bool = false
 @export var allow_float_amount: bool = false
@@ -50,6 +53,7 @@ func update_display_group() -> void:
     if not content_display_group: return
     if content_display_group.datas != slots:
         content_display_group.datas = slots
+        content_display_group.content_getter = ContentSelectSlot.get_content
     content_display_group.update()
 
 func set_slot(index: int, content: Content, amount: float) -> void:

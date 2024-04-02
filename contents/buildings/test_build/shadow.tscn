@@ -8,6 +8,9 @@
 size = Vector2(28, 28)
 
 [node name="Shadow" instance=ExtResource("1_qfp2g")]
+sub_nodes = {
+"group": NodePath("ContentDisplayGroup")
+}
 
 [node name="Marker2D" type="Marker2D" parent="Floors" index="0"]
 

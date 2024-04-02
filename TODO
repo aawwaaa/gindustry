@@ -177,10 +177,10 @@
 [X] 丢物品进建筑(建筑操作[位置, 物品, 类型])
 [ ] configuring
 [ ] alt显示
-[ ] * ContentDisplayGroup
+[X] * ContentDisplayGroup
     [X] Inventory适配
-    [ ] ContentSelectAdapter
-    [ ] ItemSelectAdapter
+    [X] ContentSelectAdapter
+    [X] ItemSelectAdapter
 [ ] ContentSelectAdapter.ContentSelectConfig
 [ ] ItemSelectAdapter.ItemSelectConfig
 [ ] BuildingShadow building_config preview
