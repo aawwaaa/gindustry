@@ -1,3 +1,3 @@
 extends BuildingShadow
 
-@export var item_icons: Node2D
+@export var display_group: ContentDisplayGroup

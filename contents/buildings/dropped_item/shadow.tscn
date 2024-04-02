@@ -1,15 +1,16 @@
-[gd_scene load_steps=5 format=3 uid="uid://q3fnbrvk20t0"]
+[gd_scene load_steps=6 format=3 uid="uid://q3fnbrvk20t0"]
 
 [ext_resource type="PackedScene" uid="uid://dowx2nq7aicx4" path="res://types/building/building_shadow.tscn" id="1_d06qi"]
 [ext_resource type="Script" path="res://contents/buildings/dropped_item/shadow.gd" id="2_8lobw"]
 [ext_resource type="Texture2D" uid="uid://crwk21yk35jph" path="res://assets/buildings/dropped-item.png" id="2_ib2ma"]
+[ext_resource type="Script" path="res://types/content/content_display_group.gd" id="4_4lavw"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3upml"]
 size = Vector2(28, 28)
 
-[node name="Shadow" node_paths=PackedStringArray("item_icons") instance=ExtResource("1_d06qi")]
+[node name="Shadow" node_paths=PackedStringArray("display_group") instance=ExtResource("1_d06qi")]
 script = ExtResource("2_8lobw")
-item_icons = NodePath("ItemIcons")
+display_group = NodePath("ContentDisplayGroup")
 
 [node name="Marker2D" type="Marker2D" parent="Floors" index="0"]
 
@@ -43,18 +44,5 @@ polygon = PackedVector2Array(14, 14, 0, 14, 14, 0)
 [node name="Sprite2D" parent="." index="4"]
 texture = ExtResource("2_ib2ma")
 
-[node name="ItemIcons" type="Node2D" parent="." index="5"]
-visible = false
-scale = Vector2(0.4, 0.4)
-
-[node name="Marker2D" type="Marker2D" parent="ItemIcons" index="0"]
-position = Vector2(-15, -15)
-
-[node name="Marker2D2" type="Marker2D" parent="ItemIcons" index="1"]
-position = Vector2(15, -15)
-
-[node name="Marker2D3" type="Marker2D" parent="ItemIcons" index="2"]
-position = Vector2(-15, 15)
-
-[node name="Marker2D4" type="Marker2D" parent="ItemIcons" index="3"]
-position = Vector2(15, 15)
+[node name="ContentDisplayGroup" type="Node2D" parent="." index="5"]
+script = ExtResource("4_4lavw")

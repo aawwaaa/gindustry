@@ -21,7 +21,6 @@ func _set_adapter(v: EntityAdapter, old: EntityAdapter) -> void:
     if interface_ready: load_slots()
 
 func load_slots() -> void:
-    print("load")
     blacklist_toggle.visible = item_select.allow_blacklist if item_select else false
     blacklist_enabled.set_pressed_no_signal(item_select.blacklist if item_select else false)
     slots = []

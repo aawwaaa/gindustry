@@ -69,7 +69,7 @@ func update() -> void:
 func update_panel() -> void:
     if not panel_node:
         panel_node = Panel.new()
-        panel_node.focus_mode = Control.FOCUS_NONE
+        panel_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
         add_child(panel_node)
     panel_node.size = AMOUNT_TO_PANEL_SIZE[min(4, contents.size())]
     panel_node.position = -panel_node.size / 2

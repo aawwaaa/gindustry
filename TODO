@@ -19,6 +19,7 @@
 	[ ] 新游戏
 	[X] 加载游戏
 	[ ] 重新生成密钥
+    [ ] 标准化log输出
 
 -- 建造系统(直接放置/需要建造) --
 [X] 玩家控制器跟据配置自动生成
@@ -180,6 +181,12 @@
     [X] Inventory适配
     [ ] ContentSelectAdapter
     [ ] ItemSelectAdapter
+[ ] BuildingShadow building_config preview
+    [ ] ContentDisplayGroup: Building -> BuildingShadow
+    [ ] Script设置
+[ ] EntityAdapter.main_adapter
+    [ ] EntityAdapter._handle_adapter_operation(source: EntityAdapter, op: String, args)
+    [ ] request_adapter_operation(target: String, op: String, args)
 [X] * BuildPlan序列化:
     [X] add_build_plan(plan)
     [X] remove_build_plan(pos)

@@ -52,7 +52,6 @@ func _ready() -> void:
 func set_paused(v: bool) -> void:
     if not MultiplayerServer.is_peer_admin(multiplayer.get_remote_sender_id()):
         return
-    print(v)
     paused = v
     get_tree().paused = v
 
