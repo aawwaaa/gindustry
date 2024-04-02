@@ -1,4 +1,4 @@
-class_name InventoryPanelAdapter
+class_name UIPanelAdapter
 extends EntityAdapter
 
 @export var panel_scene: PackedScene;

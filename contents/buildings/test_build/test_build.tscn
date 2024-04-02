@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://contents/buildings/test_build/test_build.gd" id="1_24k4r"]
 [ext_resource type="Script" path="res://types/building/building.gd" id="2_okqvj"]
-[ext_resource type="Script" path="res://types/entity/inventory_panel_adapter.gd" id="4_qtbpa"]
+[ext_resource type="Script" path="res://types/entity/ui_panel_adapter.gd" id="4_qtbpa"]
 [ext_resource type="PackedScene" uid="uid://b54dpcwt3oi7g" path="res://contents/buildings/test_build/inventory_panel.tscn" id="4_sra8l"]
 [ext_resource type="Script" path="res://types/content/content_select_adapter.gd" id="5_vx7an"]
 [ext_resource type="Script" path="res://types/item/item_selector_adapter.gd" id="6_cwe78"]
@@ -17,13 +17,13 @@ shadow_container = NodePath("..")
 main_node = NodePath("..")
 adapters = {
 "iselect": NodePath("../ItemSelectAdapter"),
-"panel": NodePath("../InventoryPanelAdapter"),
+"panel": NodePath("../UIPanelAdapter"),
 "select": NodePath("../ContentSelectAdapter")
 }
 layer_follow_world = true
 layer = 1
 
-[node name="InventoryPanelAdapter" type="Node" parent="." node_paths=PackedStringArray("main_node", "entity_node")]
+[node name="UIPanelAdapter" type="Node" parent="." node_paths=PackedStringArray("main_node", "entity_node")]
 script = ExtResource("4_qtbpa")
 panel_scene = ExtResource("4_sra8l")
 main_node = NodePath("..")

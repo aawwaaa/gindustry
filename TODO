@@ -172,7 +172,11 @@
 		etc.
 [X] Controller直接调用Adapter
 
-[ ] 当前选择的建筑/物品显示
+[ ] * 当前选择的建筑/物品显示
+    [ ] BuildingTypePanel(建筑被选择)
+    [ ] EntityPanel(interacting entity)
+    [ ] 集成至BuildUI
+[ ] 互动范围 bug修复
 [X] 建筑点击ui(call InputHandler)
 [X] 丢物品进建筑(建筑操作[位置, 物品, 类型])
 [ ] configuring

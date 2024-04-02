@@ -3,9 +3,9 @@ extends AdapterInterface
 
 static var slot_scene = load("res://ui/adapter_interfaces/ui_content_select_slot.tscn")
 
-@onready var blacklist_toggle: HBoxContainer = %BlacklistToggle
-@onready var blacklist_enabled: CheckButton = %BlacklistEnabled
-@onready var slots_container: HFlowContainer = %Slots
+var blacklist_toggle: HBoxContainer
+var blacklist_enabled: CheckButton
+var slots_container: HFlowContainer
 
 var slots: Array[UIContentSelectSlot] = []
 var content_select: ContentSelectAdapter:
@@ -13,7 +13,29 @@ var content_select: ContentSelectAdapter:
 
 func _ready() -> void:
     super._ready()
+    create_nodes()
     load_slots()
+
+func create_nodes() -> void:
+    blacklist_toggle = HBoxContainer.new()
+    blacklist_toggle.size_flags_horizontal = Control.SIZE_FILL
+    add_child(blacklist_toggle)
+
+    var whitelist_label = Label.new()
+    whitelist_label.text = tr("ContentSelectInterface_Whitelist")
+    blacklist_toggle.add_child(whitelist_label)
+
+    blacklist_enabled = CheckButton.new()
+    blacklist_enabled.focus_mode = Control.FOCUS_NONE
+    blacklist_toggle.add_child(blacklist_enabled)
+
+    var blacklist_label = Label.new()
+    blacklist_label.text = tr("ContentSelectInterface_Blacklist")
+    blacklist_toggle.add_child(blacklist_label)
+
+    slots_container = HFlowContainer.new()
+    slots_container.size_flags_horizontal = Control.SIZE_FILL
+    add_child(slots_container)
 
 func _set_adapter(v: EntityAdapter, old: EntityAdapter) -> void:
     Utils.signal_dynamic_connect(v, old, &"content_slot_changed", _on_content_slot_changed)

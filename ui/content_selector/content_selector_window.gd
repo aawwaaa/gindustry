@@ -27,6 +27,9 @@ var current_allow_float: bool = false
 var in_use: bool = false
 var hide_by_ui: bool = false
 
+func _ready() -> void:
+    handle_input_locally = true
+
 func _on_game_ui_contents_loaded() -> void:
     var types = Types.get_types(ContentType.TYPE).values().duplicate() as Array[ContentType]
     types.sort_custom(func(a, b): return a.order < b.order)
