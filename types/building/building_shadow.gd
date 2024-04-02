@@ -26,6 +26,8 @@ var marks_poses: Dictionary = {}
 var component_nodes: Dictionary = {}
 var pos_to_component: Dictionary = {}
 
+@export var sub_nodes: Dictionary = {}
+
 var world: World
 var pos: Vector2i;
 var rot: int:
@@ -65,6 +67,9 @@ func _check_build(check_pre_confirm: bool = false) -> bool:
             if tile.pre_confirm_building_name != "" \
                     and tile.pre_confirm_building_name != name: return false
     return true
+
+func get_sub_node(name: String) -> Node:
+    return get_node(sub_nodes[name])
 
 func check_build(check_pre_confirm: bool = false) -> bool:
     return _check_build(check_pre_confirm)

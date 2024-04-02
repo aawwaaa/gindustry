@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://ckwsni6u72tql"]
+[gd_scene load_steps=5 format=3 uid="uid://ckwsni6u72tql"]
 
 [ext_resource type="PackedScene" uid="uid://dowx2nq7aicx4" path="res://types/building/building_shadow.tscn" id="1_qfp2g"]
 [ext_resource type="Texture2D" uid="uid://dli78jr06n7so" path="res://assets/break_flag.png" id="2_uqdbk"]
+[ext_resource type="Script" path="res://types/content/content_display_group.gd" id="3_cqvs8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u72ta"]
 size = Vector2(28, 28)
@@ -19,3 +20,6 @@ target_position = Vector2(0, 1)
 
 [node name="Sprite2D" parent="." index="4"]
 texture = ExtResource("2_uqdbk")
+
+[node name="ContentDisplayGroup" type="Node2D" parent="." index="5"]
+script = ExtResource("3_cqvs8")

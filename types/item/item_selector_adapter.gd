@@ -6,6 +6,9 @@ signal blacklist_changed(enabled: bool)
 
 @export var slot_size: int = 4
 @export var allow_blacklist: bool = false
+
+@export var content_display_group: ContentDisplayGroup
+
 var slots: Array[Item] = []
 var blacklist: bool = false
 
@@ -28,11 +31,19 @@ func _handle_remote_operation(source: Entity, operation: String, args: Array = [
         "set_slot_from_hand": set_slot_from_hand(args[0], source)
         _: super._handle_remote_operation(source, operation, args)
 
+func update_display_group() -> void:
+    if not content_display_group: return
+    if content_display_group.datas != slots:
+        content_display_group.content_getter = ItemType.get_content.bind(true)
+        content_display_group.datas = slots
+    content_display_group.update()
+
 func set_slot(index: int, type: ItemType, item: Item = null) -> void:
     if slot_size <= index or index < 0: return
     slots[index] = item if item else type.create_item() if type else null
     if slots[index]: slots[index].amount = 1
     item_slot_changed.emit(index, slots[index])
+    update_display_group()
 
 func set_slot_from_hand(index: int, entity: Entity) -> void:
     if not entity.has_adapter("inventory"): return

@@ -22,6 +22,8 @@ class ContentSelectSlot extends RefCounted:
 var slots: Array[ContentSelectSlot] = []
 var blacklist: bool = false
 
+@export var content_display_group: ContentDisplayGroup
+
 func init_slots(size: int) -> void:
     slots.resize(size)
     for index in size:
@@ -44,12 +46,19 @@ func _handle_remote_operation(source: Entity, operation: String, args: Array = [
         "set_slot_from_hand": set_slot_from_hand(args[0], source)
         _: super._handle_remote_operation(source, operation, args)
 
+func update_display_group() -> void:
+    if not content_display_group: return
+    if content_display_group.datas != slots:
+        content_display_group.datas = slots
+    content_display_group.update()
+
 func set_slot(index: int, content: Content, amount: float) -> void:
     if slot_size <= index or index < 0: return
     if content and not filte_content_type(content.get_content_type()): return
     slots[index].content = content
     slots[index].amount = amount
     content_slot_changed.emit(index, slots[index])
+    update_display_group()
 
 func set_slot_from_hand(index: int, entity: Entity) -> void:
     if not entity.has_adapter("inventory"): return

@@ -181,6 +181,8 @@
     [X] Inventory适配
     [ ] ContentSelectAdapter
     [ ] ItemSelectAdapter
+[ ] ContentSelectAdapter.ContentSelectConfig
+[ ] ItemSelectAdapter.ItemSelectConfig
 [ ] BuildingShadow building_config preview
     [ ] ContentDisplayGroup: Building -> BuildingShadow
     [ ] Script设置
