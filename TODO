@@ -193,6 +193,7 @@
 [ ] EntityAdapter.main_adapter
     [ ] EntityAdapter._handle_adapter_operation(source: EntityAdapter, op: String, args)
     [ ] request_adapter_operation(target: String, op: String, args)
+[ ] 直接互动Adapter(adapter.interactable)
 [X] * BuildPlan序列化:
     [X] add_build_plan(plan)
     [X] remove_build_plan(pos)
