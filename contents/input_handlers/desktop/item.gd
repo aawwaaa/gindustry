@@ -27,7 +27,7 @@ func handle_input_event(event: InputEvent, unhandled: bool = false) -> void:
     update_item_use()
     var inventory = entity.get_adapter("inventory")
     var item = inventory.get_slot(inventory.hand_slot)
-    if unhandled:
+    if unhandled and enabled:
         if item and Input.is_action_just_pressed("drop_an_item"): confirm_drop_item("one", world_position)
         elif item and Input.is_action_just_pressed("drop_half_item"): confirm_drop_item("half", world_position)
         elif item and Input.is_action_just_pressed("drop_all_item"): confirm_drop_item("all", world_position)

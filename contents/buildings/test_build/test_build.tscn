@@ -25,7 +25,7 @@ layer = 1
 
 [node name="UIPanelAdapter" type="Node" parent="." node_paths=PackedStringArray("main_node", "entity_node")]
 script = ExtResource("4_qtbpa")
-panel_scene = ExtResource("4_sra8l")
+inventory_panel_scene = ExtResource("4_sra8l")
 main_node = NodePath("..")
 entity_node = NodePath("../Building")
 

@@ -32,7 +32,7 @@ entity_node = NodePath("../Building")
 
 [node name="UIPanelAdapter" type="Node" parent="." node_paths=PackedStringArray("main_node", "entity_node")]
 script = ExtResource("4_8barh")
-panel_scene = ExtResource("5_8pu5g")
+inventory_panel_scene = ExtResource("5_8pu5g")
 main_node = NodePath("..")
 entity_node = NodePath("../Building")
 

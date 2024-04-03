@@ -180,7 +180,7 @@
     [ ] InventoryInfoModule
     [ ] LiquidInfoModule
     [ ] PowerInfoModule
-[ ] 互动范围 bug修复
+[X] 互动范围 bug修复
 [X] builtin进mods
 [X] 建筑点击ui(call InputHandler)
 [X] 丢物品进建筑(建筑操作[位置, 物品, 类型])
@@ -286,6 +286,10 @@
 -- 世界盒(带子世界的火车, 飞船) --
 -- 高级工业(大型建筑, 多方块建筑) --
 -- 用于模组的扩展(有限多世界, 模板模组) --
+
+-- 杂bug --
+[ ] 建造虚影未清除
+[ ] 拆除时被其他window挡住报错(重复添加节点)
 
 -- 资产列表 --
 

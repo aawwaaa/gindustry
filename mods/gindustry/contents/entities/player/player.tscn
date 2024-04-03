@@ -39,6 +39,7 @@ script = ExtResource("1_0kf5p")
 entity = NodePath("Entity")
 
 [node name="AccessRange" type="Area2D" parent="."]
+monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AccessRange"]
 shape = SubResource("CircleShape2D_jktfm")

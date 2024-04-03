@@ -192,10 +192,18 @@ func _ready() -> void:
         for callback in entity_ref_targets[entity_id]:
             callback.call(self)
     entity_ref_targets[entity_id] = self
+    if access_range:
+        access_range.body_exited.connect(_on_access_range_body_exited)
+        access_range.area_exited.connect(_on_access_range_body_exited)
 
 func _on_access_range_body_exited(body: Node2D) -> void:
+    if not access_target: return
     if body == access_target:
         clear_access_target()
+        return
+    if Entity.get_entity_by_collision_object(body) == access_target.get_entity():
+        clear_access_target()
+        return
 
 func accept_access(_from: Node2D) -> bool:
     return true
