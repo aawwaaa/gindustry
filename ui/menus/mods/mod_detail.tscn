@@ -126,7 +126,6 @@ text = "Mods_ModDescription"
 [node name="MarginContainer" type="MarginContainer" parent="DescPanel/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 20
 
 [node name="ModDescription" type="Label" parent="DescPanel/VBoxContainer/MarginContainer"]
@@ -149,7 +148,6 @@ text = "Mods_ModDepends"
 [node name="MarginContainer" type="MarginContainer" parent="DependsPanel/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 20
 
 [node name="ModDepends" type="VBoxContainer" parent="DependsPanel/VBoxContainer/MarginContainer"]
@@ -169,7 +167,6 @@ text = "Mods_ModExcepts"
 [node name="MarginContainer" type="MarginContainer" parent="ExceptsPanel/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 20
 
 [node name="ModExcepts" type="VBoxContainer" parent="ExceptsPanel/VBoxContainer/MarginContainer"]

@@ -73,6 +73,13 @@ static func parse_info_dict(dict: Dictionary) -> ModInfo:
         info.display_version = dict["displayVersion"];
     if dict.has("depends"):
         info.depends = dict["depends"];
+        for id in info.depends.keys():
+            if info.depends[id].ends_with("+"):
+                info.depends[id] = [info.depends[id].trim_suffix("+")]
+                continue
+            var splited = info.depends[id].split("~")
+            info.depends[id] = [splited[0]] if splited.size() == 1 or splited[1] == "" \
+                    else [splited[0], splited[1]];
     if dict.has("excepts"):
         info.excepts = dict["excepts"];
     if dict.has("main"):

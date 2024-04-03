@@ -32,7 +32,9 @@ func handle_input_event(event: InputEvent, unhandled: bool = false) -> void:
         elif item and Input.is_action_just_pressed("drop_half_item"): confirm_drop_item("half", world_position)
         elif item and Input.is_action_just_pressed("drop_all_item"): confirm_drop_item("all", world_position)
         elif item_use and Input.is_action_just_pressed("confirm_item_use"): confirm_item_use()
-        elif Input.is_action_just_pressed("open_panel") and handler.get_interacting_target() in handler.interacting_entities:
+        elif Input.is_action_just_pressed("open_panel") \
+                and (handler.get_interacting_target() in handler.interacting_entities \
+                        or handler.get_interacting_target() in handler.interacting_adapters) :
             handler.interact_operate("open_panel", [world_position])
         elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
             handler.interact_operate("clicked", [world_position])

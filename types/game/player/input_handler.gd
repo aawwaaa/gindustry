@@ -24,6 +24,7 @@ signal focused_entity_changed(entity: Entity, from: Entity)
 
 var input_processors: Dictionary = {}
 var interacting_entities: Array[Entity] = []
+var interacting_adapters: Array[EntityAdapter] = []
 
 var player: Player:
     get: return Game.current_player
@@ -60,7 +61,7 @@ func remove_interacting_entity(entity: Entity) -> void:
     interacting_entities.erase(entity)
     update_focused_entity(focused)
 
-func get_interacting_target() -> Entity:
+func get_interacting_target() -> Node:
     if interacting_entities.size() == 0: return null
     return interacting_entities.back()
 

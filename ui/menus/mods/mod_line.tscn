@@ -1,7 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://b8stbkykklnxu"]
+[gd_scene load_steps=4 format=3 uid="uid://b8stbkykklnxu"]
 
 [ext_resource type="Script" path="res://ui/menus/mods/mod_line.gd" id="1_p38qi"]
-[ext_resource type="Texture2D" uid="uid://b46gtdt64efsa" path="res://assets/ui/icons/right_arrow.tres" id="2_15lvr"]
+[ext_resource type="Texture2D" uid="uid://nc3ymgni02pa" path="res://assets/ui/icons.png" id="2_on257"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xe4ar"]
+atlas = ExtResource("2_on257")
+region = Rect2(8, 8, 16, 16)
 
 [node name="HBoxContainer" type="HBoxContainer"]
 offset_right = 1152.0
@@ -28,7 +32,7 @@ text = "ModVersion"
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 2
-icon = ExtResource("2_15lvr")
+icon = SubResource("AtlasTexture_xe4ar")
 
 [connection signal="pressed" from="Enabled" to="." method="_on_enabled_pressed"]
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

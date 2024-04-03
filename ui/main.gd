@@ -64,6 +64,7 @@ func start_load() -> void:
     Mods.search_mod_folder("res://mods/", false);
     Mods.search_mod_folder("user://mods/");
     Mods.load_enable_configs();
+    Builtin.load_builtin()
     
     var errors = Mods.check_errors();
     if errors.size() != 0:
@@ -72,14 +73,14 @@ func start_load() -> void:
             info.enabled = false;
         await get_tree().create_timer(3).timeout;
         progress.call(5);
+        Mods.display_order = Mods.mod_info_list.keys()
         %Windows/Mods.load_mod_list();
         return;
     
     Global.load_configs();
     %Windows/Settings.load_tabs()
 
-    var content_list = preload("res://contents/content_list.gd").new();
-    await content_list.start_load()
+    await Builtin.start_load()
     await Mods.load_mods();
     Saves.load_saves();
     

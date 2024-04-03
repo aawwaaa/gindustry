@@ -30,7 +30,7 @@ func _on_close_requested() -> void:
 func load_mod_list() -> void:
     for line in %ModLines.get_children():
         line.queue_free();
-    for mod in Mods.mod_info_list.keys():
+    for mod in Mods.display_order:
         var info = Mods.mod_info_list[mod];
         var line = ModLine.instantiate();
         line.mod_info = info;

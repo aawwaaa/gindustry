@@ -3,9 +3,19 @@ extends Node
 
 static var entity: Dictionary = {}
 static var building: Dictionary = {}
+static var builtin_mod_info: ModInfo = load("res://contents/builtin.tres")
 
-func start_load() -> void:
-    Contents.current_loading_mod = Mod.new(load("res://contents/builtin.tres"))
+static func load_builtin() -> void:
+    builtin_mod_info.enabled = true
+
+    Contents.current_loading_mod = Mod.new(builtin_mod_info)
+    
+    Mods.mod_info_list[builtin_mod_info.id] = builtin_mod_info
+    Mods.mod_inst_list[builtin_mod_info.id] = Contents.current_loading_mod
+
+static func start_load() -> void:
+    Contents.current_loading_mod = Mods.mod_inst_list[builtin_mod_info.id]
+
     InputHandler.register_input_handler("desktop", InputHandler.InputHandlerMeta.new({
         "input_handler": DesktopInputHandler,
         "tr_name": "InputHandler_desktop",
@@ -56,13 +66,13 @@ func start_load() -> void:
         "test_build/building.tres",
     ])
 
-func load_content(to: Dictionary, prefix: String, paths: Array[String]) -> void:
+static func load_content(to: Dictionary, prefix: String, paths: Array[String]) -> void:
     var results = await Utils.load_contents_async("res://contents/" + prefix, paths)
     for content in results:
         Contents.register_content(content)
         to[content.id] = content
 
-func load_type(prefix: String, paths: Array[String]) -> void:
+static func load_type(prefix: String, paths: Array[String]) -> void:
     var results = await Utils.load_contents_async("res://contents/" + prefix, paths)
     for type in results:
         Types.register_type(type)

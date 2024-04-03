@@ -181,10 +181,11 @@
     [ ] LiquidInfoModule
     [ ] PowerInfoModule
 [ ] 互动范围 bug修复
+[X] builtin进mods
 [X] 建筑点击ui(call InputHandler)
 [X] 丢物品进建筑(建筑操作[位置, 物品, 类型])
 [ ] configuring
-[ ] alt显示
+[ ] alt显示(visiblity layer)
 [X] * ContentDisplayGroup
     [X] Inventory适配
     [X] ContentSelectAdapter

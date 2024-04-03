@@ -157,10 +157,10 @@ func check_errors() -> Array:
     return errors;
 
 class __LoadListFinder:
-    var depends_queue;
-    var load_list;
+    var depends_queue: Dictionary;
+    var load_list: Array[String];
     
-    func get_slove(list: Array):
+    func get_slove(list: Array[ModInfo]) -> Array[String]:
         depends_queue = {};
         load_list = []
         for info in list:
@@ -171,12 +171,11 @@ class __LoadListFinder:
                     if not depends_queue.has(depend):
                         depends_queue[depend] = [];
                     depends_queue[depend].append(info);
-            if not depends_loaded:
-                return;
+            if not depends_loaded: continue
             append(info)
         return load_list;
     
-    func append(info: ModInfo):
+    func append(info: ModInfo) -> void:
         load_list.append(info.id);
         if depends_queue.has(info.id):
             for target_info in depends_queue[info.id]:
@@ -191,15 +190,26 @@ class __LoadListFinder:
 
 var __load_list_finder = __LoadListFinder.new();
 
+var display_order: Array[String];
+
 func load_mods() -> void:
-    var enabled_list = []
+    var enabled_list: Array[ModInfo] = []
+    var disabled_list: Array[ModInfo] = []
     for info in mod_info_list.values():
         if info.enabled:
             enabled_list.append(info)
+        else: disabled_list.append(info)
     var progress = Log.register_progress_source(100 * enabled_list.size())
     var load_list = __load_list_finder.get_slove(enabled_list);
+    display_order = load_list
+    disabled_list.sort_custom(func(a, b): return a.id < b.id);
+    for info in disabled_list:
+        display_order.append(info.id)
     for id in load_list:
         var info = mod_info_list[id];
+        if info.main == "":
+            progress.call(100)
+            continue
         logger.info(tr("Mods_Load_LoadResources {id} {name}") \
                 .format({id = info.id, name = info.name}));
         if info.file_path != "":

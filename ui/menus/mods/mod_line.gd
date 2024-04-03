@@ -17,3 +17,4 @@ func _ready() -> void:
     $ModName.text = mod_info.name;
     $ModVersion.text = mod_info.display_version;
     $Enabled.button_pressed = mod_info.enabled;
+    if mod_info.id == "builtin": $Enabled.disabled = true

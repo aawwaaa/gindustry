@@ -50,7 +50,7 @@ func handle_input_event_mouse(event: InputEventMouse, unhandled: bool = false) -
     if entity and unhandled: handle_drag(event, world_pos)
     var interacting = handler.get_interacting_target()
     if interacting and event is InputEventMouseButton and unhandled and event.pressed:
-        if interacting.main_node is BuildingShadowContainer:
+        if interacting is Entity and interacting.main_node is BuildingShadowContainer:
             handle_interact_with_building_shadow_container(event, interacting)
 
 func handle_interact_with_building_shadow_container(event: InputEventMouseButton, interacting: Entity) -> void:
