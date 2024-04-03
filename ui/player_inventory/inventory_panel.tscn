@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://ui/player_inventory/inventory_panel.gd" id="1_pd1gj"]
 
-[node name="InventoryPanel" type="ScrollContainer"]
+[node name="InventoryPanel" type="VBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

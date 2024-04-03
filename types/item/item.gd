@@ -127,6 +127,9 @@ func create_display() -> ItemDisplay:
     display.item = self
     return display
 
+func get_localized_name() -> String:
+    return item_type.get_localized_name()
+
 static func load_from(stream: Stream) -> Item:
     var data_item_type = Contents.get_content_by_index(stream.get_32()) as ItemType;
     var item = data_item_type.create_item();

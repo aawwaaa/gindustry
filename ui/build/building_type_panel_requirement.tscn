@@ -17,10 +17,20 @@ script = ExtResource("1_hwd77")
 enough_item_style = SubResource("LabelSettings_huuuj")
 missing_item_style = SubResource("LabelSettings_2gixk")
 
-[node name="ItemContainer" type="Control" parent="."]
-unique_name_in_owner = true
+[node name="Panel" type="Panel" parent="."]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
+
+[node name="ItemContainer" type="Control" parent="Panel"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Name" type="Label" parent="."]
 unique_name_in_owner = true

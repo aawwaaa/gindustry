@@ -1,6 +1,8 @@
 class_name PlayerInventory
 extends Window
 
+signal inventory_updated()
+
 @export var default_inventory_panel: PackedScene;
 var default_inventory_panel_inst: PlayerInventoryPanel;
 
@@ -21,13 +23,17 @@ func _on_input_handler_controller_target_entity_changed(entity: Entity, from: En
     Utils.signal_dynamic_connect(entity, from, "access_target_changed", \
             _on_controller_target_access_target_changed)
     %InventoryInterface.entity = entity
-    if entity and entity.has_adapter("inventory"):
-        %InventoryInterface.adapter = entity.get_adapter("inventory")
-    else:
-        %InventoryInterface.adapter = null
+    var adapter = entity.get_adapter("inventory") if entity else null
+    var old_adapter = %InventoryInterface.adapter
+    %InventoryInterface.adapter = adapter
     %InventoryInterface.load_inventory()
 
+    Utils.signal_dynamic_connect(adapter, old_adapter, "inventory_slot_changed", \
+            _on_inventory_inventory_slot_changed)
     default_inventory_panel_inst.entity = entity
+
+func _on_inventory_inventory_slot_changed(index: int, type_changed: bool) -> void:
+    inventory_updated.emit()
 
 func _input(event: InputEvent) -> void:
     if Input.is_action_just_pressed("open_inventory"):
@@ -53,11 +59,9 @@ func load_info(access_target: Entity) -> void:
             child.request_remote_operation.disconnect(_on_panel_request_remote_operation)
             continue
         child.queue_free()
-    if access_target == null or not access_target.has_adapter("panel"):
-        %Info.add_child(default_inventory_panel_inst)
-    else:
-        var panel = access_target.get_adapter("panel")
-        %Info.add_child(panel.create_panel())
+    var panel = UIPanelAdapter.create_inventory_panel_for(access_target) if access_target else null
+    if panel == null: panel = default_inventory_panel_inst
+    %Info.add_child(panel)
 
     for child in %Info.get_children():
         child.request_operation.connect(_on_panel_request_operation)

@@ -4,9 +4,9 @@
 [ext_resource type="Script" path="res://ui/adapter_interfaces/inventory_interface.gd" id="2_t85hd"]
 
 [node name="InventoryPanel" node_paths=PackedStringArray("interfaces") instance=ExtResource("1_xm7o0")]
-interfaces = [NodePath("UIInventoryInterface")]
+interfaces = [NodePath("InventoryInterface")]
 
-[node name="UIInventoryInterface" type="VBoxContainer" parent="." index="0"]
+[node name="InventoryInterface" type="VBoxContainer" parent="." index="0"]
 layout_mode = 2
 script = ExtResource("2_t85hd")
 adapter_name = "inventory"

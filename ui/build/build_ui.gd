@@ -8,8 +8,8 @@ signal build_paused_changed(paused: bool);
 signal selected_building_type_changed(building_type: BuildingType);
 signal build_plan_operate(operation: String);
 
-var pause_icon = load("res://assets/ui/icons/pause.tres")
-var resume_icon = load("res://assets/ui/icons/resume.tres")
+const pause_icon = preload("res://assets/ui/icons/pause.tres")
+const resume_icon = preload("res://assets/ui/icons/resume.tres")
 
 var building_button_group: ButtonGroup;
 var building_category_button_group: ButtonGroup;
@@ -25,6 +25,8 @@ var selected_building_type: BuildingType:
         selected_building_type = v
         selected_building_type_changed.emit(v)
         update_child_visible()
+        building_type_panel.apply_data(v)
+        entity_info_container.visible = v == null
 var has_build_plan: bool = false:
     set(v):
         has_build_plan = v
@@ -33,6 +35,9 @@ var has_schematic: bool = false:
     set(v):
         has_schematic = v
         update_child_visible()
+
+@onready var building_type_panel: BuildingTypePanel = %BuildingTypePanel
+@onready var entity_info_container: EntityInfoContainer = %EntityInfoContainer
 
 func _ready() -> void:
     building_button_group = ButtonGroup.new();

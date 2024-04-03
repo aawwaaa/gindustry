@@ -153,6 +153,12 @@ func get_adapter(adapter: String) -> Node:
 func get_collision_mask(begin: int, end: int) -> int:
     return get_collision_mask_static(absolute_layer(), begin, end)
 
+func get_icon() -> Texture2D:
+    return entity_type.get_icon()
+
+func get_localized_name() -> String:
+    return entity_type.get_localized_name()
+
 static func get_collision_mask_static(layer: int, begin: int, end: int) -> int:
     begin = clampi(begin + layer, 0, Global.MAX_LAYERS);
     end = clampi(end + layer, 0, Global.MAX_LAYERS);

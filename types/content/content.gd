@@ -31,6 +31,9 @@ func apply_mod(mod_inst: Mod) -> void:
 func get_tr_name() -> String:
     return Content.to_full_id(mod.mod_info.id, id)
 
+func get_localized_name() -> String:
+    return tr(get_tr_name())
+
 func _get_content_type() -> ContentType:
     return Types.get_type(ContentType.TYPE, "content")
 

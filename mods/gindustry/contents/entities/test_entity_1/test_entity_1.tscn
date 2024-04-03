@@ -13,6 +13,7 @@ size = Vector2(16, 16)
 
 [node name="TestEntity1" type="RigidBody2D" node_paths=PackedStringArray("entity")]
 z_as_relative = false
+input_pickable = true
 gravity_scale = 0.0
 linear_velocity = Vector2(0, 80)
 angular_velocity = 0.785398
@@ -35,4 +36,6 @@ layer_follow_world = true
 z_index_offset = 16
 layer = 1
 
+[connection signal="mouse_entered" from="." to="Entity" method="_on_collision_object_2d_mouse_entered"]
+[connection signal="mouse_exited" from="." to="Entity" method="_on_collision_object_2d_mouse_exited"]
 [connection signal="layer_changed" from="Entity" to="." method="_on_entity_layer_changed"]

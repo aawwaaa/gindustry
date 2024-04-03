@@ -20,7 +20,7 @@ func _load_contents() -> void:
         button.button_group = group
         button.focus_mode = Control.FOCUS_NONE
         button.tooltip_text = "{localized} ( {full_id} )".format({
-            localized = tr(content.get_tr_name()),
+            localized = content.get_localized_name(),
             full_id = content.full_id
         })
         button.toggled.connect(_on_button_toggled)

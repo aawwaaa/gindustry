@@ -1,5 +1,5 @@
 class_name InventoryPanel
-extends ScrollContainer
+extends VBoxContainer
 
 @export var interfaces: Array[AdapterInterface] = []
 
@@ -12,9 +12,11 @@ signal request_remote_operation(operation: String, args: Array[Variant])
 
 func set_entity(v: Entity) -> void:
     entity = v
+
+func load_panel() -> void:
     for interface in interfaces:
-        interface.entity = v
-        interface.remote_entity = Game.current_player.get_controller().target.entity_node != v
+        interface.entity = entity
+        interface.remote_entity = Game.current_player.get_controller().target.entity_node != entity
         if not interface.request_operation.is_connected(_on_interface_request_operation):
             interface.request_operation.connect(_on_interface_request_operation)
         if not interface.request_remote_operation.is_connected(_on_interface_request_remote_operation):
