@@ -186,6 +186,7 @@
 [X] 丢物品进建筑(建筑操作[位置, 物品, 类型])
 [ ] configuring
 [ ] alt显示(visiblity layer)
+    [ ] 按钮, 控制viewport layer17的显示
 [X] * ContentDisplayGroup
     [X] Inventory适配
     [X] ContentSelectAdapter
@@ -241,6 +242,7 @@
 [ ] ContentManager
     [ ] ui
     [ ] edit
+[ ] World2D实现多世界
 
 [X] 6. 带物品的建筑拆除
 [X] 7. 掉落物

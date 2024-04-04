@@ -38,6 +38,7 @@ var content_getter: Callable = do_nothing;
 
 func _ready() -> void:
     scale *= 0.5
+    visibility_layer = Global.ALT_DISPLAY_LAYER
 
 static func do_nothing(v: Variant) -> Variant:
     return v

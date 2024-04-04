@@ -10,6 +10,9 @@ const TILE_SIZE_VECTOR = Vector2i(TILE_SIZE, TILE_SIZE);
 const MAX_LAYERS = 8;
 const MAX_LAYERS_MASK = (1 << MAX_LAYERS) - 1
 
+const MINIMAP_LAYER = 1 << 16
+const ALT_DISPLAY_LAYER = 1 << 17
+
 enum States{
     LOADING,
     MAIN_MENU,
