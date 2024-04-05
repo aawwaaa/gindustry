@@ -56,7 +56,9 @@ func set_input_handler(name: String = "") -> void:
     add_child(input_handler)
     input_handler._load_ui(game_ui_input_handler)
     input_handler_changed.emit(input_handler, old)
-    if old: old.queue_free()
+    if old:
+        input_handler.extend_properties(old)
+        old.queue_free()
 
 func set_default(key: String, value: Variant) -> void:
     if configs.g(key, null) == null:

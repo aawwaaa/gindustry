@@ -64,6 +64,12 @@ func operate(controller: Controller, operation: String, args: Array[Variant] = [
         if args.size() < 2: return
         entity_node.get_adapter(args[0])._handle_operation(args[1], args.slice(2))
         return
+    if operation == "inter_adapter":
+        if args.size() < 3: return
+        var source = entity_node.get_adapter(args[0])
+        var target = entity_node.get_adapter(args[1])
+        target._handle_adapter_operation(source, args[2], args.slice(3))
+        return
     if operation not in available_operations:
         return
     operation_received.emit(operation, args)

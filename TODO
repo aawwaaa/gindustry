@@ -184,7 +184,9 @@
 [X] builtin进mods
 [X] 建筑点击ui(call InputHandler)
 [X] 丢物品进建筑(建筑操作[位置, 物品, 类型])
-[ ] configuring
+[X] configuring TEST
+     [X] configuring
+     [X] Adapter.configuring
 [ ] alt显示(visiblity layer)
     [ ] 按钮, 控制viewport layer17的显示
 [X] * ContentDisplayGroup
@@ -196,14 +198,14 @@
 [ ] BuildingShadow building_config preview
     [ ] ContentDisplayGroup: Building -> BuildingShadow
     [ ] Script设置
-[ ] EntityAdapter.main_adapter
-    [ ] EntityAdapter._handle_adapter_operation(source: EntityAdapter, op: String, args)
-    [ ] request_adapter_operation(target: String, op: String, args)
-[ ] 直接互动Adapter(adapter.interactable)
+[X] EntityAdapter.main_adapter TEST
+    [X] EntityAdapter._handle_adapter_operation(source: EntityAdapter, op: String, args)
+    [X] request_adapter_operation(target: String, op: String, args)
+[X] 直接互动Adapter(adapter.interactable)
 [X] * BuildPlan序列化:
     [X] add_build_plan(plan)
     [X] remove_build_plan(pos)
-[ ] BuildingType.default_building_category()
+[X] BuildingType.default_building_category()
 [ ] FloorShape
     [ ] RectFloorShape
     [ ] PolygonFloorShape

@@ -7,6 +7,8 @@ signal request_remote_operation(operation: String, args: Array[Variant])
 var entity: Entity
 var adapter: EntityAdapter:
     set = set_adapter
+var main_adapter: EntityAdapter:
+    get: return adapter.get_main_adapter()
 @export var adapter_name: String:
     get: return adapter.adapter_name if adapter else adapter_name
 var remote_entity: bool = false
@@ -35,4 +37,7 @@ func operate_adapter(operation: String, args: Array[Variant] = []) -> void:
     var new_args = [adapter_name, operation]
     new_args.append_array(args)
     if remote_entity: request_remote_operation.emit("adapter", new_args)
+    elif main_adapter:
+        new_args.insert(1, main_adapter.adapter_name);
+        request_operation.emit("inter_adapter", new_args)
     else: request_operation.emit("adapter", new_args)

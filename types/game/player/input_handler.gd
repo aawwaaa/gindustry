@@ -25,6 +25,7 @@ signal focused_entity_changed(entity: Entity, from: Entity)
 var input_processors: Dictionary = {}
 var interacting_entities: Array[Entity] = []
 var interacting_adapters: Array[EntityAdapter] = []
+var configuring_target: Object = null;
 
 var player: Player:
     get: return Game.current_player
@@ -61,7 +62,25 @@ func remove_interacting_entity(entity: Entity) -> void:
     interacting_entities.erase(entity)
     update_focused_entity(focused)
 
+func add_interacting_adapter(adapter: EntityAdapter) -> void:
+    if adapter in interacting_adapters: return
+    interacting_adapters.append(adapter)
+
+func remove_interacting_adapter(adapter: EntityAdapter) -> void:
+    if adapter not in interacting_adapters: return
+    interacting_adapters.erase(adapter)
+
+func set_configuring_target(target: Object) -> bool:
+    if configuring_target: return false
+    configuring_target = target
+    return true
+
+func clear_configuring_target() -> void:
+    configuring_target = null
+
 func get_interacting_target() -> Node:
+    if configuring_target: return configuring_target
+    if interacting_adapters.size() != 0: return interacting_adapters.back()
     if interacting_entities.size() == 0: return null
     return interacting_entities.back()
 
@@ -77,6 +96,14 @@ func interact_operate(operation: String, args: Array[Variant] = []) -> void:
     var target = get_interacting_target()
     if not target: return
     target.input_operate(operation, args)
+
+func _extend_properties(from: InputHandler) -> void:
+    configuring_target = from.configuring_target
+    interacting_entities = from.interacting_entities
+    interacting_adapters = from.interacting_adapters
+
+func extend_properties(from: InputHandler) -> void:
+    _extend_properties(from)
 
 func _accept_input(name: StringName, func_name: StringName, args: Array = []) -> bool:
     return true

@@ -8,7 +8,10 @@ signal on_load_data(stream: Stream);
 signal access_target_changed(target: Node2D, from: Node2D)
 signal access_from(source: Node2D, removed: bool)
 signal input_operation(operation: String, args: Array[Variant])
+signal configure_operation(operation: String, args: Array[Variant])
 signal remote_operation(from: Entity, operation: String, args: Array[Variant])
+
+signal make_configure_visible(visible: bool)
 
 static var entity_ref_targets: Dictionary = {}
 
@@ -63,6 +66,8 @@ var entity_id: int:
 
 var tile_pos: Vector2i:
     get: return (main_node.position / Global.TILE_SIZE).floor()
+
+var configuring: bool = false
 
 static func _on_game_signal_reset_game() -> void:
     entity_ref_targets = {};
@@ -263,7 +268,23 @@ func remove() -> void:
     main_node.queue_free()
 
 func input_operate(operation: String, args: Array[Variant] = []) -> void:
+    if configuring:
+        configure_operation.emit(operation, args)
+        return
     input_operation.emit(operation, args)
+
+func enter_configuring() -> bool:
+    if configuring: return false
+    if not Global.input_handler.set_configuring_target(self): return false
+    configuring = true
+    make_configure_visible.emit(true)
+    return true
+
+func exit_configuring() -> void:
+    if not configuring: return
+    Global.input_handler.clear_configuring_target()
+    configuring = false
+    make_configure_visible.emit(false)
 
 func _on_collision_object_2d_mouse_entered() -> void:
     Global.input_handler.add_interacting_entity(self)

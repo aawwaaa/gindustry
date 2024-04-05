@@ -6,7 +6,8 @@ const BUILDING_TYPE = preload("res://contents/content_types/building.tres")
 @export var shadow: PackedScene:
     get: return shadow if shadow else _get_default_building_shadow()
 
-@export var building_category: BuildingCategory
+@export var building_category: BuildingCategory:
+    get: return building_category if building_category else _get_default_building_category();
 @export var requirements: Array[PackedItemStack] = []
 
 @export var attributes: Array[BuildingAttribute] = []
@@ -82,3 +83,6 @@ func _get_rotatable() -> bool:
 
 func get_rotatable() -> bool:
     return _get_rotatable()
+
+func _get_default_building_category() -> BuildingCategory:
+    return null

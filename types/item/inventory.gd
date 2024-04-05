@@ -14,21 +14,29 @@ signal inventory_slot_changed(slot_id: int, item_type_changed: bool)
 @export var hand_slot: int = 0
 
 @export var content_display_group: ContentDisplayGroup;
+@export var main_adapter: Inventory;
 
 var slots: Array[Item] = [];
 
 func _handle_operation(operate: String, args: Array = []) -> void:
     match operate:
-        "swap_with_hand": swap_with_other_hand(args[0])
+        "swap_with_hand": swap_with_hand(args[0])
         "use_hand": use_hand(args[0], args[1])
         "drop_item": drop_item(args[0], args[1])
         "drop_item_at": drop_item_at(args[0], args[1], args[2])
         _: super._handle_operation(operate, args)
 
+func _handle_adpater_operation(source: EntityAdapter, operate: String, args: Array = []) -> void:
+    match operate:
+        "swap_with_hand": source.swap_with_hand(args[0], self)
+
 func _handle_remote_operation(source: Entity, operate: String, args: Array = []) -> void:
     match operate:
-        "swap_with_hand": swap_with_other_hand(args[0], source.get_adapter("inventory"))
+        "swap_with_hand": swap_with_hand(args[0], source.get_adapter("inventory"))
         _: super._handle_remote_operation(source, operate, args)
+
+func _get_main_adapter() -> EntityAdapter:
+    return main_adapter
 
 func _ready() -> void:
     slots_size = slots_size
@@ -131,7 +139,7 @@ func drop_item_at(world: World, position: Vector2, type: String = "all") -> void
     if not dropped_item: return
     drop_item(dropped_item.get_entity(), type)
 
-func swap_with_other_hand(slot: int, other: Inventory = self) -> void:
+func swap_with_hand(slot: int, other: Inventory = self) -> void:
     if not other.is_slot_has_item(other.hand_slot) or \
             (is_slot_has_item(slot) and not get_slot(slot).is_same_item(other.get_slot(other.hand_slot))):
         if not is_slot_has_item(slot):
