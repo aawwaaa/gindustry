@@ -87,11 +87,8 @@ entity_node = NodePath("../Entity")
 [node name="Inventory" type="Node" parent="." node_paths=PackedStringArray("main_node", "entity_node")]
 unique_name_in_owner = true
 script = ExtResource("5_tdurn")
-slots_size = null
-hand_slot = null
 main_node = NodePath("..")
 entity_node = NodePath("../Entity")
-adapter_name = null
 
 [node name="Name" type="Node2D" parent="."]
 z_as_relative = false

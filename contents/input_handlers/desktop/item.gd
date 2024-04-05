@@ -25,7 +25,7 @@ func handle_input_event(event: InputEvent, unhandled: bool = false) -> void:
     if not entity: return
     item_use_position = world_position
     update_item_use()
-    var inventory = entity.get_adapter(Inventory.I_DEFAULT_NAME))
+    var inventory = entity.get_adapter(Inventory.I_DEFAULT_NAME)
     var item = inventory.get_slot(inventory.hand_slot)
     if unhandled and enabled:
         if item and Input.is_action_just_pressed("drop_an_item"): confirm_drop_item("one", world_position)
@@ -40,7 +40,7 @@ func handle_input_event(event: InputEvent, unhandled: bool = false) -> void:
             handler.interact_operate("clicked", [world_position])
 
 func update_item_use() -> void:
-    var inventory = entity.get_adapter(Inventory.I_DEFAULT_NAME))
+    var inventory = entity.get_adapter(Inventory.I_DEFAULT_NAME)
     var item = inventory.get_slot(inventory.hand_slot)
     if item and not item.useable_no_await(entity, entity.world, item_use_position):
         item = null

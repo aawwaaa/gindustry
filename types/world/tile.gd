@@ -158,6 +158,7 @@ func set_building(type: BuildingType, rot: int = 0, config: Variant = type._get_
     inst.building_config = config
     world.add_entity(inst)
     inst.place()
+    building_ref = inst.entity_id
     return inst
 
 func set_building_shadow(type: BuildingType, rot: int = 0, config: Variant = type._get_default_config() if type else null) -> BuildingShadowContainer:
@@ -170,6 +171,7 @@ func set_building_shadow(type: BuildingType, rot: int = 0, config: Variant = typ
     world.add_entity(container.get_entity())
     container.shadow.building_config = config
     container.place()
+    building_ref = container.get_entity().entity_id
     return container
 
 func set_redirect(target: World, pos: Vector2i = Vector2i.ZERO) -> void:

@@ -78,8 +78,8 @@ func _on_building_remote_operation(source: Entity, operation: String, args: Arra
         handle_drop_item(source, type, pos)
 
 func handle_drop_item(source: Entity, type: String, pos: Vector2) -> void:
-    if not source.has_adapter(Inventory.I_DEFAULT_NAME)): return
-    var inventory = source.get_adapter(Inventory.I_DEFAULT_NAME)) as Inventory
+    if not source.has_adapter(Inventory.I_DEFAULT_NAME): return
+    var inventory = source.get_adapter(Inventory.I_DEFAULT_NAME) as Inventory
     var item = inventory.split_dropped_item(type)
     var track = get_track(pos)
     var item_pos = pos - track.base_position
