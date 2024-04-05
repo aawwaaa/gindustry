@@ -23,7 +23,7 @@ func _on_input_handler_controller_target_entity_changed(entity: Entity, from: En
     Utils.signal_dynamic_connect(entity, from, "access_target_changed", \
             _on_controller_target_access_target_changed)
     %InventoryInterface.entity = entity
-    var adapter = entity.get_adapter(Inventory.DEFAULT_NAME) if entity else null
+    var adapter = entity.get_adapter(Inventory.I_DEFAULT_NAME)) if entity else null
     var old_adapter = %InventoryInterface.adapter
     %InventoryInterface.adapter = adapter
     %InventoryInterface.load_inventory()

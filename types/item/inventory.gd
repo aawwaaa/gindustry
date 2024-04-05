@@ -5,7 +5,7 @@ signal item_added(item: Item, amount: int)
 signal item_removed(item: Item, amount: int)
 signal inventory_slot_changed(slot_id: int, item_type_changed: bool)
 
-const DEFAULT_NAME = "inventory"
+const I_DEFAULT_NAME = "inventory"
 
 @export var slots_size: int = 8:
     set(v):
@@ -34,7 +34,7 @@ func _handle_adpater_operation(source: EntityAdapter, operate: String, args: Arr
 
 func _handle_remote_operation(source: Entity, operate: String, args: Array = []) -> void:
     match operate:
-        "swap_with_hand": swap_with_hand(args[0], source.get_adapter(Inventory.DEFAULT_NAME))
+        "swap_with_hand": swap_with_hand(args[0], source.get_adapter(Inventory.I_DEFAULT_NAME)))
         _: super._handle_remote_operation(source, operate, args)
 
 func _get_main_adapter() -> EntityAdapter:
