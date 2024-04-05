@@ -17,7 +17,7 @@ func _ready() -> void:
     add_child(camera)
     item = DesktopInputHandler_Item.new(self)
     add_child(item)
-    input_processors["item"] = item
+    input_processors[(ItemAdapter.DEFAULT_NAME)] = item
     build = DesktopInputHandler_Build.new(self)
     add_child(build)
     input_processors["build"] = build

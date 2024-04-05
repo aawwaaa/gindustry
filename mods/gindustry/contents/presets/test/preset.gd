@@ -48,7 +48,7 @@ func _init_after_world_load() -> void:
     for type in ["copper", "lead", "titanium", "thorium", "coal", "sand"]:
         var item = Gindustry.items[type].create_item()
         item.amount = 80
-        player_entity.get_adapter("item")._add_item(item)
+        player_entity.get_adapter((ItemAdapter.DEFAULT_NAME))._add_item(item)
 
 func _load_preset() -> void:
     await Game.signal_game_loaded

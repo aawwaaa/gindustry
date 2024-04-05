@@ -38,7 +38,7 @@ func _on_inventory_inventory_slot_changed(index: int, type_changed: bool) -> voi
 func _input(event: InputEvent) -> void:
     if Input.is_action_just_pressed("open_inventory"):
         hide()
-        Global.input_handler.call_input_processor("item", "clear_access_target")
+        Global.input_handler.call_input_processor((ItemAdapter.DEFAULT_NAME), "clear_access_target")
 
 func toggle_inventory() -> void:
     if not visible or not default_inventory_panel_inst.is_inside_tree():
@@ -46,7 +46,7 @@ func toggle_inventory() -> void:
         show()
     else:
         hide()
-        Global.input_handler.call_input_processor("item", "clear_access_target")
+        Global.input_handler.call_input_processor((ItemAdapter.DEFAULT_NAME), "clear_access_target")
 
 func _on_controller_target_access_target_changed(target: Node2D, from: Node2D) -> void:
     load_info(target.get_entity() if target else null)

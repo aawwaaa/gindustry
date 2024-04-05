@@ -31,7 +31,7 @@ func update_requirements() -> void:
             requirement_node.apply_data(null, 0, 0)
             continue
         var requirement = requirements[index]
-        var item_adapter = Game.current_entity.get_adapter("item") as ItemAdapter
+        var item_adapter = Game.current_entity.get_adapter((ItemAdapter.DEFAULT_NAME)) as ItemAdapter
         var exists_item_amount = item_adapter.get_item_amount(requirement)
         requirement_node.apply_data(requirement, exists_item_amount, requirement.amount)
 
