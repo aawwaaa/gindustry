@@ -6,8 +6,6 @@ signal controller_removed(controller: Controller)
 
 signal operation_received(operation: String, args: Array[Variant])
 
-const DEFAULT_NAME = "controller"
-
 """
 默认控制器, 由0~length优先级依次递减
 新控制器加入后将重新排序

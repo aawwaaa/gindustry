@@ -14,13 +14,13 @@ func _on_inventory_inventory_slot_changed(slot_id: int, item_type_changed: bool)
 
 func _on_building_input_operation(operation: String, args: Array) -> void:
     if operation == "open_panel":
-        Global.input_handler.call_input_processor((ItemAdapter.DEFAULT_NAME), "access_target_ui", [self])
+        Global.input_handler.call_input_processor("item", "access_target_ui", [self])
     if operation == "drop_item":
-        Global.input_handler.call_input_processor((ItemAdapter.DEFAULT_NAME), "accept_drop_item", [self, args])
+        Global.input_handler.call_input_processor("item", "accept_drop_item", [self, args])
 
 func get_adapter_at(pos: Vector2i, type: String) -> EntityAdapter:
-    if pos != Vector2i.ZERO or type != (ItemAdapter.DEFAULT_NAME): return null
-    return entity.adapters[(ItemAdapter.DEFAULT_NAME)]
+    if pos != Vector2i.ZERO or type != "item": return null
+    return entity.adapters["item"]
 
 func _ready() -> void:
     inventory.content_display_group = entity.shadow.display_group

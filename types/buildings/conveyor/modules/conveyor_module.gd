@@ -32,8 +32,8 @@ func _handle_get_data(name: String, source: Building, source_component: Building
     return super._handle_get_data(name, source, source_component, args)
 
 func get_adapter_at(pos: Vector2i, type: String) -> EntityAdapter:
-    if pos != Vector2i.ZERO or type != (ItemAdapter.DEFAULT_NAME): return null
-    return entity.adapters[(ItemAdapter.DEFAULT_NAME)]
+    if pos != Vector2i.ZERO or type != "item": return null
+    return entity.adapters["item"]
 
 func get_component_at(pos: Vector2i, rot: int, type: String, ignore_side = false) -> BuildingComponent:
     if pos != entity.pos: return null
@@ -84,7 +84,7 @@ func push_reached_item_for_track(target: BuildingComponent, track: EntityNode_Co
     push_reached_item_for(target, track.right_track, Directions.right)
 
 func handle_break(unit: BuilderAdapterUnit) -> bool:
-    var item_adapter = unit.adapter.entity_node.get_adapter((ItemAdapter.DEFAULT_NAME)) as ItemAdapter
+    var item_adapter = unit.adapter.entity_node.get_adapter("item") as ItemAdapter
     if not item_adapter: return false
     for track in get_tracks().map(func(track): return [track.left_track, track.right_track]):
         for single_track in track:

@@ -206,10 +206,9 @@
     [X] add_build_plan(plan)
     [X] remove_build_plan(pos)
 [X] BuildingType.default_building_category()
-[.] FloorShape
-    [.] RectFloorShape
-    [.] PolygonFloorShape
-[ ] constants(所有魔法字符串替换为常量)
+[ ] FloorShape
+    [ ] RectFloorShape
+    [ ] PolygonFloorShape
 [X] EntityType.entity_category
 [X] ItemType.item_category
 [X] Recipe.category

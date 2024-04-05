@@ -47,8 +47,8 @@ func _handle_get_data(name: String, source: Building, source_component: Building
     return super._handle_get_data(name, source, source_component, args)
 
 func get_adapter_at(pos: Vector2i, type: String) -> EntityAdapter:
-    if pos != Vector2i.ZERO or type != (ItemAdapter.DEFAULT_NAME): return null
-    return entity.adapters[(ItemAdapter.DEFAULT_NAME)]
+    if pos != Vector2i.ZERO or type != "item": return null
+    return entity.adapters["item"]
 
 func get_component_at(pos: Vector2i, rot: int, type: String, ignore_side = false) -> BuildingComponent:
     if pos != entity.pos: return null
@@ -68,7 +68,7 @@ func update_ports() -> void:
 
 func _on_building_input_operation(operation: String, args: Array = []) -> void:
     if operation == "drop_item":
-        Global.input_handler.call_input_processor((ItemAdapter.DEFAULT_NAME), "access_and_operate", [self, "drop_item", args])
+        Global.input_handler.call_input_processor("item", "access_and_operate", [self, "drop_item", args])
 
 func _on_building_remote_operation(source: Entity, operation: String, args: Array = []) -> void:
     if source.world != entity.world: return
@@ -174,7 +174,7 @@ func push_reached_items() -> void:
     push_reached_item_for(target_component, track.right_track, Directions.right)
 
 func handle_break(unit: BuilderAdapterUnit) -> bool:
-    var item_adapter = unit.adapter.entity_node.get_adapter((ItemAdapter.DEFAULT_NAME)) as ItemAdapter
+    var item_adapter = unit.adapter.entity_node.get_adapter("item") as ItemAdapter
     if not item_adapter: return false
     for track in [track.left_track, track.right_track]:
         var removes = []

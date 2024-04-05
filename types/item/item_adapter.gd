@@ -1,8 +1,6 @@
 class_name ItemAdapter
 extends EntityAdapter
 
-const DEFAULT_NAME = "item"
-
 @export var item_targets: Array[ItemAdapter] = []
 
 func _handle_overflow_item(item: Item) -> void:
