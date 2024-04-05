@@ -78,8 +78,8 @@ func _on_building_remote_operation(source: Entity, operation: String, args: Arra
         handle_drop_item(source, type, pos)
 
 func handle_drop_item(source: Entity, type: String, pos: Vector2) -> void:
-    if not source.has_adapter("inventory"): return
-    var inventory = source.get_adapter("inventory") as Inventory
+    if not source.has_adapter(Inventory.DEFAULT_NAME): return
+    var inventory = source.get_adapter(Inventory.DEFAULT_NAME) as Inventory
     var item = inventory.split_dropped_item(type)
     var track = get_track(pos)
     var item_pos = pos - track.base_position
@@ -174,7 +174,7 @@ func push_reached_items() -> void:
     push_reached_item_for(target_component, track.right_track, Directions.right)
 
 func handle_break(unit: BuilderAdapterUnit) -> bool:
-    var item_adapter = unit.adapter.entity_node.get_adapter("item") as ItemAdapter
+    var item_adapter = unit.adapter.entity_node.get_adapter(ItemAdapter.DEFAULT_NAME) as ItemAdapter
     if not item_adapter: return false
     for track in [track.left_track, track.right_track]:
         var removes = []

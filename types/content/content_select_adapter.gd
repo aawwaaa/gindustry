@@ -65,8 +65,8 @@ func set_slot(index: int, content: Content, amount: float) -> void:
     update_display_group()
 
 func set_slot_from_hand(index: int, entity: Entity) -> void:
-    if not entity.has_adapter("inventory"): return
-    var inventory = entity.get_adapter("inventory") as Inventory
+    if not entity.has_adapter(Inventory.DEFAULT_NAME): return
+    var inventory = entity.get_adapter(Inventory.DEFAULT_NAME) as Inventory
     var hand = inventory.get_slot(inventory.hand_slot)
     set_slot(index, hand.item_type if hand else null, hand.amount if hand else 0)
 

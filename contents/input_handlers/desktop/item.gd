@@ -25,7 +25,7 @@ func handle_input_event(event: InputEvent, unhandled: bool = false) -> void:
     if not entity: return
     item_use_position = world_position
     update_item_use()
-    var inventory = entity.get_adapter("inventory")
+    var inventory = entity.get_adapter(Inventory.DEFAULT_NAME)
     var item = inventory.get_slot(inventory.hand_slot)
     if unhandled and enabled:
         if item and Input.is_action_just_pressed("drop_an_item"): confirm_drop_item("one", world_position)
@@ -40,7 +40,7 @@ func handle_input_event(event: InputEvent, unhandled: bool = false) -> void:
             handler.interact_operate("clicked", [world_position])
 
 func update_item_use() -> void:
-    var inventory = entity.get_adapter("inventory")
+    var inventory = entity.get_adapter(Inventory.DEFAULT_NAME)
     var item = inventory.get_slot(inventory.hand_slot)
     if item and not item.useable_no_await(entity, entity.world, item_use_position):
         item = null
@@ -63,20 +63,20 @@ func update_item_use() -> void:
 func confirm_item_use() -> void:
     if not item_use:
         return
-    controller.operate_target("adapter", ["inventory", "use_hand", entity.world, item_use_position])
+    controller.operate_target(ControllerAdapter.TARGET_ADAPTER, ["inventory", "use_hand", entity.world, item_use_position])
     item_use.queue_free()
     item_use = null
 
 func confirm_drop_item(type: String, pos: Vector2) -> void:
     var interacting = handler.get_interacting_target()
     if not interacting:
-        controller.operate_target("adapter", ["inventory", "drop_item_at", entity.world, pos, type])
+        controller.operate_target(ControllerAdapter.TARGET_ADAPTER, ["inventory", "drop_item_at", entity.world, pos, type])
         return
     handler.interact_operate("drop_item", [type, pos])
 
 func accept_drop_item(target: Node2D, args: Array) -> void:
     var entity = target.get_entity()
-    controller.operate_target("adapter", ["inventory", "drop_item", entity, args[0]])
+    controller.operate_target(ControllerAdapter.TARGET_ADAPTER, ["inventory", "drop_item", entity, args[0]])
 
 func access_target_ui(target: Node2D) -> void:
     controller.request_access_target(target)

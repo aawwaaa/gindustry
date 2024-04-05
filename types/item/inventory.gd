@@ -5,6 +5,8 @@ signal item_added(item: Item, amount: int)
 signal item_removed(item: Item, amount: int)
 signal inventory_slot_changed(slot_id: int, item_type_changed: bool)
 
+const DEFAULT_NAME = "inventory"
+
 @export var slots_size: int = 8:
     set(v):
         slots_size = v
@@ -32,7 +34,7 @@ func _handle_adpater_operation(source: EntityAdapter, operate: String, args: Arr
 
 func _handle_remote_operation(source: Entity, operate: String, args: Array = []) -> void:
     match operate:
-        "swap_with_hand": swap_with_hand(args[0], source.get_adapter("inventory"))
+        "swap_with_hand": swap_with_hand(args[0], source.get_adapter(Inventory.DEFAULT_NAME))
         _: super._handle_remote_operation(source, operate, args)
 
 func _get_main_adapter() -> EntityAdapter:
@@ -121,7 +123,7 @@ func merge_overflowed_dropped_item(overflow: Item) -> void:
 func drop_item(target: Entity, type: String = "all") -> void:
     if not entity_node.request_access_target(target.main_node): return
     var splited = split_dropped_item(type)
-    var overflow = target.get_adapter("item").add_item(splited)
+    var overflow = target.get_adapter(ItemAdapter.DEFAULT_NAME).add_item(splited)
     merge_overflowed_dropped_item(overflow)
     entity_node.clear_access_target()
 
@@ -216,7 +218,7 @@ func _handle_break(unit: BuilderAdapterUnit) -> bool:
     for slot in slots.size():
         if not is_slot_has_item(slot): continue
         var item = get_slot(slot)
-        var item_adapter = unit.adapter.entity_node.get_adapter("item") as ItemAdapter
+        var item_adapter = unit.adapter.entity_node.get_adapter(ItemAdapter.DEFAULT_NAME) as ItemAdapter
         set_slot(slot, item_adapter.add_item(item))
         if is_slot_has_item(slot): return false
     return true

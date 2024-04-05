@@ -84,7 +84,7 @@ func push_reached_item_for_track(target: BuildingComponent, track: EntityNode_Co
     push_reached_item_for(target, track.right_track, Directions.right)
 
 func handle_break(unit: BuilderAdapterUnit) -> bool:
-    var item_adapter = unit.adapter.entity_node.get_adapter("item") as ItemAdapter
+    var item_adapter = unit.adapter.entity_node.get_adapter(ItemAdapter.DEFAULT_NAME) as ItemAdapter
     if not item_adapter: return false
     for track in get_tracks().map(func(track): return [track.left_track, track.right_track]):
         for single_track in track:

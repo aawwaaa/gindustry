@@ -36,8 +36,8 @@ func load_interface() -> void:
 func operate_adapter(operation: String, args: Array[Variant] = []) -> void:
     var new_args = [adapter_name, operation]
     new_args.append_array(args)
-    if remote_entity: request_remote_operation.emit("adapter", new_args)
+    if remote_entity: request_remote_operation.emit(ControllerAdapter.TARGET_ADAPTER, new_args)
     elif main_adapter:
         new_args.insert(1, main_adapter.adapter_name);
-        request_operation.emit("inter_adapter", new_args)
-    else: request_operation.emit("adapter", new_args)
+        request_operation.emit(ControllerAdapter.TARGET_INTER_ADAPTER, new_args)
+    else: request_operation.emit(ControllerAdapter.TARGET_ADAPTER, new_args)

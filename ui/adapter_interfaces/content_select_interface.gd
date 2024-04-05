@@ -69,7 +69,7 @@ func _on_blacklist_enabled_toggled(toggled_on: bool) -> void:
 
 func _on_slot_pressed(index: int) -> void:
     if remote_entity:
-        var inventory: Inventory = Game.current_entity.get_adapter("inventory")
+        var inventory: Inventory = Game.current_entity.get_adapter(Inventory.DEFAULT_NAME)
         if inventory.is_slot_has_item(inventory.hand_slot):
             operate_adapter("set_slot_from_hand", [index])
             return

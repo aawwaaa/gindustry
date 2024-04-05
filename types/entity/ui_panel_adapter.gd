@@ -1,6 +1,8 @@
 class_name UIPanelAdapter
 extends EntityAdapter
 
+const DEFAULT_NAME = "panel"
+
 static var default_entity_info_panel_scene = load("res://ui/entity_info_panel/templates/default.tscn")
 
 @export var inventory_panel_scene: PackedScene;
@@ -28,12 +30,12 @@ func create_entity_info_panel() -> EntityInfoPanel:
     return panel
 
 static func create_inventory_panel_for(entity: Entity) -> InventoryPanel:
-    var adapter = entity.get_adapter("panel") as UIPanelAdapter
+    var adapter = entity.get_adapter(DEFAULT_NAME) as UIPanelAdapter
     if adapter and adapter.inventory_panel_scene: return adapter.create_inventory_panel()
     return null
 
 static func create_entity_info_panel_for(entity: Entity) -> EntityInfoPanel:
-    var adapter = entity.get_adapter("panel") as UIPanelAdapter
+    var adapter = entity.get_adapter(DEFAULT_NAME) as UIPanelAdapter
     if adapter and adapter.entity_info_panel_scene: return adapter.create_entity_info_panel()
     var panel = default_entity_info_panel_scene.instantiate()
     panel.entity = entity

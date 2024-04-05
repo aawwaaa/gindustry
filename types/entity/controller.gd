@@ -82,7 +82,7 @@ func control_to_rpc(target: ControllerAdapter):
     target.add_controller(self)
 
 func control_to(target: ControllerAdapter) -> void:
-    MultiplayerServer.rpc_sync(self, "control_to", [target])
+    MultiplayerServer.rpc_sync(self, "control_to_rpc", [target])
 
 @rpc("authority", "call_remote", "reliable")
 func control_to_id_rpc(target_id: int) -> void:
