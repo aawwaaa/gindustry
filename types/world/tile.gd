@@ -25,10 +25,12 @@ var redirect_target_tile: Vector2i;
 # floor
 var floor_type: Floor
 var floor_data: Variant = null
+var floor_ore_data: Variant = null
 
 # overlay
 var overlay_type: Overlay
 var overlay_data: Variant = null
+var overlay_ore_data: Variant = null
 
 # building
 var building_ref: int:
@@ -106,24 +108,30 @@ func init_tile(chunk_inst: Chunk, pos: Vector2i) -> void:
 func set_floors_tilemap(layer: TileLayer, source_id: int, tile_coords: Vector2i, tile_alter_id: int):
     world.get_floors_node().set_cell(layer, tile_pos, source_id, tile_coords, tile_alter_id);
 
-func set_floor(new_floor_type: Floor, new_floor_data = new_floor_type._init_floor_data(self) if new_floor_type else null) -> void:
+func set_floor(new_floor_type: Floor, \
+        new_floor_data = new_floor_type._init_floor_data(self) if new_floor_type else null, \
+        new_floor_ore_data = new_floor_type.tile_ore_with_data._init_ore_data(self, "floor") if new_floor_type and new_floor_type.tile_ore_with_data else null) -> void:
     if floor_type:
         floor_type._remove_floor(self)
     self.floor_type = new_floor_type;
     self.floor_data = new_floor_data;
+    self.floor_ore_data = new_floor_ore_data;
     if floor_type:
         floor_type._update_floor(self)
-    if floor_data != null:
+    if floor_data != null or floor_ore_data != null:
         set_special_data()
 
-func set_overlay(new_overlay_type: Overlay, new_overlay_data = new_overlay_type._init_overlay_data(self) if new_overlay_type else null) -> void:
+func set_overlay(new_overlay_type: Overlay, \
+        new_overlay_data = new_overlay_type._init_overlay_data(self) if new_overlay_type else null, \
+        new_overlay_ore_data = new_overlay_type.tile_ore_with_data._init_ore_data(self, "overlay") if new_overlay_type and new_overlay_type.tile_ore_with_data else null) -> void:
     if overlay_type:
         overlay_type._remove_overlay(self)
     self.overlay_type = new_overlay_type;
     self.overlay_data = new_overlay_data;
+    self.overlay_ore_data = new_overlay_ore_data;
     if overlay_type:
         overlay_type._update_overlay(self)
-    if overlay_data != null:
+    if overlay_data != null or overlay_ore_data != null:
         set_special_data()
 
 func can_build_on(building_type: BuildingType) -> bool:
@@ -188,6 +196,26 @@ func get_near_tile(rot: int) -> Tile:
     var delta = Vector2i(Vector2.RIGHT.rotated(rad).round())
     var pos = tile_pos + delta
     return world.get_tile_or_null(pos)
+
+func get_tile_ore(type: TileOreType) -> TileOre:
+    var overlay_ore = overlay_type.get_tile_ore(type)
+    if overlay_ore: return overlay_ore
+    var floor_ore = floor_type.get_tile_ore(type)
+    if floor_ore: return floor_ore
+    return null
+
+func call_tile_ore(type: TileOreType, name: StringName, args: Array) -> Variant:
+    args = args.duplicate()
+    args.push_front(self)
+    var overlay_ore = overlay_type.get_tile_ore(type)
+    if overlay_ore:
+        args.insert(1, "overlay")
+        return overlay_ore.callv(name, args)
+    var floor_ore = floor_type.get_tile_ore(type)
+    if floor_ore:
+        args.insert(1, "floor")
+        return floor_ore.callv(name, args)
+    return null
 
 const current_data_version = 1;
 

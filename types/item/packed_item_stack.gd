@@ -13,3 +13,8 @@ func get_item() -> Item:
         item.apply_stack(self)
 
     return item
+
+func create_item() -> Item:
+    var item = item_type.create_item()
+    item.apply_stack(self)
+    return item

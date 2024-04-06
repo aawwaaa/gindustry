@@ -29,6 +29,7 @@ static func start_load() -> void:
         "content_type.tres",
         "content_category.tres",
         "preset.tres",
+        "tile_ore_type.tres"
     ])
     await load_type("content_types/", [
         "building.tres",
@@ -56,6 +57,9 @@ static func start_load() -> void:
         "logic.tres",
         "research.tres",
         "misc.tres",
+    ])
+    await load_type("tile_ore_types/", [
+        "item.tres",
     ])
 
     await load_content(entity, "entities/", [

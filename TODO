@@ -227,9 +227,10 @@
     [X] ItemSelector
     [X] ContentSelector
 [ ] TileOre[WithData]
-	[ ] TileOreType
-	[ ] [Floor/Overlay].ores/ore_with_data
-	[ ] TileOre_ItemOre
+	[X] TileOreType
+	[X] [Floor/Overlay].ores/ore_with_data
+	[X] TileOre_ItemOre
+    [ ] BuildUI显示TileOre
 [ ] GraphAdpater
     [ ] Graph
     [ ] GraphAdpater
@@ -238,6 +239,7 @@
     [ ] PowerOverload
     [ ] PowerDisconnected
     [ ] SignalConflected
+
 [ ] ContentManager
     [ ] ui
     [ ] edit
