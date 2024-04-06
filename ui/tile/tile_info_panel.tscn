@@ -1,0 +1,74 @@
+[gd_scene load_steps=3 format=3 uid="uid://wmerrmleh36m"]
+
+[ext_resource type="Texture2D" uid="uid://bhvx2a5ify12e" path="res://assets/asset-not-found.png" id="1_hi1ku"]
+[ext_resource type="Script" path="res://ui/tile/tile_info_panel.gd" id="1_mnh4u"]
+
+[node name="TileInfoPanel" type="VBoxContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+script = ExtResource("1_mnh4u")
+
+[node name="FloorPanel" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="FloorPanel"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="FloorPanel/PanelContainer"]
+layout_mode = 2
+
+[node name="FloorIcon" type="TextureRect" parent="FloorPanel/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("1_hi1ku")
+
+[node name="FloorName" type="Label" parent="FloorPanel/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "FloorName"
+
+[node name="MarginContainer" type="MarginContainer" parent="FloorPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="PanelContainer" type="PanelContainer" parent="FloorPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="FloorOres" type="VBoxContainer" parent="FloorPanel/MarginContainer/PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OverlayPanel" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="OverlayPanel"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="OverlayPanel/PanelContainer"]
+layout_mode = 2
+
+[node name="OverlayIcon" type="TextureRect" parent="OverlayPanel/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("1_hi1ku")
+
+[node name="OverlayName" type="Label" parent="OverlayPanel/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "FloorName"
+
+[node name="MarginContainer" type="MarginContainer" parent="OverlayPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="PanelContainer" type="PanelContainer" parent="OverlayPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="OverlayOres" type="VBoxContainer" parent="OverlayPanel/MarginContainer/PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2

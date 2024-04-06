@@ -57,6 +57,18 @@ func _get_tile_ore(type: TileOreType) -> TileOre:
     if tile_ores_indexed.has(type): return tile_ores_indexed[type]
     return null
 
+func _should_show_panel() -> bool:
+    return tile_ore_with_data != null or tile_ores.size() > 0
+
+func should_show_panel() -> bool:
+    return _should_show_panel()
+
+func _create_info_node() -> Control:
+    return null
+
+func create_info_node() -> Control:
+    return _create_info_node()
+
 func get_tr_name() -> String:
     return Content.to_full_id(mod.mod_info.id, id, "Overlay")
 

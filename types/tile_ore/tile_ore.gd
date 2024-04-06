@@ -15,3 +15,4 @@ func _get_type() -> TileOreType:
 func get_type() -> TileOreType:
     return _get_type()
 
+
