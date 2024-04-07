@@ -25,11 +25,3 @@ layout_mode = 2
 [node name="Editors" type="VBoxContainer" parent="EditorsContainer/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="Button" type="Button" parent="EditorsContainer/ScrollContainer/Editors"]
-layout_mode = 2
-text = "12345"
-
-[node name="Label" type="Label" parent="EditorsContainer/ScrollContainer/Editors"]
-layout_mode = 2
-text = "12345"

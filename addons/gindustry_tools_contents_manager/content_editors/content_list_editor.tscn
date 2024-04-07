@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://6hyvkkiya10x"]
+
+[ext_resource type="PackedScene" uid="uid://bmjcycscdm3ky" path="res://addons/gindustry_tools_contents_manager/content_editors/content_editor.tscn" id="1_nkwxo"]
+[ext_resource type="Script" path="res://addons/gindustry_tools_contents_manager/content_editors/content_list_editor.gd" id="2_be2yf"]
+[ext_resource type="Texture2D" uid="uid://do3tytjoslyl5" path="res://assets/ui/arrows/down_arrow_2.tres" id="3_mfup2"]
+
+[node name="ContentEditor" instance=ExtResource("1_nkwxo")]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2_be2yf")
+
+[node name="Button" type="Button" parent="Toolbar" index="0"]
+layout_mode = 2
+icon = ExtResource("3_mfup2")
+flat = true
+
+[node name="ItemList" type="ItemList" parent="." index="1"]
+layout_mode = 2
+size_flags_vertical = 3
+select_mode = 1
+auto_height = true

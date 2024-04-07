@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://bmjcycscdm3ky"]
+
+[ext_resource type="Script" path="res://addons/gindustry_tools_contents_manager/content_editors/content_editor.gd" id="1_edbcf"]
+
+[node name="ContentEditor" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_edbcf")
+
+[node name="Toolbar" type="HBoxContainer" parent="."]
+layout_mode = 2

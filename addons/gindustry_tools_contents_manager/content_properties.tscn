@@ -1,7 +1,17 @@
-[gd_scene load_steps=5 format=3 uid="uid://dpumwf3w8qxg8"]
+[gd_scene load_steps=5 format=3 uid="uid://5271wg830wiw"]
 
-[ext_resource type="Script" path="res://addons/gindustry_tools_contents_manager/main_panel.gd" id="1_67g50"]
-[ext_resource type="PackedScene" uid="uid://cwpw3gohiud0n" path="res://addons/gindustry_tools_contents_manager/contents_editor.tscn" id="2_lgxue"]
+[ext_resource type="Script" path="res://addons/gindustry_tools_contents_manager/content_properties.gd" id="1_ks3bq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dk6x0"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.147, 0.168, 0.203, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_detail = 3
+anti_aliasing = false
 
 [sub_resource type="Image" id="Image_k3akd"]
 data = {
@@ -15,66 +25,42 @@ data = {
 [sub_resource type="ImageTexture" id="ImageTexture_phy33"]
 image = SubResource("Image_k3akd")
 
-[node name="MainPanel" type="Control"]
-layout_mode = 3
+[node name="ContentProperties" type="VBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 3
+script = ExtResource("1_ks3bq")
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 2
 size_flags_vertical = 3
-script = ExtResource("1_67g50")
+theme_override_styles/panel = SubResource("StyleBoxFlat_dk6x0")
 
-[node name="HSplitContainer" type="HSplitContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.25
-
-[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 6
-
-[node name="HBoxContainer" type="HBoxContainer" parent="HSplitContainer/VBoxContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
 layout_mode = 2
 
-[node name="AddElement" type="Button" parent="HSplitContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="AddElement" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 icon = SubResource("ImageTexture_phy33")
 flat = true
 
-[node name="Filter" type="LineEdit" parent="HSplitContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+[node name="Filter" type="LineEdit" parent="Panel/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Filter"
 
-[node name="TreeContainer" type="PanelContainer" parent="HSplitContainer/VBoxContainer"]
+[node name="LayerTree" type="Tree" parent="Panel/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
 size_flags_vertical = 3
-size_flags_stretch_ratio = 0.3
 
-[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="ContentsEditor" parent="HSplitContainer/MarginContainer" instance=ExtResource("2_lgxue")]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[connection signal="pressed" from="HSplitContainer/VBoxContainer/MarginContainer/HBoxContainer/AddElement" to="." method="_on_add_element_pressed"]
-[connection signal="text_changed" from="HSplitContainer/VBoxContainer/MarginContainer/HBoxContainer/Filter" to="." method="_on_filter_text_changed"]
+[connection signal="pressed" from="Panel/VBoxContainer/HBoxContainer/AddElement" to="." method="_on_add_element_pressed"]
+[connection signal="text_changed" from="Panel/VBoxContainer/HBoxContainer/Filter" to="." method="_on_filter_text_changed"]
+[connection signal="item_activated" from="Panel/VBoxContainer/LayerTree" to="." method="_on_layer_tree_item_activated"]

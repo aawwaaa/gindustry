@@ -243,6 +243,14 @@
 [ ] ContentManager
     [ ] ui
     [ ] edit
+[ ] ContentEditor
+[ ] 数据驱动
+    [ ] BuildingShadow.tiles
+    [ ] BuildingShadow.raycast2d.collision_shape
+    [ ] BuildingShadow.sprite
+    [ ] BuildingShadow.collision(动态添加节点)
+    [ ] BuildingShadow.components
+    [ ] BuildingShadow.adapter_nodes
 [ ] World2D实现多世界
 
 [X] 6. 带物品的建筑拆除
