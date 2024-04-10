@@ -13,10 +13,11 @@ func _on_inventory_inventory_slot_changed(slot_id: int, item_type_changed: bool)
     entity.world.get_tile_or_null(entity.pos).clear_building.call_deferred()
 
 func _on_building_input_operation(operation: String, args: Array) -> void:
-    if operation == "open_panel":
-        Global.input_handler.call_input_processor("item", "access_target_ui", [self])
-    if operation == "drop_item":
-        Global.input_handler.call_input_processor("item", "accept_drop_item", [self, args])
+    if operation == InputInteracts.INTERACT_I_DIRECT_INTERACT:
+        Global.input_handler.interact_access_target_ui(self);
+    if operation == InputInteracts.ITEM_I_DROP_ITEM:
+        Global.input_handler.call_input_processor(InputInteracts.ITEM_PROCESSOR, \
+                InputInteracts.ITEM_ACCEPT_DROP_ITEM, [self, args])
 
 func get_adapter_at(pos: Vector2i, type: String) -> EntityAdapter:
     if pos != Vector2i.ZERO or type != "item": return null

@@ -88,6 +88,12 @@ func get_focused_entity() -> Entity:
     if interacting_entities.size() == 0: return null
     return interacting_entities.back()
 
+func _get_focused_tile() -> Tile:
+    return null
+
+func get_focused_tile() -> Tile:
+    return _get_focused_tile()
+
 func update_focused_entity(old: Entity) -> void:
     if old == get_focused_entity(): return
     focused_entity_changed.emit(get_focused_entity(), old)
@@ -114,6 +120,18 @@ func call_input_processor(name: StringName, func_name: StringName, args: Array =
     var processor = input_processors[name]
     if not processor or not processor.has_method(func_name): return
     processor[func_name].callv(args)
+
+func call_interact_processor(func_name: StringName, args: Array = []) -> void:
+    call_input_processor(InputInteracts.INTERACT_PROCESSOR, func_name, args)
+
+func interact_access_target_ui(target: Variant) -> void:
+    call_input_processor(InputInteracts.INTERACT_PROCESSOR, InputInteracts.INTERACT_ACCESS_TARGET_UI, [target])
+
+func interact_clear_access_target() -> void:
+    call_input_processor(InputInteracts.INTERACT_PROCESSOR, InputInteracts.INTERACT_CLEAR_ACCESS_TARGET, [])
+
+func interact_access_and_operate(args: Array = []) -> void:
+    call_input_processor(InputInteracts.INTERACT_PROCESSOR, InputInteracts.INTERACT_ACCESS_AND_OPERATE, args)
 
 func _on_player_changed(player: Player, from: Player) -> void:
     Utils.signal_dynamic_connect(controller, from.get_controller() if from else null,

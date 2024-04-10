@@ -12,7 +12,7 @@ func _ready() -> void:
 
 func _on_close_requested() -> void:
     hide()
-    Global.input_handler.call_input_processor("item", "clear_access_target")
+    Global.input_handler.interact_clear_access_target();
 
 func _on_input_handler_changed(handler: InputHandler, from: InputHandler) -> void:
     Utils.signal_dynamic_connect(handler, from, "controller_target_entity_changed", \
@@ -36,9 +36,9 @@ func _on_inventory_inventory_slot_changed(index: int, type_changed: bool) -> voi
     inventory_updated.emit()
 
 func _input(event: InputEvent) -> void:
-    if Input.is_action_just_pressed("open_inventory"):
+    if Input.is_action_just_pressed("ui_open_inventory"):
         hide()
-        Global.input_handler.call_input_processor("item", "clear_access_target")
+        Global.input_handler.interact_clear_access_target();
 
 func toggle_inventory() -> void:
     if not visible or not default_inventory_panel_inst.is_inside_tree():
@@ -46,7 +46,7 @@ func toggle_inventory() -> void:
         show()
     else:
         hide()
-        Global.input_handler.call_input_processor("item", "clear_access_target")
+        Global.input_handler.interact_clear_access_target();
 
 func _on_controller_target_access_target_changed(target: Node2D, from: Node2D) -> void:
     load_info(target.get_entity() if target else null)

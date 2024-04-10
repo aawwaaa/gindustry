@@ -112,6 +112,10 @@ func _on_copy_toggled(toggled_on: bool) -> void:
         if %Break.button_pressed: build_mode = "break";
         else: build_mode = "place";
 
+func toggle_build_mode_buttons(disable: bool) -> void:
+    %Break.visible = not visible
+    %Copy.visible = not visible
+
 func _on_confirm_pressed() -> void:
     confirm_build.emit();
 

@@ -7,6 +7,7 @@ var move: DesktopInputHandler_Movement
 var camera: DesktopInputHandler_Camera
 var item: DesktopInputHandler_Item
 var build: DesktopInputHandler_Build
+var interact: DesktopInputHandler_Interact
 
 func _ready() -> void:
     super._ready()
@@ -17,25 +18,30 @@ func _ready() -> void:
     add_child(camera)
     item = DesktopInputHandler_Item.new(self)
     add_child(item)
-    input_processors["item"] = item
+    input_processors[InputInteracts.ITEM_PROCESSOR] = item
     build = DesktopInputHandler_Build.new(self)
     add_child(build)
-    input_processors["build"] = build
+    input_processors[InputInteracts.BUILD_PROCESSOR] = build
+    interact = DesktopInputHandler_Interact.new(self)
+    add_child(interact)
+    input_processors[InputInteracts.INTERACT_PROCESSOR] = interact
 
     keys.merge({
-        "open_pause_menu": GameUI.instance.pause_menu.toggle_pause_menu.bind(),
-        "open_inventory": GameUI.instance.player_inventory.toggle_inventory.bind(),
+        "ui_open_pause_menu": GameUI.instance.pause_menu.toggle_pause_menu.bind(),
+        "ui_open_inventory": GameUI.instance.player_inventory.toggle_inventory.bind(),
     })
 
 func _handle_unhandled_input(event: InputEvent) -> void:
-    item.handle_unhandled_input(event)
-    build.handle_unhandled_input(event)
+    if item.handle_unhandled_input(event): return
+    if build.handle_unhandled_input(event): return
+    if interact.handle_unhandled_input(event): return
 
 func _handle_input(event: InputEvent) -> void:
     if event is InputEventMouse: handle_input_event_mouse(event)
     if event is InputEventKey: handle_input_event_key(event)
-    item.handle_input(event)
-    build.handle_input(event)
+    if item.handle_input(event): return
+    if build.handle_input(event): return
+    if interact.handle_input(event): return
     
 func _handle_process(_delta: float) -> void:
     if entity: update_debug_message()
@@ -47,10 +53,6 @@ func _load_ui(node: Control) -> void:
 
 func _unload_ui(node: Control) -> void:
     build.unload_ui(node)
-
-func _accept_input(name: StringName, func_name: StringName, args: Array = []) -> bool:
-    if name == "build" and item.activate: return false
-    return true
 
 func handle_input_event_mouse(event: InputEventMouse) -> void:
     var pos = event.position

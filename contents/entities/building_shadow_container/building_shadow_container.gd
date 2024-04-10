@@ -161,6 +161,7 @@ func _on_entity_on_save_data(stream: Stream) -> void:
         item.save_to(stream)
 
 func _on_entity_input_operation(operation: String, args: Array) -> void:
-    if not operation == "continue_build": return
-    Global.input_handler.call_input_processor("build", "continue_build", [self])
+    if not operation == InputInteracts.INTERACT_I_DIRECT_INTERACT: return
+    Global.input_handler.call_input_processor(InputInteracts.BUILD_PROCESSOR, \
+            InputInteracts.BUILD_CONTINUE_BUILD, [self])
 

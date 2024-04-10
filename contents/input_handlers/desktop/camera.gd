@@ -9,11 +9,7 @@ func _handle_process(_delta: float) -> void:
     if target: update_camera()
 
 func _handle_unhandled_input(event: InputEvent) -> void:
-    if event is InputEventMouseButton: handle_unhandled_input_event_mouse_button(event)
-
-func handle_unhandled_input_event_mouse_button(event: InputEventMouseButton) -> void:
-    if event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
-        handle_camera_zoom(event)
+    handle_camera_zoom(event)
 
 func update_camera() -> void:
     camera_position = controller.get_target_attribute("position")
@@ -24,8 +20,8 @@ func update_camera() -> void:
     Game.camera_node.zoom = Game.camera_node.zoom.lerp(Vector2(camera_zoom, camera_zoom), 0.15);
 
 func handle_camera_zoom(event: InputEventMouseButton) -> void:
-    if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+    if Input.is_action_just_pressed("camera_zoom_up"):
         camera_zoom *= 1.1
-    if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+    if Input.is_action_just_pressed("camera_zoom_down"):
         camera_zoom /= 1.1
 

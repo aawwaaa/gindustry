@@ -11,33 +11,30 @@ var enabled: bool = true:
     set(v): enabled = v; update_item_use()
 var activate: bool = false;
 
-func handle_input(event: InputEvent) -> void:
-    handle_input_event(event) 
+func handle_input(event: InputEvent) -> bool:
+    return handle_input_event(event) 
 
-func handle_unhandled_input(event: InputEvent) -> void:
-    handle_input_event(event, true) 
+func handle_unhandled_input(event: InputEvent) -> bool:
+    return handle_input_event(event, true) 
 
-func handle_input_event(event: InputEvent, unhandled: bool = false) -> void:
+func handle_input_event(event: InputEvent, unhandled: bool = false) -> bool:
     if event is InputEventMouse:
         mouse_position = event.position
         var trans = Game.camera_node.get_viewport_transform()
         world_position = trans.affine_inverse() * mouse_position
-    if not entity: return
+    if not entity: return false
     item_use_position = world_position
     update_item_use()
     var inventory = entity.get_adapter(Inventory.I_DEFAULT_NAME)
     var item = inventory.get_slot(inventory.hand_slot)
     if unhandled and enabled:
-        if item and Input.is_action_just_pressed("drop_an_item"): confirm_drop_item("one", world_position)
-        elif item and Input.is_action_just_pressed("drop_half_item"): confirm_drop_item("half", world_position)
-        elif item and Input.is_action_just_pressed("drop_all_item"): confirm_drop_item("all", world_position)
-        elif item_use and Input.is_action_just_pressed("confirm_item_use"): confirm_item_use()
-        elif Input.is_action_just_pressed("open_panel") \
-                and (handler.get_interacting_target() in handler.interacting_entities \
-                        or handler.get_interacting_target() in handler.interacting_adapters) :
-            handler.interact_operate("open_panel", [world_position])
-        elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-            handler.interact_operate("clicked", [world_position])
+        if item and Input.is_action_just_pressed("item_drop_an_item"): confirm_drop_item("one", world_position)
+        elif item and Input.is_action_just_pressed("item_drop_half_item"): confirm_drop_item("half", world_position)
+        elif item and Input.is_action_just_pressed("item_drop_all_item"): confirm_drop_item("all", world_position)
+        elif item_use and Input.is_action_just_pressed("item_confirm_item_use"): confirm_item_use()
+        else: return false
+        return true
+    return false
 
 func update_item_use() -> void:
     var inventory = entity.get_adapter(Inventory.I_DEFAULT_NAME)
@@ -72,23 +69,8 @@ func confirm_drop_item(type: String, pos: Vector2) -> void:
     if not interacting:
         controller.operate_target(ControllerAdapter.TARGET_ADAPTER, ["inventory", "drop_item_at", entity.world, pos, type])
         return
-    handler.interact_operate("drop_item", [type, pos])
+    handler.interact_operate(InputInteracts.ITEM_I_DROP_ITEM, [type, pos])
 
 func accept_drop_item(target: Node2D, args: Array) -> void:
     var entity = target.get_entity()
     controller.operate_target(ControllerAdapter.TARGET_ADAPTER, ["inventory", "drop_item", entity, args[0]])
-
-func access_target_ui(target: Node2D) -> void:
-    controller.request_access_target(target)
-    GameUI.instance.player_inventory.show()
-
-func clear_access_target() -> void:
-    controller.clear_access_target()
-
-func access_and_operate(target: Node2D, operation: String, args: Array[Variant] = []) -> void:
-    if not entity: return
-    var current = entity.access_target
-    controller.request_access_target.call_deferred(target)
-    await entity.access_target_changed
-    if not entity: return
-    controller.operate_remote_target(operation, args)
