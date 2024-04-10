@@ -57,7 +57,7 @@ func _unload_ui(node: Control) -> void:
 func handle_input_event_mouse(event: InputEventMouse) -> void:
     var pos = event.position
     var trans = Game.camera_node.get_viewport_transform()
-    var world_pos = trans.affine_inverse() * pos
+    world_pos = trans.affine_inverse() * pos
 
 func handle_input_event_key(event: InputEventKey) -> void:
     for key in keys:

@@ -41,13 +41,14 @@ func handle_input(event: InputEvent) -> bool:
 func handle_unhandled_input(event: InputEvent) -> bool:
     return handle_input_event(event, true)
 
-func handle_input_event(event: InputEventMouse, unhandled: bool = false) -> bool:
-    var pos = event.position
-    var trans = Game.camera_node.get_viewport_transform()
-    var world_pos = trans.affine_inverse() * pos
+func handle_input_event(event: InputEvent, unhandled: bool = false) -> bool:
+    if event is InputEventMouse:
+        var pos = event.position
+        var trans = Game.camera_node.get_viewport_transform()
+        world_pos = trans.affine_inverse() * pos
     building_shadow_position = Tile.to_tile_pos(world_pos)
     if entity: update_building_shadow()
-    if entity and unhandled: return handle_drag(event, world_pos)
+    if entity and unhandled: return handle_drag(event)
     return false
 
 func load_ui(node: Control) -> void:
@@ -118,7 +119,7 @@ func update_build_plan() -> void:
             plan.world.get_temp_node(plan.preview_name).queue_free()
         controller.remove_build_plan(plan)
 
-func handle_drag(event: InputEvent, world_pos: Vector2) -> bool:
+func handle_drag(event: InputEvent) -> bool:
     var ui = GameUI.instance.build_ui
     if Input.is_action_pressed("build_break_drag") or Input.is_action_just_released("build_break_drag"):
         ui.build_mode = "break"
@@ -126,12 +127,12 @@ func handle_drag(event: InputEvent, world_pos: Vector2) -> bool:
         ui.build_mode = "copy"
     else:
         ui.build_mode = "place"
-    if ui.build_mode == "place" and ui.selected_building_type: return handle_place_drag(event, world_pos)
-    if ui.build_mode == "break": return handle_break_drag(event, world_pos)
-    if ui.build_mode == "copy": return handle_copy_drag(event, world_pos)
+    if ui.build_mode == "place" and ui.selected_building_type: return handle_place_drag(event)
+    if ui.build_mode == "break": return handle_break_drag(event)
+    if ui.build_mode == "copy": return handle_copy_drag(event)
     return false
 
-func handle_place_drag(event: InputEventMouse, world_pos: Vector2) -> bool:
+func handle_place_drag(event: InputEvent) -> bool:
     var ui = GameUI.instance.build_ui
     var building_type = ui.selected_building_type
     if Input.is_action_just_pressed("build_build_drag"):
@@ -172,7 +173,7 @@ func handle_place_drag(event: InputEventMouse, world_pos: Vector2) -> bool:
         confirm_build_drag()
     return true
 
-func handle_break_drag(event: InputEventMouse, world_pos: Vector2) -> bool:
+func handle_break_drag(event: InputEvent) -> bool:
     if Input.is_action_just_pressed("build_break_drag"):
         building_drag_begin = Tile.to_tile_pos(world_pos)
         dragging = true
@@ -214,7 +215,7 @@ func handle_break_drag(event: InputEventMouse, world_pos: Vector2) -> bool:
         confirm_break_drag()
     return false
         
-func handle_copy_drag(event: InputEventMouse, world_pos: Vector2) -> bool:
+func handle_copy_drag(event: InputEvent) -> bool:
     if Input.is_action_just_pressed("build_copy_drag"):
         pass
     if not dragging: return false

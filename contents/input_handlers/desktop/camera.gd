@@ -19,7 +19,7 @@ func update_camera() -> void:
         Game.camera_base_node.rotation = camera_rotation;
     Game.camera_node.zoom = Game.camera_node.zoom.lerp(Vector2(camera_zoom, camera_zoom), 0.15);
 
-func handle_camera_zoom(event: InputEventMouseButton) -> void:
+func handle_camera_zoom(event: InputEvent) -> void:
     if Input.is_action_just_pressed("camera_zoom_up"):
         camera_zoom *= 1.1
     if Input.is_action_just_pressed("camera_zoom_down"):

@@ -36,6 +36,8 @@ var target: ControllerAdapter:
 var entity: Entity:
     get: return target.entity_node if target else null
 
+var world_pos: Vector2;
+
 func _load_ui(node: Control) -> void:
     pass
 
@@ -89,7 +91,7 @@ func get_focused_entity() -> Entity:
     return interacting_entities.back()
 
 func _get_focused_tile() -> Tile:
-    return null
+    return entity.world.get_tile_or_null(Tile.to_tile_pos(world_pos)) if entity else null
 
 func get_focused_tile() -> Tile:
     return _get_focused_tile()

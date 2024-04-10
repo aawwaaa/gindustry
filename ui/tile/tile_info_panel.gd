@@ -10,8 +10,18 @@ extends VBoxContainer
 @onready var overlay_name: Label = %OverlayName
 @onready var overlay_ores: VBoxContainer = %OverlayOres
 
+func _process(delta: float) -> void:
+    apply_data(Global.input_handler.get_focused_tile())
+
 func reset_state() -> void:
-    pass
+    floor_panel.visible = false
+    for child in floor_ores.get_children():
+        child.queue_free()
+    overlay_panel.visible = false
+    for child in overlay_ores.get_children():
+        child.queue_free()
 
 func apply_data(tile: Tile) -> void:
-    pass
+    reset_state()
+    if not tile: return
+    # todo here

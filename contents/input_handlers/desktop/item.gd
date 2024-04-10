@@ -2,7 +2,6 @@ class_name DesktopInputHandler_Item
 extends InputHandlerModule
 
 var mouse_position: Vector2
-var world_position: Vector2
 
 var item_use_position: Vector2;
 var item_use: ItemUse;
@@ -20,17 +19,15 @@ func handle_unhandled_input(event: InputEvent) -> bool:
 func handle_input_event(event: InputEvent, unhandled: bool = false) -> bool:
     if event is InputEventMouse:
         mouse_position = event.position
-        var trans = Game.camera_node.get_viewport_transform()
-        world_position = trans.affine_inverse() * mouse_position
     if not entity: return false
-    item_use_position = world_position
+    item_use_position = world_pos
     update_item_use()
     var inventory = entity.get_adapter(Inventory.I_DEFAULT_NAME)
     var item = inventory.get_slot(inventory.hand_slot)
     if unhandled and enabled:
-        if item and Input.is_action_just_pressed("item_drop_an_item"): confirm_drop_item("one", world_position)
-        elif item and Input.is_action_just_pressed("item_drop_half_item"): confirm_drop_item("half", world_position)
-        elif item and Input.is_action_just_pressed("item_drop_all_item"): confirm_drop_item("all", world_position)
+        if item and Input.is_action_just_pressed("item_drop_an_item"): confirm_drop_item("one", world_pos)
+        elif item and Input.is_action_just_pressed("item_drop_half_item"): confirm_drop_item("half", world_pos)
+        elif item and Input.is_action_just_pressed("item_drop_all_item"): confirm_drop_item("all", world_pos)
         elif item_use and Input.is_action_just_pressed("item_confirm_item_use"): confirm_item_use()
         else: return false
         return true

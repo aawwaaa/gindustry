@@ -2,7 +2,6 @@ class_name DesktopInputHandler_Interact
 extends InputHandlerModule
 
 var mouse_position: Vector2
-var world_position: Vector2
 
 var enabled: bool = true:
     set(v): enabled = v;
@@ -17,8 +16,6 @@ func handle_unhandled_input(event: InputEvent) -> bool:
 func handle_input_event(event: InputEvent, unhandled: bool = false) -> bool:
     if event is InputEventMouse:
         mouse_position = event.position
-        var trans = Game.camera_node.get_viewport_transform()
-        world_position = trans.affine_inverse() * mouse_position
     if not entity: return false
     var inventory = entity.get_adapter(Inventory.I_DEFAULT_NAME)
     var item = inventory.get_slot(inventory.hand_slot)
@@ -26,10 +23,10 @@ func handle_input_event(event: InputEvent, unhandled: bool = false) -> bool:
         if Input.is_action_just_pressed("interact_direct_interact") \
                 and (handler.get_interacting_target() in handler.interacting_entities \
                         or handler.get_interacting_target() in handler.interacting_adapters) :
-            handler.interact_operate(InputInteracts.INTERACT_I_DIRECT_INTERACT, [world_position])
+            handler.interact_operate(InputInteracts.INTERACT_I_DIRECT_INTERACT, [world_pos])
             return true
         if Input.is_action_just_pressed("interact_click"):
-            handler.interact_operate(InputInteracts.INTERACT_I_CLICK, [world_position])
+            handler.interact_operate(InputInteracts.INTERACT_I_CLICK, [world_pos])
             return true
     return false
 

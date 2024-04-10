@@ -12,6 +12,9 @@ var target: ControllerAdapter:
 var entity: Entity:
     get: return handler.entity
 
+var world_pos: Vector2:
+    get: return handler.world_pos
+
 func _init(handler: InputHandler) -> void:
     self.handler = handler
 
