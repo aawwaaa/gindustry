@@ -26,7 +26,6 @@ var selected_building_type: BuildingType:
         selected_building_type_changed.emit(v)
         update_child_visible()
         building_type_panel.apply_data(v)
-        entity_info_container.visible = v == null
 var has_build_plan: bool = false:
     set(v):
         has_build_plan = v
@@ -37,7 +36,6 @@ var has_schematic: bool = false:
         update_child_visible()
 
 @onready var building_type_panel: BuildingTypePanel = %BuildingTypePanel
-@onready var entity_info_container: EntityInfoContainer = %EntityInfoContainer
 
 func _ready() -> void:
     building_button_group = ButtonGroup.new();

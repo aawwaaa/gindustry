@@ -10,7 +10,7 @@ var log_levels = {
     "debug" = "LogLevel_Debug"
 }
 
-var enable_debug_log = true;
+var enable_debug_log = false;
 var log_access: FileAccess;
 
 class Logger extends RefCounted:
