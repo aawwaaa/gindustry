@@ -1,12 +1,29 @@
-[gd_resource type="Resource" script_class="Gindustry_Overlay" load_steps=3 format=3 uid="uid://bg41cuiggix8j"]
+[gd_resource type="Resource" script_class="Gindustry_Overlay" load_steps=8 format=3 uid="uid://bg41cuiggix8j"]
 
 [ext_resource type="Script" path="res://mods/gindustry/types/overlays/overlay.gd" id="1_xu7x6"]
+[ext_resource type="Resource" uid="uid://c7tfdm8ui7dcn" path="res://mods/gindustry/contents/items/coal.tres" id="2_a5yh8"]
 [ext_resource type="Texture2D" uid="uid://c4xvsgkd5uk5e" path="res://mods/gindustry/assets/overlays.png" id="2_t8t8i"]
+[ext_resource type="Script" path="res://types/item/packed_item_stack.gd" id="3_yjhlu"]
+[ext_resource type="Script" path="res://types/tile_ore/item_ore/limited_item.gd" id="4_wt46u"]
+
+[sub_resource type="Resource" id="Resource_5agdh"]
+script = ExtResource("3_yjhlu")
+item_type = ExtResource("2_a5yh8")
+amount = 1
+options = {}
+
+[sub_resource type="Resource" id="Resource_eexni"]
+script = ExtResource("4_wt46u")
+item_stack = SubResource("Resource_5agdh")
+default_amount = 50
+auto_remove = true
 
 [resource]
 script = ExtResource("1_xu7x6")
 tilemap_texture = ExtResource("2_t8t8i")
 collision_type = "none"
 tile_coords = Vector2i(4, 0)
+tile_ores = Array[Resource("res://types/tile_ore/tile_ore.gd")]([])
+tile_ore_with_data = SubResource("Resource_eexni")
 id = "ore_coal"
 options = {}

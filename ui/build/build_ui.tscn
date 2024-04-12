@@ -1,10 +1,11 @@
-[gd_scene load_steps=18 format=3 uid="uid://bkjiopb08w5no"]
+[gd_scene load_steps=19 format=3 uid="uid://bkjiopb08w5no"]
 
 [ext_resource type="Script" path="res://ui/build/build_ui.gd" id="1_1mh4v"]
 [ext_resource type="Texture2D" uid="uid://bnrgbbio2cewj" path="res://assets/ui/arrows.png" id="1_o3puo"]
 [ext_resource type="Texture2D" uid="uid://ds4ih5scc8o4r" path="res://assets/ui/icons/break.tres" id="2_ob47p"]
 [ext_resource type="PackedScene" uid="uid://dp004ooklp7ls" path="res://ui/build/building_type_panel.tscn" id="2_qywls"]
 [ext_resource type="Texture2D" uid="uid://djiadsqq65hkd" path="res://assets/ui/icons/copy.tres" id="3_6eicn"]
+[ext_resource type="PackedScene" uid="uid://wmerrmleh36m" path="res://ui/tile/tile_info_panel.tscn" id="3_06lvx"]
 [ext_resource type="Script" path="res://ui/build/entity_info_container.gd" id="3_gcja1"]
 [ext_resource type="Texture2D" uid="uid://d4h3l85gk7ahu" path="res://assets/ui/icons/check.tres" id="4_7f4ug"]
 [ext_resource type="Texture2D" uid="uid://botefrj43l1li" path="res://assets/ui/icons/schematics.tres" id="5_33xuc"]
@@ -49,6 +50,10 @@ grow_vertical = 0
 layout_mode = 2
 
 [node name="BuildingTypePanel" parent="PanelContainer/VBoxContainer" instance=ExtResource("2_qywls")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TileInfoPanel" parent="PanelContainer/VBoxContainer" instance=ExtResource("3_06lvx")]
 unique_name_in_owner = true
 layout_mode = 2
 

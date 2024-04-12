@@ -226,11 +226,11 @@
         [X] RecipeSelectorPanel
     [X] ItemSelector
     [X] ContentSelector
-[ ] TileOre[WithData]
+[X] TileOre[WithData] 测试
 	[X] TileOreType
 	[X] [Floor/Overlay].ores/ore_with_data
 	[X] TileOre_ItemOre
-    [ ] BuildUI显示TileOre
+    [X] BuildUI显示TileOre
 [ ] GraphAdpater
     [ ] Graph
     [ ] GraphAdpater

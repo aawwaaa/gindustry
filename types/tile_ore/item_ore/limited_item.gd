@@ -23,6 +23,17 @@ func create_item(tile: Tile, ore_type: String) -> Item:
 func _init_ore_data(_tile: Tile, ore_type: String) -> Variant:
     return default_amount
 
+func _has_panel(tile: Tile, ore_type: String) -> bool:
+    return true
+
+func _create_panel(tile: Tile, ore_type: String) -> Control:
+    var panel = TileOre_ItemOrePanel.scene.instantiate() as TileOre_ItemOrePanel
+    panel.stack = item_stack
+    panel.ore = self
+    panel.tile = tile
+    panel.type = ore_type
+    return panel
+
 func _load_data(tile: Tile, ore_type: String, stream: Stream) -> void:
     set_data(tile, ore_type, stream.get_32())
 

@@ -9,8 +9,8 @@ region = Rect2(96, 0, 32, 32)
 
 [resource]
 script = ExtResource("1_yav3j")
-icon = SubResource("AtlasTexture_duhsc")
 max_stack_amount = 100
-cost_per_item = 1
+cost_per_item = 1.0
 id = "coal"
 options = {}
+icon = SubResource("AtlasTexture_duhsc")

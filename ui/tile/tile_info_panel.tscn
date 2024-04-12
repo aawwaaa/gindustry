@@ -59,7 +59,7 @@ texture = ExtResource("1_hi1ku")
 [node name="OverlayName" type="Label" parent="OverlayPanel/PanelContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "FloorName"
+text = "OverlayName"
 
 [node name="MarginContainer" type="MarginContainer" parent="OverlayPanel"]
 layout_mode = 2

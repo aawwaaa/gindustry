@@ -37,13 +37,13 @@ func _handle_unhandled_input(event: InputEvent) -> void:
     if interact.handle_unhandled_input(event): return
 
 func _handle_input(event: InputEvent) -> void:
-    if event is InputEventMouse: handle_input_event_mouse(event)
     if event is InputEventKey: handle_input_event_key(event)
     if item.handle_input(event): return
     if build.handle_input(event): return
     if interact.handle_input(event): return
     
 func _handle_process(_delta: float) -> void:
+    update_mouse_position()
     if entity: update_debug_message()
     if build.activate and item.enabled: item.enabled = false
     if not build.activate and not item.enabled: item.enabled = true
@@ -54,10 +54,8 @@ func _load_ui(node: Control) -> void:
 func _unload_ui(node: Control) -> void:
     build.unload_ui(node)
 
-func handle_input_event_mouse(event: InputEventMouse) -> void:
-    var pos = event.position
-    var trans = Game.camera_node.get_viewport_transform()
-    world_pos = trans.affine_inverse() * pos
+func update_mouse_position() -> void:
+    world_pos = Global.main.get_global_mouse_position()
 
 func handle_input_event_key(event: InputEventKey) -> void:
     for key in keys:
