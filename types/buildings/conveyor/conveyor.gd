@@ -67,8 +67,8 @@ func update_ports() -> void:
     if old != direction: entity.shadow.display_direction = direction
 
 func _on_building_input_operation(operation: String, args: Array = []) -> void:
-    if operation == "drop_item":
-        Global.input_handler.call_input_processor("item", "access_and_operate", [self, "drop_item", args])
+    if operation == InputInteracts.ITEM_I_DROP_ITEM:
+        Global.input_handler.interact_access_and_operate([self, "drop_item", args])
 
 func _on_building_remote_operation(source: Entity, operation: String, args: Array = []) -> void:
     if source.world != entity.world: return

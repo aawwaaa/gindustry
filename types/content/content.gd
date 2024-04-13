@@ -26,7 +26,8 @@ static func sort_content_list(list: Array) -> Array:
 func apply_mod(mod_inst: Mod) -> void:
     mod = mod_inst;
     full_id = Content.to_full_id(mod.mod_info.id, id, get_content_type().name)
-    content_category.contents.append(self)
+    if content_category:
+        content_category.contents.append(self)
 
 func get_tr_name() -> String:
     return Content.to_full_id(mod.mod_info.id, id)

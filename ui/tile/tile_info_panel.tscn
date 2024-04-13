@@ -11,6 +11,7 @@ script = ExtResource("1_mnh4u")
 
 [node name="FloorPanel" type="VBoxContainer" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="FloorPanel"]
@@ -43,6 +44,7 @@ layout_mode = 2
 
 [node name="OverlayPanel" type="VBoxContainer" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="OverlayPanel"]
