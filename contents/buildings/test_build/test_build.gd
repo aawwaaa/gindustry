@@ -13,3 +13,9 @@ func _on_building_input_operation(operation: String, args: Array) -> void:
 
 func _ready() -> void:
     item_select.content_display_group = entity.shadow.get_sub_node("group")
+
+func get_config() -> Variant:
+    return item_select.get_config()
+
+func set_config(config: Variant) -> void:
+    item_select.set_config(config)

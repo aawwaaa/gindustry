@@ -14,6 +14,8 @@ entity = NodePath("Building")
 [node name="Building" type="Node" parent="." node_paths=PackedStringArray("shadow_container", "main_node")]
 script = ExtResource("2_okqvj")
 shadow_container = NodePath("..")
+callback_get_config = &"get_config"
+callback_set_config = &"set_config"
 main_node = NodePath("..")
 adapters = {
 "iselect": NodePath("../ItemSelectAdapter"),

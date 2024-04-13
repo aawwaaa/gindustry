@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://ckwsni6u72tql"]
+[gd_scene load_steps=6 format=3 uid="uid://ckwsni6u72tql"]
 
 [ext_resource type="PackedScene" uid="uid://dowx2nq7aicx4" path="res://types/building/building_shadow.tscn" id="1_qfp2g"]
+[ext_resource type="Script" path="res://contents/buildings/test_build/shadow.gd" id="2_opmux"]
 [ext_resource type="Texture2D" uid="uid://dli78jr06n7so" path="res://assets/break_flag.png" id="2_uqdbk"]
 [ext_resource type="Script" path="res://types/content/content_display_group.gd" id="3_cqvs8"]
 
@@ -8,6 +9,7 @@
 size = Vector2(28, 28)
 
 [node name="Shadow" instance=ExtResource("1_qfp2g")]
+script = ExtResource("2_opmux")
 sub_nodes = {
 "group": NodePath("ContentDisplayGroup")
 }

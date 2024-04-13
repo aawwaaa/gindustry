@@ -195,9 +195,9 @@
     [X] ItemSelectAdapter
 [X] ContentSelectAdapter.ContentSelectConfig
 [X] ItemSelectAdapter.ItemSelectConfig
-[ ] BuildingShadow building_config preview
-    [ ] ContentDisplayGroup: Building -> BuildingShadow
-    [ ] Script设置
+[X] BuildingShadow building_config preview
+    [X] ContentDisplayGroup: Building -> BuildingShadow
+    [X] Script设置
 [X] EntityAdapter.main_adapter TEST
     [X] EntityAdapter._handle_adapter_operation(source: EntityAdapter, op: String, args)
     [X] request_adapter_operation(target: String, op: String, args)
@@ -239,6 +239,9 @@
     [ ] PowerOverload
     [ ] PowerDisconnected
     [ ] SignalConflected
+[ ] ItemAttribute
+    [ ] 热值
+[ ] FuelAdapter
 
 [ ] ContentManager
     [ ] ui

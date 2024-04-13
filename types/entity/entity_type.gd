@@ -6,8 +6,6 @@ const ENTITY_TYPE = preload("res://contents/content_types/entity.tres")
 @export var entity_scene: PackedScene:
     get: return entity_scene if entity_scene else _get_default_entity_scene()
 
-@export var controllable: bool = false;
-
 func _get_default_entity_scene() -> PackedScene:
     return null
 
