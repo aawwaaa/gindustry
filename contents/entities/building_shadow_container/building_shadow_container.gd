@@ -107,11 +107,11 @@ func _ready() -> void:
     shadow = building_type.create_shadow()
     shadow.world = entity.world
     shadow.pos = pos
-    shadow.building_config = building_config
     _on_entity_layer_changed(entity.layer, -1)
     add_child(shadow)
     shadow.entity = entity
     shadow.rot = rot
+    shadow.building_config = building_config
     shadow.build_progress = 0
     shadow.input_mouse_entered.connect(entity._on_collision_object_2d_mouse_entered)
     shadow.input_mouse_exited.connect(entity._on_collision_object_2d_mouse_exited)

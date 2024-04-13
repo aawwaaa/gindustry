@@ -40,11 +40,11 @@ func _ready() -> void:
     shadow = building_type.create_shadow()
     shadow.world = world
     shadow.pos = pos
-    shadow.building_config = building_config
     shadow.layer = layer
     await get_tree().process_frame
     shadow_container.add_child(shadow)
     shadow.rot = rot
+    shadow.building_config = building_config
     shadow.finish_build(self)
     shadow_inited = true
     shadow.input_mouse_entered.connect(_on_collision_object_2d_mouse_entered)
@@ -52,6 +52,9 @@ func _ready() -> void:
 
     if should_place: place()
     if should_destroy: destroy()
+
+    if callback_set_config != "":
+        main_node.call(callback_set_config, building_config)
 
 func _on_layer_changed(layer: int, from: int) -> void:
     if not shadow: return
