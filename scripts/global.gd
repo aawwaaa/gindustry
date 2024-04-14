@@ -77,13 +77,11 @@ func generate_player_configs() -> void:
     set_default("token-mapping-key", token_mapping_key)
 
 func load_configs() -> void:
-    var progress = Log.register_progress_source(10);
     if not FileAccess.file_exists("user://configs.bin"):
         configs.init_configs();
         logger.warn(tr("Global_ConfigsNotFound"))
         generate_player_configs();
         save_configs();
-        progress.call(10);
         return;
     logger.info(tr("Global_LoadConfigs"))
     var access = FileAccess.open("user://configs.bin", FileAccess.READ);
@@ -94,7 +92,6 @@ func load_configs() -> void:
     generate_player_configs();
     if config_value_changed:
         save_configs()
-    progress.call(10);
 
 func save_configs() -> void:
     logger.info(tr("Global_SaveConfigs"))

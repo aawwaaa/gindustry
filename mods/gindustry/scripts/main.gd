@@ -56,7 +56,7 @@ func load_types(scripts_dir: String) -> Dictionary:
         types_list.append(file_name);
         file_name = access.get_next();
     access.list_dir_end();
-    var scripts = await Utils.load_contents_async(scripts_dir, types_list);
+    var scripts = await Utils.load_contents_async(scripts_dir, types_list, "Loader_ModLoad_Scripts", logger.source);
     var types = {};
     for script in scripts:
         var inst = script.new();
@@ -64,7 +64,7 @@ func load_types(scripts_dir: String) -> Dictionary:
     return types
 
 func load_floors(list: Array[String], prefix: String, target: Dictionary) -> void:
-    var contents = await Utils.load_contents_async(prefix, list);
+    var contents = await Utils.load_contents_async(prefix, list, "Loader_ModLoad_Floors", logger.source);
     var sorted_by_tilemap_texture: Dictionary = {}
     for content in contents:
         var texture = content.tilemap_texture
@@ -92,33 +92,33 @@ func load_floors(list: Array[String], prefix: String, target: Dictionary) -> voi
 
 func load_items(list: Array[String]) -> void:
     logger.info(tr("Loader_ModLoad_Items"))
-    var items_contents = await Utils.load_contents_async(root+"/contents/items", list);
+    var items_contents = await Utils.load_contents_async(root+"/contents/items", list, "Loader_ModLoad_Items", logger.source);
     for item in items_contents:
         items[item.id] = item;
         Contents.register_content(item)
 
 func load_entities(list: Array[String]) -> void:
     logger.info(tr("Loader_ModLoad_Entities"))
-    var entities_contents = await Utils.load_contents_async(root+"/contents/entities", list);
+    var entities_contents = await Utils.load_contents_async(root+"/contents/entities", list, "Loader_ModLoad_Entities", logger.source);
     for entity in entities_contents:
         entities[entity.id] = entity;
         Contents.register_content(entity)
 
 func load_buildings(list: Array[String]) -> void:
-    var buildings_contents = await Utils.load_contents_async(root+"/contents/buildings", list);
+    var buildings_contents = await Utils.load_contents_async(root+"/contents/buildings", list, "Loader_ModLoad_Buildings", logger.source);
     for building in buildings_contents:
         buildings[building.id] = building;
         Contents.register_content(building)
 
 func load_presets(list: Array[String]) -> void:
     logger.info(tr("Loader_ModLoad_Presets"))
-    var presets = await Utils.load_contents_async(root+"/contents/presets", list);
-    var presets_group = Presets.register_preset_group("Gindustry")
+    var presets = await Utils.load_contents_async(root+"/contents/presets", list, "Loader_ModLoad_Presets", logger.source);
+    var presets_group = Presets.register_preset_group("Gindustry_Presets")
     for preset in presets:
         presets_group.add(preset);
 
 func load_translations(list: Array[String]) -> void:
     logger.info(tr("Loader_ModLoad_Translations"))
-    var translations = await Utils.load_contents_async(root+"/bundles", list);
+    var translations = await Utils.load_contents_async(root+"/bundles", list, "Loader_ModLoad_Translations", logger.source);
     for translation in translations:
         Utils.merge_translations(translation)

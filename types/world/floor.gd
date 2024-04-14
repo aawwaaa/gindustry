@@ -91,7 +91,7 @@ func add_panels_to(tile: Tile, control: Control) -> void:
         tile_ore.add_panel_to(tile, "floor", control)
 
 func get_tr_name() -> String:
-    return Content.to_full_id(mod.mod_info.id, id, "Floor")
+    return Content.to_full_id(mod.mod_info.id, id, "floor")
 
 func apply_mod(mod_inst: Mod) -> void:
     super.apply_mod(mod_inst);

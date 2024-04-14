@@ -71,12 +71,12 @@ static func start_load() -> void:
     ])
 
 static func load_content(to: Dictionary, prefix: String, paths: Array[String]) -> void:
-    var results = await Utils.load_contents_async("res://contents/" + prefix, paths)
+    var results = await Utils.load_contents_async("res://contents/" + prefix, paths, "Loader_ModLoad_Contents", "Builtin")
     for content in results:
         Contents.register_content(content)
         to[content.id] = content
 
 static func load_type(prefix: String, paths: Array[String]) -> void:
-    var results = await Utils.load_contents_async("res://contents/" + prefix, paths)
+    var results = await Utils.load_contents_async("res://contents/" + prefix, paths, "Loader_ModLoad_Types", "Builtin")
     for type in results:
         Types.register_type(type)

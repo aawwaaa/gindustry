@@ -78,7 +78,7 @@ func add_panels_to(tile: Tile, control: Control) -> void:
         tile_ore.add_panel_to(tile, "overlay", control)
 
 func get_tr_name() -> String:
-    return Content.to_full_id(mod.mod_info.id, id, "Overlay")
+    return Content.to_full_id(mod.mod_info.id, id, "overlay")
 
 func apply_mod(mod_inst: Mod) -> void:
     super.apply_mod(mod_inst);

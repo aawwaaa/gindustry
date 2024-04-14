@@ -7,7 +7,7 @@ const RECIPE_TYPE = preload("res://contents/content_types/recipe.tres")
 @export var providers: Array[Provider] = []
 
 func get_tr_name() -> String:
-    return Content.to_full_id(mod.mod_info.id, id, "Recipe")
+    return Content.to_full_id(mod.mod_info.id, id, "recipe")
 
 func _get_content_type() -> ContentType:
     return RECIPE_TYPE

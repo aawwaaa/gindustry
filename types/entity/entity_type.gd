@@ -18,7 +18,7 @@ func create_entity(init: bool = true) -> Entity:
     return entity;
 
 func get_tr_name() -> String:
-    return Content.to_full_id(mod.mod_info.id, id, "Entity")
+    return Content.to_full_id(mod.mod_info.id, id, "entity")
 
 func _get_content_type() -> ContentType:
     return ENTITY_TYPE

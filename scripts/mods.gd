@@ -11,7 +11,9 @@ func search_mod_folder(path: String, ignore_folder: bool = true) -> void:
         logger.error(tr("Mods_SearchFailed {directory}") \
             .format({directory = path}))
         return;    
-    var progress = Log.register_progress_source(5);
+    var progress = Log.register_progress_tracker(5, \
+            tr("Mods_SearchMods {directory}").format({directory = path}), \
+            logger.source);
     var count = 0;
     dir_access.list_dir_begin();
     var dir_name = dir_access.get_next();
@@ -32,7 +34,7 @@ func search_mod_folder(path: String, ignore_folder: bool = true) -> void:
     logger.info(tr_n("Mods_SearchSuccess {directory} {amount}", \
             "Mods_SearchSuccess_plural {directory} {amount}", count) \
             .format({directory = path, amount = count}))
-    progress.call(5);
+    progress.finish()
 
 func found_mod(info: ModInfo, path: String) -> int:
     if not info:
@@ -54,7 +56,7 @@ func load_enable_configs() -> void:
         save_enable_configs()
         return
     logger.info(tr("Mods_LoadEnableConfigs"))
-    var progress = Log.register_progress_source(5);
+    var progress = Log.register_progress_tracker(5, "Mods_LoadEnableConfigs", logger.source);
     var access = FileAccess.open("user://mod-enable-config.bin", \
             FileAccess.READ);
     var founded = [];
@@ -75,7 +77,7 @@ func load_enable_configs() -> void:
     access.close();
     if has_foreign:
         save_enable_configs()
-    progress.call(5)
+    progress.finish()
 
 func save_enable_configs() -> void:
     logger.info(tr("Mods_SaveEnableConfigs"))
@@ -199,7 +201,7 @@ func load_mods() -> void:
         if info.enabled:
             enabled_list.append(info)
         else: disabled_list.append(info)
-    var progress = Log.register_progress_source(100 * enabled_list.size())
+    var progress = Log.register_progress_tracker(100 * enabled_list.size(), "Mods_Load", logger.source)
     var load_list = __load_list_finder.get_slove(enabled_list);
     display_order = load_list
     disabled_list.sort_custom(func(a, b): return a.id < b.id);
@@ -208,27 +210,31 @@ func load_mods() -> void:
     for id in load_list:
         var info = mod_info_list[id];
         if info.main == "":
-            progress.call(100)
+            progress.progress += 100
             continue
-        logger.info(tr("Mods_Load_LoadResources {id} {name}") \
-                .format({id = info.id, name = info.name}));
+        progress.name = tr("Mods_Load_LoadResources {id} {name}") \
+                .format({id = info.id, name = info.name});
+        logger.info(progress.name)
         if info.file_path != "":
             ProjectSettings.load_resource_pack(info.file_path);
-        progress.call(20);
+        progress.progress += 30
         var Main = load(info.main)
         var mod = Main.new(info);
         Contents.current_loading_mod = mod;
         mod_inst_list[info.id] = mod;
         await load_mod_configs(mod);
-        progress.call(20);
-        logger.info(tr("Mods_Load_Initialize {id} {name}") \
-                .format({id = info.id, name = info.name}));
+        progress.progress += 15
+        progress.name = tr("Mods_Load_Initialize {id} {name}") \
+                .format({id = info.id, name = info.name});
+        logger.info(progress.name)
         mod._mod_init();
-        progress.call(20);
-        logger.info(tr("Mods_Load_LoadContents {id} {name}") \
-                .format({id = info.id, name = info.name}));
+        progress.progress += 25
+        progress.name = tr("Mods_Load_LoadContents {id} {name}") \
+                .format({id = info.id, name = info.name});
+        logger.info(progress.name)
         await mod._load_contents();
-        progress.call(40);
+        progress.progress += 30
     logger.info(tr_n("Mods_Load_LoadComplete {amount}", \
             "Mods_Load_LoadComplete_plural {amount}", load_list.size()) \
             .format({amount = load_list.size()}))
+    progress.finish()

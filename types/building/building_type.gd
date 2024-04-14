@@ -27,7 +27,7 @@ func get_requirements() -> Array[Item]:
     return array
 
 func get_tr_name() -> String:
-    return Content.to_full_id(mod.mod_info.id, id, "Building")
+    return Content.to_full_id(mod.mod_info.id, id, "building")
 
 func _get_content_type() -> ContentType:
     return BUILDING_TYPE

@@ -1,7 +1,9 @@
 extends Node
 
 signal log_created(formatted: String, source: String, level: String, message: String);
-signal progress_changed(new_progress: float, completed: int, total: int);
+signal progress_tracker_created(tracker: ProgressTracker);
+signal progress_tracker_finished(tracker: ProgressTracker);
+signal all_progress_tracker_finished();
 
 var log_levels = {
     "info" = "LogLevel_Info",
@@ -13,9 +15,11 @@ var log_levels = {
 var enable_debug_log = false;
 var log_access: FileAccess;
 
+var active_progress_trackers: Array[ProgressTracker] = []
+
 class Logger extends RefCounted:
-    var source;
-    var template;
+    var source: String;
+    var template: String;
     
     func _init(src: String):
         source = tr(src);
@@ -42,6 +46,30 @@ class Logger extends RefCounted:
     func debug(message: String):
         self.log("debug", message);
 
+class ProgressTracker extends RefCounted:
+    var name: String:
+        set(v): name = v; updated.emit()
+    var source: String
+    var progress: int:
+        set(v): progress = v; updated.emit()
+    var total: int
+
+    signal updated()
+
+    func _init(total: int, name: String, source: String) -> void:
+        self.name = name
+        self.source = source
+        self.total = total
+        self.progress = 0
+        Log.active_progress_trackers.append(self)
+        Log.progress_tracker_created.emit(self)
+    
+    func finish() -> void:
+        Log.progress_tracker_finished.emit(self)
+        Log.active_progress_trackers.erase(self)
+        if Log.active_progress_trackers.is_empty():
+            Log.all_progress_tracker_finished.emit()
+
 func register_log_source(source: String) -> Logger:
     return Logger.new(source);
 
@@ -49,16 +77,8 @@ func print_log(formatted: String, _1, _2, _3) -> void:
     print(formatted);
     log_access.store_string(formatted + "\n");
 
-var completed_progress: int = 0;
-var total_progress: int = 0;
-
-func register_progress_source(total: int) -> Callable:
-    total_progress += total;
-    return func(increase: int):
-        completed_progress += increase;
-        @warning_ignore("integer_division")
-        progress_changed.emit(completed_progress / total_progress, \
-            completed_progress, total_progress);
+func register_progress_tracker(total: int, name: String, source: String) -> ProgressTracker:
+    return ProgressTracker.new(total, name, source)
 
 func _ready() -> void:
     log_access = FileAccess.open("user://log_file.log", FileAccess.WRITE);

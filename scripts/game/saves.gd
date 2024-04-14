@@ -2,23 +2,25 @@ extends Node
 
 signal saves_changed()
 
-var log_source: Log.Logger
+var logger: Log.Logger
 
 var saves: Dictionary = {}
 
 var save_head = "GSAV".to_ascii_buffer()
 
 func _ready() -> void:
-    log_source = Log.register_log_source("Saves_LogSource");
+    logger = Log.register_log_source("Saves_LogSource");
 
 func search_save_folder(path: String, dict: Dictionary = saves) -> void:
     var dir_access = DirAccess.open(path);
     if not dir_access:
-        log_source.warn(tr("Saves_SearchFailed {directory}") \
+        logger.warn(tr("Saves_SearchFailed {directory}") \
                 .format({directory = path}))
         return;
     var count = 0;
-    var progress = Log.register_progress_source(5)
+    var progress = Log.register_progress_tracker(5, \
+            tr("Saves_SearchSaves {directory}").format({directory = path}), \
+            logger.source)
     dir_access.list_dir_begin()
     var dir_name = dir_access.get_next()
     while dir_name != "":
@@ -31,7 +33,7 @@ func search_save_folder(path: String, dict: Dictionary = saves) -> void:
         var stream = FileStream.new(access)
         var buffer = stream.get_buffer(save_head.size())
         if buffer != save_head:
-            log_source.error(tr("Saves_InvalidSaveFile {name}").format({name = name}))
+            logger.error(tr("Saves_InvalidSaveFile {name}").format({name = name}))
             access.close()
             dir_name = dir_access.get_next()
             continue 
@@ -41,16 +43,16 @@ func search_save_folder(path: String, dict: Dictionary = saves) -> void:
         access.close()
         count += 1
         dir_name = dir_access.get_next()
-    progress.call(5)
-    log_source.info(tr_n("Saves_FoundSaves {dictionary} {amount}", "Saves_FoundSaves_plural {dictionary} {amount}", count) \
+    logger.info(tr_n("Saves_FoundSaves {dictionary} {amount}", "Saves_FoundSaves_plural {dictionary} {amount}", count) \
             .format({dictionary = path, amount = count}))
+    progress.finish()
     saves_changed.emit()
 
 func load_saves() -> void:
     search_save_folder("user://saves/")
 
 func create_save(name: String) -> void:
-    log_source.info(tr("Saves_CreateSave {name}").format({name = name}))
+    logger.info(tr("Saves_CreateSave {name}").format({name = name}))
     var path = "user://saves/"+name+".gsav"
     var access = FileAccess.open(path, FileAccess.WRITE)
     var stream = FileStream.new(access)
@@ -67,13 +69,13 @@ func create_save(name: String) -> void:
     saves_changed.emit()
 
 func load_save(name: String) -> void:
-    log_source.info(tr("Saves_LoadSave {name}").format({name = name}))
+    logger.info(tr("Saves_LoadSave {name}").format({name = name}))
     var meta = saves[name]
     var access = FileAccess.open(meta.file_path, FileAccess.READ)
     var stream = FileStream.new(access)
     var buffer = stream.get_buffer(save_head.size())
     if buffer != save_head:
-        log_source.error(tr("Saves_InvalidSaveFile {name}").format({name = name}))
+        logger.error(tr("Saves_InvalidSaveFile {name}").format({name = name}))
         access.close()
         return
     Game.load_game(stream)
@@ -81,14 +83,14 @@ func load_save(name: String) -> void:
     var player = Multiplayer.join_local()
 
 func delete_save(name: String) -> void:
-    log_source.info(tr("Saves_DeleteSave {name}").format({name = name}))
+    logger.info(tr("Saves_DeleteSave {name}").format({name = name}))
     var info = saves[name]
     DirAccess.remove_absolute(info.file_path)
     saves.erase(name)
     saves_changed.emit()
 
 func rename_save(name: String, new_name: String) -> void:
-    log_source.info(tr("Saves_RenameSave {name} {new_name}").format({name = name, new_name = new_name}))
+    logger.info(tr("Saves_RenameSave {name} {new_name}").format({name = name, new_name = new_name}))
     var info = saves[name]
     var new_path = "user://saves/"+new_name+".gsav"
     DirAccess.rename_absolute(info.file_path, new_path)
@@ -105,7 +107,7 @@ func rename_save(name: String, new_name: String) -> void:
     saves_changed.emit()
 
 func copy_save(name: String, new_name: String) -> void:
-    log_source.info(tr("Saves_CopySave {name} {new_name}").format({name = name, new_name = new_name}))
+    logger.info(tr("Saves_CopySave {name} {new_name}").format({name = name, new_name = new_name}))
     var info = saves[name]
     var new_path = "user://saves/"+new_name+".gsav"
     DirAccess.copy_absolute(info.file_path, new_path)

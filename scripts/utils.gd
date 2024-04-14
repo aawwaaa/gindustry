@@ -31,11 +31,12 @@ func compare_version_string_ge(v1: String, v2: String, use_gt = false) -> bool:
 
 var loader_log_source;
 
-func load_contents_async(header: String, contents_input: Array[String]) -> Array:
+func load_contents_async(header: String, contents_input: Array[String], \
+        hint: String = "Loader_LoadContents", source: String = "Unknown") -> Array:
     if not loader_log_source:
         loader_log_source = Log.register_log_source(tr("Loader_LogSource"));
     var contents = contents_input.map(func(x): return header + x)
-    var progress = Log.register_progress_source(1 * contents.size())
+    var progress = Log.register_progress_tracker(1 * contents.size(), hint, source)
     var output = [];
     var removes = [];
     for content in contents:
@@ -44,7 +45,7 @@ func load_contents_async(header: String, contents_input: Array[String]) -> Array
             loader_log_source.error(tr("Loader_LoadFailed {path}") \
                 .format({path = content}))
             removes.append(content);
-            progress.call(1)
+            progress.progress += 1
     while contents.size() != 0:
         for content in contents:
             var status = ResourceLoader.load_threaded_get_status(content)
@@ -53,21 +54,21 @@ func load_contents_async(header: String, contents_input: Array[String]) -> Array
                     loader_log_source.error(tr("Loader_LoadFailed {path}") \
                         .format({path = content}))
                     removes.append(content);
-                    progress.call(1)
                 ResourceLoader.ThreadLoadStatus.THREAD_LOAD_FAILED:
                     loader_log_source.error(tr("Loader_LoadFailed {path}") \
                         .format({path = content}))
                     ResourceLoader.load_threaded_get(content)
                     removes.append(content);
-                    progress.call(1)
                 ResourceLoader.ThreadLoadStatus.THREAD_LOAD_LOADED:
                     output.append(ResourceLoader.load_threaded_get(content))
                     removes.append(content);
-                    progress.call(1)
+            if status != ResourceLoader.ThreadLoadStatus.THREAD_LOAD_IN_PROGRESS:
+                progress.progress += 1
         for content in removes:
             contents.remove_at(contents.find(content));
         removes = [];
         await get_tree().process_frame
+    progress.finish()
     return output
 
 func merge_translations(translation: Translation):

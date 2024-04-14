@@ -18,7 +18,7 @@ func create_item() -> Item:
     return inst
 
 func get_tr_name() -> String:
-    return Content.to_full_id(mod.mod_info.id, id, "Item")
+    return Content.to_full_id(mod.mod_info.id, id, "item")
 
 func _get_content_type() -> ContentType:
     return ITEM_TYPE
