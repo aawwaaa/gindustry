@@ -4,6 +4,8 @@ extends EntityAdapter
 signal item_slot_changed(index: int, slot: Item)
 signal blacklist_changed(enabled: bool)
 
+const DEFAULT_NAME = "iselect"
+
 @export var slot_size: int = 4
 @export var allow_blacklist: bool = false
 

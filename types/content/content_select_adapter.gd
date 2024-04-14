@@ -4,6 +4,8 @@ extends EntityAdapter
 signal content_slot_changed(index: int, slot: ContentSelectSlot)
 signal blacklist_changed(enabled: bool)
 
+const DEFAULT_NAME = "cselect"
+
 class ContentSelectSlot extends RefCounted:
     var content: Content
     var amount: float

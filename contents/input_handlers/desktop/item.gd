@@ -57,17 +57,17 @@ func update_item_use() -> void:
 func confirm_item_use() -> void:
     if not item_use:
         return
-    controller.operate_target(ControllerAdapter.TARGET_ADAPTER, ["inventory", "use_hand", entity.world, item_use_position])
+    controller.operate_target(ControllerAdapter.TARGET_ADAPTER, [Inventory.I_DEFAULT_NAME, "use_hand", entity.world, item_use_position])
     item_use.queue_free()
     item_use = null
 
 func confirm_drop_item(type: String, pos: Vector2) -> void:
     var interacting = handler.get_interacting_target()
     if not interacting:
-        controller.operate_target(ControllerAdapter.TARGET_ADAPTER, ["inventory", "drop_item_at", entity.world, pos, type])
+        controller.operate_target(ControllerAdapter.TARGET_ADAPTER, [Inventory.I_DEFAULT_NAME, "drop_item_at", entity.world, pos, type])
         return
     handler.interact_operate(InputInteracts.ITEM_I_DROP_ITEM, [type, pos])
 
 func accept_drop_item(target: Node2D, args: Array) -> void:
     var entity = target.get_entity()
-    controller.operate_target(ControllerAdapter.TARGET_ADAPTER, ["inventory", "drop_item", entity, args[0]])
+    controller.operate_target(ControllerAdapter.TARGET_ADAPTER, [Inventory.I_DEFAULT_NAME, "drop_item", entity, args[0]])

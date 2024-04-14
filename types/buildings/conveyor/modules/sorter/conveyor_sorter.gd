@@ -1,0 +1,1 @@
+extends EntityNode_ConveyorModule

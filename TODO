@@ -219,7 +219,7 @@
     [X] set_name(string)
     [X] finish
 [X] loading ui
-[ ] ConveyorModule.get_display_texture() - 传送带桥
+[.] ConveyorModule.get_display_texture() - 传送带桥
 [X] ContentSelector
     [X] ContentSelectorPanel
         [X] ItemTypeSelectorPanel
@@ -232,10 +232,11 @@
     [X] ItemSelector
     [X] ContentSelector
 [X] TileOre[WithData] 测试
-	[X] TileOreType
-	[X] [Floor/Overlay].ores/ore_with_data
-	[X] TileOre_ItemOre
+    [X] TileOreType
+    [X] [Floor/Overlay].ores/ore_with_data
+    [X] TileOre_ItemOre
     [X] BuildUI显示TileOre
+[ ] AdapterConfig
 [ ] GraphAdpater
     [ ] Graph
     [ ] GraphAdpater
@@ -283,7 +284,7 @@
         [X] 交叉器
         [X] 路由器
         [ ] 分类器
-        [ ] 反向分类器
+        [.] 反向分类器
         [ ] 溢流门
         [ ] 反向溢流门
         [ ] 翻转器

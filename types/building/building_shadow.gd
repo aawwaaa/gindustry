@@ -22,6 +22,8 @@ var entity: Entity:
     set(v):
         entity = v
         collision_area.entity = v
+var building: Building:
+    get: return entity if entity is Building else null
 var marks_poses: Dictionary = {}
 var component_nodes: Dictionary = {}
 var pos_to_component: Dictionary = {}
