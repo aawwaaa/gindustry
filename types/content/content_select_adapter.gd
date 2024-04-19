@@ -163,43 +163,6 @@ func get_allow_float_amount() -> bool:
 func format_amount(amount: float) -> float:
     return amount if get_allow_float_amount() else roundf(amount)
 
-func get_config() -> Array[Array]:
-    var config = []
-    for index in slot_size:
-        config.append([slots[index].content, slots[index].amount])
-    return config
-
-func set_config(config: Array[Array]) -> void:
-    for index in slot_size:
-        if index >= config.size():
-            set_slot(index, null, 0)
-            continue
-        var amount = format_amount(config[index][1])
-        set_slot(index, config[index][0], amount)
-
-static func apply_config_to_display_group(config: Array[Array], content_display_group: ContentDisplayGroup) -> void:
-    content_display_group.datas = config
-    content_display_group.content_getter = get_content_from_config
-    content_display_group.update()
-
-static func get_content_from_config(config: Array) -> Content:
-    return config[0]
-
-static func save_config(config: Array[Array], stream: Stream) -> void:
-    stream.store_32(config.size())
-    for content in config:
-        stream.store_64(content[0].index if content[0] else 0)
-        stream.store_double(content[1])
-
-static func load_config(stream: Stream) -> Array[Array]:
-    var config = []
-    var size = stream.get_32()
-    for index in size:
-        var content = Contents.get_content_by_index(stream.get_64())
-        var amount = stream.get_double()
-        config.append([content, amount])
-    return config
-
 func _should_save_data() -> bool:
     return true
 

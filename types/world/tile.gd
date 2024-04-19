@@ -68,6 +68,10 @@ static func to_entity_rot(rot: int) -> float:
 static func to_tile_rot(rotation: float) -> int:
     return round(rotation / PI * 2)
 
+enum Rot {
+    right = 0, up, left, down
+}
+
 func set_special_data() -> void:
     if has_special_data:
         return;

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" load_steps=6 format=3 uid="uid://bmrhjtbmqpcyu"]
+[gd_resource type="Resource" script_class="BuildingType" load_steps=6 format=3 uid="uid://bmrhjtbmqpcyu"]
 
 [ext_resource type="Script" path="res://types/building/building_type.gd" id="1_b6y4g"]
 [ext_resource type="Resource" uid="uid://ceig7jq8y8add" path="res://contents/building_categories/misc.tres" id="1_tgmkd"]

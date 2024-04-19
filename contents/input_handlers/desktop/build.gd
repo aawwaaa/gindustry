@@ -94,6 +94,7 @@ func update_building_shadow() -> void:
         })
         building_shadow.disable_collision = true
         entity.world.add_temp_node(building_shadow)
+        building_shadow.building_config = selected.get_default_config()
         building_shadow.build_progress = 1
     building_shadow.update_position({
         "position": building_shadow_position,
@@ -158,6 +159,7 @@ func handle_place_drag(event: InputEvent) -> bool:
             })
             current_shadow.disable_collision = true
             entity.world.add_temp_node(current_shadow) 
+            current_shadow.building_config = building_type.get_default_config()
             current_shadow.build_progress = 1
         var tile_pos = building_drag_begin + current_pos
         current_shadow.update_position({

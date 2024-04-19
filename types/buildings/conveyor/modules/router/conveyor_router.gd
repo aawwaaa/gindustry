@@ -33,9 +33,42 @@ const SIDE_TO_DIRECTION_TO_POSITION = {
     },
 }
 
-const TRACK_INPUT_TARGET_POSITION = {
-    Directions.left: Vector2(-7, -7),
-    Directions.right: Vector2(7, 7)
+const SIDE_TO_DIRECTION_TO_SOURCE_POSITION = {
+    Sides.left: {
+        Directions.left: Vector2(-8, 7),
+        Directions.right: Vector2(-8, -7),
+    },
+    Sides.right: {
+        Directions.left: Vector2(8, -7),
+        Directions.right: Vector2(8, 7),
+    },
+    Sides.up: {
+        Directions.left: Vector2(-7, -8),
+        Directions.right: Vector2(7, -8),
+    },
+    Sides.down: {
+        Directions.left: Vector2(7, 8),
+        Directions.right: Vector2(-7, 8),
+    },
+}
+
+const SIDE_TO_DIRECTION_TO_INPUT_TARGET_POSITION = {
+    Sides.left: {
+        Directions.left: Vector2(-8, -7),
+        Directions.right: Vector2(-8, 7),
+    },
+    Sides.right: {
+        Directions.left: Vector2(8, 7),
+        Directions.right: Vector2(8, -7),
+    },
+    Sides.up: {
+        Directions.left: Vector2(7, -8),
+        Directions.right: Vector2(-7, -8),
+    },
+    Sides.down: {
+        Directions.left: Vector2(-7, 8),
+        Directions.right: Vector2(7, 8),
+    },
 }
 
 func _get_target_position(side: Sides, direction: Directions) -> Vector2:
@@ -69,17 +102,18 @@ func update_ports() -> void:
         if component and component.has_side(revert_sides(side)):
             track_modes[rot] = TrackMode.INPUT
         else: track_modes[rot] = TrackMode.IGNORE
-        track.left_track_end = TRACK_INPUT_TARGET_POSITION[Directions.left]
-        track.right_track_end = TRACK_INPUT_TARGET_POSITION[Directions.right]
+        track.left_track_end = SIDE_TO_DIRECTION_TO_INPUT_TARGET_POSITION[side][Directions.left]
+        track.right_track_end = SIDE_TO_DIRECTION_TO_INPUT_TARGET_POSITION[side][Directions.right]
 
 func distribute_single_track(track: EntityNode_Conveyor_ConveyorTrack.SingleTrack, direction: Directions) -> void:
     if not track.reached_item: return
     var index = left_distribution_index if direction == Directions.left else right_distribution_index
     if track_modes[index] == TrackMode.OUTPUT:
         var target_track = tracks[index].left_track if direction == Directions.left else tracks[index].right_track
-        var target_position = track.base_position - target_track.base_position
-        var left = target_track.try_add_exists_item(track.reached_item, target_position)
-        track.set_reached_item(null if left else track.reached_item)
+        var target_side = ROT_TO_SIDE[index]
+        var target_position = SIDE_TO_DIRECTION_TO_SOURCE_POSITION[target_side][direction] - target_track.base_position
+        var success = target_track.try_add_exists_item(track.reached_item, target_position)
+        track.set_reached_item(null if success else track.reached_item)
     index = (index + 1) % 4
     if direction == Directions.left: left_distribution_index = index
     else: right_distribution_index = index

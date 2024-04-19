@@ -1,6 +1,8 @@
 class_name BuildingType_ConveyorSorter
 extends BuildingType_ConveyorModule
 
+# TODO blacklist_texture
+
 const MODULE_SCENE = preload("res://types/buildings/conveyor/modules/sorter/conveyor_sorter.tscn")
 
 func _get_default_entity_scene() -> PackedScene:
