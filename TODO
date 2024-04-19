@@ -236,7 +236,13 @@
     [X] [Floor/Overlay].ores/ore_with_data
     [X] TileOre_ItemOre
     [X] BuildUI显示TileOre
-[ ] AdapterConfig
+[X] AdapterConfig TEST
+    [X] AdapterConfig
+    [X] ItemSelectAdapter
+        - accept content select adapter
+        - convert to content select adapter
+    [X] ContentSelectAdapter
+
 [ ] GraphAdpater
     [ ] Graph
     [ ] GraphAdpater

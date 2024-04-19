@@ -6,6 +6,65 @@ signal blacklist_changed(enabled: bool)
 
 const DEFAULT_NAME = "cselect"
 
+const CONFIG_KEY = "cselect"
+const CONFIG_TARGET_CONTENT_DISPLAY_GROUP = "cdg"
+const CONFIG_TARGET_SPRITE2D = "s2d"
+const CONFIG_TARGET_SPRITE2D_NODE = "node"
+const CONFIG_TARGET_SPRITE2D_WHITELIST_TEXTURE = "wltex"
+const CONFIG_TARGET_SPRITE2D_BLACKLIST_TEXTURE = "bltex"
+
+class ConfigHandler extends AdapterConfig.ConfigHandler:
+    func _get_type() -> String:
+        return CONFIG_KEY
+    func _generate_config(uncasted: EntityAdapter) -> Variant:
+        var adapter = uncasted as ContentSelectAdapter
+        var slots: Array[Array] = []
+        for slot in adapter.slots:
+            slots.append([slot.content, slot.amount])
+        return {
+            CKEY_BLACKLIST: adapter.blacklist,
+            CKEY_SLOTS: slots
+        }
+    func _apply_config(config: Variant, type: String, uncasted: EntityAdapter) -> void:
+        var adapter = uncasted as ContentSelectAdapter
+        adapter.blacklist = config[CKEY_BLACKLIST] if adapter.allow_blacklist else false
+        for index in adapter.slots.size():
+            var has = config[CKEY_SLOTS].size() > index
+            adapter.slots[index].content = config[CKEY_SLOTS][index][0] if has else null
+            adapter.slots[index].amount = adapter.format_amount(config[CKEY_SLOTS][index][1]) if has else 0
+    func _apply_shadow(config: Variant, type: String, targets: Dictionary) -> void:
+        if CONFIG_TARGET_CONTENT_DISPLAY_GROUP in targets:
+            var display_group = targets[CONFIG_TARGET_CONTENT_DISPLAY_GROUP] as ContentDisplayGroup
+            display_group.datas = config[CKEY_SLOTS]
+            display_group.content_getter = get_display_group_data
+            display_group.update()
+        if CONFIG_TARGET_SPRITE2D in targets:
+            var node = targets[CONFIG_TARGET_SPRITE2D][CONFIG_TARGET_SPRITE2D_NODE] as Sprite2D
+            var blacklist_texture = targets[CONFIG_TARGET_SPRITE2D][CONFIG_TARGET_SPRITE2D_BLACKLIST_TEXTURE] as Texture2D
+            var whitelist_texture = targets[CONFIG_TARGET_SPRITE2D][CONFIG_TARGET_SPRITE2D_WHITELIST_TEXTURE] as Texture2D
+            node.texture = blacklist_texture if config[CKEY_BLACKLIST] else whitelist_texture
+
+    func _save_data(config: Variant, stream: Stream) -> void:
+        stream.store_8(1 if config[CKEY_BLACKLIST] else 0)
+        stream.store_32(config[CKEY_SLOTS].size())
+        for slot in config[CKEY_SLOTS]:
+            stream.store_64(slot[0].index if slot[0] else 0)
+            stream.store_double(slot[1])
+    func _load_data(stream: Stream) -> Variant:
+        var config = {
+            CKEY_BLACKLIST: stream.get_8() == 1,
+            CKEY_SLOTS: []
+        }
+        var size = stream.get_32()
+        for index in size:
+            var content = Contents.get_content_by_index(stream.get_64())
+            var amount = stream.get_double()
+            config[CKEY_SLOTS].append([content, amount])
+        return config
+
+    static func get_display_group_data(slot: Array) -> Content:
+        return slot[0]
+
 class ContentSelectSlot extends RefCounted:
     var content: Content
     var amount: float
@@ -28,6 +87,10 @@ var slots: Array[ContentSelectSlot] = []
 var blacklist: bool = false
 
 @export var content_display_group: ContentDisplayGroup
+
+static func _static_init() -> void:
+    var handler = ConfigHandler.new()
+    AdapterConfig.register_handler(handler)
 
 func init_slots(size: int) -> void:
     slots.resize(size)

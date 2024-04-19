@@ -1,6 +1,6 @@
 [gd_resource type="Resource" load_steps=6 format=3 uid="uid://bmrhjtbmqpcyu"]
 
-[ext_resource type="Script" path="res://contents/buildings/test_build/building.gd" id="1_b6y4g"]
+[ext_resource type="Script" path="res://types/building/building_type.gd" id="1_b6y4g"]
 [ext_resource type="Resource" uid="uid://ceig7jq8y8add" path="res://contents/building_categories/misc.tres" id="1_tgmkd"]
 [ext_resource type="PackedScene" uid="uid://bwgtwfxvf02uh" path="res://contents/buildings/test_build/test_build.tscn" id="2_rm8q4"]
 [ext_resource type="Texture2D" uid="uid://dli78jr06n7so" path="res://assets/break_flag.png" id="3_18b7o"]

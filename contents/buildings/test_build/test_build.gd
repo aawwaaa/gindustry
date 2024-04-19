@@ -15,7 +15,13 @@ func _ready() -> void:
     item_select.content_display_group = entity.shadow.get_sub_node("group")
 
 func get_config() -> Variant:
-    return item_select.get_config()
+    return AdapterConfig.generate_config({
+        ContentSelectAdapter.CONFIG_KEY: content_select,
+        ItemSelectAdapter.CONFIG_KEY: item_select
+    })
 
 func set_config(config: Variant) -> void:
-    item_select.set_config(config)
+    AdapterConfig.apply_config(config, {
+        ContentSelectAdapter.CONFIG_KEY: content_select,
+        ItemSelectAdapter.CONFIG_KEY: item_select
+    })

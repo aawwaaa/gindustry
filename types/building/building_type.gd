@@ -49,13 +49,13 @@ func apply_mod(mod_inst: Mod) -> void:
         attributes_dict[attribute.get_type()] = attribute
 
 func _get_default_config() -> Variant:
-    return null
+    return {}
 
 func _load_config(stream: Stream) -> Variant:
-    return null
+    return AdapterConfig.load_config(stream)
 
 func _save_config(config: Variant, stream: Stream) -> void:
-    pass
+    AdapterConfig.save_config(config, stream)
 
 func get_default_config() -> Variant:
     return _get_default_config()

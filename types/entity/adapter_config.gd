@@ -16,6 +16,19 @@ class ConfigHandler extends RefCounted:
     const UNAPPLICATABLE = -1
     const UNCONVERTABLE = -1
 
+    const NORMAL_APPLICATABLE = 500
+    const HIGH_APPLICATABLE = 1000
+
+    const NORMAL_CONVERTABLE = 500
+    const HIGH_CONVERTABLE = 1000
+
+    const CKEY_BLACKLIST = &"blacklist"
+    const CKEY_SLOTS = &"slots"
+    const CKEY_ENABLED = &"enabled"
+    const CKEY_TYPE = &"type"
+    const CKEY_TEXT = &"text"
+    const CKEY_VALUE = &"value"
+
     func _get_type() -> String:
         return ""
     func get_type() -> String:
@@ -89,8 +102,44 @@ class ConfigHandler extends RefCounted:
 
     func _save_data(config: Variant, stream: Stream) -> void:
         pass
+    func save_data(config: Variant, stream: Stream) -> void:
+        _save_data(config, stream)
 
-    # TODO save_data load_data
+    func _load_data(stream: Stream) -> Variant:
+        return null
+    func load_data(stream: Stream) -> Variant:
+        return _load_data(stream)
 
-# TODO static funcs
+static func register_handler(handler: ConfigHandler) -> void:
+    config_handlers[handler.get_type()] = handler
 
+static func save_config(config: Dictionary, stream: Stream) -> void:
+    stream.store_32(config.size())
+    for type in config:
+        stream.store_string(type)
+        config_handlers[type].save_data(config[type], stream)
+
+static func load_config(stream: Stream) -> Dictionary:
+    var config = {}
+    var size = stream.get_32()
+    for _i in range(size):
+        var type = stream.get_string()
+        config[type] = config_handlers[type].load_data(stream)
+    return config
+
+static func generate_config(adapters: Dictionary) -> Dictionary:
+    var config = {}
+    for type in adapters:
+        if type not in config_handlers: continue
+        config_handlers[type].generate_config(adapters[type], config[type])
+    return config
+
+static func apply_config(config: Dictionary, adapters: Dictionary) -> void:
+    for type in config:
+        if type not in adapters: continue
+        config_handlers[type].apply_config(adapters[type], config[type])
+
+static func apply_shadow(config: Dictionary, targets: Dictionary) -> void:
+    for type in config:
+        if type not in targets: continue
+        config_handlers[type].apply_shadow(targets[type], config[type])
