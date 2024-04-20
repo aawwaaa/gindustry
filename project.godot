@@ -147,7 +147,7 @@ camera_zoom_down={
 [internationalization]
 
 locale/translations=PackedStringArray("res://bundles/en.po", "res://bundles/zh.po")
-locale/test="zh"
+locale/test="en"
 
 [layer_names]
 

@@ -243,6 +243,11 @@
         - convert to content select adapter
     [X] ContentSelectAdapter
 
+[ ] EntityInfoPanelModule
+    [ ] ItemSelectModule
+    [ ] ContentSelectModule
+    [ ] InventoryModule
+[ ] 设置中的语言选项
 [ ] GraphAdpater
     [ ] Graph
     [ ] GraphAdpater
@@ -289,7 +294,7 @@
 	[ ] 传送带部件
         [X] 交叉器
         [X] 路由器
-        [ ] 分类器
+        [X] 分类器
         [.] 反向分类器
         [ ] 溢流门
         [ ] 反向溢流门
