@@ -58,7 +58,6 @@ vframes = 1
 building_category = ExtResource("1_kb4w5")
 requirements = Array[ExtResource("4_txnnh")]([SubResource("Resource_3806t")])
 attributes = Array[Resource("res://types/building/building_attribute.gd")]([])
-controllable = false
 id = "conveyor_1"
 options = {}
 icon = SubResource("AtlasTexture_r4stg")

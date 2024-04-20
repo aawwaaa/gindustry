@@ -18,12 +18,15 @@ func _load_data(stream: Stream) -> void:
 
 # operation
 func _handle_operation(operation: String, args: Array[Variant] = []) -> void:
+    push_error("Unknown operation: ", operation, args)
     pass
 
 func _handle_adapter_operation(source: EntityAdapter, operation: String, args: Array[Variant] = []) -> void:
+    push_error("Unknown adapter operation: ", source, " -> ", operation, args)
     pass
 
 func _handle_remote_operation(source: Entity, operation: String, args: Array[Variant] = []) -> void:
+    push_error("Unknown remote operation: ", source, " -> ", operation, args)
     pass
 
 func _get_main_adapter() -> EntityAdapter:

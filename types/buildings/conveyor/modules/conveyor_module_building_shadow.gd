@@ -1,4 +1,4 @@
-class_name BuildingShadow_ConveyorJunction
+class_name BuildingShadow_ConveyorModule
 extends BuildingShadow
 
 func _ready() -> void:

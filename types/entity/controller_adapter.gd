@@ -75,6 +75,7 @@ func operate(controller: Controller, operation: String, args: Array[Variant] = [
         target._handle_adapter_operation(source, args[2], args.slice(3))
         return
     if operation not in available_operations:
+        push_error("Unknown operation: ", operation, args)
         return
     operation_received.emit(operation, args)
 

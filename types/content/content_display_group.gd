@@ -36,9 +36,13 @@ var contents: Array[Content] = []
 var datas: Array = []
 var content_getter: Callable = do_nothing;
 
+@export var increase_z_index: bool = true
+
 func _ready() -> void:
     scale *= 0.5
     visibility_layer = Global.ALT_DISPLAY_LAYER
+    if increase_z_index:
+        z_index += 28
 
 static func do_nothing(v: Variant) -> Variant:
     return v

@@ -259,6 +259,7 @@ func operate_remote(operation: String, args: Array[Variant] = []) -> bool:
         return true
     var remote = access_target.get_entity()
     if operation not in remote.available_remote_operations:
+        push_error("Unknown remote operation: ", operation, args)
         return false
     remote.remote_operation.emit(self, operation, args)
     return true

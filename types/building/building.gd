@@ -18,6 +18,7 @@ var building_type: BuildingType:
 var building_config: Variant:
     get: return main_node.call(callback_get_config) if callback_get_config != "" else building_config
     set(v): 
+        if shadow: shadow.building_config = v
         if callback_set_config != "": 
             main_node.call(callback_set_config, v)
         else:

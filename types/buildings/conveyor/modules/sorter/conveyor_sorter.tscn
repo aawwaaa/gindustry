@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://yn22cwsy1ggn"]
+[gd_scene load_steps=7 format=3 uid="uid://yn22cwsy1ggn"]
 
 [ext_resource type="PackedScene" uid="uid://b26i8kffy01nw" path="res://types/buildings/conveyor/modules/conveyor_module.tscn" id="1_ntmne"]
 [ext_resource type="Script" path="res://types/buildings/conveyor/modules/sorter/conveyor_sorter.gd" id="2_l0vbs"]
 [ext_resource type="Script" path="res://types/item/item_selector_adapter.gd" id="3_mjv8d"]
 [ext_resource type="Script" path="res://types/buildings/conveyor/conveyor_track.gd" id="3_pdur8"]
+[ext_resource type="Script" path="res://types/entity/ui_panel_adapter.gd" id="4_r8hus"]
+[ext_resource type="PackedScene" uid="uid://c4mymv58m26vo" path="res://types/buildings/conveyor/modules/sorter/inventory_panel.tscn" id="5_ciis0"]
 
 [node name="ConveyorSorter" node_paths=PackedStringArray("input_track", "tracks", "main_output_track", "item_select_adapter", "entity") instance=ExtResource("1_ntmne")]
 script = ExtResource("2_l0vbs")
@@ -14,9 +16,12 @@ item_select_adapter = NodePath("ItemSelectAdapter")
 entity = NodePath("Building")
 
 [node name="Building" parent="." index="0"]
+callback_get_config = &"get_config"
+callback_set_config = &"set_config"
 adapters = {
 "iselect": NodePath("../ItemSelectAdapter"),
-"item": NodePath("../ItemAdapter")
+"item": NodePath("../ItemAdapter"),
+"panel": NodePath("../UIPanelAdapter")
 }
 
 [node name="ItemSelectAdapter" type="Node" parent="." index="2" node_paths=PackedStringArray("main_node", "entity_node")]
@@ -25,26 +30,34 @@ allow_blacklist = true
 main_node = NodePath("..")
 entity_node = NodePath("../Building")
 
-[node name="Track1" type="Node2D" parent="." index="4" node_paths=PackedStringArray("main_node")]
+[node name="UIPanelAdapter" type="Node" parent="." index="3" node_paths=PackedStringArray("main_node", "entity_node")]
+script = ExtResource("4_r8hus")
+inventory_panel_scene = ExtResource("5_ciis0")
+main_node = NodePath("..")
+entity_node = NodePath("../Building")
+
+[node name="Track1" type="Node2D" parent="." index="5" node_paths=PackedStringArray("main_node")]
 script = ExtResource("3_pdur8")
 main_node = NodePath("..")
 left_track_end = Vector2(-8, -7)
 right_track_end = Vector2(-8, 7)
 callback_get_speed = &"get_speed"
 
-[node name="Track2" type="Node2D" parent="." index="5" node_paths=PackedStringArray("main_node")]
+[node name="Track2" type="Node2D" parent="." index="6" node_paths=PackedStringArray("main_node")]
 script = ExtResource("3_pdur8")
 main_node = NodePath("..")
 callback_get_speed = &"get_speed"
 
-[node name="Track3" type="Node2D" parent="." index="6" node_paths=PackedStringArray("main_node")]
+[node name="Track3" type="Node2D" parent="." index="7" node_paths=PackedStringArray("main_node")]
 script = ExtResource("3_pdur8")
 main_node = NodePath("..")
 left_track_end = Vector2(16, -7)
 right_track_end = Vector2(16, 7)
 callback_get_speed = &"get_speed"
 
-[node name="Track4" type="Node2D" parent="." index="7" node_paths=PackedStringArray("main_node")]
+[node name="Track4" type="Node2D" parent="." index="8" node_paths=PackedStringArray("main_node")]
 script = ExtResource("3_pdur8")
 main_node = NodePath("..")
 callback_get_speed = &"get_speed"
+
+[connection signal="input_operation" from="Building" to="." method="_on_building_input_operation"]

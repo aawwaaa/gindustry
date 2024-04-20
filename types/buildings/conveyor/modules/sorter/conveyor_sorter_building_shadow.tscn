@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://dqvqas55scr61"]
+
+[ext_resource type="PackedScene" uid="uid://cj5jfkihcpdle" path="res://types/buildings/conveyor/modules/conveyor_module_building_shadow.tscn" id="1_fuqxx"]
+[ext_resource type="Script" path="res://types/buildings/conveyor/modules/sorter/conveyor_sorter_building_shadow.gd" id="2_gk62a"]
+[ext_resource type="Script" path="res://types/content/content_display_group.gd" id="2_w2hu1"]
+
+[node name="Shadow" instance=ExtResource("1_fuqxx")]
+script = ExtResource("2_gk62a")
+sub_nodes = {
+"group": NodePath("ContentDisplayGroup")
+}
+
+[node name="ContentDisplayGroup" type="Node2D" parent="." index="6"]
+script = ExtResource("2_w2hu1")

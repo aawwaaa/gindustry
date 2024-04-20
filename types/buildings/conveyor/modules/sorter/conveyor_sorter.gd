@@ -13,9 +13,7 @@ const used_output_tracks = [Tile.Rot.up, Tile.Rot.down]
 
 @export var item_select_adapter: ItemSelectAdapter = null
 
-# TODO get_config, set_config, callbacks, building_shadow, auto set ItemSelectAdapter.content_display_group from get_sub_node("group")
-
-var side_output_enabled: Dictionary = {}
+var side_output_enabled: Array = [false, false, false, false]
 
 func _get_target_position(side: Sides, direction: Directions) -> Vector2:
     return SIDE_TO_DIRECTION_TO_POSITION[side][direction]
@@ -26,6 +24,10 @@ func _is_vaild_source(source_side: Sides, source_direction: Directions) -> bool:
 func _has_side(side: Sides) -> bool:
     if side == Sides.left: return false
     return side == Sides.right or side_output_enabled[SIDE_TO_ROT[side]]
+
+func _get_track(side: Sides, direction: Directions, position: Vector2) -> EntityNode_Conveyor_ConveyorTrack.SingleTrack:
+    if side != Sides.left: return null
+    return input_track.left_track if direction == Directions.left else input_track.right_track
 
 func update_ports() -> void:
     for rot in used_output_tracks:
@@ -61,15 +63,39 @@ func push_reached_items() -> void:
     distribute_single_track(input_track.right_track, Directions.right)
     var target = get_component(Sides.right, "conveyor")
     if target: push_reached_item_for_track(target, main_output_track)
+    target = get_component(Sides.up, "conveyor")
+    if target: push_reached_item_for_track(target, tracks[Tile.Rot.down])
+    target = get_component(Sides.down, "conveyor")
+    if target: push_reached_item_for_track(target, tracks[Tile.Rot.up])
 
 func _get_tracks() -> Array[EntityNode_Conveyor_ConveyorTrack]:
     return tracks
 
 func _ready() -> void:
     super._ready()
+    item_select_adapter.content_display_group = building.shadow.get_sub_node("group")
+    item_select_adapter.sprite2d = building.shadow.display_sprite
+    item_select_adapter.sprite2d_blacklist_texture = building.building_type.texture_blacklist_texture
+    item_select_adapter.sprite2d_whitelist_texture = building.building_type.texture_texture
+    item_select_adapter.set_blacklist(item_select_adapter.blacklist)
     await get_tree().process_frame
     update_ports()
 
 func _process_update(delta: float) -> void:
     update_ports()
     push_reached_items()
+
+func get_config() -> Variant:
+    return AdapterConfig.generate_config({
+        ItemSelectAdapter.CONFIG_KEY: item_select_adapter
+    })
+
+func set_config(config: Variant) -> void:
+    AdapterConfig.apply_config(config, {
+        ItemSelectAdapter.CONFIG_KEY: item_select_adapter
+    })
+
+func _on_building_input_operation(operation: String, args: Array) -> void:
+    if operation == InputInteracts.INTERACT_I_DIRECT_INTERACT:
+        Global.input_handler.interact_access_target_ui(self)
+

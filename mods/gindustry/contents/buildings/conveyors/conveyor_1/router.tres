@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="BuildingType_ConveyorRouter" load_steps=9 format=3 uid="uid://cvxsrgedlxfl8"]
+[gd_resource type="Resource" script_class="BuildingType_ConveyorRouter" load_steps=10 format=3 uid="uid://cvxsrgedlxfl8"]
 
 [ext_resource type="Resource" uid="uid://bqc777vs32a3j" path="res://contents/building_categories/transportation.tres" id="1_7p8vo"]
 [ext_resource type="Resource" uid="uid://co0rvlk0j7rlx" path="res://mods/gindustry/contents/buildings/conveyors/conveyor_1/conveyor.tres" id="2_xbac4"]
@@ -7,7 +7,7 @@
 [ext_resource type="Resource" uid="uid://ckdxq0ogtny06" path="res://mods/gindustry/contents/items/copper.tres" id="4_c1rwb"]
 [ext_resource type="Script" path="res://types/item/packed_item_stack.gd" id="5_ygorx"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_3fifq"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_m3lqs"]
 atlas = ExtResource("3_8fsbw")
 region = Rect2(0, 256, 32, 32)
 
@@ -17,17 +17,20 @@ item_type = ExtResource("4_c1rwb")
 amount = 1
 options = {}
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_mltow"]
+atlas = ExtResource("3_8fsbw")
+region = Rect2(0, 256, 32, 32)
+
 [resource]
 script = ExtResource("3_7vbmv")
 conveyor_type = ExtResource("2_xbac4")
-texture_texture = SubResource("AtlasTexture_3fifq")
+texture_texture = SubResource("AtlasTexture_mltow")
 texture_z_index = 8
 texture_polygon_texture = ExtResource("3_8fsbw")
 texture_polygon_texture_offset = Vector2(16, 272)
-icon = SubResource("AtlasTexture_3fifq")
 building_category = ExtResource("1_7p8vo")
 requirements = Array[ExtResource("5_ygorx")]([SubResource("Resource_n5jhq")])
 attributes = Array[Resource("res://types/building/building_attribute.gd")]([])
-controllable = false
 id = "conveyor_1_router"
 options = {}
+icon = SubResource("AtlasTexture_m3lqs")

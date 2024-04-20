@@ -180,8 +180,8 @@ func set_building_shadow(type: BuildingType, rot: int = 0, config: Variant = typ
     container.building_type = type
     container.pos = tile_pos
     container.rot = rot
+    container.building_config = config
     world.add_entity(container.get_entity())
-    container.shadow.building_config = config
     container.place()
     building_ref = container.get_entity().entity_id
     return container

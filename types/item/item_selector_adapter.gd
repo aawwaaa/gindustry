@@ -14,6 +14,8 @@ const CONFIG_TARGET_SPRITE2D_WHITELIST_TEXTURE = "wltex"
 const CONFIG_TARGET_SPRITE2D_BLACKLIST_TEXTURE = "bltex"
 
 class ConfigHandler extends AdapterConfig.ConfigHandler:
+    static var inst: ConfigHandler = ConfigHandler.new()
+
     func _get_type() -> String:
         return CONFIG_KEY
     func _get_applicatablity(type: String, config: Variant) -> int:
@@ -25,9 +27,9 @@ class ConfigHandler extends AdapterConfig.ConfigHandler:
 
     func _generate_config(uncasted: EntityAdapter) -> Variant:
         var adapter = uncasted as ItemSelectAdapter
-        var slots: Array[Array] = []
+        var slots: Array[Item] = []
         for slot in adapter.slot_size:
-            slots.append(adapter.get_slot(slot))
+            slots.append(adapter.slots[slot])
         return {
             CKEY_BLACKLIST: adapter.blacklist,
             CKEY_SLOTS: slots
@@ -92,6 +94,9 @@ class ConfigHandler extends AdapterConfig.ConfigHandler:
 @export var allow_blacklist: bool = false
 
 @export var content_display_group: ContentDisplayGroup
+@export var sprite2d: Sprite2D
+@export var sprite2d_whitelist_texture: Texture2D
+@export var sprite2d_blacklist_texture: Texture2D
 
 var slots: Array[Item] = []
 var blacklist: bool = false
@@ -142,6 +147,9 @@ func set_blacklist(enable: bool) -> void:
     if not allow_blacklist: return
     blacklist = enable
     blacklist_changed.emit(enable)
+    if sprite2d:
+        sprite2d.texture = sprite2d_blacklist_texture if enable \
+                else sprite2d_whitelist_texture
 
 func has_content(content: Content, found = not blacklist) -> bool:
     for slot in slot_size:

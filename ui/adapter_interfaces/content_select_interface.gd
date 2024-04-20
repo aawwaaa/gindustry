@@ -65,7 +65,7 @@ func _on_blacklist_changed(blacklist: bool) -> void:
     blacklist_enabled.set_pressed_no_signal(blacklist)
 
 func _on_blacklist_enabled_toggled(toggled_on: bool) -> void:
-    operate_adapter("set_blackist", [toggled_on])
+    operate_adapter("set_blacklist", [toggled_on])
 
 func _on_slot_pressed(index: int) -> void:
     if remote_entity:

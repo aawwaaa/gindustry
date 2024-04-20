@@ -103,6 +103,7 @@ func place_build_shadow(plan: BuildPlan, tile: Tile) -> bool:
     })
     shadow.disable_collision = true
     plan.world.add_temp_node(shadow)
+    shadow.building_config = plan.building_config
     shadow.build_progress = 0
     var result = shadow.check_build()
     shadow.queue_free()

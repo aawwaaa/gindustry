@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://c4mymv58m26vo"]
+
+[ext_resource type="Script" path="res://ui/player_inventory/inventory_panel.gd" id="1_in26r"]
+[ext_resource type="Script" path="res://ui/adapter_interfaces/item_select_interface.gd" id="2_hfeuu"]
+
+[node name="InventoryPanel" type="VBoxContainer" node_paths=PackedStringArray("interfaces")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_in26r")
+interfaces = [NodePath("ItemSelectInterface")]
+
+[node name="ItemSelectInterface" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("2_hfeuu")
+adapter_name = "iselect"

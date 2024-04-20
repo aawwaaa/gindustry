@@ -27,6 +27,7 @@ func create_nodes() -> void:
 
     blacklist_enabled = CheckButton.new()
     blacklist_enabled.focus_mode = Control.FOCUS_NONE
+    blacklist_enabled.toggled.connect(_on_blacklist_enabled_toggled)
     blacklist_toggle.add_child(blacklist_enabled)
 
     var blacklist_label = Label.new()
@@ -65,7 +66,7 @@ func _on_blacklist_changed(blacklist: bool) -> void:
     blacklist_enabled.set_pressed_no_signal(blacklist)
 
 func _on_blacklist_enabled_toggled(toggled_on: bool) -> void:
-    operate_adapter("set_blackist", [toggled_on])
+    operate_adapter("set_blacklist", [toggled_on])
 
 func _on_slot_pressed(index: int) -> void:
     if remote_entity:

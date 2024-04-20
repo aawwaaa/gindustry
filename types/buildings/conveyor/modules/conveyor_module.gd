@@ -56,7 +56,7 @@ func _check_transfer(name: String, source: Building, source_component: BuildingC
     if not _is_vaild_source(source_side, source_direction): return false
     if not item: return true
     var position = _get_target_position(source_side, source_direction)
-    var track = _get_track(source_side ,source_direction, position)
+    var track = _get_track(source_side, source_direction, position)
     return track.test_position(item.position + position - track.base_position)
 
 func _handle_transfer(name: String, source: Building, source_component: BuildingComponent, args: Array = []) -> Variant:

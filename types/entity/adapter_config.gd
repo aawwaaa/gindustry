@@ -29,6 +29,9 @@ class ConfigHandler extends RefCounted:
     const CKEY_TEXT = &"text"
     const CKEY_VALUE = &"value"
 
+    func _init() -> void:
+        AdapterConfig.register_handler(self)
+
     func _get_type() -> String:
         return ""
     func get_type() -> String:
@@ -131,15 +134,15 @@ static func generate_config(adapters: Dictionary) -> Dictionary:
     var config = {}
     for type in adapters:
         if type not in config_handlers: continue
-        config_handlers[type].generate_config(adapters[type], config[type])
+        config_handlers[type].generate_config(adapters[type], config)
     return config
 
 static func apply_config(config: Dictionary, adapters: Dictionary) -> void:
     for type in config:
         if type not in adapters: continue
-        config_handlers[type].apply_config(adapters[type], config[type])
+        config_handlers[type].apply_config(adapters[type], config)
 
 static func apply_shadow(config: Dictionary, targets: Dictionary) -> void:
     for type in config:
         if type not in targets: continue
-        config_handlers[type].apply_shadow(targets[type], config[type])
+        config_handlers[type].apply_shadow(targets[type], config)
