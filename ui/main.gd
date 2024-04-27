@@ -1,5 +1,5 @@
 class_name MainNode
-extends Node2D
+extends Node3D
 
 func _ready() -> void:
     get_viewport().gui_embed_subwindows = true
@@ -114,6 +114,6 @@ func start_load() -> void:
     
     progress.name = "Main_Load_LoadInputHandler"
     Global.game_ui_input_handler = %GameUI.input_handler_ui
-    Global.set_input_handler()
+    # Global.set_input_handler()
     progress.progress += 2
     progress.finish()

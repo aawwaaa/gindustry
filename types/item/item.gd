@@ -83,32 +83,32 @@ func merge_from(source: Item, override_max_stack: bool = false, merge_amount: in
     if source.is_empty(): return null
     return source
 
-func _useable_no_await(entity: Entity, world: World, target_position: Vector2) -> bool:
-    return true
-
-func useable_no_await(entity: Entity, world: World, target_position: Vector2) -> bool:
-    if not item_type.useable: return false
-    return _useable_no_await(entity, world, target_position)
-
-func _useable(entity: Entity, world: World, target_position: Vector2) -> bool:
-    if not await entity.check_access_range(world, target_position):
-        return false
-    return true
-
-func useable(entity: Entity, world: World, target_position: Vector2) -> bool:
-    if not useable_no_await(entity, world, target_position): return false
-    return await _useable(entity, world, target_position)
-
-func _create_use(entity: Entity, world: World) -> ItemUse:
-    var use = item_type.use_scene.instantiate()
-    use.world = world
-    use.user = entity
-    use.item = self
-    world.add_temp_node(use)
-    return use
-
-func create_use(entity: Entity, world: World) -> ItemUse:
-    return _create_use(entity, world)
+# func _useable_no_await(entity: Entity, world: World, target_position: Vector2) -> bool:
+#     return true
+# 
+# func useable_no_await(entity: Entity, world: World, target_position: Vector2) -> bool:
+#     if not item_type.useable: return false
+#     return _useable_no_await(entity, world, target_position)
+# 
+# func _useable(entity: Entity, world: World, target_position: Vector2) -> bool:
+#     if not await entity.check_access_range(world, target_position):
+#         return false
+#     return true
+# 
+# func useable(entity: Entity, world: World, target_position: Vector2) -> bool:
+#     if not useable_no_await(entity, world, target_position): return false
+#     return await _useable(entity, world, target_position)
+# 
+# func _create_use(entity: Entity, world: World) -> ItemUse:
+#     var use = item_type.use_scene.instantiate()
+#     use.world = world
+#     use.user = entity
+#     use.item = self
+#     world.add_temp_node(use)
+#     return use
+# 
+# func create_use(entity: Entity, world: World) -> ItemUse:
+#     return _create_use(entity, world)
 
 func _get_cost() -> float:
     return item_type.get_cost() * amount

@@ -12,11 +12,11 @@ var in_game: bool = false;
 var paused: bool = false:
     set = set_paused;
 
-var camera_node: Camera2D;
-var camera_base_node: Node2D;
-var worlds_node: Node2D;
+var camera_node: Camera3D;
+var camera_base_node: Node3D;
+var worlds_node: Node3D;
 
-var world_load_source: WorldLoadSource;
+# var world_load_source: WorldLoadSource;
 
 var save_preset: Preset:
     set(v):
@@ -29,7 +29,7 @@ var save_meta: SaveMeta:
         save_meta_changed.emit(v)
 var save_configs: ConfigsGroup = ConfigsGroup.new();
 
-var temp_tile: Tile;
+# var temp_tile: Tile;
 
 var worlds: Dictionary = {}
 var root_world: World;
@@ -42,11 +42,11 @@ var current_player: Player:
         var old = current_player if current_player else null
         current_player = v
         current_player_changed.emit(v, old)
-var current_entity: Entity:
-    get: return current_player.get_controller().entity if current_player else null
+# var current_entity: Entity:
+#     get: return current_player.get_controller().entity if current_player else null
 
-func _ready() -> void:
-    create_temp_tile();
+# func _ready() -> void:
+#     create_temp_tile();
 
 @rpc("any_peer", "call_local", "reliable")
 func set_paused(v: bool) -> void:
@@ -55,8 +55,8 @@ func set_paused(v: bool) -> void:
     paused = v
     get_tree().paused = v
 
-func create_temp_tile() -> void:
-    temp_tile = Tile.new();
+# func create_temp_tile() -> void:
+#     temp_tile = Tile.new();
 
 func reset_game() -> void:
     signal_reset_game.emit();
@@ -70,10 +70,10 @@ func reset_game() -> void:
     current_player = null;
     Players.reset_players();
     MultiplayerServer.rpc_sync(self, "set_paused", [false])
-    create_temp_tile()
+#     create_temp_tile()
     
-    Controller._on_game_signal_reset_game();
-    Entity._on_game_signal_reset_game();
+#     Controller._on_game_signal_reset_game();
+#     Entity._on_game_signal_reset_game();
 
 func init_game() -> void:
     reset_game();
@@ -105,10 +105,10 @@ func get_world(world_id: int) -> World:
     var world = get_world_or_null(world_id)
     if world:
         return world;
-    if not world_load_source:
-        return null;
+#     if not world_load_source:
+#         return null;
     @warning_ignore("redundant_await")
-    world = await world_load_source._load_world(world_id);
+#     world = await world_load_source._load_world(world_id);
     if not world:
         return null;
     worlds[world_id] = world;

@@ -10,9 +10,9 @@ func _ready() -> void:
 func data_updated() -> void:
     %Icon.texture = item.item_type.get_texture()
 
-func _set_in_inventory(in_inventory: bool, inventory: Inventory) -> void:
-    pass
-
-func set_in_inventory(in_inventory: bool, inventory: Inventory) -> void:
-    _set_in_inventory(in_inventory, inventory)
-    data_updated()
+# func _set_in_inventory(in_inventory: bool, inventory: Inventory) -> void:
+#     pass
+# 
+# func set_in_inventory(in_inventory: bool, inventory: Inventory) -> void:
+#     _set_in_inventory(in_inventory, inventory)
+#     data_updated()

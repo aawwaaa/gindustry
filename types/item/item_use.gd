@@ -6,11 +6,11 @@ var item_type: ItemType:
     get: return item.item_type
     set(v): return;
 
-var inventory: Inventory
+# var inventory: Inventory
 var slot: int
 
 var world: World
-var user: Entity
+# var user: Entity
 
 func _set_position(position: Vector2):
     self.position = position
@@ -20,5 +20,5 @@ func _use() -> void:
 
 func remove_items(amount: int) -> Item:
     var removed = item.split_to(amount)
-    inventory.update_slot(slot)
+#     inventory.update_slot(slot)
     return removed

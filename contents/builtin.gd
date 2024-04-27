@@ -16,10 +16,10 @@ static func load_builtin() -> void:
 static func start_load() -> void:
     Contents.current_loading_mod = Mods.mod_inst_list[builtin_mod_info.id]
 
-    InputHandler.register_input_handler("desktop", InputHandler.InputHandlerMeta.new({
-        "input_handler": DesktopInputHandler,
-        "tr_name": "InputHandler_desktop",
-    }))
+    # InputHandler.register_input_handler("desktop", InputHandler.InputHandlerMeta.new({
+    #     "input_handler": DesktopInputHandler,
+    #     "tr_name": "InputHandler_desktop",
+    # }))
 
     await load_type("resource_types/", [
         "building_category.tres",

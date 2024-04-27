@@ -15,8 +15,8 @@ var player_name: String
 func init_player() -> void:
     player_name = "unnamed"
 
-func get_controller() -> PlayerController:
-    return %PlayerController
+# func get_controller() -> PlayerController:
+#     return %PlayerController
 
 func _ready() -> void:
     name = "Player#" + str(player_id)

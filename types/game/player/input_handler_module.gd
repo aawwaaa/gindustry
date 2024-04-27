@@ -5,12 +5,12 @@ var handler: InputHandler
 
 var player: Player:
     get: return handler.player
-var controller: PlayerController:
-    get: return handler.controller
-var target: ControllerAdapter:
-    get: return handler.target
-var entity: Entity:
-    get: return handler.entity
+# var controller: PlayerController:
+#     get: return handler.controller
+# var target: ControllerAdapter:
+#     get: return handler.target
+# var entity: Entity:
+#     get: return handler.entity
 
 var world_pos: Vector2:
     get: return handler.world_pos
@@ -42,5 +42,5 @@ func _handle_input(event: InputEvent) -> void:
 func _handle_process(delta: float) -> void:
     pass
 
-func _handle_interact(target: Entity, input: InputEvent) -> bool:
-    return false
+# func _handle_interact(target: Entity, input: InputEvent) -> bool:
+#     return false

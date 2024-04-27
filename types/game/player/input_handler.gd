@@ -18,23 +18,23 @@ static func register_input_handler(id: String, meta: InputHandlerMeta) -> void:
     if add_input_handler_listener:
         add_input_handler_listener.call(id, meta)
 
-signal controller_target_changed(target: ControllerAdapter, from: ControllerAdapter)
-signal controller_target_entity_changed(entity: Entity, from: Entity)
-signal focused_entity_changed(entity: Entity, from: Entity)
+# signal controller_target_changed(target: ControllerAdapter, from: ControllerAdapter)
+# signal controller_target_entity_changed(entity: Entity, from: Entity)
+# signal focused_entity_changed(entity: Entity, from: Entity)
 
 var input_processors: Dictionary = {}
-var interacting_entities: Array[Entity] = []
-var interacting_adapters: Array[EntityAdapter] = []
+# var interacting_entities: Array[Entity] = []
+# var interacting_adapters: Array[EntityAdapter] = []
 var configuring_target: Object = null;
 
 var player: Player:
     get: return Game.current_player
-var controller: PlayerController:
-    get: return player.get_controller() if player else null
-var target: ControllerAdapter:
-    get: return controller.target if controller else null
-var entity: Entity:
-    get: return target.entity_node if target else null
+# var controller: PlayerController:
+#     get: return player.get_controller() if player else null
+# var target: ControllerAdapter:
+#     get: return controller.target if controller else null
+# var entity: Entity:
+#     get: return target.entity_node if target else null
 
 var world_pos: Vector2;
 
@@ -47,30 +47,30 @@ func _unload_ui(node: Control) -> void:
 
 func _ready() -> void:
     Game.current_player_changed.connect(_on_player_changed)
-    Game.signal_reset_game.connect(_on_reset_game)
+#     Game.signal_reset_game.connect(_on_reset_game)
 
-func _on_reset_game() -> void:
-    interacting_entities.clear()
-
-func add_interacting_entity(entity: Entity) -> void:
-    if entity in interacting_entities: return
-    var focused = get_focused_entity()
-    interacting_entities.append(entity)
-    update_focused_entity(focused)
-
-func remove_interacting_entity(entity: Entity) -> void:
-    if entity not in interacting_entities: return
-    var focused = get_focused_entity()
-    interacting_entities.erase(entity)
-    update_focused_entity(focused)
-
-func add_interacting_adapter(adapter: EntityAdapter) -> void:
-    if adapter in interacting_adapters: return
-    interacting_adapters.append(adapter)
-
-func remove_interacting_adapter(adapter: EntityAdapter) -> void:
-    if adapter not in interacting_adapters: return
-    interacting_adapters.erase(adapter)
+# func _on_reset_game() -> void:
+#     interacting_entities.clear()
+# 
+# func add_interacting_entity(entity: Entity) -> void:
+#     if entity in interacting_entities: return
+#     var focused = get_focused_entity()
+#     interacting_entities.append(entity)
+#     update_focused_entity(focused)
+# 
+# func remove_interacting_entity(entity: Entity) -> void:
+#     if entity not in interacting_entities: return
+#     var focused = get_focused_entity()
+#     interacting_entities.erase(entity)
+#     update_focused_entity(focused)
+# 
+# func add_interacting_adapter(adapter: EntityAdapter) -> void:
+#     if adapter in interacting_adapters: return
+#     interacting_adapters.append(adapter)
+# 
+# func remove_interacting_adapter(adapter: EntityAdapter) -> void:
+#     if adapter not in interacting_adapters: return
+#     interacting_adapters.erase(adapter)
 
 func set_configuring_target(target: Object) -> bool:
     if configuring_target: return false
@@ -80,35 +80,36 @@ func set_configuring_target(target: Object) -> bool:
 func clear_configuring_target() -> void:
     configuring_target = null
 
-func get_interacting_target() -> Node:
-    if configuring_target: return configuring_target
-    if interacting_adapters.size() != 0: return interacting_adapters.back()
-    if interacting_entities.size() == 0: return null
-    return interacting_entities.back()
+# func get_interacting_target() -> Node:
+#     if configuring_target: return configuring_target
+#     if interacting_adapters.size() != 0: return interacting_adapters.back()
+#     if interacting_entities.size() == 0: return null
+#     return interacting_entities.back()
+# 
+# func get_focused_entity() -> Entity:
+#     if interacting_entities.size() == 0: return null
+#     return interacting_entities.back()
+# 
+# func _get_focused_tile() -> Tile:
+#     return entity.world.get_tile_or_null(Tile.to_tile_pos(world_pos)) if entity else null
+# 
+# func get_focused_tile() -> Tile:
+#     return _get_focused_tile()
+# 
+# func update_focused_entity(old: Entity) -> void:
+#     if old == get_focused_entity(): return
+#     focused_entity_changed.emit(get_focused_entity(), old)
 
-func get_focused_entity() -> Entity:
-    if interacting_entities.size() == 0: return null
-    return interacting_entities.back()
-
-func _get_focused_tile() -> Tile:
-    return entity.world.get_tile_or_null(Tile.to_tile_pos(world_pos)) if entity else null
-
-func get_focused_tile() -> Tile:
-    return _get_focused_tile()
-
-func update_focused_entity(old: Entity) -> void:
-    if old == get_focused_entity(): return
-    focused_entity_changed.emit(get_focused_entity(), old)
-
-func interact_operate(operation: String, args: Array[Variant] = []) -> void:
-    var target = get_interacting_target()
-    if not target: return
-    target.input_operate(operation, args)
-
+# func interact_operate(operation: String, args: Array[Variant] = []) -> void:
+#     var target = get_interacting_target()
+#     if not target: return
+#     target.input_operate(operation, args)
+# 
 func _extend_properties(from: InputHandler) -> void:
-    configuring_target = from.configuring_target
-    interacting_entities = from.interacting_entities
-    interacting_adapters = from.interacting_adapters
+#     configuring_target = from.configuring_target
+#     interacting_entities = from.interacting_entities
+#     interacting_adapters = from.interacting_adapters
+    pass
 
 func extend_properties(from: InputHandler) -> void:
     _extend_properties(from)
@@ -136,14 +137,15 @@ func interact_access_and_operate(args: Array = []) -> void:
     call_input_processor(InputInteracts.INTERACT_PROCESSOR, InputInteracts.INTERACT_ACCESS_AND_OPERATE, args)
 
 func _on_player_changed(player: Player, from: Player) -> void:
-    Utils.signal_dynamic_connect(controller, from.get_controller() if from else null,
-            "target_changed", _on_controller_target_changed)
-    _on_controller_target_changed(target, from.get_controller().target if from else null)
-
-func _on_controller_target_changed(target: ControllerAdapter, from: ControllerAdapter) -> void:
-    controller_target_changed.emit(target, from)
-    controller_target_entity_changed.emit(target.entity_node if target else null, \
-            from.entity_node if from else null)
+    pass
+#     Utils.signal_dynamic_connect(controller, from.get_controller() if from else null,
+#             "target_changed", _on_controller_target_changed)
+#     _on_controller_target_changed(target, from.get_controller().target if from else null)
+# 
+# func _on_controller_target_changed(target: ControllerAdapter, from: ControllerAdapter) -> void:
+#     controller_target_changed.emit(target, from)
+#     controller_target_entity_changed.emit(target.entity_node if target else null, \
+#             from.entity_node if from else null)
 
 func _unhandled_input(event: InputEvent) -> void:
     if player == null: return

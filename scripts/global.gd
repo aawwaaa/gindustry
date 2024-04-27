@@ -1,17 +1,7 @@
 extends Node
 
 signal configs_loaded();
-signal input_handler_changed(handler: InputHandler, from: InputHandler);
-
-const CHUNK_SIZE = 16;
-const TILE_SIZE = 32;
-const TILE_SIZE_VECTOR = Vector2i(TILE_SIZE, TILE_SIZE);
-
-const MAX_LAYERS = 8;
-const MAX_LAYERS_MASK = (1 << MAX_LAYERS) - 1
-
-const MINIMAP_LAYER = 1 << 16
-const ALT_DISPLAY_LAYER = 1 << 17
+# signal input_handler_changed(handler: InputHandler, from: InputHandler);
 
 enum States{
     LOADING,
@@ -31,7 +21,7 @@ var state: StateMachine
 
 var configs: ConfigsGroup;
 var logger: Log.Logger;
-var input_handler: InputHandler;
+# var input_handler: InputHandler;
 
 var headless_client: bool = false;
 
@@ -43,22 +33,22 @@ func _ready() -> void:
     state = StateMachine.new()
     state.set_state(States.LOADING)
 
-func set_input_handler(name: String = "") -> void:
-    if name != "":
-        configs.p("input-handler", name)
-        save_configs()
-    else:
-        name = configs.g("input-handler", main.get_default_input_handler())
-    var old = input_handler if input_handler else null
-    if input_handler:
-        input_handler._unload_ui(game_ui_input_handler)
-    input_handler = InputHandler.input_handlers[name].input_handler.new()
-    add_child(input_handler)
-    input_handler._load_ui(game_ui_input_handler)
-    input_handler_changed.emit(input_handler, old)
-    if old:
-        input_handler.extend_properties(old)
-        old.queue_free()
+# func set_input_handler(name: String = "") -> void:
+#     if name != "":
+#         configs.p("input-handler", name)
+#         save_configs()
+#     else:
+#         name = configs.g("input-handler", main.get_default_input_handler())
+#     var old = input_handler if input_handler else null
+#     if input_handler:
+#         input_handler._unload_ui(game_ui_input_handler)
+#     input_handler = InputHandler.input_handlers[name].input_handler.new()
+#     add_child(input_handler)
+#     input_handler._load_ui(game_ui_input_handler)
+#     input_handler_changed.emit(input_handler, old)
+#     if old:
+#         input_handler.extend_properties(old)
+#         old.queue_free()
 
 func set_default(key: String, value: Variant) -> void:
     if configs.g(key, null) == null:

@@ -26,11 +26,11 @@ class ContentSerializer extends Serializer:
     func _serialize(object: Variant) -> Variant: return object.index
     func _unserialize(object: Variant) -> Variant: return Contents.get_content_by_index(object)
 
-class EntitySerializer extends Serializer:
-    func _get_name() -> String: return "e"
-    func _matched(object: Variant) -> bool: return object is Entity
-    func _serialize(object: Variant) -> Variant: return object.entity_id
-    func _unserialize(object: Variant) -> Variant: return Entity.get_entity_by_ref_or_null(object)
+# class EntitySerializer extends Serializer:
+#     func _get_name() -> String: return "e"
+#     func _matched(object: Variant) -> bool: return object is Entity
+#     func _serialize(object: Variant) -> Variant: return object.entity_id
+#     func _unserialize(object: Variant) -> Variant: return Entity.get_entity_by_ref_or_null(object)
 
 var serializers: Array[Serializer] = []
 var map: Dictionary = {}
@@ -75,4 +75,4 @@ func _ready() -> void:
     add_serializer(Serializer.new())
     add_serializer(NodeSerializer.new())
     add_serializer(ContentSerializer.new())
-    add_serializer(EntitySerializer.new())
+#     add_serializer(EntitySerializer.new())
