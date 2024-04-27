@@ -32,13 +32,13 @@ static func start_load() -> void:
         "tile_ore_type.tres"
     ])
     await load_type("content_types/", [
-        "building.tres",
+        # "building.tres",
         "content.tres",
-        "entity.tres",
-        "floor.tres",
-        "item.tres",
-        "overlay.tres",
-        "recipe.tres",
+        # "entity.tres",
+        # "floor.tres",
+        # "item.tres",
+        # "overlay.tres",
+        # "recipe.tres",
     ])
     await load_type("content_categories/", [
         "uncategoried.tres",
@@ -62,13 +62,13 @@ static func start_load() -> void:
         "item.tres",
     ])
 
-    await load_content(entity, "entities/", [
-        "building_shadow_container/entity.tres",
-    ])
-    await load_content(building, "buildings/", [
-        "dropped_item/building.tres",
-        "test_build/building.tres",
-    ])
+    # await load_content(entity, "entities/", [
+    #     "building_shadow_container/entity.tres",
+    # ])
+    # await load_content(building, "buildings/", [
+    #     "dropped_item/building.tres",
+    #     "test_build/building.tres",
+    # ])
 
 static func load_content(to: Dictionary, prefix: String, paths: Array[String]) -> void:
     var results = await Utils.load_contents_async("res://contents/" + prefix, paths, "Loader_ModLoad_Contents", "Builtin")

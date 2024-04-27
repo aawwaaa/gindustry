@@ -103,7 +103,6 @@ func start_load() -> void:
     progress.progress += 5
 
     progress.name = "Main_Load_LoadUI"
-    Game.worlds_node = %Worlds;
     Game.camera_base_node = %CameraBase
     Game.camera_node = %Camera;
     

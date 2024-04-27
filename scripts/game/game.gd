@@ -14,7 +14,6 @@ var paused: bool = false:
 
 var camera_node: Camera3D;
 var camera_base_node: Node3D;
-var worlds_node: Node3D;
 
 # var world_load_source: WorldLoadSource;
 
@@ -32,7 +31,6 @@ var save_configs: ConfigsGroup = ConfigsGroup.new();
 # var temp_tile: Tile;
 
 var worlds: Dictionary = {}
-var root_world: World;
 var world_inc_id = 1;
 
 var entity_inc_id = 1;
@@ -64,9 +62,6 @@ func reset_game() -> void:
     world_inc_id = 1;
     entity_inc_id = 1;
     worlds = {};
-    root_world = null;
-    for world in worlds_node.get_children():
-        world.queue_free();
     current_player = null;
     Players.reset_players();
     MultiplayerServer.rpc_sync(self, "set_paused", [false])
@@ -112,19 +107,13 @@ func get_world(world_id: int) -> World:
     if not world:
         return null;
     worlds[world_id] = world;
-    if world.root_world:
-        worlds_node.add_child(world);
     return world;
 
 func create_world() -> World:
-    if root_world:
-        return null;  
     var world = World.create();
     world.world_id = world_inc_id;
     world_inc_id += 1;
     world.root_world = true;
-    worlds_node.add_child(world);
-    root_world = world;
     worlds[world.world_id] = world;
     return world;
 
@@ -145,14 +134,12 @@ func load_game(stream: Stream) -> void:
 
     world_inc_id = stream.get_32();
     entity_inc_id = stream.get_64();
-    if stream.get_8() == 1:
+    for _1 in stream.get_32():
         var world_id = stream.get_32();
         var world = World.create();
         world.world_id = world_id;
-        world.root_world = true;
-        root_world = world;
+        worlds[world_id] = world
         world.load_data(stream);
-        worlds_node.add_child(world);
 
     Players.load_data(stream)
     game_loaded()
@@ -169,9 +156,10 @@ func save_game(stream: Stream, to_client: bool = false) -> void:
 
     stream.store_32(world_inc_id)
     stream.store_64(entity_inc_id)
-    stream.store_8(1);
-    stream.store_32(root_world.world_id);
-    root_world.save_data(stream)
+    stream.store_32(worlds.size())
+    for world in worlds.values():
+        stream.store_32(world.world_id)
+        world.save_data(world)
 
     Players.save_data(stream)
 
