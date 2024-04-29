@@ -1,37 +1,22 @@
 class_name MainNode
 extends Node3D
 
+var log_source: Log.Logger
+
 func _ready() -> void:
     get_viewport().gui_embed_subwindows = true
 
     get_tree().root.process_mode = Node.PROCESS_MODE_ALWAYS
-
+    
+    log_source = Log.register_log_source("Main_LogSource")
     Log.all_progress_tracker_finished.connect(_on_all_progress_tracker_finished)
+    Global.state.state_changed.connect(_on_state_changed)
     Global.main = self;
     
     init_configs();
+
+    Global.state.set_state(Global.States.LOADING);
     start_load();
-
-func back_to_menu() -> void:
-    for node in %Windows.get_children():
-        node.hide();
-    %GameUI.hide()
-    %Loading.visible = false;
-    %MainMenu.visible = true;
-
-func hide_all() -> void:
-    for node in %Windows.get_children():
-        node.hide();
-    %GameUI.hide_ui()
-    %Loading.visible = false;
-    %MainMenu.visible = false;
-
-func show_game_ui() -> void:
-    for node in %Windows.get_children():
-        node.hide();
-    %GameUI.show_ui()
-    %Loading.visible = false;
-    %MainMenu.visible = false;
 
 func open_window(window_name: String) -> void:
     %Windows.get_node(window_name).show()
@@ -47,10 +32,23 @@ func _on_saves_pressed() -> void:
     open_window("Saves")
 
 func _on_all_progress_tracker_finished() -> void:
-    %Loading.visible = false;
-    %MainMenu.visible = true;
-    Global.state.set_state(Global.States.MAIN_MENU);
-    Headless.apply_args_from_cmdline()
+    if Global.state.get_state() == Global.States.LOADING:
+        Global.state.set_state(Global.States.MAIN_MENU);
+        Headless.apply_args_from_cmdline()
+
+func _on_state_changed(state: Global.States, from: Global.States) -> void:
+    for node in %Windows.get_children():
+        node.hide();
+    %Loading.visible = state == Global.States.LOADING or state == Global.States.LOADING_GAME
+    %MainMenu.visible = state == Global.States.MAIN_MENU;
+    if state == Global.States.GAME or state == Global.States.PAUSED:
+        %GameUI.show_ui()
+    else:
+        %GameUI.hide_ui()
+    log_source.info(tr("Main_StateChanged {from} {state}").format({
+        from = Global.States.find_key(from),
+        state = Global.States.find_key(state)}
+    ))
 
 func init_configs() -> void:
     if not DirAccess.dir_exists_absolute("user://mods/"):
@@ -59,7 +57,7 @@ func init_configs() -> void:
         DirAccess.make_dir_absolute("user://saves/");
 
 func start_load() -> void:
-    var progress = Log.register_progress_tracker(100, "Main_Load", "Main_LogSource");
+    var progress = Log.register_progress_tracker(100, "Main_Load", log_source.source);
     progress.name = "Main_Load_SearchMods"
     Mods.search_mod_folder("res://mods/", false);
     Mods.search_mod_folder("user://mods/");

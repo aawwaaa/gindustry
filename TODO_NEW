@@ -1,6 +1,13 @@
+[X] StateMachine
+
 [ ] World
     [ ] 世界中的世界
-        - 如何使其跟随实体
+        根世界持有World3D
+        所有世界持有RID -> viewport到父世界viewport
+        世界位置发生变化 -> 更新viewport全局变换
+        实体位置发生变化 -> 更新instance变换
+
+    [.] Game.create_world及World.create_world同步
 [ ] Chunk
 [ ] Tile
 

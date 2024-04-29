@@ -7,7 +7,9 @@ enum States{
     LOADING,
     MAIN_MENU,
     PRESET_CONFIG,
+    LOADING_GAME,
     GAME,
+    PAUSED
 }
 
 class Temp extends RefCounted:

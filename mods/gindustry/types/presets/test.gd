@@ -17,8 +17,11 @@ func _init_preset() -> void:
 func _init_after_world_load() -> void:
     pass
 
+func _load_after_world_load() -> void:
+    pass
+
 func _load_preset() -> void:
-    await Game.signal_game_loaded
+    pass
 
 func _enable_preset() -> void:
     pass

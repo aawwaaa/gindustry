@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://b32css7pntk7e"]
+
+[ext_resource type="Script" path="res://ui/meshtest.gd" id="1_5mwls"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_d5fj7"]
+
+[node name="Meshtest" type="Node3D"]
+script = ExtResource("1_5mwls")
+mesh = SubResource("BoxMesh_d5fj7")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.30221)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 4.72761, 3)

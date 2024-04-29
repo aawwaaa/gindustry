@@ -23,7 +23,7 @@ class Logger extends RefCounted:
     
     func _init(src: String):
         source = tr(src);
-        self.template = "[{source}]\t[{level}] {message}" \
+        self.template = "[{source}]\t[{level}]\t{message}" \
             .format({source = tr(source)});
     
     func log(level: String, message: String):

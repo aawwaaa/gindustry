@@ -1,16 +1,9 @@
 extends Node
 
-signal signal_reset_game();
-signal signal_init_game();
-signal signal_game_loaded();
-signal signal_back_to_menu();
-
 signal save_meta_changed(meta: SaveMeta);
 signal current_player_changed(player: Player, from: Player);
 
-var in_game: bool = false;
-var paused: bool = false:
-    set = set_paused;
+var paused: bool = false;
 
 var camera_node: Camera3D;
 var camera_base_node: Node3D;
@@ -47,24 +40,38 @@ var current_player: Player:
 #     create_temp_tile();
 
 @rpc("any_peer", "call_local", "reliable")
-func set_paused(v: bool) -> void:
+func set_paused_rpc(v: bool) -> void:
     if not MultiplayerServer.is_peer_admin(multiplayer.get_remote_sender_id()):
         return
     paused = v
     get_tree().paused = v
 
+func set_paused(v: bool) -> void:
+    MultiplayerServer.rpc_sync(self, "set_paused_rpc", [v])
+    Global.state.set_state(Global.States.PAUSED if v else Global.States.GAME)
+
+func is_in_game() -> bool:
+    var state = Global.state.get_state();
+    return state == Global.States.GAME or state == Global.States.PAUSED
+
 # func create_temp_tile() -> void:
 #     temp_tile = Tile.new();
 
-func reset_game() -> void:
-    signal_reset_game.emit();
+func cleanup() -> void:
+    if save_preset: save_preset._disable_preset()
+    for world in worlds.values():
+        world.free()
     save_preset = null
     world_inc_id = 1;
     entity_inc_id = 1;
     worlds = {};
     current_player = null;
     Players.reset_players();
-    MultiplayerServer.rpc_sync(self, "set_paused", [false])
+
+func reset_game() -> void:
+    cleanup()
+    MultiplayerServer.rpc_sync(self, "set_paused_rpc", [true])
+    Global.state.set_state(Global.States.LOADING_GAME)
 #     create_temp_tile()
     
 #     Controller._on_game_signal_reset_game();
@@ -75,21 +82,16 @@ func init_game() -> void:
     save_meta = SaveMeta.new();
     save_configs = ConfigsGroup.new();
     Contents.init_contents_mapping();
-    signal_init_game.emit();
 
 func game_loaded() -> void:
-    signal_game_loaded.emit();
-    Global.main.show_game_ui();
-    in_game = true;
     Global.state.set_state(Global.States.GAME)
+    MultiplayerServer.send_world_data()
+    MultiplayerServer.rpc_sync(self, "set_paused_rpc", [false])
 
 func back_to_menu() -> void:
-    Global.state.set_state(Global.States.MAIN_MENU)
     Multiplayer.disconnect_multiplayer()
-    signal_back_to_menu.emit();
-    reset_game()
-    Global.main.back_to_menu();
-    in_game = false;
+    cleanup()
+    Global.state.set_state(Global.States.MAIN_MENU)
 
 func get_world_or_null(world_id: int) -> World:
     if not worlds.has(world_id):
@@ -115,6 +117,7 @@ func create_world() -> World:
     world_inc_id += 1;
     world.root_world = true;
     worlds[world.world_id] = world;
+    world.create_resources()
     return world;
 
 const current_data_version = 0;
@@ -142,6 +145,7 @@ func load_game(stream: Stream) -> void:
         world.load_data(stream);
 
     Players.load_data(stream)
+    save_preset._load_after_world_load()
     game_loaded()
 
 func save_game(stream: Stream, to_client: bool = false) -> void:

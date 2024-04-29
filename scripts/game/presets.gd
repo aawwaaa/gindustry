@@ -24,7 +24,6 @@ func register_preset_group(group_name: String) -> PresetGroup:
 func load_preset(preset: Preset) -> void:
     logger.info(tr("Presets_LoadPreset {name}") \
         .format({name = tr(preset.get_tr_name())}))
-    Global.main.hide_all();
     Global.state.set_state(Global.States.PRESET_CONFIG)
     var result = await preset._pre_config_preset();
     if not result:

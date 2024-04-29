@@ -62,6 +62,10 @@ func request_join(uuid: String, player_name: String) -> void:
 func is_peer_admin(peer: int) -> bool:
     return peer == 1
 
+func send_world_data() -> void:
+    pass
+    # TODO
+
 # request connect(with uuid, name) -> confirmed -> request-world -> send-world -> send-packets -> create-player
 # server-player-join(with name)
 
