@@ -243,6 +243,17 @@
         - convert to content select adapter
     [X] ContentSelectAdapter
 
+[ ] World.temp_node日志
+    复现: 建造拖动时拖动到UI松开后再次建造/拆除
+    Cannot call method 'queue_free' on a null value.
+E 0:06:00:0432   world.gd:135 @ get_temp_node(): Node not found: "@Sprite2D@378" (relative to "/root/Main/Worlds/World#1/TempNodes").
+  <C++ 错误>       Method/function failed. Returning: nullptr
+  <C++ 源文件>      scene/main/node.cpp:1638 @ get_node()
+  <栈追踪>          world.gd:135 @ get_temp_node()
+                 build.gd:120 @ update_build_plan()
+                 build.gd:36 @ _handle_process()
+                 input_handler_module.gd:34 @ _process()
+
 [ ] EntityInfoPanelModule
     [ ] ItemSelectModule
     [ ] ContentSelectModule
@@ -300,6 +311,7 @@
         [ ] 反向溢流门
         [ ] 翻转器
         [ ] 均分器
+        [ ] 分离器
         [.] 读取器
         [.] 切断器
         [.] 切换器

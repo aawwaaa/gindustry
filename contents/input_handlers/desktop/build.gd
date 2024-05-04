@@ -179,7 +179,8 @@ func handle_break_drag(event: InputEvent) -> bool:
     if Input.is_action_just_pressed("build_break_drag"):
         building_drag_begin = Tile.to_tile_pos(world_pos)
         dragging = true
-        entity.world.add_temp_node(break_drag_range)
+        if not break_drag_range.is_inside_tree():
+            entity.world.add_temp_node(break_drag_range)
     if not dragging: return false
     building_drag_end = Tile.to_tile_pos(world_pos)
     for flag in break_drag_buffer.values():
@@ -189,6 +190,7 @@ func handle_break_drag(event: InputEvent) -> bool:
             mini(building_drag_begin.y, building_drag_end.y))
     var end = Vector2i(maxi(building_drag_begin.x, building_drag_end.x), \
             maxi(building_drag_begin.y, building_drag_end.y))
+    break_drag_range.z_index = entity.get_z_index(0) + 31
     break_drag_range.clear_points()
     break_drag_range.add_point(Tile.to_world_pos(begin, Vector2.ZERO))
     break_drag_range.add_point(Tile.to_world_pos(Vector2( \
