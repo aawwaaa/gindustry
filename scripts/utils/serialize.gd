@@ -18,14 +18,14 @@ class Serializer extends Object:
 class NodeSerializer extends Serializer:
     func _get_name() -> String: return "n"
     func _matched(object: Variant) -> bool: return object is Node
-    func _serialize(object: Variant) -> Variant: return Serialize.get_tree().root.get_path_to(object)
-    func _unserialize(object: Variant) -> Variant: return Serialize.get_tree().root.get_node(object)
+    func _serialize(object: Variant) -> Variant: return G.tree.root.get_path_to(object)
+    func _unserialize(object: Variant) -> Variant: return G.tree.root.get_node(object)
 
 class ContentSerializer extends Serializer:
     func _get_name() -> String: return "c"
     func _matched(object: Variant) -> bool: return object is Content
     func _serialize(object: Variant) -> Variant: return object.index
-    func _unserialize(object: Variant) -> Variant: return Contents.get_content_by_index(object)
+    func _unserialize(object: Variant) -> Variant: return G.contents.get_content_by_index(object)
 
 # class EntitySerializer extends Serializer:
 #     func _get_name() -> String: return "e"

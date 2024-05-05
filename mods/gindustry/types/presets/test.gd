@@ -12,7 +12,7 @@ func _pre_config_preset() -> bool:
     return true
 
 func _init_preset() -> void:
-    var world = Game.create_world()
+    var world = G.worlds.create_world()
 
 func _init_after_world_load() -> void:
     pass

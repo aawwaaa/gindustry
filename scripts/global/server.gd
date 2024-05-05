@@ -1,6 +1,8 @@
 class_name G_Server
 extends G.G_Object
 
+var logger = Log.register_log_source("Server_LogSource")
+
 class PeerData extends RefCounted:
     var peer_id: int = -1;
     var player: Player = null;
@@ -32,6 +34,7 @@ func start_server(port: int) -> void:
     multiplayer.multiplayer_peer = peer;
     peer.create_server(port, 256)
     multiplayer_port = port;
+    logger.info(tr("Server_ServerStarted {port}").format({port = port}))
 
 func _on_peer_connected(peer_id: int) -> void:
     peers[peer_id] = PeerData.new()
@@ -50,6 +53,7 @@ func stop_server() -> void:
     var peer: ENetMultiplayerPeer = multiplayer.multiplayer_peer
     peer.close()
     reset_server()
+    logger.info(tr("Server_ServerStopped"))
 
 @rpc("any_peer", "call_remote", "reliable")
 func request_server_info() -> Dictionary:
@@ -57,7 +61,7 @@ func request_server_info() -> Dictionary:
 
 @rpc("any_peer", "call_remote", "reliable")
 func request_join(uuid: String, player_name: String) -> void:
-    var peer_id = multiplayer.get_remote_sender_id();
+    var peer_id = G.client.get_sender_id();
     # todo
 
 func is_peer_admin(peer: int) -> bool:
@@ -72,14 +76,14 @@ func send_world_data() -> void:
 
 @rpc("any_peer", "call_remote", "reliable")
 func ready_to_play() -> void:
-    var id = multiplayer.get_remote_sender_id()
+    var id = G.client.get_sender_id()
     if not peers.has(id) or peers[id].joined:
         return
     var peer_data = peers[id]
-    var player_id = Players.get_player_id_by_token(peer_data.token)
-    Multiplayer.player_join.rpc(id, player_id, {
+    var player_id = G.players.get_player_id_by_token(peer_data.token)
+    G.client.player_join.rpc(id, player_id, {
         "player_name": peer_data.player_name,
-        "data": Players.player_datas[player_id] if player_id in Players.player_datas else null,
+        "data": G.players.player_datas[player_id] if player_id in G.players.player_datas else null,
     })
     send_sync_packets(id)
 
@@ -97,34 +101,35 @@ func send_sync_packets(peer_id: int) -> void:
         var method = packed[1]
         var args = packed[2]
         var types = packed[3]
-        if peer_id == multiplayer.get_unique_id():
-            var inst = get_tree().root.get_node(node)
-            inst.callv(method, Serialize.unserialize_args(args, types))
+        if peer_id == G.client.get_unique_id():
+            var inst = G.tree.root.get_node(node)
+            inst.callv(method, Utils.serialize.unserialize_args(args, types))
         else:
-            rpc_sync_client.rpc_id(peer_id, node, method, args, types)
+            rpc_node_client.rpc_id(peer_id, node, method, args, types)
     peers[peer_id].packet_queue.clear()
 
-func rpc_sync(node: Node, method: String, args: Array = []) -> void:
-    var serialized = Serialize.serialize_args(args)
-    var path = get_tree().root.get_path_to(node)
-    rpc_sync_server.rpc_id(1, path, method, serialized["args"], serialized["types"])
+func rpc_node(node: Node, method: String, args: Array = []) -> void:
+    var serialized = Utils.serialize.serialize_args(args)
+    var path = G.tree.root.get_path_to(node)
+    rpc_node_server.rpc_id(1, path, method, serialized["args"], serialized["types"])
 
 @rpc("any_peer", "call_local", "reliable")
-func rpc_sync_server(node: NodePath, method: String, args: Array, types: Array) -> void:
-    var inst = get_tree().root.get_node(node)
-    if multiplayer.get_remote_sender_id() != inst.get_multiplayer_authority():
+func rpc_node_server(node: NodePath, method: String, args: Array, types: Array) -> void:
+    var inst = G.tree.root.get_node(node)
+    if G.client.get_sender_id() != inst.get_multiplayer_authority():
         return
     var packed = [node, method, args, types]
     for peer in peers.keys():
         if not peers[peer].joined:
             peers[peer].packet_queue.append(packed)
             continue
-        if peer == multiplayer.get_unique_id():
-            inst.callv(method, Serialize.unserialize_args(args, types))
+        if peer == G.client.get_unique_id():
+            inst.callv(method, Utils.serialize.unserialize_args(args, types))
             continue
-        rpc_sync_client.rpc_id(peer, node, method, args, types)
+        rpc_node_client.rpc_id(peer, node, method, args, types)
 
 @rpc("authority", "call_remote", "reliable")
-func rpc_sync_client(node: NodePath, method: String, args: Array, types: Array) -> void: 
-    var inst = get_tree().root.get_node(node)
-    inst.callv(method, Serialize.unserialize_args(args, types))
+func rpc_node_client(node: NodePath, method: String, args: Array, types: Array) -> void: 
+    var inst = G.tree.root.get_node(node)
+    inst.callv(method, Utils.serialize.unserialize_args(args, types))
+

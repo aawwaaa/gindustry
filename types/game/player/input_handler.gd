@@ -28,7 +28,7 @@ var input_processors: Dictionary = {}
 var configuring_target: Object = null;
 
 var player: Player:
-    get: return Game.current_player
+    get: return G.game.current_player
 # var controller: PlayerController:
 #     get: return player.get_controller() if player else null
 # var target: ControllerAdapter:
@@ -46,7 +46,7 @@ func _unload_ui(node: Control) -> void:
         child.queue_free()
 
 func _ready() -> void:
-    Game.current_player_changed.connect(_on_player_changed)
+    G.game.current_player_changed.connect(_on_player_changed)
 #     Game.signal_reset_game.connect(_on_reset_game)
 
 # func _on_reset_game() -> void:

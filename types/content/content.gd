@@ -36,7 +36,7 @@ func get_localized_name() -> String:
     return tr(get_tr_name())
 
 func _get_content_type() -> ContentType:
-    return Types.get_type(ContentType.TYPE, "content")
+    return G.types.get_type(ContentType.TYPE, "content")
 
 func get_content_type() -> ContentType:
     return _get_content_type()

@@ -14,7 +14,7 @@ func _mod_init() -> void:
 
 func _load_contents() -> void:
     var preset = load(root+"/contents/presets/test.tres")
-    Presets.register_preset_group("Gindustry").add(preset)
+    G.presets.register_preset_group("Gindustry").add(preset)
 
 func _open_configs() -> Window:
     return super._open_configs();

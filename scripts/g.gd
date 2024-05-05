@@ -1,20 +1,7 @@
 extends Node
 
-class G_Object:
-    func _ready() -> void:
-        pass
-
-    func _process(delta: float) -> void:
-        pass
-
-    func _physics_process(delta: float) -> void:
-        pass
-
-    func _input(event: InputEvent) -> void:
-        pass
-
-    func _unhandled_input(event: InputEvent) -> void:
-        pass
+class G_Object extends Node:
+    pass
 
 var objects: Array[G_Object] = []
 
@@ -23,7 +10,7 @@ var tree: SceneTree
 
 var temp: G_Temp
 
-var config: G_Config
+var configs: G_Configs
 var mods: G_Mods
 
 var types: G_Types
@@ -46,29 +33,13 @@ func _ready() -> void:
     tree = get_tree()
 
 func add(obj: G_Object, init = true) -> G_Object:
-    if init: obj._ready()
+    if init: add_child(obj)
     return obj
-
-func _process(delta: float) -> void:
-    for obj in objects:
-        obj._process(delta)
-
-func _physics_process(delta: float) -> void:
-    for obj in objects:
-        obj._physics_process(delta)
-
-func _input(event: InputEvent) -> void:
-    for obj in objects:
-        obj._input(event)
-
-func _unhandled_input(event: InputEvent) -> void:
-    for obj in objects:
-        obj._unhandled_input(event)
 
 func init() -> void:
     temp = add(G_Temp.new())
 
-    config = add(G_Config.new())
+    configs = add(G_Configs.new())
     mods = add(G_Mods.new())
 
     types = add(G_Types.new())

@@ -1,7 +1,7 @@
 class_name G_Mods
 extends G.G_Object
 
-@onready var logger = Log.register_log_source("Mods_LogSource");
+var logger = Log.register_log_source("Mods_LogSource");
 
 var mod_info_list: Dictionary = {}
 var mod_inst_list: Dictionary = {}
@@ -221,7 +221,7 @@ func load_mods() -> void:
         progress.progress += 30
         var Main = load(info.main)
         var mod = Main.new(info);
-        Contents.current_loading_mod = mod;
+        G.contents.current_loading_mod = mod;
         mod_inst_list[info.id] = mod;
         await load_mod_configs(mod);
         progress.progress += 15

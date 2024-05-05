@@ -34,7 +34,7 @@ func search_save_folder(path: String, dict: Dictionary = saves) -> void:
         var stream = FileStream.new(access)
         var buffer = stream.get_buffer(save_head.size())
         if buffer != save_head:
-            logger.error(tr("Saves_InvalidSaveFile {name}").format({name = name}))
+            logger.error(tr("Saves_InvalidSaveFile {name}").format({name = file}))
             access.close()
             dir_name = dir_access.get_next()
             continue 
@@ -60,13 +60,13 @@ func create_save(name: String) -> void:
     var buffer = PackedByteArray()
     buffer.resize(save_head.size())
     stream.store_buffer(buffer)
-    Game.save_meta.save_name = name
-    Game.save_meta.file_path = path
-    Game.save_game(stream)
+    G.game.save_meta.save_name = name
+    G.game.save_meta.file_path = path
+    G.game.save_game(stream)
     access.seek(0)
     stream.store_buffer(save_head)
     access.close()
-    saves[name] = Game.save_meta
+    saves[name] = G.game.save_meta
     saves_changed.emit()
 
 func load_save(name: String) -> void:
@@ -79,9 +79,9 @@ func load_save(name: String) -> void:
         logger.error(tr("Saves_InvalidSaveFile {name}").format({name = name}))
         access.close()
         return
-    Game.load_game(stream)
+    G.game.load_game(stream)
     access.close()
-    var player = Multiplayer.join_local()
+    var player = G.client.join_local()
 
 func delete_save(name: String) -> void:
     logger.info(tr("Saves_DeleteSave {name}").format({name = name}))

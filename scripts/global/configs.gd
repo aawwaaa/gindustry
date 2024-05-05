@@ -1,4 +1,4 @@
-class_name G_Config
+class_name G_Configs
 extends G.G_Object
 
 signal configs_loaded();
@@ -9,7 +9,7 @@ var logger: Log.Logger = Log.register_log_source(tr("Global_LogSource"));
 var config_value_changed = false
 
 func g(key: String, default: Variant = null) -> Variant:
-    return configs.get(key)
+    return configs.g(key, default)
 
 func p(key: String, value: Variant) -> void:
     configs.p(key, value)

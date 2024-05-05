@@ -4,7 +4,7 @@ var current_preset: Preset;
 var PresetGroup = preload("res://ui/menus/new_game/preset_group.tscn");
 
 func load_presets() -> void:
-    for group in Presets.preset_groups:
+    for group in G.presets.preset_groups:
         var line = PresetGroup.instantiate();
         line.preset_group = group;
         line.pressed.connect(show_description)
@@ -39,4 +39,4 @@ func _on_search_text_changed(new_text: String) -> void:
         line.visible = has_matched;
 
 func _on_confirm_button_pressed() -> void:
-    Presets.load_preset(current_preset)
+    G.presets.load_preset(current_preset)

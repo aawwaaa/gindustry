@@ -19,7 +19,6 @@ var state: StateMachine
 func _ready() -> void:
     state = StateMachine.new()
     state.state_changed.connect(func(s, f): state_changed.emit(s, f))
-    state.set_state(States.LOADING)
 
 func is_in_game() -> bool:
     return state.get_state() in [States.GAME, States.PAUSED]
@@ -27,17 +26,26 @@ func is_in_game() -> bool:
 func is_in_loading() -> bool:
     return state.get_state() in [States.LOADING, States.LOADING_GAME]
 
+func get_state() -> States:
+    return state.get_state()
+
+func set_state(v: States) -> void:
+    state.set_state(v)
+
 @rpc("any_peer", "call_local", "reliable")
 func set_paused_rpc(v: bool) -> void:
-    if not MultiplayerServer.is_peer_admin(multiplayer.get_remote_sender_id()):
+    if not G.server.is_peer_admin(G.client.get_sender_id()):
         return
-    if state not in [States.GAME, States.PAUSED]: return
-    state.set_state(States.PAUSED if v else States.GAME)
+    if get_state() not in [States.GAME, States.PAUSED]: return
+    var target_state = States.PAUSED if v else States.GAME
+    if get_state() != target_state: set_state(target_state)
     G.tree.paused = v
 
 func set_paused(v: bool) -> void:
-    MultiplayerServer.rpc_sync(self, "set_paused_rpc", [v])
-    Global.state.set_state(Global.States.PAUSED if v else Global.States.GAME)
+    G.server.rpc_node(self, "set_paused_rpc", [v])
+
+func is_paused() -> bool:
+    return get_state() == States.PAUSED
 
 # var world_load_source: WorldLoadSource;
 
@@ -67,15 +75,15 @@ var current_player: Player:
 
 func cleanup() -> void:
     if save_preset: save_preset._disable_preset()
-    Worlds.cleanup()
+    G.worlds.cleanup()
     save_preset = null
     current_player = null;
-    Players.reset_players();
+    G.players.reset_players();
 
 func reset_game() -> void:
     cleanup()
-    MultiplayerServer.rpc_sync(self, "set_paused_rpc", [true])
-    Global.state.set_state(Global.States.LOADING_GAME)
+    G.server.rpc_node(self, "set_paused_rpc", [true])
+    state.set_state(States.LOADING_GAME)
 #     create_temp_tile()
     
 #     Controller._on_game_signal_reset_game();
@@ -85,17 +93,17 @@ func init_game() -> void:
     reset_game();
     save_meta = SaveMeta.new();
     save_configs = ConfigsGroup.new();
-    Contents.init_contents_mapping();
+    G.contents.init_contents_mapping();
 
 func game_loaded() -> void:
-    Global.state.set_state(Global.States.GAME)
-    MultiplayerServer.send_world_data()
-    MultiplayerServer.rpc_sync(self, "set_paused_rpc", [false])
+    state.set_state(States.GAME)
+    G.server.send_world_data()
+    G.server.rpc_node(self, "set_paused_rpc", [false])
 
 func back_to_menu() -> void:
-    Multiplayer.disconnect_multiplayer()
+    G.client.disconnect_multiplayer()
     cleanup()
-    Global.state.set_state(Global.States.MAIN_MENU)
+    state.set_state(States.MAIN_MENU)
 
 const current_data_version = 0;
 
@@ -105,15 +113,15 @@ func load_game(stream: Stream) -> void:
     var version = stream.get_16();
     if version < 0: return game_loaded();
     save_configs = ConfigsGroup.load_from(stream);
-    Contents.load_contents_mapping(stream);
+    G.contents.load_contents_mapping(stream);
 
-    save_preset = Types.get_type(Preset.TYPE, stream.get_string()) as Preset
+    save_preset = G.types.get_type(Preset.TYPE, stream.get_string()) as Preset
     save_preset._load_preset_data(stream)
     save_preset._enable_preset()
     save_preset._load_preset()
     
-    Worlds.load_data(stream)
-    Players.load_data(stream)
+    G.worlds.load_data(stream)
+    G.players.load_data(stream)
     save_preset._load_after_world_load()
     game_loaded()
 
@@ -122,11 +130,11 @@ func save_game(stream: Stream, to_client: bool = false) -> void:
     stream.store_16(current_data_version)
     # version 0
     save_configs.save_configs(stream);
-    Contents.save_contents_mapping(stream);
+    G.contents.save_contents_mapping(stream);
 
     stream.store_string(save_preset.name)
     save_preset._save_preset_data(stream)
 
-    Worlds.save_data(stream)
-    Players.save_data(stream)
+    G.worlds.save_data(stream)
+    G.players.save_data(stream)
 

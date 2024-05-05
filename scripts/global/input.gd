@@ -10,7 +10,8 @@ var ui_node: Control;
 
 # var input_handler: InputHandler;
 
-# func set_input_handler(name: String = "") -> void:
+func set_input_handler(name: String = "") -> void:
+    pass
 #     if name != "":
 #         configs.p("input-handler", name)
 #         save_configs()

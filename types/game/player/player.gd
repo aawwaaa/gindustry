@@ -8,7 +8,7 @@ static func create() -> Player:
 
 var player_id: int
 var peer_id: int
-var peer_data: MultiplayerServer.PeerData
+var peer_data: G_Server.PeerData
 
 var player_name: String
 

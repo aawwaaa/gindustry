@@ -12,7 +12,7 @@ class PresetGroup:
     
     func add(preset: Preset) -> void:
         presets.append(preset)
-        Types.register_type(preset)
+        G.types.register_type(preset)
 
 var preset_groups: Array[PresetGroup] = []
 
@@ -25,17 +25,17 @@ func register_preset_group(group_name: String) -> PresetGroup:
 func load_preset(preset: Preset) -> void:
     logger.info(tr("Presets_LoadPreset {name}") \
         .format({name = tr(preset.get_tr_name())}))
-    Global.state.set_state(Global.States.PRESET_CONFIG)
+    G.game.set_state(G.game.States.PRESET_CONFIG)
     var result = await preset._pre_config_preset();
     if not result:
-        Global.state.set_state(Global.States.MAIN_MENU)
+        G.game.set_state(G.game.States.MAIN_MENU)
         return
-    Game.init_game()
-    Game.save_preset = preset
+    G.game.init_game()
+    G.game.save_preset = preset
     preset._enable_preset()
     preset._init_preset();
-    var player = Multiplayer.join_local()
+    var player = G.client.join_local()
     preset._init_after_world_load()
     preset._load_preset();
-    Game.game_loaded()
+    G.game.game_loaded()
 

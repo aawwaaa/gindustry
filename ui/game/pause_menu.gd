@@ -11,15 +11,15 @@ func _on_back_pressed() -> void:
     visible = false
 
 func _on_pause_pressed() -> void:
-    MultiplayerServer.rpc_sync(Game, "set_paused", [not Game.paused])
+    G.game.set_paused(not G.game.is_paused())
 
 func _on_save_pressed() -> void:
-    Global.main.get_window_node("Saves").set_save_ui(true)
-    Global.main.open_window("Saves")
+    G.main.get_window_node("Saves").set_save_ui(true)
+    G.main.open_window("Saves")
 
 func _on_settings_pressed() -> void:
-    Global.main.open_window("Settings")
+    G.main.open_window("Settings")
 
 func _on_exit_pressed() -> void:
     visible = false
-    Game.back_to_menu()
+    G.game.back_to_menu()

@@ -43,7 +43,7 @@ func args_help() -> void:
     print("args: " + ", ".join(args_handlers.keys()))
 
 func args_load_save(save_name: String) -> void:
-    Saves.load_save(save_name)
+    G.saves.load_save(save_name)
 
 func apply_args(args: Dictionary, props: Dictionary) -> void:
     for prop in props:

@@ -7,6 +7,9 @@ signal state_changed(new_state: int, old_state: int)
 
 var state: int = -1
 
+func _init(default_state: int = -1) -> void:
+    state = default_state
+
 func get_state() -> int:
     return state
 

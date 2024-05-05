@@ -36,7 +36,7 @@ func _load_contents() -> void:
     content_group = ButtonGroup.new()
     content_group.allow_unpress = true
 
-    var categories = Types.get_types(category_type).values().duplicate()
+    var categories = G.types.get_types(category_type).values().duplicate()
     categories.sort_custom(func(a, b): return get_order_for_category(a) < get_order_for_category(b))
     for category in categories:
         var category_button = Button.new()

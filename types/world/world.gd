@@ -1,5 +1,5 @@
 class_name World
-extends Object
+extends Node
 
 var world_id: int;
 # Vector3i -> Chunk
@@ -15,18 +15,6 @@ var canvas_item: RID
 static func create() -> World:
     var world = World.new();
     return world;
-
-func process(delta: float) -> void:
-    pass
-
-func physics_process(delta: float) -> void:
-    pass
-
-func input(event: InputEvent) -> void:
-    pass
-
-func unhandled_input(event: InputEvent) -> void:
-    pass
 
 func create_resources() -> void:
     pass

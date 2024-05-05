@@ -10,12 +10,13 @@ func _ready() -> void:
     
     log_source = Log.register_log_source("Main_LogSource")
     Log.all_progress_tracker_finished.connect(_on_all_progress_tracker_finished)
-    Global.state.state_changed.connect(_on_state_changed)
-    Global.main = self;
+    G.init()
+    G.game.state.state_changed.connect(_on_state_changed)
+    G.main = self;
     
     init_configs();
 
-    Global.state.set_state(Global.States.LOADING);
+    G.game.set_state(G.game.States.LOADING);
     start_load();
 
 func open_window(window_name: String) -> void:
@@ -32,22 +33,22 @@ func _on_saves_pressed() -> void:
     open_window("Saves")
 
 func _on_all_progress_tracker_finished() -> void:
-    if Global.state.get_state() == Global.States.LOADING:
-        Global.state.set_state(Global.States.MAIN_MENU);
-        Headless.apply_args_from_cmdline()
+    if G.game.get_state() == G.game.States.LOADING:
+        G.game.set_state(G.game.States.MAIN_MENU);
+        G.headless.apply_args_from_cmdline()
 
-func _on_state_changed(state: Global.States, from: Global.States) -> void:
+func _on_state_changed(state: G_Game.States, from: G_Game.States) -> void:
     for node in %Windows.get_children():
         node.hide();
-    %Loading.visible = state == Global.States.LOADING or state == Global.States.LOADING_GAME
-    %MainMenu.visible = state == Global.States.MAIN_MENU;
-    if state == Global.States.GAME or state == Global.States.PAUSED:
+    %Loading.visible = G.game.is_in_loading()
+    %MainMenu.visible = G.game.get_state() == G.game.States.MAIN_MENU;
+    if G.game.is_in_game():
         %GameUI.show_ui()
     else:
         %GameUI.hide_ui()
     log_source.info(tr("Main_StateChanged {from} {state}").format({
-        from = Global.States.find_key(from),
-        state = Global.States.find_key(state)}
+        from = G.game.States.find_key(from),
+        state = G.game.States.find_key(state)}
     ))
 
 func init_configs() -> void:
@@ -59,28 +60,28 @@ func init_configs() -> void:
 func start_load() -> void:
     var progress = Log.register_progress_tracker(100, "Main_Load", log_source.source);
     progress.name = "Main_Load_SearchMods"
-    Mods.search_mod_folder("res://mods/", false);
-    Mods.search_mod_folder("user://mods/");
-    Mods.load_enable_configs();
+    G.mods.search_mod_folder("res://mods/", false);
+    G.mods.search_mod_folder("user://mods/");
+    G.mods.load_enable_configs();
     progress.progress += 5
 
     # add builtin to mod lists
     Builtin.load_builtin()
     
     progress.name = "Main_Load_CheckModErrors"
-    var errors = Mods.check_errors();
+    var errors = G.mods.check_errors();
     if errors.size() != 0:
-        Mods.logger.error(tr("Mods_DetectedExceptsInLoading"))
-        for info in Mods.mod_info_list.values():
+        G.mods.logger.error(tr("Mods_DetectedExceptsInLoading"))
+        for info in G.mods.mod_info_list.values():
             info.enabled = false;
         await get_tree().create_timer(3).timeout;
         progress.progress = progress.total
-        Mods.display_order = Mods.mod_info_list.keys()
+        G.mods.display_order = G.mods.mod_info_list.keys()
         %Windows/Mods.load_mod_list();
         return;
     
     progress.name = "Main_Load_LoadConfigs"
-    Global.load_configs();
+    G.configs.load_configs();
     %Windows/Settings.load_tabs()
     progress.progress += 5
 
@@ -88,10 +89,10 @@ func start_load() -> void:
     await Builtin.start_load()
     progress.progress += 10
     progress.name = "Main_Load_LoadMods"
-    await Mods.load_mods();
+    await G.mods.load_mods();
     progress.progress += 50
     progress.name = "Main_Load_LoadSaves"
-    Saves.load_saves();
+    G.saves.load_saves();
     progress.progress += 20
     
     progress.name = "Main_Load_LoadUI"
@@ -101,8 +102,8 @@ func start_load() -> void:
     progress.progress += 5
 
     progress.name = "Main_Load_LoadUI"
-    Game.camera_base_node = %CameraBase
-    Game.camera_node = %Camera;
+    G.input.camera_base_node = %CameraBase
+    G.input.camera_node = %Camera;
     
     GameUI.instance = %GameUI
     
@@ -110,7 +111,7 @@ func start_load() -> void:
     progress.progress += 3
     
     progress.name = "Main_Load_LoadInputHandler"
-    Global.game_ui_input_handler = %GameUI.input_handler_ui
-    # Global.set_input_handler()
+    G.input.ui_node = %GameUI.input_handler_ui
+    # G.input.set_input_handler()
     progress.progress += 2
     progress.finish()

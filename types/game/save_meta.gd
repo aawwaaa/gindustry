@@ -38,6 +38,6 @@ func save_to(stream: Stream) -> void:
     stream.store_buffer(name_buffer)
     # version 1
     mods = {}
-    for mod in Mods.mod_inst_list.values():
+    for mod in G.mods.mod_inst_list.values():
         mods[mod.mod_info.id] = mod.mod_info.version
     stream.store_var(mods, true)
