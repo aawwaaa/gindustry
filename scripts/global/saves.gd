@@ -1,4 +1,5 @@
-extends Node
+class_name G_Saves
+extends G.G_Object
 
 signal saves_changed()
 

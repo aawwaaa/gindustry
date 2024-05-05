@@ -1,4 +1,5 @@
-extends Node
+class_name Utils_Serialize
+extends Object
 
 class Serializer extends Object:
     
@@ -71,7 +72,7 @@ func unserialize_args(args: Array, types: Array) -> Array:
         outs.append(unserialize_object(args[index], types[index]))
     return outs
 
-func _ready() -> void:
+func add_defaults() -> void:
     add_serializer(Serializer.new())
     add_serializer(NodeSerializer.new())
     add_serializer(ContentSerializer.new())

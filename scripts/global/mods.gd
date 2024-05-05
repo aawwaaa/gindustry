@@ -1,4 +1,5 @@
-extends Node
+class_name G_Mods
+extends G.G_Object
 
 @onready var logger = Log.register_log_source("Mods_LogSource");
 

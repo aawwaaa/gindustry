@@ -1,4 +1,7 @@
-extends Node
+class_name G_Headless
+extends G.G_Object
+
+var headless_client: bool = false
 
 func apply_args_from_cmdline() -> void:
     var args = {"_": []}
@@ -17,7 +20,7 @@ func apply_args_from_cmdline() -> void:
 
 func restart(args: PackedStringArray = []) -> void:
     OS.set_restart_on_exit(true, args)
-    get_tree().quit()
+    G.tree.quit()
 
 var props_handlers = {
     "lang" = props_lang,

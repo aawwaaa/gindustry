@@ -1,56 +1,18 @@
-extends Node
+class_name G_Config
+extends G.G_Object
 
 signal configs_loaded();
-# signal input_handler_changed(handler: InputHandler, from: InputHandler);
 
-enum States{
-    LOADING,
-    MAIN_MENU,
-    PRESET_CONFIG,
-    LOADING_GAME,
-    GAME,
-    PAUSED
-}
-
-class Temp extends RefCounted:
-    var bas: ByteArrayStream = ByteArrayStream.new([])
-
-var temp: Temp = Temp.new()
-
-var main: MainNode
-var game_ui_input_handler: Control
-var state: StateMachine
-
-var configs: ConfigsGroup;
-var logger: Log.Logger;
-# var input_handler: InputHandler;
-
-var headless_client: bool = false;
+var configs: ConfigsGroup = ConfigsGroup.new();
+var logger: Log.Logger = Log.register_log_source(tr("Global_LogSource"));
 
 var config_value_changed = false
 
-func _ready() -> void:
-    logger = Log.register_log_source(tr("Global_LogSource"));
-    configs = ConfigsGroup.new();
-    state = StateMachine.new()
-    state.set_state(States.LOADING)
+func g(key: String, default: Variant = null) -> Variant:
+    return configs.get(key)
 
-# func set_input_handler(name: String = "") -> void:
-#     if name != "":
-#         configs.p("input-handler", name)
-#         save_configs()
-#     else:
-#         name = configs.g("input-handler", main.get_default_input_handler())
-#     var old = input_handler if input_handler else null
-#     if input_handler:
-#         input_handler._unload_ui(game_ui_input_handler)
-#     input_handler = InputHandler.input_handlers[name].input_handler.new()
-#     add_child(input_handler)
-#     input_handler._load_ui(game_ui_input_handler)
-#     input_handler_changed.emit(input_handler, old)
-#     if old:
-#         input_handler.extend_properties(old)
-#         old.queue_free()
+func p(key: String, value: Variant) -> void:
+    configs.p(key, value)
 
 func set_default(key: String, value: Variant) -> void:
     if configs.g(key, null) == null:

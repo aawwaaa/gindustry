@@ -1,4 +1,5 @@
-extends Node
+class_name G_Players
+extends G.G_Object
 
 var player_tokens: Dictionary = {}
 var player_datas: Dictionary = {}

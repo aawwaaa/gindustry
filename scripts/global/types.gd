@@ -1,6 +1,7 @@
-extends Node
+class_name G_Types
+extends G.G_Object
 
-@onready var log_source = Log.register_log_source("types")
+var log_source = Log.register_log_source("types")
 
 var resource_type_types: Dictionary = {}
 var types: Dictionary = {}

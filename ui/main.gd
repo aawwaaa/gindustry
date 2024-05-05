@@ -1,5 +1,5 @@
 class_name MainNode
-extends Node3D
+extends Node2D
 
 var log_source: Log.Logger
 

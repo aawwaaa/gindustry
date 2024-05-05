@@ -1,8 +1,9 @@
-extends Node
+class_name G_Contents
+extends G.G_Object
 
 signal content_registed(content: Content)
 
-@onready var log_source = Log.register_log_source("contents")
+var log_source = Log.register_log_source("contents")
 
 var contents: Array[Content] = []
 var contents_indexed = {}

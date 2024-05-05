@@ -1,13 +1,18 @@
 [X] StateMachine
 
+
+
 [ ] World
     [ ] 世界中的世界
-        根世界持有World3D
-        所有世界持有RID -> viewport到父世界viewport
-        世界位置发生变化 -> 更新viewport全局变换
-        实体位置发生变化 -> 更新instance变换
-
+        世界持有Space3D和CanvasItem
     [.] Game.create_world及World.create_world同步
+[ ] arch:
+    物理: 3D:
+        锁死xy轴旋转
+    渲染: 2D
+        >玩家z: alpha=max(0, deltaz*(-0.2))
+        <玩家z: 总是显示
+
 [ ] Chunk
 [ ] Tile
 

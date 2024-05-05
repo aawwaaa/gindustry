@@ -9,17 +9,17 @@
 [ext_resource type="PackedScene" uid="uid://c7uj4kdkhepli" path="res://ui/game/game_ui.tscn" id="8_8l6oa"]
 [ext_resource type="PackedScene" uid="uid://bpse7iuci88lr" path="res://ui/menus/saves/saves.tscn" id="8_ysqt5"]
 
-[node name="Main" type="Node3D"]
+[node name="Main" type="Node2D"]
 script = ExtResource("1_w18yf")
 
-[node name="Worlds" type="Node3D" parent="."]
+[node name="Worlds" type="Node2D" parent="."]
 unique_name_in_owner = true
 process_mode = 1
 
-[node name="CameraBase" type="Node3D" parent="."]
+[node name="CameraBase" type="Node2D" parent="."]
 unique_name_in_owner = true
 
-[node name="Camera" type="Camera3D" parent="CameraBase"]
+[node name="Camera" type="Camera2D" parent="CameraBase"]
 unique_name_in_owner = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]

@@ -19,19 +19,8 @@ config/icon="res://mods/gindustry/icon.png"
 [autoload]
 
 Utils="*res://scripts/utils.gd"
-Mods="*res://scripts/mods.gd"
 Log="*res://scripts/log.gd"
-Global="*res://scripts/global.gd"
-Game="*res://scripts/game/game.gd"
-Contents="*res://scripts/game/contents.gd"
-Presets="*res://scripts/game/presets.gd"
-Players="*res://scripts/game/players.gd"
-Serialize="*res://scripts/serialize.gd"
-Multiplayer="*res://scripts/game/multiplayer.gd"
-MultiplayerServer="*res://scripts/game/multiplayer_server.gd"
-Saves="*res://scripts/game/saves.gd"
-Headless="*res://scripts/headless.gd"
-Types="*res://scripts/game/types.gd"
+G="*res://scripts/g.gd"
 
 [debug]
 
@@ -163,5 +152,5 @@ locale/test="en"
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
-renderer/rendering_method.mobile="gl_compatibility"
+renderer/rendering_method="gl_compatibility"
 environment/defaults/default_clear_color=Color(0.145098, 0.180392, 0.290196, 1)

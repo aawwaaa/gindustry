@@ -1,5 +1,7 @@
 extends Node
 
+var serialize: Utils_Serialize
+
 func parse_image_data(data: PackedByteArray, type: String) -> ImageTexture:
     var image = Image.new();
     match type:
@@ -106,3 +108,7 @@ func save_data_with_version(stream: Stream, savers: Array[Callable] = []) -> voi
     stream.store_16(savers.size())
     for saver in savers:
         saver.call()
+
+func _ready() -> void:
+    serialize = Utils_Serialize.new()
+    serialize.add_defaults()

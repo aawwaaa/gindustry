@@ -1,4 +1,5 @@
-extends Node
+class_name G_Presets
+extends G.G_Object
 
 var logger: Log.Logger;
 

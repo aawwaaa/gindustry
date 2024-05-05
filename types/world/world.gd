@@ -8,20 +8,25 @@ var chunks: Dictionary = {};
 var root_world: bool = false;
 var parent_world: World = null;
 
-var world3d: World3D = null:
-    get:
-        var current = self;
-        while not current.root_world: current = current.parent_world;
-        return current.world3d;
-    set(v):
-        var current = self;
-        while not current.root_world: current = current.parent_world;
-        current.world3d = v;
-var viewport: RID;
+var physics_space: RID:
+    get: return parent_world.physics_space if parent_world else physics_space
+var canvas_item: RID
 
 static func create() -> World:
     var world = World.new();
     return world;
+
+func process(delta: float) -> void:
+    pass
+
+func physics_process(delta: float) -> void:
+    pass
+
+func input(event: InputEvent) -> void:
+    pass
+
+func unhandled_input(event: InputEvent) -> void:
+    pass
 
 func create_resources() -> void:
     pass

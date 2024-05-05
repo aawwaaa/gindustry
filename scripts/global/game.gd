@@ -1,12 +1,43 @@
-extends Node
+class_name G_Game
+extends G.G_Object
 
 signal save_meta_changed(meta: SaveMeta);
 signal current_player_changed(player: Player, from: Player);
+signal state_changed(state: States, from: States);
 
-var paused: bool = false;
+enum States{
+    LOADING,
+    MAIN_MENU,
+    PRESET_CONFIG,
+    LOADING_GAME,
+    GAME,
+    PAUSED
+}
 
-var camera_node: Camera3D;
-var camera_base_node: Node3D;
+var state: StateMachine
+
+func _ready() -> void:
+    state = StateMachine.new()
+    state.state_changed.connect(func(s, f): state_changed.emit(s, f))
+    state.set_state(States.LOADING)
+
+func is_in_game() -> bool:
+    return state.get_state() in [States.GAME, States.PAUSED]
+
+func is_in_loading() -> bool:
+    return state.get_state() in [States.LOADING, States.LOADING_GAME]
+
+@rpc("any_peer", "call_local", "reliable")
+func set_paused_rpc(v: bool) -> void:
+    if not MultiplayerServer.is_peer_admin(multiplayer.get_remote_sender_id()):
+        return
+    if state not in [States.GAME, States.PAUSED]: return
+    state.set_state(States.PAUSED if v else States.GAME)
+    G.tree.paused = v
+
+func set_paused(v: bool) -> void:
+    MultiplayerServer.rpc_sync(self, "set_paused_rpc", [v])
+    Global.state.set_state(Global.States.PAUSED if v else Global.States.GAME)
 
 # var world_load_source: WorldLoadSource;
 
@@ -23,11 +54,6 @@ var save_configs: ConfigsGroup = ConfigsGroup.new();
 
 # var temp_tile: Tile;
 
-var worlds: Dictionary = {}
-var world_inc_id = 1;
-
-var entity_inc_id = 1;
-
 var current_player: Player:
     set(v):
         var old = current_player if current_player else null
@@ -36,35 +62,13 @@ var current_player: Player:
 # var current_entity: Entity:
 #     get: return current_player.get_controller().entity if current_player else null
 
-# func _ready() -> void:
-#     create_temp_tile();
-
-@rpc("any_peer", "call_local", "reliable")
-func set_paused_rpc(v: bool) -> void:
-    if not MultiplayerServer.is_peer_admin(multiplayer.get_remote_sender_id()):
-        return
-    paused = v
-    get_tree().paused = v
-
-func set_paused(v: bool) -> void:
-    MultiplayerServer.rpc_sync(self, "set_paused_rpc", [v])
-    Global.state.set_state(Global.States.PAUSED if v else Global.States.GAME)
-
-func is_in_game() -> bool:
-    var state = Global.state.get_state();
-    return state == Global.States.GAME or state == Global.States.PAUSED
-
 # func create_temp_tile() -> void:
 #     temp_tile = Tile.new();
 
 func cleanup() -> void:
     if save_preset: save_preset._disable_preset()
-    for world in worlds.values():
-        world.free()
+    Worlds.cleanup()
     save_preset = null
-    world_inc_id = 1;
-    entity_inc_id = 1;
-    worlds = {};
     current_player = null;
     Players.reset_players();
 
@@ -93,33 +97,6 @@ func back_to_menu() -> void:
     cleanup()
     Global.state.set_state(Global.States.MAIN_MENU)
 
-func get_world_or_null(world_id: int) -> World:
-    if not worlds.has(world_id):
-        return null;
-    return worlds[world_id];
-
-func get_world(world_id: int) -> World:
-    var world = get_world_or_null(world_id)
-    if world:
-        return world;
-#     if not world_load_source:
-#         return null;
-    @warning_ignore("redundant_await")
-#     world = await world_load_source._load_world(world_id);
-    if not world:
-        return null;
-    worlds[world_id] = world;
-    return world;
-
-func create_world() -> World:
-    var world = World.create();
-    world.world_id = world_inc_id;
-    world_inc_id += 1;
-    world.root_world = true;
-    worlds[world.world_id] = world;
-    world.create_resources()
-    return world;
-
 const current_data_version = 0;
 
 func load_game(stream: Stream) -> void:
@@ -134,16 +111,8 @@ func load_game(stream: Stream) -> void:
     save_preset._load_preset_data(stream)
     save_preset._enable_preset()
     save_preset._load_preset()
-
-    world_inc_id = stream.get_32();
-    entity_inc_id = stream.get_64();
-    for _1 in stream.get_32():
-        var world_id = stream.get_32();
-        var world = World.create();
-        world.world_id = world_id;
-        worlds[world_id] = world
-        world.load_data(stream);
-
+    
+    Worlds.load_data(stream)
     Players.load_data(stream)
     save_preset._load_after_world_load()
     game_loaded()
@@ -158,12 +127,6 @@ func save_game(stream: Stream, to_client: bool = false) -> void:
     stream.store_string(save_preset.name)
     save_preset._save_preset_data(stream)
 
-    stream.store_32(world_inc_id)
-    stream.store_64(entity_inc_id)
-    stream.store_32(worlds.size())
-    for world in worlds.values():
-        stream.store_32(world.world_id)
-        world.save_data(world)
-
+    Worlds.save_data(stream)
     Players.save_data(stream)
 

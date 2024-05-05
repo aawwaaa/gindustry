@@ -1,4 +1,5 @@
-extends Node
+class_name G_Server
+extends G.G_Object
 
 class PeerData extends RefCounted:
     var peer_id: int = -1;
