@@ -70,7 +70,7 @@ class ProgressTracker extends RefCounted:
         if Log.active_progress_trackers.is_empty():
             Log.all_progress_tracker_finished.emit()
 
-func register_log_source(source: String) -> Logger:
+func register_logger(source: String) -> Logger:
     return Logger.new(source);
 
 func print_log(formatted: String, _1, _2, _3) -> void:

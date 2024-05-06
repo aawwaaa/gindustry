@@ -4,7 +4,7 @@ extends G.G_Object
 signal configs_loaded();
 
 var configs: ConfigsGroup = ConfigsGroup.new();
-var logger: Log.Logger = Log.register_log_source(tr("Global_LogSource"));
+var logger: Log.Logger = Log.register_logger(tr("Global_LogSource"));
 
 var config_value_changed = false
 

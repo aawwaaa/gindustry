@@ -3,14 +3,11 @@ extends G.G_Object
 
 signal saves_changed()
 
-var logger: Log.Logger
+var logger: Log.Logger = Log.register_logger("Saves_LogSource");
 
 var saves: Dictionary = {}
 
 var save_head = "GSAV".to_ascii_buffer()
-
-func _ready() -> void:
-    logger = Log.register_log_source("Saves_LogSource");
 
 func search_save_folder(path: String, dict: Dictionary = saves) -> void:
     var dir_access = DirAccess.open(path);

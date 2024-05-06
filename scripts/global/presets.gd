@@ -4,7 +4,7 @@ extends G.G_Object
 var logger: Log.Logger;
 
 func _ready() -> void:
-    logger = Log.register_log_source("Presets_LogSource")
+    logger = Log.register_logger("Presets_LogSource")
 
 class PresetGroup:
     var group_name: String = "unnamed"

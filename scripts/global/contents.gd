@@ -3,7 +3,7 @@ extends G.G_Object
 
 signal content_registed(content: Content)
 
-var log_source = Log.register_log_source("contents")
+var logger = Log.register_logger("Contents_LogSource")
 
 var contents: Array[Content] = []
 var contents_indexed = {}
@@ -18,7 +18,7 @@ var current_loading_mod: Mod = null;
 
 func register_content(content: Content) -> void:
     content.apply_mod(current_loading_mod);
-    log_source.debug("Load content: " + content.full_id + " " + content.get_content_type().name)
+    logger.debug("Load content: " + content.full_id + " " + content.get_content_type().name)
     contents.append(content);
     contents_indexed[content.full_id] = content;
     var type = content.get_content_type();

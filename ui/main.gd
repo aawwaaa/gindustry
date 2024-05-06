@@ -1,14 +1,14 @@
 class_name MainNode
 extends Node2D
 
-var log_source: Log.Logger
+var logger: Log.Logger
 
 func _ready() -> void:
     get_viewport().gui_embed_subwindows = true
 
     get_tree().root.process_mode = Node.PROCESS_MODE_ALWAYS
     
-    log_source = Log.register_log_source("Main_LogSource")
+    logger = Log.register_logger("Main_LogSource")
     Log.all_progress_tracker_finished.connect(_on_all_progress_tracker_finished)
     G.init()
     G.game.state.state_changed.connect(_on_state_changed)
@@ -46,7 +46,7 @@ func _on_state_changed(state: G_Game.States, from: G_Game.States) -> void:
         %GameUI.show_ui()
     else:
         %GameUI.hide_ui()
-    log_source.info(tr("Main_StateChanged {from} {state}").format({
+    logger.info(tr("Main_StateChanged {from} {state}").format({
         from = G.game.States.find_key(from),
         state = G.game.States.find_key(state)}
     ))
@@ -58,7 +58,7 @@ func init_configs() -> void:
         DirAccess.make_dir_absolute("user://saves/");
 
 func start_load() -> void:
-    var progress = Log.register_progress_tracker(100, "Main_Load", log_source.source);
+    var progress = Log.register_progress_tracker(100, "Main_Load", logger.source);
     progress.name = "Main_Load_SearchMods"
     G.mods.search_mod_folder("res://mods/", false);
     G.mods.search_mod_folder("user://mods/");

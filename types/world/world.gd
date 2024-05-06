@@ -1,26 +1,24 @@
 class_name World
-extends Node
+extends Entity
 
 var world_id: int;
 # Vector3i -> Chunk
 var chunks: Dictionary = {};
 
 var root_world: bool = false;
-var parent_world: World = null;
 
 var physics_space: RID:
-    get: return parent_world.physics_space if parent_world else physics_space
-var canvas_item: RID
+    get: return world.physics_space if world else physics_space
 
 static func create() -> World:
     var world = World.new();
     return world;
 
 func create_resources() -> void:
-    pass
+    init_resources()
 
 func init_resources() -> void:
-    pass
+    name = "World#" + str(world_id)
 
 func free_resources() -> void:
     pass

@@ -4,7 +4,7 @@ extends G.G_Object
 signal player_joined(player: Player)
 signal player_left(player: Player)
 
-var log_source = Log.register_log_source("Client_LogSource")
+var logger = Log.register_logger("Client_LogSource")
 
 func join_local(if_not_headless: bool = true) -> Player:
     if if_not_headless and G.headless.headless_client:

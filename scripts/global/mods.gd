@@ -1,7 +1,7 @@
 class_name G_Mods
 extends G.G_Object
 
-var logger = Log.register_log_source("Mods_LogSource");
+var logger = Log.register_logger("Mods_LogSource");
 
 var mod_info_list: Dictionary = {}
 var mod_inst_list: Dictionary = {}

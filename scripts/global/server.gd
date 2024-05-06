@@ -1,7 +1,7 @@
 class_name G_Server
 extends G.G_Object
 
-var logger = Log.register_log_source("Server_LogSource")
+var logger = Log.register_logger("Server_LogSource")
 
 class PeerData extends RefCounted:
     var peer_id: int = -1;

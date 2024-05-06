@@ -31,12 +31,12 @@ func compare_version_string_ge(v1: String, v2: String, use_gt = false) -> bool:
             return true;
     return false;
 
-var loader_log_source;
+var loader_logger;
 
 func load_contents_async(header: String, contents_input: Array[String], \
         hint: String = "Loader_LoadContents", source: String = "Unknown") -> Array:
-    if not loader_log_source:
-        loader_log_source = Log.register_log_source(tr("Loader_LogSource"));
+    if not loader_logger:
+        loader_logger = Log.register_logger(tr("Loader_LogSource"));
     var contents = contents_input.map(func(x): return header + x)
     var progress = Log.register_progress_tracker(1 * contents.size(), hint, source)
     var output = [];
@@ -44,7 +44,7 @@ func load_contents_async(header: String, contents_input: Array[String], \
     for content in contents:
         var error = ResourceLoader.load_threaded_request(content, "", true)
         if error:
-            loader_log_source.error(tr("Loader_LoadFailed {path}") \
+            loader_logger.error(tr("Loader_LoadFailed {path}") \
                 .format({path = content}))
             removes.append(content);
             progress.progress += 1
@@ -53,11 +53,11 @@ func load_contents_async(header: String, contents_input: Array[String], \
             var status = ResourceLoader.load_threaded_get_status(content)
             match status:
                 ResourceLoader.ThreadLoadStatus.THREAD_LOAD_INVALID_RESOURCE:
-                    loader_log_source.error(tr("Loader_LoadFailed {path}") \
+                    loader_logger.error(tr("Loader_LoadFailed {path}") \
                         .format({path = content}))
                     removes.append(content);
                 ResourceLoader.ThreadLoadStatus.THREAD_LOAD_FAILED:
-                    loader_log_source.error(tr("Loader_LoadFailed {path}") \
+                    loader_logger.error(tr("Loader_LoadFailed {path}") \
                         .format({path = content}))
                     ResourceLoader.load_threaded_get(content)
                     removes.append(content);

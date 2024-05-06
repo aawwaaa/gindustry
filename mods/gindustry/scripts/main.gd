@@ -6,7 +6,7 @@ static var logger: Log.Logger;
 
 func _init(info: ModInfo) -> void:
     super._init(info);
-    logger = Log.register_log_source("Gindustry");
+    logger = Log.register_logger("Gindustry");
 
 func _mod_init() -> void:
     #logger.info("Hello world from mod!")
