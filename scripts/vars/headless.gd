@@ -1,5 +1,5 @@
-class_name G_Headless
-extends G.G_Object
+class_name Vars_Headless
+extends Vars.Vars_Object
 
 var headless_client: bool = false
 
@@ -20,7 +20,7 @@ func apply_args_from_cmdline() -> void:
 
 func restart(args: PackedStringArray = []) -> void:
     OS.set_restart_on_exit(true, args)
-    G.tree.quit()
+    Vars.tree.quit()
 
 var props_handlers = {
     "lang" = props_lang,
@@ -43,7 +43,7 @@ func args_help() -> void:
     print("args: " + ", ".join(args_handlers.keys()))
 
 func args_load_save(save_name: String) -> void:
-    G.saves.load_save(save_name)
+    Vars.saves.load_save(save_name)
 
 func apply_args(args: Dictionary, props: Dictionary) -> void:
     for prop in props:

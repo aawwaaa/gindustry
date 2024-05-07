@@ -20,7 +20,7 @@ config/icon="res://mods/gindustry/icon.png"
 
 Utils="*res://scripts/utils.gd"
 Log="*res://scripts/log.gd"
-G="*res://scripts/g.gd"
+Vars="*res://scripts/vars.gd"
 
 [debug]
 

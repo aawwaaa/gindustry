@@ -13,7 +13,7 @@ func load() -> Settings.SettingsUIGroup:
     input_handlers_button.flat = false
     builtin.add_child_with_label("Settings_General_InputHandler", input_handlers_button)
     var listener_ids = []
-    var input_handler = group._get_configs().g("input-handler", G.main.get_default_input_handler())
+    var input_handler = group._get_configs().g("input-handler", Vars.main.get_default_input_handler())
     InputHandler.add_input_handler_listener = func(id, meta):
         if input_handler == id: input_handlers_button.text = meta.tr_name
         listener_ids.append(id)
@@ -21,7 +21,7 @@ func load() -> Settings.SettingsUIGroup:
     input_handlers_button.get_popup().id_pressed.connect(func(id):
         input_handler = listener_ids[id]
         group._get_configs().p("input-handler", input_handler)
-        G.input.set_input_handler(input_handler)
+        Vars.input.set_input_handler(input_handler)
         input_handlers_button.text = InputHandler.input_handlers[input_handler].tr_name
     )
 

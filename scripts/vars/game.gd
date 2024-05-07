@@ -1,5 +1,5 @@
-class_name G_Game
-extends G.G_Object
+class_name Vars_Game
+extends Vars.Vars_Object
 
 signal save_meta_changed(meta: SaveMeta);
 signal current_player_changed(player: Player, from: Player);
@@ -34,15 +34,15 @@ func set_state(v: States) -> void:
 
 @rpc("any_peer", "call_local", "reliable")
 func set_paused_rpc(v: bool) -> void:
-    if not G.server.is_peer_admin(G.client.get_sender_id()):
+    if not Vars.server.is_peer_admin(Vars.client.get_sender_id()):
         return
     if get_state() not in [States.GAME, States.PAUSED]: return
     var target_state = States.PAUSED if v else States.GAME
     if get_state() != target_state: set_state(target_state)
-    G.tree.paused = v
+    Vars.tree.paused = v
 
 func set_paused(v: bool) -> void:
-    G.server.rpc_node(self, "set_paused_rpc", [v])
+    Vars.server.rpc_node(self, "set_paused_rpc", [v])
 
 func is_paused() -> bool:
     return get_state() == States.PAUSED
@@ -75,14 +75,14 @@ var current_player: Player:
 
 func cleanup() -> void:
     if save_preset: save_preset._disable_preset()
-    G.worlds.cleanup()
+    Vars.worlds.cleanup()
     save_preset = null
     current_player = null;
-    G.players.reset_players();
+    Vars.players.reset_players();
 
 func reset_game() -> void:
     cleanup()
-    G.server.rpc_node(self, "set_paused_rpc", [true])
+    Vars.server.rpc_node(self, "set_paused_rpc", [true])
     state.set_state(States.LOADING_GAME)
 #     create_temp_tile()
     
@@ -93,15 +93,15 @@ func init_game() -> void:
     reset_game();
     save_meta = SaveMeta.new();
     save_configs = ConfigsGroup.new();
-    G.contents.init_contents_mapping();
+    Vars.contents.init_contents_mapping();
 
 func game_loaded() -> void:
     state.set_state(States.GAME)
-    G.server.send_world_data()
-    G.server.rpc_node(self, "set_paused_rpc", [false])
+    Vars.server.send_world_data()
+    Vars.server.rpc_node(self, "set_paused_rpc", [false])
 
 func back_to_menu() -> void:
-    G.client.disconnect_multiplayer()
+    Vars.client.disconnect_multiplayer()
     cleanup()
     state.set_state(States.MAIN_MENU)
 
@@ -113,15 +113,15 @@ func load_game(stream: Stream) -> void:
     var version = stream.get_16();
     if version < 0: return game_loaded();
     save_configs = ConfigsGroup.load_from(stream);
-    G.contents.load_contents_mapping(stream);
+    Vars.contents.load_contents_mapping(stream);
 
-    save_preset = G.types.get_type(Preset.TYPE, stream.get_string()) as Preset
+    save_preset = Vars.types.get_type(Preset.TYPE, stream.get_string()) as Preset
     save_preset._load_preset_data(stream)
     save_preset._enable_preset()
     save_preset._load_preset()
     
-    G.worlds.load_data(stream)
-    G.players.load_data(stream)
+    Vars.worlds.load_data(stream)
+    Vars.players.load_data(stream)
     save_preset._load_after_world_load()
     game_loaded()
 
@@ -130,11 +130,11 @@ func save_game(stream: Stream, to_client: bool = false) -> void:
     stream.store_16(current_data_version)
     # version 0
     save_configs.save_configs(stream);
-    G.contents.save_contents_mapping(stream);
+    Vars.contents.save_contents_mapping(stream);
 
     stream.store_string(save_preset.name)
     save_preset._save_preset_data(stream)
 
-    G.worlds.save_data(stream)
-    G.players.save_data(stream)
+    Vars.worlds.save_data(stream)
+    Vars.players.save_data(stream)
 

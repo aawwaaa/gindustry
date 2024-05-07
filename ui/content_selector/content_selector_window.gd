@@ -31,7 +31,7 @@ func _ready() -> void:
     handle_input_locally = true
 
 func _on_game_ui_contents_loaded() -> void:
-    var types = G.types.get_types(ContentType.TYPE).values().duplicate() as Array[ContentType]
+    var types = Vars.types.get_types(ContentType.TYPE).values().duplicate() as Array[ContentType]
     types.sort_custom(func(a, b): return a.order < b.order)
     var first: ContentType = null
     for content_type in types:
@@ -91,7 +91,7 @@ func select_content(content: Content, amount: float, \
 
 func update_filter() -> void:
     var first: ContentType = null
-    var types = G.types.get_types(ContentType.TYPE).values() as Array[ContentType]
+    var types = Vars.types.get_types(ContentType.TYPE).values() as Array[ContentType]
     for content_type in types:
         var visible = current_filter.call(content_type) 
         content_type_to_button[content_type].visible = visible

@@ -1,5 +1,5 @@
-class_name G_Presets
-extends G.G_Object
+class_name Vars_Presets
+extends Vars.Vars_Object
 
 var logger: Log.Logger;
 
@@ -12,7 +12,7 @@ class PresetGroup:
     
     func add(preset: Preset) -> void:
         presets.append(preset)
-        G.types.register_type(preset)
+        Vars.types.register_type(preset)
 
 var preset_groups: Array[PresetGroup] = []
 
@@ -25,17 +25,17 @@ func register_preset_group(group_name: String) -> PresetGroup:
 func load_preset(preset: Preset) -> void:
     logger.info(tr("Presets_LoadPreset {name}") \
         .format({name = tr(preset.get_tr_name())}))
-    G.game.set_state(G.game.States.PRESET_CONFIG)
+    Vars.game.set_state(Vars.game.States.PRESET_CONFIG)
     var result = await preset._pre_config_preset();
     if not result:
-        G.game.set_state(G.game.States.MAIN_MENU)
+        Vars.game.set_state(Vars.game.States.MAIN_MENU)
         return
-    G.game.init_game()
-    G.game.save_preset = preset
+    Vars.game.init_game()
+    Vars.game.save_preset = preset
     preset._enable_preset()
     preset._init_preset();
-    var player = G.client.join_local()
+    var player = Vars.client.join_local()
     preset._init_after_world_load()
     preset._load_preset();
-    G.game.game_loaded()
+    Vars.game.game_loaded()
 

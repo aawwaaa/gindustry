@@ -1,5 +1,5 @@
-class_name G_Input
-extends G.G_Object
+class_name Vars_Input
+extends Vars.Vars_Object
 
 var camera_node: Camera2D;
 var camera_base_node: Node2D;

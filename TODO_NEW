@@ -1,6 +1,8 @@
 [X] StateMachine
 
-
+[X] ObjectTypeMapping
+    [X] load_object
+    [X] save_object
 
 [ ] World
     [ ] 世界中的世界
@@ -22,4 +24,4 @@
 [ ] Tile
 
 [ ] Entity
-
+[ ] Item类改RefObject

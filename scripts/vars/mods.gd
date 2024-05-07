@@ -1,5 +1,5 @@
-class_name G_Mods
-extends G.G_Object
+class_name Vars_Mods
+extends Vars.Vars_Object
 
 var logger = Log.register_logger("Mods_LogSource");
 
@@ -221,7 +221,7 @@ func load_mods() -> void:
         progress.progress += 30
         var Main = load(info.main)
         var mod = Main.new(info);
-        G.contents.current_loading_mod = mod;
+        Vars.contents.current_loading_mod = mod;
         mod_inst_list[info.id] = mod;
         await load_mod_configs(mod);
         progress.progress += 15

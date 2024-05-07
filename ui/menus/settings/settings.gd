@@ -20,7 +20,7 @@ class SettingsUIGroup extends RefCounted:
 
     func _get_configs() -> ConfigsGroup:
         if parent: return parent._get_configs()
-        if configs == null: return G.game.save_configs
+        if configs == null: return Vars.game.save_configs
         return configs
 
     func load() -> void:
@@ -148,7 +148,7 @@ static func create(name: String) -> SettingsUIGroup:
     instance.get_node("TabContainer").add_child(node)
     var group = SettingsUIGroup.new(node)
     groups[name] = group
-    group.configs = G.configs.configs
+    group.configs = Vars.configs.configs
     return group
 
 func _ready() -> void:
@@ -161,5 +161,5 @@ func load_tabs() -> void:
 func _on_close_requested() -> void:
     for group in groups.values():
         group.save()
-    G.configs.save_configs()
+    Vars.configs.save_configs()
     hide()

@@ -10,18 +10,18 @@ var cancel_callable: Callable;
 func load_saves() -> void:
     for button in %SavesList.get_children():
         button.queue_free()
-    for name in G.saves.saves.keys():
+    for name in Vars.saves.saves.keys():
         var button = Button.new()
         button.auto_translate = false
         button.text = name
         button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
         button.pressed.connect(load_save_info.bind(name))
         %SavesList.add_child(button)
-    if not G.saves.saves_changed.is_connected(load_saves):
-        G.saves.saves_changed.connect(load_saves)
+    if not Vars.saves.saves_changed.is_connected(load_saves):
+        Vars.saves.saves_changed.connect(load_saves)
 
 func load_save_info(name: String) -> void:
-    var save = G.saves.saves[name] if name in G.saves.saves else null
+    var save = Vars.saves.saves[name] if name in Vars.saves.saves else null
     if save == null:
         return
     current = save
@@ -32,7 +32,7 @@ func load_save_info(name: String) -> void:
     for label in %Mods.get_children():
         label.queue_free()
     for mod in save.mods:
-        var info = G.mods.mod_info_list[mod] if mod in G.mods.mod_info_list else null
+        var info = Vars.mods.mod_info_list[mod] if mod in Vars.mods.mod_info_list else null
         var mod_name = info.name if info else mod
         var container = HBoxContainer.new()
         var label = Label.new()
@@ -64,7 +64,7 @@ func wait_for_confirm(callback: Callable, cancel: Callable = func(): pass) -> vo
 func _on_delete_pressed() -> void:
     if not current: return
     wait_for_confirm(func():
-        G.saves.delete_save(current.save_name)
+        Vars.saves.delete_save(current.save_name)
         current = null
         %SaveName.text = ""
         for label in %Mods.get_children():
@@ -75,8 +75,8 @@ func _on_rename_pressed() -> void:
     if not current: return
     %SaveName.editable = true
     wait_for_confirm(func():
-        G.saves.rename_save(current.save_name, %SaveName.text)
-        current = G.saves.saves[%SaveName.text]
+        Vars.saves.rename_save(current.save_name, %SaveName.text)
+        current = Vars.saves.saves[%SaveName.text]
         %SaveName.editable = false,
     func():
         %SaveName.editable = false)
@@ -85,8 +85,8 @@ func _on_copy_pressed() -> void:
     if not current: return
     %SaveName.editable = true
     wait_for_confirm(func():
-        G.saves.copy_save(current.save_name, %SaveName.text)
-        current = G.saves.saves[%SaveName.text]
+        Vars.saves.copy_save(current.save_name, %SaveName.text)
+        current = Vars.saves.saves[%SaveName.text]
         %SaveName.editable = false,
     func():
         %SaveName.editable = false)
@@ -107,68 +107,68 @@ func set_save_ui(v: bool) -> void:
     save_ui = v
     if not v:
         %ForceLoad.visible = true
-        %Button.text = tr("G.saves_Load")
+        %Button.text = tr("Vars.saves_Load")
         return
     %ForceLoad.visible = false
-    %Button.text = tr("G.saves_Save")
+    %Button.text = tr("Vars.saves_Save")
     %TargetName.text = ""
 
 func _on_button_pressed() -> void:
     if save_ui:
-        G.saves.create_save(%TargetName.text)
+        Vars.saves.create_save(%TargetName.text)
         set_save_ui(false)
         hide()
         return
-    if not G.saves.saves.has(%TargetName.text):
-        %AcceptDialog.dialog_text = tr("G.saves_SaveNotExist {name}").format({name = %TargetName.text})
+    if not Vars.saves.saves.has(%TargetName.text):
+        %AcceptDialog.dialog_text = tr("Vars.saves_SaveNotExist {name}").format({name = %TargetName.text})
         %AcceptDialog.show()
         return
     var result = check_mods()
     if not result:
-        %ConfirmationDialog.dialog_text = tr("G.saves_NeedRestartForApplyG.mods")
+        %ConfirmationDialog.dialog_text = tr("Vars.saves_NeedRestartForApplyG.mods")
         %ConfirmationDialog.show()
         return
-    G.saves.load_save(%TargetName.text)
+    Vars.saves.load_save(%TargetName.text)
 
 func _on_force_load_pressed() -> void:
-    if not G.saves.saves.has(%TargetName.text):
-        %AcceptDialog.dialog_text = tr("G.saves_SaveNotExist {name}").format({name = %TargetName.text})
+    if not Vars.saves.saves.has(%TargetName.text):
+        %AcceptDialog.dialog_text = tr("Vars.saves_SaveNotExist {name}").format({name = %TargetName.text})
         %AcceptDialog.show()
         return
-    G.saves.load_save(%TargetName.text)
+    Vars.saves.load_save(%TargetName.text)
 
 func check_mods() -> bool:
-    for mod in G.mods.mod_info_list.values():
+    for mod in Vars.mods.mod_info_list.values():
         if mod.enabled and not current.mods.has(mod.id):
             return false
     for mod in current.mods:
-        if not G.mods.mod_info_list.has(mod) or not G.mods.mod_info_list[mod].enabled:
+        if not Vars.mods.mod_info_list.has(mod) or not Vars.mods.mod_info_list[mod].enabled:
             return false
     return true
 
 func _on_confirmation_dialog_confirmed() -> void:
     var modifies = {}
     var missings = []
-    for mod in G.mods.mod_info_list.values():
+    for mod in Vars.mods.mod_info_list.values():
         if mod.enabled and not current.mods.has(mod.id):
             modifies[mod.id] = mod.enabled
             mod.enabled = false
     for mod in current.mods:
-        if not G.mods.mod_info_list.has(mod):
+        if not Vars.mods.mod_info_list.has(mod):
             missings.append(mod)
-        if not G.mods.mod_info_list[mod].enabled:
-            modifies[mod] = G.mods.mod_info_list[mod].enabled
-            G.mods.mod_info_list[mod].enabled = true
+        if not Vars.mods.mod_info_list[mod].enabled:
+            modifies[mod] = Vars.mods.mod_info_list[mod].enabled
+            Vars.mods.mod_info_list[mod].enabled = true
     if missings.size() != 0:
         for mod in modifies:
-            G.mods.mod_info_list[mod].enabled = modifies[mod]
+            Vars.mods.mod_info_list[mod].enabled = modifies[mod]
         var str = "\n".join(PackedStringArray(missings))
-        %AcceptDialog.dialog_text = tr("G.saves_FailedToApplyG.mods_MissingG.mods") + "\n" + str
+        %AcceptDialog.dialog_text = tr("Vars.saves_FailedToApplyG.mods_MissingG.mods") + "\n" + str
         %AcceptDialog.show()
         return
-    G.mods.save_enable_configs()
-    %AcceptDialog.dialog_text = tr("G.mods_NeedRestart")
+    Vars.mods.save_enable_configs()
+    %AcceptDialog.dialog_text = tr("Vars.mods_NeedRestart")
     %AcceptDialog.confirmed.connect(func():
-        G.headless.restart(["--load-save", %TargetName.text])
+        Vars.headless.restart(["--load-save", %TargetName.text])
     , CONNECT_ONE_SHOT)
     %AcceptDialog.show()

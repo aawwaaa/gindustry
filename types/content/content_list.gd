@@ -8,9 +8,9 @@ extends Resource
 func load_all() -> void:
     var results = await Utils.load_contents_async(base_path, types)
     for type in results:
-        G.types.register_type(type)
+        Vars.types.register_type(type)
 
     results = await Utils.load_contents_async(base_path, contents)
     for content in results:
-        G.contents.register_content(content)
+        Vars.contents.register_content(content)
 

@@ -1,5 +1,5 @@
-class_name G_Contents
-extends G.G_Object
+class_name Vars_Contents
+extends Vars.Vars_Object
 
 signal content_registed(content: Content)
 

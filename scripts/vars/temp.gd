@@ -1,4 +1,4 @@
-class_name G_Temp
-extends G.G_Object
+class_name Vars_Temp
+extends Vars.Vars_Object
 
 var bas: ByteArrayStream = ByteArrayStream.new([])

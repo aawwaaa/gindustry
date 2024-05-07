@@ -1,5 +1,5 @@
-class_name G_Configs
-extends G.G_Object
+class_name Vars_Configs
+extends Vars.Vars_Object
 
 signal configs_loaded();
 

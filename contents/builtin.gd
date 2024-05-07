@@ -8,13 +8,13 @@ static var builtin_mod_info: ModInfo = load("res://contents/builtin.tres")
 static func load_builtin() -> void:
     builtin_mod_info.enabled = true
 
-    G.contents.current_loading_mod = Mod.new(builtin_mod_info)
+    Vars.contents.current_loading_mod = Mod.new(builtin_mod_info)
     
-    G.mods.mod_info_list[builtin_mod_info.id] = builtin_mod_info
-    G.mods.mod_inst_list[builtin_mod_info.id] = G.contents.current_loading_mod
+    Vars.mods.mod_info_list[builtin_mod_info.id] = builtin_mod_info
+    Vars.mods.mod_inst_list[builtin_mod_info.id] = Vars.contents.current_loading_mod
 
 static func start_load() -> void:
-    G.contents.current_loading_mod = G.mods.mod_inst_list[builtin_mod_info.id]
+    Vars.contents.current_loading_mod = Vars.mods.mod_inst_list[builtin_mod_info.id]
 
     # InputHandler.register_input_handler("desktop", InputHandler.InputHandlerMeta.new({
     #     "input_handler": DesktopInputHandler,
@@ -73,10 +73,10 @@ static func start_load() -> void:
 static func load_content(to: Dictionary, prefix: String, paths: Array[String]) -> void:
     var results = await Utils.load_contents_async("res://contents/" + prefix, paths, "Loader_ModLoad_Contents", "Builtin")
     for content in results:
-        G.contents.register_content(content)
+        Vars.contents.register_content(content)
         to[content.id] = content
 
 static func load_type(prefix: String, paths: Array[String]) -> void:
     var results = await Utils.load_contents_async("res://contents/" + prefix, paths, "Loader_ModLoad_Types", "Builtin")
     for type in results:
-        G.types.register_type(type)
+        Vars.types.register_type(type)

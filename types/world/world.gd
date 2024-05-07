@@ -1,7 +1,6 @@
 class_name World
 extends Entity
 
-var world_id: int;
 # Vector3i -> Chunk
 var chunks: Dictionary = {};
 
@@ -15,13 +14,19 @@ static func create() -> World:
     return world;
 
 func create_resources() -> void:
-    init_resources()
+    super.create_resource()
+    init_data()
+
+func init_data() -> void:
+    name = "World#" + str(entity_id)
 
 func init_resources() -> void:
-    name = "World#" + str(world_id)
+    super.init_resource()
+    init_data()
+    Vars.worlds.worlds[entity_id] = self
 
 func free_resources() -> void:
-    pass
+    super.free_resource()
 
 func free() -> void:
     for chunk in chunks.values():

@@ -1,5 +1,5 @@
-class_name G_Types
-extends G.G_Object
+class_name Vars_Types
+extends Vars.Vars_Object
 
 var logger = Log.register_logger("Types_LogSource")
 
@@ -8,7 +8,7 @@ var types: Dictionary = {}
 
 func register_type(type: ResourceType) -> void:
     logger.debug("Load type: " + str(type.get_type().name, " ", type.name))
-    type.mod = G.contents.current_loading_mod
+    type.mod = Vars.contents.current_loading_mod
     if type is ResourceTypeType:
         resource_type_types[type.name] = type
         if not types.has(type):

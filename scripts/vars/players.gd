@@ -1,5 +1,5 @@
-class_name G_Players
-extends G.G_Object
+class_name Vars_Players
+extends Vars.Vars_Object
 
 var player_tokens: Dictionary = {}
 var player_datas: Dictionary = {}
@@ -63,7 +63,7 @@ func reset_players() -> void:
         child.queue_free()
 
 func register_player_data_type(type_id: String, type: GDScript) -> String:
-    var id = G.contents.current_loading_mod.mod_info.id + "_" + type_id
+    var id = Vars.contents.current_loading_mod.mod_info.id + "_" + type_id
     player_data_types[id] = type
     return id
 
@@ -128,7 +128,7 @@ func load_data(stream: Stream) -> void:
     player_inc_id = stream.get_64()
 
     player_tokens = {}
-    var aes_key = G.configs.g("token-mapping-key")
+    var aes_key = Vars.configs.g("token-mapping-key")
     for _1 in range(stream.get_64()):
         var token_buffer = stream.get_buffer(stream.get_32())
         token_buffer.resize(ceili(token_buffer.size() / 16.0) * 16)
@@ -143,7 +143,7 @@ func load_data(stream: Stream) -> void:
     aes_context.finish()
     if buffer_decrypted != magic_number:
         player_tokens = {}
-        player_tokens[G.configs.g("player-token")] = 1
+        player_tokens[Vars.configs.g("player-token")] = 1
 
     player_datas = {}
     for _1 in range(stream.get_64()):
@@ -157,7 +157,7 @@ func save_data(stream: Stream) -> void:
     stream.store_64(player_inc_id)
 
     stream.store_64(player_tokens.size())
-    var aes_key = G.configs.g("token-mapping-key")
+    var aes_key = Vars.configs.g("token-mapping-key")
     for token in player_tokens:
         var player_id = player_tokens[token]
         var token_buffer = token.to_ascii_buffer()

@@ -1,5 +1,5 @@
-class_name G_Saves
-extends G.G_Object
+class_name Vars_Saves
+extends Vars.Vars_Object
 
 signal saves_changed()
 
@@ -57,13 +57,13 @@ func create_save(name: String) -> void:
     var buffer = PackedByteArray()
     buffer.resize(save_head.size())
     stream.store_buffer(buffer)
-    G.game.save_meta.save_name = name
-    G.game.save_meta.file_path = path
-    G.game.save_game(stream)
+    Vars.game.save_meta.save_name = name
+    Vars.game.save_meta.file_path = path
+    Vars.game.save_game(stream)
     access.seek(0)
     stream.store_buffer(save_head)
     access.close()
-    saves[name] = G.game.save_meta
+    saves[name] = Vars.game.save_meta
     saves_changed.emit()
 
 func load_save(name: String) -> void:
@@ -76,9 +76,9 @@ func load_save(name: String) -> void:
         logger.error(tr("Saves_InvalidSaveFile {name}").format({name = name}))
         access.close()
         return
-    G.game.load_game(stream)
+    Vars.game.load_game(stream)
     access.close()
-    var player = G.client.join_local()
+    var player = Vars.client.join_local()
 
 func delete_save(name: String) -> void:
     logger.info(tr("Saves_DeleteSave {name}").format({name = name}))

@@ -11,15 +11,15 @@ func _on_back_pressed() -> void:
     visible = false
 
 func _on_pause_pressed() -> void:
-    G.game.set_paused(not G.game.is_paused())
+    Vars.game.set_paused(not Vars.game.is_paused())
 
 func _on_save_pressed() -> void:
-    G.main.get_window_node("Saves").set_save_ui(true)
-    G.main.open_window("Saves")
+    Vars.main.get_window_node("Saves").set_save_ui(true)
+    Vars.main.open_window("Saves")
 
 func _on_settings_pressed() -> void:
-    G.main.open_window("Settings")
+    Vars.main.open_window("Settings")
 
 func _on_exit_pressed() -> void:
     visible = false
-    G.game.back_to_menu()
+    Vars.game.back_to_menu()

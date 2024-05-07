@@ -9,7 +9,7 @@ func call_alert(message: String, callback: Callable) -> void:
     $Alert.show();
 
 func _on_close_requested() -> void:
-    var errors = G.mods.check_errors();
+    var errors = Vars.mods.check_errors();
     if errors.size() != 0:
         var s = ""
         for error in errors:
@@ -21,17 +21,17 @@ func _on_close_requested() -> void:
     if not state_changed:
         hide();
         return;
-    call_alert("G.mods_NeedRestart", func():
+    call_alert("Vars.mods_NeedRestart", func():
         hide();
-        G.mods.save_enable_configs();
-        G.headless.restart()
+        Vars.mods.save_enable_configs();
+        Vars.headless.restart()
     );
 
 func load_mod_list() -> void:
     for line in %ModLines.get_children():
         line.queue_free();
-    for mod in G.mods.display_order:
-        var info = G.mods.mod_info_list[mod];
+    for mod in Vars.mods.display_order:
+        var info = Vars.mods.mod_info_list[mod];
         var line = ModLine.instantiate();
         line.mod_info = info;
         line.toggled.connect(_on_line_toggled);

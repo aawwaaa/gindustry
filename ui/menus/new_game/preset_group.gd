@@ -2,7 +2,7 @@ extends VBoxContainer
 
 signal pressed(preset: Preset);
 
-var preset_group: G_Presets.PresetGroup;
+var preset_group: Vars_Presets.PresetGroup;
 
 func _ready() -> void:
     %Name.text = preset_group.group_name;
