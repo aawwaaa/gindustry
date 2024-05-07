@@ -19,15 +19,11 @@ func get_world(world_id: int) -> World:
 #     world = await world_load_source._load_world(world_id);
     if not world:
         return null;
-    world.init_resources()
-#     worlds[world_id] = world;
     return world;
 
 func create_world() -> World:
     var world = World.create();
     world.root_world = true;
-    world.create_resources()
-    world.init_resources()
     return world;
 
 func cleanup() -> void:

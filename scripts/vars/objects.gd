@@ -4,6 +4,12 @@ extends Vars.Vars_Object
 signal object_ready(object: RefObject)
 
 class RefObject extends Object:
+    static var TYPE: ObjectType:
+        get = get_type
+
+    static func get_type() -> ObjectType:
+        return null
+
     var object_id: int;
     var object_type: ObjectType
 
@@ -90,6 +96,9 @@ func add_object(object: RefObject, id: int = 0) -> void:
 
 func object_freed(id: int) -> void:
     objects.erase(id)
+
+func has_object(id: int) -> bool:
+    return objects.has(id)
 
 func get_object_or_null(id: int) -> RefObject:
     if objects.has(id):

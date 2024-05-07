@@ -1,6 +1,16 @@
 class_name World
 extends Entity
 
+static var world_object_type: Vars_Objects.GDScriptObjectType
+
+static func _static_init() -> void:
+    world_object_type = Vars.objects.GDScriptObjectType.new()
+    world_object_type.uuid = "gindustry-builtin-world"
+    world_object_type.type_script = World
+
+static func get_type() -> Vars_Objects.ObjectType:
+    return world_object_type
+
 # Vector3i -> Chunk
 var chunks: Dictionary = {};
 
@@ -10,8 +20,7 @@ var physics_space: RID:
     get: return world.physics_space if world else physics_space
 
 static func create() -> World:
-    var world = World.new();
-    return world;
+    return TYPE.create();
 
 func create_resources() -> void:
     super.create_resource()

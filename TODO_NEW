@@ -21,7 +21,7 @@
            <- others...
 
 [ ] Chunk
-[ ] Tile
+    [ ] tile相关方法(区块实现tile, tile不使用对象)
 
 [ ] Entity
 [ ] Item类改RefObject

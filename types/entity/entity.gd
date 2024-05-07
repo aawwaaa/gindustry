@@ -3,6 +3,8 @@ extends Vars_Objects.RefObject
 
 signal data_changed(data_type: StringName)
 
+static var entity_object_type: Vars_Objects.GDScriptObjectType
+
 var modules: Dictionary = {}
 
 var parent: Entity:
@@ -13,6 +15,14 @@ var world: World:
     set(v): world = v; for child in childs: child.world = v
 var transform: Transform3D:
     set = set_transform
+
+static func _static_init() -> void:
+    entity_object_type = Vars.objects.GDScriptObjectType.new()
+    entity_object_type.uuid = "gindustry-builtin-entity"
+    entity_object_type.type_script = Entity
+
+static func get_type() -> Vars_Objects.ObjectType:
+    return entity_object_type
 
 func set_parent(new_parent: Entity) -> void:
     if parent:
