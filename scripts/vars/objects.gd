@@ -3,7 +3,7 @@ extends Vars.Vars_Object
 
 signal object_ready(object: RefObject)
 
-class RefObject extends Object:
+class RefObject extends Node:
     static var TYPE: ObjectType:
         get = get_type
 
@@ -22,6 +22,7 @@ class RefObject extends Object:
 
     func _object_init() -> void:
         Vars.objects.add_object(self)
+        name = object_type.uuid + "#" + str(object_id)
 
     func _object_free() -> void:
         pass
@@ -73,11 +74,11 @@ class PlaceholderObjectType extends ObjectType:
 
 var logger: Log.Logger = Log.register_logger("Objects_LogSource")
 
-var object_types_list: Array[ObjectType]
-var object_type_inc_id: int = 1
-var object_types: Dictionary = {}
-var object_types_indexed: Dictionary = {}
-var object_types_sorted: Array[ObjectType]
+static var object_types_list: Array[ObjectType]
+static var object_type_inc_id: int = 1
+static var object_types: Dictionary = {}
+static var object_types_indexed: Dictionary = {}
+static var object_types_sorted: Array[ObjectType]
 
 var object_inc_id: int = 1
 var objects: Dictionary = {}
@@ -93,6 +94,9 @@ func add_object(object: RefObject, id: int = 0) -> void:
         object.object_id = id
     objects[id] = object
     object_ready.emit(object, id)
+    await Vars.tree.process_frame
+    if not object.is_inside_tree():
+        add_child(object)
 
 func object_freed(id: int) -> void:
     objects.erase(id)
@@ -106,6 +110,7 @@ func get_object_or_null(id: int) -> RefObject:
     return null
 
 func get_object(id: int) -> RefObject:
+    if id == 0: return null
     if objects.has(id):
         return objects[id]
     var last_object: RefObject
@@ -115,6 +120,9 @@ func get_object(id: int) -> RefObject:
     return last_object
 
 func get_object_callback(id: int, callback: Callable) -> void:
+    if id == 0:
+        callback.call(null)
+        return
     if objects.has(id):
         callback.call(objects[id])
         return
@@ -125,6 +133,9 @@ func get_object_callback(id: int, callback: Callable) -> void:
             callback.call(null)
             return
     callback.call(last_object)
+
+func get_object_id(object: RefObject) -> int:
+    return object.object_id if object else 0
 
 func cleanup() -> void:
     object_ready.emit(null)
@@ -172,7 +183,7 @@ func save_data(stream: Stream) -> void:
         stream.store_64(object_inc_id)
     ])
 
-func add_object_type(type: ObjectType) -> void:
+static func add_object_type(type: ObjectType) -> void:
     object_types_list.append(type)
     object_types_indexed[type.uuid] = type
 

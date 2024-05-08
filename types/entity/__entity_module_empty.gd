@@ -1,16 +1,16 @@
-class_name EntityModulePhysics
+class_name __EntityModuleEmpty
 extends EntityModule
 
-static var entity_module_physics_object_type: Vars_Objects.GDScriptObjectType
+static var entity_module_empty_object_type: Vars_Objects.GDScriptObjectType
 
 static func _static_init() -> void:
-    entity_module_physics_object_type = Vars_Objects.GDScriptObjectType.new()
-    entity_module_physics_object_type.uuid = "gindustry-builtin-entity-module-physics"
-    entity_module_physics_object_type.type_script = EntityModulePhysics
-    Vars_Objects.add_object_type(entity_module_physics_object_type)
+    entity_module_empty_object_type = Vars_Objects.GDScriptObjectType.new()
+    entity_module_empty_object_type.uuid = "gindustry-builtin-entity-module-empty"
+    entity_module_empty_object_type.type_script = __EntityModuleEmpty
+    Vars_Objects.add_object_type(entity_module_empty_object_type)
 
 static func get_type() -> Vars_Objects.ObjectType:
-    return entity_module_physics_object_type
+    return entity_module_empty_object_type
 
 func _object_create() -> void:
     super._object_create()

@@ -1,6 +1,8 @@
 class_name Vars_Worlds
 extends Vars.Vars_Object
 
+var logger: Log.Logger = Log.register_logger("Worlds_LogSource")
+
 var worlds: Dictionary = {}
 
 func get_world_or_null(world_id: int) -> World:
@@ -34,20 +36,17 @@ func cleanup() -> void:
 func load_data(stream: Stream) -> void:
     Utils.load_data_with_version(stream, [func():
         for _1 in stream.get_32():
-            var world_id = stream.get_64();
-            var world = World.create();
-            # TODO load_object
-            world.world_id = world_id;
-#             worlds[world_id] = world
-            world.load_data(stream);
-            world.init_resources()
+            var world = Vars.objects.load_object(stream)
+            if not (world is World):
+                logger.error(tr("Worlds_UnknownWorldObject {id}").format({id = world.object_id}))
+                continue
+            worlds[world.object_id] = world
     ])
 
 func save_data(stream: Stream) -> void:
     Utils.save_data_with_version(stream, [func():
         stream.store_32(worlds.size())
         for world in worlds.values():
-            stream.store_64(world.world_id)
-            world.save_data(world)
+            Vars.objects.save_object(stream, world)
     ])
 
