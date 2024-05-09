@@ -1,8 +1,11 @@
 [X] StateMachine
 
-[X] ObjectTypeMapping
+[ ] ObjectTypeMapping
     [X] load_object
     [X] save_object
+    [ ] object_ready(): when game is loaded
+
+[ ] 可相互嵌套的EntityModule
 
 [ ] World
     [ ] 世界中的世界
