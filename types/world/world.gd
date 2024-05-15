@@ -1,6 +1,9 @@
 class_name World
 extends Entity
 
+const TILE_SIZE = 0.5
+const TILE_SIZE_VECTOR = Vector3.ONE * TILE_SIZE
+
 static var world_object_type: Vars_Objects.GDScriptObjectType
 
 static func _static_init() -> void:
@@ -30,6 +33,10 @@ func _object_init() -> void:
     super._object_init()
     Vars.worlds.worlds[object_id] = self
     if root_world: self.world = self
+
+func _object_ready() -> void:
+    if object_ready: return
+    super._object_ready()
 
 func _object_free() -> void:
     super._object_free()

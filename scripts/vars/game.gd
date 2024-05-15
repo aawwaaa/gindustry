@@ -76,6 +76,7 @@ var current_player: Player:
 func cleanup() -> void:
     if save_preset: save_preset._disable_preset()
     Vars.worlds.cleanup()
+    Vars.objects.cleanup()
     save_preset = null
     current_player = null;
     Vars.players.reset_players();
@@ -93,7 +94,9 @@ func init_game() -> void:
     reset_game();
     save_meta = SaveMeta.new();
     save_configs = ConfigsGroup.new();
+    Vars.objects.init_object_types_mapping();
     Vars.contents.init_contents_mapping();
+    Vars.objects.object_ready()
 
 func game_loaded() -> void:
     state.set_state(States.GAME)
@@ -107,12 +110,13 @@ func back_to_menu() -> void:
 
 const current_data_version = 0;
 
-func load_game(stream: Stream) -> void:
+func load_game(stream: Stream, call_loaded: bool = true) -> void:
     reset_game();
     save_meta = SaveMeta.load_from(stream);
     var version = stream.get_16();
     if version < 0: return game_loaded();
     save_configs = ConfigsGroup.load_from(stream);
+    Vars.objects.load_object_types_mapping(stream);
     Vars.contents.load_contents_mapping(stream);
 
     save_preset = Vars.types.get_type(Preset.TYPE, stream.get_string()) as Preset
@@ -123,13 +127,15 @@ func load_game(stream: Stream) -> void:
     Vars.worlds.load_data(stream)
     Vars.players.load_data(stream)
     save_preset._load_after_world_load()
-    game_loaded()
+    Vars.objects.object_ready()
+    if call_loaded: game_loaded()
 
 func save_game(stream: Stream, to_client: bool = false) -> void:
     save_meta.save_to(stream);
     stream.store_16(current_data_version)
     # version 0
     save_configs.save_configs(stream);
+    Vars.objects.save_object_types_mapping(stream);
     Vars.contents.save_contents_mapping(stream);
 
     stream.store_string(save_preset.name)

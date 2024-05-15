@@ -1,7 +1,7 @@
 class_name Vars_Objects
 extends Vars.Vars_Object
 
-signal object_ready(object: RefObject)
+signal object_registed(object: RefObject)
 
 class RefObject extends Node:
     static var TYPE: ObjectType:
@@ -12,6 +12,7 @@ class RefObject extends Node:
 
     var object_id: int;
     var object_type: ObjectType
+    var object_ready: bool
 
     func _object_create() -> void:
         pass
@@ -21,7 +22,8 @@ class RefObject extends Node:
         _object_init()
 
     func _object_init() -> void:
-        Vars.objects.add_object(self)
+        Vars.objects.add_object(self) 
+        add_to_group(&"objects")
         name = object_type.uuid + "#" + str(object_id)
 
     func _object_free() -> void:
@@ -31,6 +33,12 @@ class RefObject extends Node:
         _object_free()
         Vars.objects.object_freed(object_id)
         super.free()
+
+    func _object_ready() -> void:
+        if object_ready: return
+        object_ready = true
+        if not is_inside_tree():
+            Vars.objects.add_child(self)
 
     func _load_data(stream: Stream) -> void:
         pass
@@ -82,6 +90,7 @@ static var object_types_sorted: Array[ObjectType]
 
 var object_inc_id: int = 1
 var objects: Dictionary = {}
+var object_auto_ready: bool = false
 
 func create_id() -> int:
     var id = object_inc_id
@@ -93,10 +102,9 @@ func add_object(object: RefObject, id: int = 0) -> void:
         id = create_id()
         object.object_id = id
     objects[id] = object
-    object_ready.emit(object, id)
-    await Vars.tree.process_frame
-    if not object.is_inside_tree():
-        add_child(object)
+    object_registed.emit(object, id)
+    if object_auto_ready:
+        object._object_ready()
 
 func object_freed(id: int) -> void:
     objects.erase(id)
@@ -115,7 +123,7 @@ func get_object(id: int) -> RefObject:
         return objects[id]
     var last_object: RefObject
     while not last_object or last_object.object_id != id:
-        last_object = await object_ready
+        last_object = await object_registed
         if last_object == null: return null
     return last_object
 
@@ -128,7 +136,7 @@ func get_object_callback(id: int, callback: Callable) -> void:
         return
     var last_object: RefObject
     while not last_object or last_object.object_id != id:
-        last_object = await object_ready
+        last_object = await object_registed
         if last_object == null:
             callback.call(null)
             return
@@ -137,10 +145,18 @@ func get_object_callback(id: int, callback: Callable) -> void:
 func get_object_id(object: RefObject) -> int:
     return object.object_id if object else 0
 
+func object_ready() -> void:
+    Vars.tree.call_group(&"objects", &"_object_ready")
+    object_auto_ready = true
+
 func cleanup() -> void:
-    object_ready.emit(null)
+    for object in objects.values():
+        if is_instance_valid(object):
+            object.free()
+    object_registed.emit(null)
     object_inc_id = 1
-    init_object_types_mapping()
+    object_auto_ready = false
+    cleanup_object_types()
 
 func cleanup_object_types() -> void:
     for type in object_types_sorted:

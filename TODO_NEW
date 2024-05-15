@@ -1,30 +1,31 @@
-[X] StateMachine
-
-[ ] ObjectTypeMapping
-    [X] load_object
-    [X] save_object
-    [ ] object_ready(): when game is loaded
-
-[ ] 可相互嵌套的EntityModule
-
-[ ] World
-    [ ] 世界中的世界
-        世界持有Space3D和CanvasItem
-    [.] Game.create_world及World.create_world同步
-
-[ ] 物理:
-    建筑, 地形载入到世界公共碰撞中, 直接影响世界位置
-    对于每个shape使用其id查找entity进而通知实体进行处理
-    移动实体等单独使用碰撞体(如玩家), 玩家移动->施加力->碰撞体影响世界
-    实体在区块间移动时, 若进入某玩家未加载区域, 则隐藏并取消碰撞
-    如从玩家未加载区域进入已加载区域, 添加实体并添加碰撞
-[ ] 结构:
-    Entity <- World
-           <- Tile(使用碰撞体)
-           <- others...
-
-[ ] Chunk
-    [ ] tile相关方法(区块实现tile, tile不使用对象)
-
-[ ] Entity
-[ ] Item类改RefObject
+[ ] 实体
+[ ] 世界
+    [ ] 全量加载/卸载, 不分区块
+[ ] 物理实体
+[ ] 实体类型
+[ ] 控制器
+    [ ] 控制器子模块
+[ ] 输入处理器
+    [ ] 输入处理子模块
+[ ] 实体访问
+    [ ] 可访问
+    [ ] 访问链
+[ ] 多人游戏重写:
+    服务器:
+        请求加入
+        输入
+        请求世界数据
+        请求包序列
+        加入
+        断开
+        本地加入
+    客户端:
+        断开连接
+        输入
+        继续
+        世界数据
+        世界数据摘要
+        加入包序列
+        确认加入
+        断开
+        本地断开
