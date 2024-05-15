@@ -13,6 +13,10 @@ func _pre_config_preset() -> bool:
 
 func _init_preset() -> void:
     var world = Vars.worlds.create_world()
+    var entity = TestEntity.TYPE.create()
+    world.add_child_entity(entity)
+    Vars.objects.make_ready(entity)
+    world.toggle_to()
 
 func _init_after_world_load() -> void:
     pass

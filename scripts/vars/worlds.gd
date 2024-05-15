@@ -4,6 +4,7 @@ extends Vars.Vars_Object
 var logger: Log.Logger = Log.register_logger("Worlds_LogSource")
 
 var worlds: Dictionary = {}
+var current_toggled_world: World
 
 func get_world_or_null(world_id: int) -> World:
     if not Vars.objects.has_object(world_id) \
@@ -24,13 +25,16 @@ func get_world(world_id: int) -> World:
     return world;
 
 func create_world() -> World:
-    var world = World.create();
-    world.root_world = true;
+    var world = World.TYPE.create(true);
+    world.is_root_world = true;
+    world.handle_create()
+    Vars.objects.make_ready(world)
     return world;
 
 func cleanup() -> void:
     for world in worlds.values():
         world.free()
+    current_toggled_world = null
     worlds = {};
 
 func load_data(stream: Stream) -> void:

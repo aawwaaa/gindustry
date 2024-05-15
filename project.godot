@@ -36,6 +36,7 @@ window/version="1.0.0"
 
 movie_writer/movie_file="E:/workspace/out.avi"
 movie_writer/disable_vsync=true
+run/main_run_args="-- --load-preset test"
 
 [gindustry_tools]
 
@@ -147,10 +148,10 @@ locale/test="en"
 
 [physics]
 
+3d/default_gravity=0.0
 2d/default_gravity_vector=Vector2(0, 0)
 
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
-environment/defaults/default_clear_color=Color(0.145098, 0.180392, 0.290196, 1)

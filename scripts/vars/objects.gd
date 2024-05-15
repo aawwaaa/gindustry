@@ -90,7 +90,6 @@ static var object_types_sorted: Array[ObjectType]
 
 var object_inc_id: int = 1
 var objects: Dictionary = {}
-var object_auto_ready: bool = false
 
 func create_id() -> int:
     var id = object_inc_id
@@ -103,8 +102,9 @@ func add_object(object: RefObject, id: int = 0) -> void:
         object.object_id = id
     objects[id] = object
     object_registed.emit(object, id)
-    if object_auto_ready:
-        object._object_ready()
+
+func make_ready(object: RefObject) -> void:
+    object._object_ready()
 
 func object_freed(id: int) -> void:
     objects.erase(id)
@@ -147,7 +147,6 @@ func get_object_id(object: RefObject) -> int:
 
 func object_ready() -> void:
     Vars.tree.call_group(&"objects", &"_object_ready")
-    object_auto_ready = true
 
 func cleanup() -> void:
     for object in objects.values():
@@ -155,7 +154,6 @@ func cleanup() -> void:
             object.free()
     object_registed.emit(null)
     object_inc_id = 1
-    object_auto_ready = false
     cleanup_object_types()
 
 func cleanup_object_types() -> void:

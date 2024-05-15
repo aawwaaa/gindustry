@@ -1,8 +1,8 @@
 class_name Vars_Input
 extends Vars.Vars_Object
 
-var camera_node: Camera2D;
-var camera_base_node: Node2D;
+var camera_node: Camera3D;
+var camera_base_node: Node3D;
 
 var ui_node: Control;
 
