@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class BufferStream : GodotObject, ReadableStream, WriteableStream
+public partial class BufferStream : GodotObject, ReadableStream, WritableStream
 {
     public long expandSize;
 
@@ -57,7 +57,7 @@ public class BufferStream : GodotObject, ReadableStream, WriteableStream
     }
 }
 
-public class PacketOutputStream : WriteableStream
+public class PacketOutputStream : WritableStream
 {
     public ulong packetSize;
 

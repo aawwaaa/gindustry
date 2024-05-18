@@ -11,6 +11,18 @@ public partial class Vars: Node
     {
         tree = GetTree();
 
-        objects = new Objects();
+        objects = Attach(new Objects());
+    }
+
+    public T Attach<T>(T obj) where T: Node
+    {
+        obj.Name = obj.GetType().Name;
+        AddChild(obj);
+        return obj;
+    }
+
+    public Objects GetObjects()
+    {
+        return objects;
     }
 }

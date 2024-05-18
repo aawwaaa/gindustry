@@ -76,14 +76,14 @@ public static class ReadableStreamEx
     }
 }
 
-public interface WriteableStream
+public interface WritableStream
 {
     void Close();
     void Flush();
     void Seek(long offset);
     abstract ulong Position{get; }
 
-    virtual WriteableStream Write
+    virtual WritableStream Write
     {
         get{ return this; }
     }
@@ -93,62 +93,62 @@ public interface WriteableStream
     // TODO void Object(object value);
 }
 
-public static class WriteableStreamEx
+public static class WritebleStreamEx
 {
-    public static WriteableStream Write(this WriteableStream stream)
+    public static WritableStream Write(this WritableStream stream)
     {
         return stream;
     }
 
-    public static void Byte(this WriteableStream stream, byte value)
+    public static void Byte(this WritableStream stream, byte value)
     {
         stream.Bytes(new byte[]{value});
     }
-    public static void ByteSigned(this WriteableStream stream, sbyte value)
+    public static void ByteSigned(this WritableStream stream, sbyte value)
     {
         stream.Bytes(BitConverter.GetBytes(value));
     }
-    public static void Short(this WriteableStream stream, short value)
+    public static void Short(this WritableStream stream, short value)
     {
         stream.Bytes(BitConverter.GetBytes(value));
     }
-    public static void ShortUnsigned(this WriteableStream stream, ushort value)
+    public static void ShortUnsigned(this WritableStream stream, ushort value)
     {
         stream.Bytes(BitConverter.GetBytes(value));
     }
-    public static void Int(this WriteableStream stream, int value)
+    public static void Int(this WritableStream stream, int value)
     {
         stream.Bytes(BitConverter.GetBytes(value));
     }
-    public static void IntUnsigned(this WriteableStream stream, uint value)
+    public static void IntUnsigned(this WritableStream stream, uint value)
     {
         stream.Bytes(BitConverter.GetBytes(value));
     }
-    public static void Long(this WriteableStream stream, long value)
+    public static void Long(this WritableStream stream, long value)
     {
         stream.Bytes(BitConverter.GetBytes(value));
     }
-    public static void LongUnsigned(this WriteableStream stream, ulong value)
-    {
-        stream.Bytes(BitConverter.GetBytes(value));
-    }
-
-    public static void Float(this WriteableStream stream, float value)
-    {
-        stream.Bytes(BitConverter.GetBytes(value));
-    }
-    public static void Double(this WriteableStream stream, double value)
+    public static void LongUnsigned(this WritableStream stream, ulong value)
     {
         stream.Bytes(BitConverter.GetBytes(value));
     }
 
-    public static void String(this WriteableStream stream, string value)
+    public static void Float(this WritableStream stream, float value)
+    {
+        stream.Bytes(BitConverter.GetBytes(value));
+    }
+    public static void Double(this WritableStream stream, double value)
+    {
+        stream.Bytes(BitConverter.GetBytes(value));
+    }
+
+    public static void String(this WritableStream stream, string value)
     {
         stream.Int(value.Length);
         byte[] buffer = System.Text.Encoding.UTF8.GetBytes(value);
         stream.Bytes(buffer);
     }
-    public static void Bool(this WriteableStream stream, bool value)
+    public static void Bool(this WritableStream stream, bool value)
     {
         stream.Byte(value? (byte)1: (byte)0);
     }
