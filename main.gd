@@ -1,4 +1,6 @@
 extends Object
 
 func _ready() -> void:
-    print(Vars.GetObjects())
+    Log.CreateLogger("123").Info(Vars.GetObjects())
+    for source in Log.GetLoggers():
+        source.Info(source.sourceTranslated)

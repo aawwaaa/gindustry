@@ -22,11 +22,14 @@ public partial class Log : Node
     public delegate void TriggerListener();
     public static event TriggerListener OnProgressAllFinished;
 
+    public static readonly StringName SINGLETON_NAME = "Log";
+
     public static Log Singleton
     {
         get
         {
-            return (Log)Engine.GetSingleton("Log");
+            if (!Engine.HasSingleton(SINGLETON_NAME)) return null;
+            return (Log)Engine.GetSingleton(SINGLETON_NAME);
         }
     }
 
@@ -40,6 +43,16 @@ public partial class Log : Node
     public delegate void OnProgressChangedSignalEventHandler (Progress progress, int current, int total);
     [Signal]
     public delegate void OnProgressAllFinishedSignalEventHandler ();
+
+    public Logger[] GetLoggers()
+    {
+        return loggers.ToArray();
+    }
+
+    public Progress[] GetProgresses()
+    {
+        return progresses.ToArray();
+    }
 
     public partial class LogLevel: GodotObject
     {
@@ -95,7 +108,7 @@ public partial class Log : Node
             string formatted = $"[{sourceTranslated}] [{level.name}] {message}";
             GD.Print(formatted);
             if (OnLog != null) OnLog(this, level, formatted);
-            Singleton.EmitSignal("OnLogSignal", this, level, formatted);
+            if (Singleton != null) Singleton.EmitSignal("OnLogSignal", this, level, formatted);
         }
 
         public void Info(string message)
@@ -142,7 +155,7 @@ public partial class Log : Node
             this.total = total;
             progresses.Add(this);
             if(Log.OnProgressAdded != null) Log.OnProgressAdded(this);
-            Singleton.EmitSignal("OnProgressAddedSignal", this);
+            if (Singleton != null) Singleton.EmitSignal("OnProgressAddedSignal", this);
 
             SetMessage(message);
         }
@@ -152,7 +165,7 @@ public partial class Log : Node
             this.message = message;
             messageTranslated = TranslationServer.Translate(message);
             if (Log.OnProgressChanged != null) Log.OnProgressChanged(this, current, total);
-            Singleton.EmitSignal("OnProgressChangedSignal", this);
+            if (Singleton != null) Singleton.EmitSignal("OnProgressChangedSignal", this);
             if (OnProgressChanged != null) OnProgressChanged(this, current, total);
             EmitSignal("OnProgressChangedSignal", this, current, total);
 
@@ -163,7 +176,7 @@ public partial class Log : Node
             current += amount;
             if (current > total) current = total;
             if (Log.OnProgressChanged != null) Log.OnProgressChanged(this, current, total);
-            Singleton.EmitSignal("OnProgressChangedSignal", this);
+            if (Singleton != null) Singleton.EmitSignal("OnProgressChangedSignal", this);
             if (OnProgressChanged != null) OnProgressChanged(this, current, total);
             EmitSignal("OnProgressChangedSignal", this, current, total);
         }
@@ -173,11 +186,21 @@ public partial class Log : Node
             current = total;
             progresses.Remove(this);
             if (Log.OnProgressFinished != null) Log.OnProgressFinished(this);
-            Singleton.EmitSignal("OnProgressFinishedSignal", this);
+            if (Singleton != null) Singleton.EmitSignal("OnProgressFinishedSignal", this);
             if (OnProgressChanged != null) OnProgressChanged(this, current, total);
             EmitSignal("OnProgressChangedSignal", this, current, total);
             if (progresses.Count == 0 && Log.OnProgressAllFinished != null) Log.OnProgressAllFinished();
-            Singleton.EmitSignal("OnProgressAllFinishedSignal");
+            if (Singleton != null) Singleton.EmitSignal("OnProgressAllFinishedSignal");
         }
+    }
+
+    public static Logger CreateLogger(string source)
+    {
+        return new Logger(source);
+    }
+
+    public static Progress CreateProgress(string source, string message, int total)
+    {
+        return new Progress(source, message, total);
     }
 }

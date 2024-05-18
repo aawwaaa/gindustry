@@ -3,15 +3,17 @@ using System;
 
 public partial class Vars: Node
 {
+    public static readonly StringName SINGLETON_NAME = "Vars";
+
     public static SceneTree tree;
 
-    public static Objects objects;
+    public static ObjectsManager objects;
 
     public override void _Ready()
     {
         tree = GetTree();
 
-        objects = Attach(new Objects());
+        objects = Attach(new ObjectsManager());
     }
 
     public T Attach<T>(T obj) where T: Node
@@ -21,8 +23,8 @@ public partial class Vars: Node
         return obj;
     }
 
-    public Objects GetObjects()
+    public ObjectsManager Objects
     {
-        return objects;
+        get { return objects; }
     }
 }
