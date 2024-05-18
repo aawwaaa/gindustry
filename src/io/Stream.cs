@@ -60,7 +60,7 @@ public static class ReadableStreamEx
     }
     public static double Double(this ReadableStream stream)
     {
-        return BitConverter.ToSingle(stream.Bytes(8), 0);
+        return BitConverter.ToDouble(stream.Bytes(8), 0);
     }
 
     public static bool Bool(this ReadableStream stream)
@@ -70,9 +70,9 @@ public static class ReadableStreamEx
 
     public static string String(this ReadableStream stream)
     {
-        long length = stream.Long();
+        int length = stream.Int();
         byte[] buffer = stream.Bytes(length);
-        return System.Text.Encoding.UTF8.GetString(buffer, 0, (int)length);
+        return System.Text.Encoding.UTF8.GetString(buffer, 0, length);
     }
 }
 
@@ -102,7 +102,7 @@ public static class WriteableStreamEx
 
     public static void Byte(this WriteableStream stream, byte value)
     {
-        stream.Bytes(BitConverter.GetBytes(value));
+        stream.Bytes(new byte[]{value});
     }
     public static void ByteSigned(this WriteableStream stream, sbyte value)
     {
@@ -144,7 +144,7 @@ public static class WriteableStreamEx
 
     public static void String(this WriteableStream stream, string value)
     {
-        stream.Long(value.Length);
+        stream.Int(value.Length);
         byte[] buffer = System.Text.Encoding.UTF8.GetBytes(value);
         stream.Bytes(buffer);
     }
