@@ -3,36 +3,37 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-public partial class ObjectsManager: Node
+public partial class ObjectsManager : Node
 {
-    public readonly Dictionary<ulong, RefObject> objects = new Dictionary<ulong, RefObject>();
-    public readonly Dictionary<string, IRefObjectType<RefObject>> objectTypes = new Dictionary<string, IRefObjectType<RefObject>>();
-    public readonly Dictionary<uint, IRefObjectType<RefObject>> objectTypeIndexed = new Dictionary<uint, IRefObjectType<RefObject>>();
-    
+    public readonly Dictionary<ulong, IRefObject> objects = new Dictionary<ulong, IRefObject>();
+    public readonly Dictionary<string, IRefObjectType<IRefObject>> objectTypes = new Dictionary<string, IRefObjectType<IRefObject>>();
+    public readonly Dictionary<uint, IRefObjectType<IRefObject>> objectTypeIndexed = new Dictionary<uint, IRefObjectType<IRefObject>>();
+
     public uint objectTypeIncID = 1;
     public ulong objectIncID = 1;
 
-    public delegate void ObjectAddedEventHandler (RefObject obj);
+    public delegate void ObjectAddedEventHandler(IRefObject obj);
     public event ObjectAddedEventHandler ObjectAdded;
 
-    public void AddObject(RefObject obj)
+    public void AddObject(IRefObject obj)
     {
-        if (obj.objectID == 0){
-            obj.objectID = objectIncID;
+        if (obj.ObjectID == 0)
+        {
+            obj.ObjectID = objectIncID;
             objectIncID++;
         }
-        objects.Add(obj.objectID, obj);
+        objects.Add(obj.ObjectID, obj);
         if (ObjectAdded != null) ObjectAdded(obj);
     }
 
-    public void RemoveObject(RefObject obj)
+    public void RemoveObject(IRefObject obj)
     {
-        objects.Remove(obj.objectID);
+        objects.Remove(obj.ObjectID);
     }
 
     public void Reset()
     {
-        if(ObjectAdded != null) ObjectAdded(null);
+        if (ObjectAdded != null) ObjectAdded(null);
         ResetObjectTypes();
         ResetObjects();
     }
@@ -42,7 +43,7 @@ public partial class ObjectsManager: Node
         InitObjectTypeMapping();
     }
 
-    public void Load(ReadableStream stream)
+    public void Load(IReadableStream stream)
     {
         Utils.LoadWithVersion(stream, new Utils.LoadCallback[]{() => {
             LoadObjectTypeMapping(stream);
@@ -50,7 +51,7 @@ public partial class ObjectsManager: Node
         }});
     }
 
-    public void Write(WritableStream stream)
+    public void Write(IWritableStream stream)
     {
         Utils.SaveWithVersion(stream, new Utils.SaveCallback[]{() => {
             SaveObjectTypeMapping(stream);
@@ -61,9 +62,9 @@ public partial class ObjectsManager: Node
     public void ResetObjects()
     {
         objectIncID = 1;
-        foreach (RefObject obj in objects.Values)
+        foreach (IRefObject obj in objects.Values)
         {
-            obj.Free();
+            obj.ObjectFree();
         }
         objects.Clear();
     }
@@ -72,10 +73,10 @@ public partial class ObjectsManager: Node
     {
         objectTypeIncID = 1;
         objectTypeIndexed.Clear();
-        foreach (RefObjectType<RefObject> objType in objectTypes.Values)
+        foreach (RefObjectType<IRefObject> objType in objectTypes.Values)
         {
             objType.TypeIndex = 0;
-            if (objType is PlaceholderObjectType<RefObject>)
+            if (objType is PlaceholderObjectType<IRefObject>)
             {
                 objectTypes.Remove(objType.TypeID);
                 objType.Free();
@@ -83,35 +84,35 @@ public partial class ObjectsManager: Node
         }
     }
 
-    public T GetObjectOrNull<T>(ulong objectID) where T: RefObject
+    public T GetObjectOrThrow<T>(ulong objectID) where T : IRefObject
     {
         if (objects.ContainsKey(objectID))
         {
-            return objects[objectID] as T;
+            return (T)objects[objectID];
         }
-        return null;
+        throw new ObjectNotFoundException(objectID);
     }
 
-    public async Task<T> GetObjectAsync<T>(ulong objectID) where T: RefObject
+    public async Task<T> GetObjectAsync<T>(ulong objectID) where T : IRefObject
     {
         if (objects.ContainsKey(objectID))
         {
-            return objects[objectID] as T;
+            return (T)objects[objectID];
         }
         TaskCompletionSource<T> tcs = new TaskCompletionSource<T>();
         ObjectAddedEventHandler handler = null;
-        handler = (obj) => 
+        handler = (obj) =>
         {
             if (obj == null)
             {
                 ObjectAdded -= handler;
-                tcs.SetResult(null);
+                tcs.SetException(new ObjectManagerResetedException());
                 return;
             }
-            if (obj.objectID == objectID)
+            if (obj.ObjectID == objectID)
             {
                 ObjectAdded -= handler;
-                tcs.SetResult(obj as T);
+                tcs.SetResult((T)obj);
                 return;
             }
         };
@@ -119,7 +120,7 @@ public partial class ObjectsManager: Node
         return await tcs.Task;
     }
 
-    public void GetObjectCallback<T>(ulong objectID, Action<T> callback) where T: RefObject
+    public void GetObjectCallback<T>(ulong objectID, Action<T> callback) where T : IRefObject
     {
         GetObjectAsync<T>(objectID).ContinueWith(x => callback(x.Result));
     }
@@ -127,7 +128,7 @@ public partial class ObjectsManager: Node
     public void InitObjectTypeMapping(bool reset = true)
     {
         if (reset) ResetObjectTypes();
-        foreach (IRefObjectType<RefObject> objType in objectTypes.Values)
+        foreach (IRefObjectType<IRefObject> objType in objectTypes.Values)
         {
             if (objType.TypeIndex != 0) continue;
             objType.TypeIndex = objectTypeIncID;
@@ -136,25 +137,25 @@ public partial class ObjectsManager: Node
         }
     }
 
-    public void SaveObjectTypeMapping(WritableStream stream)
+    public void SaveObjectTypeMapping(IWritableStream stream)
     {
         stream.IntUnsigned(objectTypeIncID);
 
-        foreach (IRefObjectType<RefObject> objType in objectTypes.Values)
+        foreach (IRefObjectType<IRefObject> objType in objectTypes.Values)
         {
             stream.String(objType.TypeID);
         }
     }
 
-    public void LoadObjectTypeMapping(ReadableStream stream)
+    public void LoadObjectTypeMapping(IReadableStream stream)
     {
         uint count = stream.IntUnsigned();
         for (int i = 0; i < count; i++)
         {
             string typeID = stream.String();
-            IRefObjectType<RefObject> objType = objectTypes.ContainsKey(typeID)
+            IRefObjectType<IRefObject> objType = objectTypes.ContainsKey(typeID)
                 ? objectTypes[typeID]
-                : new PlaceholderObjectType<RefObject>(typeID);
+                : new PlaceholderObjectType<IRefObject>(typeID);
             objType.TypeIndex = objectTypeIncID;
             objectTypeIndexed.Add(objectTypeIncID, objType);
             objectTypeIncID++;
@@ -162,115 +163,128 @@ public partial class ObjectsManager: Node
         InitObjectTypeMapping(false);
     }
 
-    public void SaveObject(WritableStream stream, RefObject obj)
+    public void SaveObject(IWritableStream stream, IRefObject obj)
     {
         stream.IntUnsigned(obj.GetObjectType().TypeIndex);
         obj.SaveData(stream);
     }
 
-    public RefObject LoadObject(ReadableStream stream)
+    public IRefObject LoadObject(IReadableStream stream)
     {
         uint index = stream.IntUnsigned();
-        IRefObjectType<RefObject> objType = objectTypeIndexed[index];
-        RefObject obj = objType.LoadFrom(stream);
+        IRefObjectType<IRefObject> objType = objectTypeIndexed[index];
+        IRefObject obj = objType.LoadFrom(stream);
         return obj;
     }
 
-    public void SaveObjects(WritableStream stream)
+    public void SaveObjects(IWritableStream stream)
     {
         stream.IntUnsigned((uint)objects.Count);
-        foreach (RefObject obj in objects.Values)
+        foreach (IRefObject obj in objects.Values)
         {
             SaveObject(stream, obj);
         }
     }
 
-    public void LoadObjects(ReadableStream stream)
+    public void LoadObjects(IReadableStream stream)
     {
         uint count = stream.IntUnsigned();
         for (int i = 0; i < count; i++)
         {
-            RefObject obj = LoadObject(stream);
+            IRefObject obj = LoadObject(stream);
+        }
+    }
+
+    public class ObjectNotFoundException: Exception
+    {
+        public ulong ObjectID;
+        public ObjectNotFoundException(ulong objectID): base($"Object with ID {objectID} not found")
+        {
+            ObjectID = objectID;
+        }
+    }
+    
+    public class ObjectManagerResetedException: Exception
+    {
+        public ObjectManagerResetedException(): base("Object manager reseted")
+        {
         }
     }
 }
 
-public partial class RefObject: Node
+public interface IRefObject
 {
-    public static readonly RefObjectType<RefObject> TYPE = new EmptyConstructObjectType<RefObject>("RefObject");
     public static readonly StringName GROUP_NAME = "objects";
 
-    public ulong objectID = 0;
+    ulong ObjectID { get; set; }
 
-    public virtual RefObjectType<RefObject> _GetType()
+    RefObjectType<IRefObject> _GetType();
+    void _ObjectInit();
+    void _ObjectReady();
+    void _ObjectFree();
+    void _LoadData(IReadableStream stream);
+    void _SaveData(IWritableStream stream);
+}
+
+public static class IRefObjectEx
+{
+    public static RefObjectType<T> GetObjectType<T>(this T obj) where T : IRefObject
     {
-        return TYPE;
+        return obj._GetType() as RefObjectType<T>;
     }
 
-    public RefObjectType<RefObject> GetObjectType()
+    public static void ObjectInit(this IRefObject obj)
     {
-        return _GetType();
-    }
-
-    public virtual void _ObjectInit()
-    {
-        Name = GetObjectType().TypeID + "_" + objectID;
-        AddToGroup(GROUP_NAME);
-    }
-
-    public virtual void _ObjectReady()
-    {
-        if (!IsInsideTree())
-        {
-            Vars.objects.AddChild(this);
+        if (obj is Node node){
+            node.Name = obj.GetObjectType().TypeID + "_" + obj.ObjectID;
+            node.AddToGroup(IRefObject.GROUP_NAME);
         }
+        obj._ObjectInit();
     }
 
-    public virtual void _ObjectFree()
+    public static void ObjectReady(this IRefObject obj)
     {
-        Vars.objects.RemoveObject(this);
+        if (obj is Node node){
+            if (!node.IsInsideTree())
+                Vars.objects.AddChild(node);
+        }
+        obj._ObjectReady();
     }
 
-    public new void Free()
+    public static void ObjectFree(this IRefObject obj)
     {
-        _ObjectFree();
-        base.Free();
+        obj._ObjectFree();
+        Vars.objects.RemoveObject(obj);
+        if (obj is GodotObject godotObject)
+            godotObject.Free();
     }
 
-    public virtual void _LoadData(ReadableStream stream)
-    {
-    }
-
-    public virtual void _SaveData(WritableStream stream)
-    {
-    }
-
-    public void LoadData(ReadableStream stream)
+    public static void LoadData(this IRefObject obj, IReadableStream stream)
     {
         Utils.LoadWithVersion(stream, new Utils.LoadCallback[]{() => {
-            objectID = stream.LongUnsigned();
+            obj.ObjectID = stream.LongUnsigned();
         }});
-        _LoadData(stream);
+        obj._LoadData(stream);
     }
 
-    public void SaveData(WritableStream stream)
+    public static void SaveData(this IRefObject obj, IWritableStream stream)
     {
         Utils.SaveWithVersion(stream, new Utils.SaveCallback[]{() => {
-            stream.LongUnsigned(objectID);
+            stream.LongUnsigned(obj.ObjectID);
         }});
-        _SaveData(stream);
+        obj._SaveData(stream);
     }
 }
 
-public interface IRefObjectType<out T> where T: RefObject
+public interface IRefObjectType<out T> where T : IRefObject
 {
-    abstract string TypeID{ get; }
-    abstract uint TypeIndex{ get; set; }
+    abstract string TypeID { get; }
+    abstract uint TypeIndex { get; set; }
     T Create(bool init = true);
-    T LoadFrom(ReadableStream stream);
+    T LoadFrom(IReadableStream stream);
 }
 
-public partial class RefObjectType<T>: Resource, IRefObjectType<T> where T: RefObject
+public partial class RefObjectType<T> : Resource, IRefObjectType<T> where T : IRefObject
 {
     // TODO: Mod name + typeID = TypeID
 
@@ -280,18 +294,18 @@ public partial class RefObjectType<T>: Resource, IRefObjectType<T> where T: RefO
         protected set { TypeID = value; }
     }
 
-    public virtual uint TypeIndex{ get; set; }
+    public virtual uint TypeIndex { get; set; }
 
     public RefObjectType(string typeID)
     {
         TypeID = typeID;
         TypeIndex = 0;
-        Vars.objects.objectTypes.Add(TypeID, this);
+        Vars.objects.objectTypes.Add(TypeID, (IRefObjectType<IRefObject>)this);
     }
 
     public virtual T _Create()
     {
-        return null;
+        throw new NotImplementedException();
     }
 
     public virtual void InitObject(T obj)
@@ -307,7 +321,7 @@ public partial class RefObjectType<T>: Resource, IRefObjectType<T> where T: RefO
         return obj;
     }
 
-    public virtual T LoadFrom(ReadableStream stream)
+    public virtual T LoadFrom(IReadableStream stream)
     {
         T obj = _Create();
         obj.LoadData(stream);
@@ -316,9 +330,9 @@ public partial class RefObjectType<T>: Resource, IRefObjectType<T> where T: RefO
     }
 }
 
-public partial class EmptyConstructObjectType<T>: RefObjectType<T> where T: RefObject, new()
+public partial class EmptyConstructObjectType<T> : RefObjectType<T> where T : IRefObject, new()
 {
-    public EmptyConstructObjectType(string typeID): base(typeID) { }
+    public EmptyConstructObjectType(string typeID) : base(typeID) { }
 
     public override T _Create()
     {
@@ -326,7 +340,7 @@ public partial class EmptyConstructObjectType<T>: RefObjectType<T> where T: RefO
     }
 }
 
-public partial class PlaceholderObjectType<T>: RefObjectType<T> where T: RefObject
+public partial class PlaceholderObjectType<T> : RefObjectType<T> where T : IRefObject
 {
-    public PlaceholderObjectType(string typeID): base(typeID) { }
+    public PlaceholderObjectType(string typeID) : base(typeID) { }
 }

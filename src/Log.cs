@@ -85,7 +85,7 @@ public partial class Log : Node
         {
             this.source = source;
             sourceTranslated = TranslationServer.Translate(source);
-            sourceTranslated.PadRight(longestLoggerNameLength);
+            sourceTranslated = sourceTranslated.PadRight(longestLoggerNameLength);
             loggers.Add(this);
             if (sourceTranslated.Length > longestLoggerNameLength)
             {
@@ -105,7 +105,7 @@ public partial class Log : Node
 
         public void Log(LogLevel level, string message)
         {
-            string formatted = $"[{sourceTranslated}] [{level.name}] {message}";
+            string formatted = $"[{sourceTranslated}] \t[{level.name}] \t{message}";
             GD.Print(formatted);
             if (OnLog != null) OnLog(this, level, formatted);
             if (Singleton != null) Singleton.EmitSignal("OnLogSignal", this, level, formatted);
