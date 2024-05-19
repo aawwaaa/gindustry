@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Threading.Tasks;
 
 public partial class Main : Node
 {
@@ -11,6 +12,6 @@ public partial class Main : Node
 
         GDScript script = GD.Load<GDScript>("res://main.gd");
         GodotObject result = (GodotObject)script.New();
-        result.Call("_ready");
+        result.Call("_ready"); 
     }
 }
