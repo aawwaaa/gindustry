@@ -13,5 +13,7 @@ public partial class Main : Node
         GDScript script = GD.Load<GDScript>("res://main.gd");
         GodotObject result = (GodotObject)script.New();
         result.Call("_ready"); 
+
+        Vars.core.StartLoad();
     }
 }

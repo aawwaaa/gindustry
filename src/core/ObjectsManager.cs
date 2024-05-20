@@ -33,7 +33,7 @@ public partial class ObjectsManager : Node
         objects.Remove(obj.ObjectID);
     }
 
-    public void ModuleReset()
+    public void ModuleGameReset()
     {
         if (ObjectAdded != null) ObjectAdded(null);
         ResetObjectTypes();
@@ -41,12 +41,12 @@ public partial class ObjectsManager : Node
         autoReady = false;
     }
 
-    public void ModuleInit()
+    public void ModuleGameInit()
     {
         InitObjectTypeMapping();
     }
 
-    public void ModuleReady()
+    public void ModuleGameReady()
     {
         foreach (IRefObject obj in objects.Values)
         {
@@ -55,7 +55,7 @@ public partial class ObjectsManager : Node
         autoReady = true;
     }
 
-    public void ModuleLoad(IReadableStream stream)
+    public void ModuleGameLoad(IReadableStream stream)
     {
         Utils.LoadWithVersion(stream, new Utils.LoadCallback[]{() => {
             LoadObjectTypeMapping(stream);
@@ -63,7 +63,7 @@ public partial class ObjectsManager : Node
         }});
     }
 
-    public void ModuleSave(IWritableStream stream)
+    public void ModuleGameSave(IWritableStream stream)
     {
         Utils.SaveWithVersion(stream, new Utils.SaveCallback[]{() => {
             SaveObjectTypeMapping(stream);

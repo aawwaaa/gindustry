@@ -84,7 +84,7 @@ public partial class Log : Node
         public Logger(string source)
         {
             this.source = source;
-            sourceTranslated = TranslationServer.Translate(source);
+            sourceTranslated = Tr(source);
             sourceTranslated = sourceTranslated.PadRight(longestLoggerNameLength);
             loggers.Add(this);
             if (sourceTranslated.Length > longestLoggerNameLength)
@@ -151,7 +151,7 @@ public partial class Log : Node
         public Progress(string source, string message, int total)
         {
             this.source = source;
-            sourceTranslated = TranslationServer.Translate(source);
+            sourceTranslated = Tr(source);
             this.total = total;
             progresses.Add(this);
             if(Log.OnProgressAdded != null) Log.OnProgressAdded(this);
@@ -163,7 +163,7 @@ public partial class Log : Node
         public void SetMessage(string message)
         {
             this.message = message;
-            messageTranslated = TranslationServer.Translate(message);
+            messageTranslated = Tr(message);
             if (Log.OnProgressChanged != null) Log.OnProgressChanged(this, current, total);
             if (Singleton != null) Singleton.EmitSignal("OnProgressChangedSignal", this);
             if (OnProgressChanged != null) OnProgressChanged(this, current, total);

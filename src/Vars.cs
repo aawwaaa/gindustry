@@ -7,12 +7,16 @@ public partial class Vars: Node
 
     public static SceneTree tree;
 
+    public static CoreClass core;
+
     public static ObjectsManager objects;
     public static GameManager game;
 
     public override void _Ready()
     {
         tree = GetTree();
+
+        core = Attach(new CoreClass());
 
         objects = Attach(new ObjectsManager());
         game = Attach(new GameManager());
@@ -28,6 +32,11 @@ public partial class Vars: Node
     public ObjectsManager Objects
     {
         get { return objects; }
+    }
+
+    public CoreClass Core
+    {
+        get { return core; }
     }
 
     public GameManager Game
