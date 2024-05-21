@@ -12,15 +12,15 @@ config_version=5
 
 config/name="gindustry"
 config/version="1.0.0"
-run/main_scene="res://main.tscn"
-config/features=PackedStringArray("4.2", "C#", "GL Compatibility")
+run/main_scene="res://ui/main.tscn"
+config/features=PackedStringArray("4.2", "GL Compatibility")
 config/icon="res://mods/gindustry/icon.png"
 
 [autoload]
 
-Log="*res://src/Log.cs"
-Utils="*res://src/Utils.cs"
-Vars="*res://src/Vars.cs"
+Utils="*res://scripts/utils.gd"
+Log="*res://scripts/log.gd"
+Vars="*res://scripts/vars.gd"
 
 [debug]
 
@@ -31,10 +31,6 @@ gdscript/warnings/enable=false
 window/stretch/aspect="expand"
 window/custom=""
 window/version="1.0.0"
-
-[dotnet]
-
-project/assembly_name="gindustry"
 
 [editor]
 
