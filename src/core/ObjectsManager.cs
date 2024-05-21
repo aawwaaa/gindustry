@@ -15,8 +15,6 @@ public partial class ObjectsManager : Node
     public delegate void ObjectAddedEventHandler(IRefObject obj);
     public event ObjectAddedEventHandler ObjectAdded;
 
-    public bool autoReady = false;
-
     public void AddObject(IRefObject obj)
     {
         if (obj.ObjectID == 0)
@@ -33,29 +31,19 @@ public partial class ObjectsManager : Node
         objects.Remove(obj.ObjectID);
     }
 
-    public void ModuleReset()
+    public void Reset()
     {
         if (ObjectAdded != null) ObjectAdded(null);
         ResetObjectTypes();
         ResetObjects();
-        autoReady = false;
     }
 
-    public void ModuleInit()
+    public void Init()
     {
         InitObjectTypeMapping();
     }
 
-    public void ModuleReady()
-    {
-        foreach (IRefObject obj in objects.Values)
-        {
-            obj.ObjectReady();
-        }
-        autoReady = true;
-    }
-
-    public void ModuleLoad(IReadableStream stream)
+    public void Load(IReadableStream stream)
     {
         Utils.LoadWithVersion(stream, new Utils.LoadCallback[]{() => {
             LoadObjectTypeMapping(stream);
@@ -63,7 +51,7 @@ public partial class ObjectsManager : Node
         }});
     }
 
-    public void ModuleSave(IWritableStream stream)
+    public void Write(IWritableStream stream)
     {
         Utils.SaveWithVersion(stream, new Utils.SaveCallback[]{() => {
             SaveObjectTypeMapping(stream);
@@ -85,13 +73,13 @@ public partial class ObjectsManager : Node
     {
         objectTypeIncID = 1;
         objectTypeIndexed.Clear();
-        foreach (IRefObjectType<IRefObject> objType in objectTypes.Values)
+        foreach (RefObjectType<IRefObject> objType in objectTypes.Values)
         {
             objType.TypeIndex = 0;
-            if (objType is PlaceholderObjectType<IRefObject> placeholder)
+            if (objType is PlaceholderObjectType<IRefObject>)
             {
                 objectTypes.Remove(objType.TypeID);
-                placeholder.Free();
+                objType.Free();
             }
         }
     }
@@ -151,7 +139,7 @@ public partial class ObjectsManager : Node
 
     public void SaveObjectTypeMapping(IWritableStream stream)
     {
-        stream.IntUnsigned(objectTypeIncID - 1);
+        stream.IntUnsigned(objectTypeIncID);
 
         foreach (IRefObjectType<IRefObject> objType in objectTypes.Values)
         {
@@ -185,7 +173,7 @@ public partial class ObjectsManager : Node
     {
         uint index = stream.IntUnsigned();
         IRefObjectType<IRefObject> objType = objectTypeIndexed[index];
-        IRefObject obj = objType.LoadFromAndInit(stream);
+        IRefObject obj = objType.LoadFrom(stream);
         return obj;
     }
 
@@ -230,7 +218,7 @@ public interface IRefObject
 
     ulong ObjectID { get; set; }
 
-    IRefObjectType<IRefObject> _GetType();
+    RefObjectType<IRefObject> _GetType();
     void _ObjectInit();
     void _ObjectReady();
     void _ObjectFree();
@@ -240,23 +228,18 @@ public interface IRefObject
 
 public static class IRefObjectEx
 {
-    public static IRefObjectType<T> GetObjectType<T>(this T obj) where T : IRefObject
+    public static RefObjectType<T> GetObjectType<T>(this T obj) where T : IRefObject
     {
-        return obj._GetType() as IRefObjectType<T>;
+        return obj._GetType() as RefObjectType<T>;
     }
 
     public static void ObjectInit(this IRefObject obj)
     {
-        Vars.objects.AddObject(obj);
         if (obj is Node node){
-            node.Name = obj.GetObjectType().TypeID + "#" + obj.ObjectID;
+            node.Name = obj.GetObjectType().TypeID + "_" + obj.ObjectID;
             node.AddToGroup(IRefObject.GROUP_NAME);
         }
         obj._ObjectInit();
-        if (Vars.objects.autoReady)
-        {
-            obj.ObjectReady();
-        }
     }
 
     public static void ObjectReady(this IRefObject obj)
@@ -272,11 +255,8 @@ public static class IRefObjectEx
     {
         obj._ObjectFree();
         Vars.objects.RemoveObject(obj);
-        if (obj is GodotObject gobj)
-        {
-            if (gobj is Node node) node.QueueFree();
-            else gobj.Free();
-        }
+        if (obj is GodotObject godotObject)
+            godotObject.Free();
     }
 
     public static void LoadData(this IRefObject obj, IReadableStream stream)
@@ -300,34 +280,21 @@ public interface IRefObjectType<out T> where T : IRefObject
 {
     abstract string TypeID { get; }
     abstract uint TypeIndex { get; set; }
-    T Create();
+    T Create(bool init = true);
     T LoadFrom(IReadableStream stream);
-}
-
-public static class IRefObjectTypeEx
-{
-    public static T CreateAndInit<T>(this IRefObjectType<T> objType) where T : IRefObject
-    {
-        T obj = objType.Create();
-        obj.ObjectInit();
-        return obj;
-    }
-
-    public static T LoadFromAndInit<T>(this IRefObjectType<T> objType, IReadableStream stream) where T : IRefObject
-    {
-        T obj = objType.LoadFrom(stream);
-        obj.ObjectInit();
-        return obj;
-    }
 }
 
 public partial class RefObjectType<T> : Resource, IRefObjectType<T> where T : IRefObject
 {
     // TODO: Mod name + typeID = TypeID
 
-    public string TypeID { get; protected set; }
+    public virtual string TypeID
+    {
+        get { return TypeID; }
+        protected set { TypeID = value; }
+    }
 
-    public uint TypeIndex { get; set; }
+    public virtual uint TypeIndex { get; set; }
 
     public RefObjectType(string typeID)
     {
@@ -340,16 +307,25 @@ public partial class RefObjectType<T> : Resource, IRefObjectType<T> where T : IR
     {
         throw new NotImplementedException();
     }
-    public virtual T Create()
+
+    public virtual void InitObject(T obj)
+    {
+        Vars.objects.AddObject(obj);
+        obj._ObjectInit();
+    }
+
+    public virtual T Create(bool init = true)
     {
         T obj = _Create();
+        if (init) InitObject(obj);
         return obj;
     }
 
     public virtual T LoadFrom(IReadableStream stream)
     {
-        T obj = Create();
+        T obj = _Create();
         obj.LoadData(stream);
+        InitObject(obj);
         return obj;
     }
 }
