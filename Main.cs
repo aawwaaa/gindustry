@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 public partial class Main : Node
 {
-    public static Log.Logger logger = new Log.Logger("main-log-source");
+    public static Log.Logger logger = new Log.Logger("main_log_source");
 
     public override void _Ready()
     {
@@ -15,6 +15,5 @@ public partial class Main : Node
         result.Call("_ready"); 
 
         Vars.core.StartLoad();
-        Vars.game.InitGame();
     }
 }

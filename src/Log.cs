@@ -10,17 +10,17 @@ public partial class Log : Node
     public static readonly List<Progress> progresses = new List<Progress>();
 
     public delegate void LogListener(Logger logger, LogLevel level, string message);
-    public static event LogListener LogEvent;
+    public static event LogListener OnLog;
 
     public delegate void ProgressListener(Progress progress);
-    public static event ProgressListener ProgressAdded;
-    public static event ProgressListener ProgressFinished;
+    public static event ProgressListener OnProgressAdded;
+    public static event ProgressListener OnProgressFinished;
 
-    public delegate void ProgressChangedHandler (Progress progress, int current, int total);
-    public static event ProgressChangedHandler ProgressChanged;
+    public delegate void ProgressChanged (Progress progress, int current, int total);
+    public static event ProgressChanged OnProgressChanged;
 
     public delegate void TriggerListener();
-    public static event TriggerListener ProgressAllFinished;
+    public static event TriggerListener OnProgressAllFinished;
 
     public static readonly StringName SINGLETON_NAME = "Log";
 
@@ -34,15 +34,15 @@ public partial class Log : Node
     }
 
     [Signal]
-    public delegate void LogSignalEventHandler(Logger logger, LogLevel level, string message);
+    public delegate void OnLogSignalEventHandler(Logger logger, LogLevel level, string message);
     [Signal]
-    public delegate void ProgressSignalAddedEventHandler(Progress progress);
+    public delegate void OnProgressSignalAddedEventHandler(Progress progress);
     [Signal]
-    public delegate void ProgressFinishedSignalEventHandler(Progress progress);
+    public delegate void OnProgressFinishedSignalEventHandler(Progress progress);
     [Signal]
-    public delegate void ProgressChangedSignalEventHandler (Progress progress, int current, int total);
+    public delegate void OnProgressChangedSignalEventHandler (Progress progress, int current, int total);
     [Signal]
-    public delegate void ProgressAllFinishedSignalEventHandler ();
+    public delegate void OnProgressAllFinishedSignalEventHandler ();
 
     public Logger[] GetLoggers()
     {
@@ -58,10 +58,10 @@ public partial class Log : Node
     {
         public static readonly List<LogLevel> values = new List<LogLevel>();
 
-        public static readonly LogLevel Debug = new LogLevel("log-level-debug");
-        public static readonly LogLevel Info = new LogLevel("log-level-info");
-        public static readonly LogLevel Warning = new LogLevel("log-level-warning");
-        public static readonly LogLevel Error = new LogLevel("log-level-error");
+        public static readonly LogLevel Debug = new LogLevel("log_level_debug");
+        public static readonly LogLevel Info = new LogLevel("log_level_info");
+        public static readonly LogLevel Warning = new LogLevel("log_level_warning");
+        public static readonly LogLevel Error = new LogLevel("log_level_error");
 
         public string name;
         private LogLevel(string name)
@@ -107,8 +107,8 @@ public partial class Log : Node
         {
             string formatted = $"[{sourceTranslated}] \t[{level.name}] \t{message}";
             GD.Print(formatted);
-            if (LogEvent != null) LogEvent(this, level, formatted);
-            if (Singleton != null) Singleton.EmitSignal("LogSignal", this, level, formatted);
+            if (OnLog != null) OnLog(this, level, formatted);
+            if (Singleton != null) Singleton.EmitSignal("OnLogSignal", this, level, formatted);
         }
 
         public void Info(string message)
@@ -143,10 +143,10 @@ public partial class Log : Node
         public int total;
         public int current = 0;
 
-        public event ProgressChangedHandler ProgressChanged;
+        public event ProgressChanged OnProgressChanged;
 
         [Signal]
-        public delegate void ProgressChangedSignalEventHandler (Progress progress, int current, int total);
+        public delegate void OnProgressChangedSignalEventHandler (Progress progress, int current, int total);
 
         public Progress(string source, string message, int total)
         {
@@ -154,8 +154,8 @@ public partial class Log : Node
             sourceTranslated = Tr(source);
             this.total = total;
             progresses.Add(this);
-            if(Log.ProgressAdded != null) Log.ProgressAdded(this);
-            if (Singleton != null) Singleton.EmitSignal("ProgressAddedSignal", this);
+            if(Log.OnProgressAdded != null) Log.OnProgressAdded(this);
+            if (Singleton != null) Singleton.EmitSignal("OnProgressAddedSignal", this);
 
             SetMessage(message);
         }
@@ -164,10 +164,10 @@ public partial class Log : Node
         {
             this.message = message;
             messageTranslated = Tr(message);
-            if (Log.ProgressChanged != null) Log.ProgressChanged(this, current, total);
-            if (Singleton != null) Singleton.EmitSignal("ProgressChangedSignal", this);
-            if (ProgressChanged != null) ProgressChanged(this, current, total);
-            EmitSignal("ProgressChangedSignal", this, current, total);
+            if (Log.OnProgressChanged != null) Log.OnProgressChanged(this, current, total);
+            if (Singleton != null) Singleton.EmitSignal("OnProgressChangedSignal", this);
+            if (OnProgressChanged != null) OnProgressChanged(this, current, total);
+            EmitSignal("OnProgressChangedSignal", this, current, total);
 
         }
 
@@ -175,22 +175,22 @@ public partial class Log : Node
         {
             current += amount;
             if (current > total) current = total;
-            if (Log.ProgressChanged != null) Log.ProgressChanged(this, current, total);
-            if (Singleton != null) Singleton.EmitSignal("ProgressChangedSignal", this);
-            if (ProgressChanged != null) ProgressChanged(this, current, total);
-            EmitSignal("ProgressChangedSignal", this, current, total);
+            if (Log.OnProgressChanged != null) Log.OnProgressChanged(this, current, total);
+            if (Singleton != null) Singleton.EmitSignal("OnProgressChangedSignal", this);
+            if (OnProgressChanged != null) OnProgressChanged(this, current, total);
+            EmitSignal("OnProgressChangedSignal", this, current, total);
         }
 
         public void Finish()
         {
             current = total;
             progresses.Remove(this);
-            if (Log.ProgressFinished != null) Log.ProgressFinished(this);
-            if (Singleton != null) Singleton.EmitSignal("ProgressFinishedSignal", this);
-            if (ProgressChanged != null) ProgressChanged(this, current, total);
-            EmitSignal("ProgressChangedSignal", this, current, total);
-            if (progresses.Count == 0 && Log.ProgressAllFinished != null) Log.ProgressAllFinished();
-            if (Singleton != null) Singleton.EmitSignal("ProgressAllFinishedSignal");
+            if (Log.OnProgressFinished != null) Log.OnProgressFinished(this);
+            if (Singleton != null) Singleton.EmitSignal("OnProgressFinishedSignal", this);
+            if (OnProgressChanged != null) OnProgressChanged(this, current, total);
+            EmitSignal("OnProgressChangedSignal", this, current, total);
+            if (progresses.Count == 0 && Log.OnProgressAllFinished != null) Log.OnProgressAllFinished();
+            if (Singleton != null) Singleton.EmitSignal("OnProgressAllFinishedSignal");
         }
     }
 

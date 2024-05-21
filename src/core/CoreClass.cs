@@ -3,12 +3,12 @@ using System;
 
 public partial class CoreClass: Node
 {
-    public Log.Logger logger = Log.CreateLogger("core-log-source");
+    public Log.Logger logger = Log.CreateLogger("core_log_source");
 
     // GameState
     public enum GameState
     {
-        Loading, MainMenu, PresetConfifg, LoadingGame, InGame, ResetingGame
+        Loading, MainMenu, PresetConfifg, LoadingGame, InGame
     }
     /*
         Available changing:
@@ -21,13 +21,13 @@ public partial class CoreClass: Node
             LoadingGame => InGame                    // game loaded
             InGame => MainMenu                       // back to main menu
         Auto execute:
-            * => MainMenu               : Show main menu TODO
-            MainMenu => *               : Hide main menu TODO
-            * => Loading/LoadingGame    : Show loading ui TODO
-            Loading/LoadingGame => *    : Hide loading ui TODO
-            LoadingGame => InGame       : Ready game DOING
-            * => InGame                 : Show game ui TODO
-            InGame => *                 : Reset game DOING, Hide game ui TODO
+            * => MainMenu               : Show main menu
+            MainMenu => *               : Hide main menu
+            * => Loading/LoadingGame    : Show loading ui
+            Loading/LoadingGame => *    : Hide loading ui
+            LoadingGame => InGame       : Ready game
+            * => InGame                 : Show game ui
+            InGame => *                 : Reset game, Hide game ui
     */
     public readonly StateMachine state = new StateMachine();
 
@@ -42,7 +42,7 @@ public partial class CoreClass: Node
     }
     public bool IsLoading()
     {
-        return GetState() == GameState.Loading || GetState() == GameState.LoadingGame || GetState() == GameState.ResetingGame;
+        return GetState() == GameState.Loading || GetState() == GameState.LoadingGame;
     }
     public bool IsInGame()
     {
@@ -58,7 +58,7 @@ public partial class CoreClass: Node
         state.Name = "State";
         AddChild(state);
 
-        Log.ProgressAllFinished += OnLogProgressesAllFinished;
+        Log.OnProgressAllFinished += OnLogProgressesAllFinished;
         state.StateChanged += OnStateStateChanged;
     }
 
@@ -72,14 +72,14 @@ public partial class CoreClass: Node
     {
         string newStateName = Enum.GetName(typeof(GameState), newState);
         string oldStateName = oldState == StateMachine.NOT_INITIALZIED? "<Null>": Enum.GetName(typeof(GameState), oldState);
-        logger.Info(Tr("core-state-changed {src} => {dst}")
-                .Fmt("src", Tr("core-state-" + oldStateName))
-                .Fmt("dst", Tr("core-state-" + newStateName)));
+        logger.Info(Tr("core_state_changed {src} => {dst}")
+                .Fmt("src", oldStateName)
+                .Fmt("dst", newStateName));
     }
 
     public void StartLoad()
     {
-        Log.Progress progress = Log.CreateProgress("core-loading", "", 100);
+        Log.Progress progress = Log.CreateProgress("core_loading", "", 100);
         state.SetState((int)GameState.Loading);
         progress.Finish();
     }

@@ -10,7 +10,7 @@ public partial class Utils : Node
 
     public override void _Ready()
     {
-        serialize = Attach(new Serialize());
+        serialize = new Serialize();
     }
 
     public T Attach<T>(T obj) where T: Node
