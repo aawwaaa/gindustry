@@ -93,7 +93,7 @@ public interface IWritableStream
     // TODO void Object(object value);
 }
 
-public static class IWritebleStreamEx
+public static class IWritableStreamEx
 {
     public static IWritableStream Write(this IWritableStream stream)
     {

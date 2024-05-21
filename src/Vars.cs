@@ -8,15 +8,19 @@ public partial class Vars: Node
     public static SceneTree tree;
 
     public static CoreClass core;
+    public static ModsManager mods;
 
     public static ObjectsManager objects;
     public static GameManager game;
 
     public override void _Ready()
     {
+        ProcessMode = ProcessModeEnum.Always;
+
         tree = GetTree();
 
         core = Attach(new CoreClass());
+        mods = Attach(new ModsManager());
 
         objects = Attach(new ObjectsManager());
         game = Attach(new GameManager());
@@ -42,5 +46,10 @@ public partial class Vars: Node
     public GameManager Game
     {
         get { return game; }
+    }
+
+    public ModsManager Mods
+    {
+        get { return mods; }
     }
 }

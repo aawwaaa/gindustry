@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Serialize
+public partial class Serialize: Node
 {
     // TODO
 }

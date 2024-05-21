@@ -4,12 +4,10 @@
 	"description": "Gindustry contents",
 	"author": "awa",
 	"version": "1.0.0",
-	"displayVersion": "1.0.0",
 	"depends": {
 		"builtin": "1.0.0+"
 	},
 	"excepts": [],
-	"icon": "icon.png",
-	"iconType": "png",
+	"icon": "res://mods/gindustry/icon.png",
 	"main": "res://mods/gindustry/scripts/main.gd"
 }
