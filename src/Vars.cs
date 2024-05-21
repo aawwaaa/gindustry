@@ -8,14 +8,12 @@ public partial class Vars: Node
     public static SceneTree tree;
 
     public static ObjectsManager objects;
-    public static GameManager game;
 
     public override void _Ready()
     {
         tree = GetTree();
 
         objects = Attach(new ObjectsManager());
-        game = Attach(new GameManager());
     }
 
     public T Attach<T>(T obj) where T: Node
@@ -28,10 +26,5 @@ public partial class Vars: Node
     public ObjectsManager Objects
     {
         get { return objects; }
-    }
-
-    public GameManager Game
-    {
-        get { return game; }
     }
 }

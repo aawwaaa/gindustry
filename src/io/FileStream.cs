@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class FileStream : GodotObject, IReadableStream, IWritableStream
+public partial class FileStream : GodotObject, ReadableStream, WritableStream
 {
     private FileAccess access;
 

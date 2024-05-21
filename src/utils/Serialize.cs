@@ -1,7 +1,9 @@
 using Godot;
 using System;
 
-public class Serialize
+public partial class Utils
 {
-    // TODO
+    public static class serialize
+    {
+    }
 }
