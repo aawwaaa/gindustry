@@ -22,26 +22,7 @@ public partial class Log : Node
     public delegate void TriggerListener();
     public static event TriggerListener OnProgressAllFinished;
 
-    public static Log Singleton
-    {
-        get
-        {
-            return (Log)Engine.GetSingleton("Log");
-        }
-    }
-
-    [Signal]
-    public delegate void OnLogSignalEventHandler(Logger logger, LogLevel level, string message);
-    [Signal]
-    public delegate void OnProgressSignalAddedEventHandler(Progress progress);
-    [Signal]
-    public delegate void OnProgressFinishedSignalEventHandler(Progress progress);
-    [Signal]
-    public delegate void OnProgressChangedSignalEventHandler (Progress progress, int current, int total);
-    [Signal]
-    public delegate void OnProgressAllFinishedSignalEventHandler ();
-
-    public partial class LogLevel: GodotObject
+    public class LogLevel
     {
         public static readonly List<LogLevel> values = new List<LogLevel>();
 
@@ -62,7 +43,7 @@ public partial class Log : Node
         }
     }
 
-    public partial class Logger: GodotObject
+    public class Logger
     {
         public string source;
         public string sourceTranslated;
@@ -84,10 +65,9 @@ public partial class Log : Node
             }
         }
 
-        public new void Free()
+        public void Free()
         {
             loggers.Remove(this);
-            base.Free();
         }
 
         public void Log(LogLevel level, string message)
@@ -95,7 +75,6 @@ public partial class Log : Node
             string formatted = $"[{sourceTranslated}] [{level.name}] {message}";
             GD.Print(formatted);
             if (OnLog != null) OnLog(this, level, formatted);
-            Singleton.EmitSignal("OnLogSignal", this, level, formatted);
         }
 
         public void Info(string message)
@@ -119,7 +98,7 @@ public partial class Log : Node
         }
     }
 
-    public partial class Progress: GodotObject
+    public class Progress
     {
         public string source;
         public string sourceTranslated;
@@ -132,9 +111,6 @@ public partial class Log : Node
 
         public event ProgressChanged OnProgressChanged;
 
-        [Signal]
-        public delegate void OnProgressChangedSignalEventHandler (Progress progress, int current, int total);
-
         public Progress(string source, string message, int total)
         {
             this.source = source;
@@ -142,7 +118,6 @@ public partial class Log : Node
             this.total = total;
             progresses.Add(this);
             if(Log.OnProgressAdded != null) Log.OnProgressAdded(this);
-            Singleton.EmitSignal("OnProgressAddedSignal", this);
 
             SetMessage(message);
         }
@@ -152,10 +127,7 @@ public partial class Log : Node
             this.message = message;
             messageTranslated = TranslationServer.Translate(message);
             if (Log.OnProgressChanged != null) Log.OnProgressChanged(this, current, total);
-            Singleton.EmitSignal("OnProgressChangedSignal", this);
             if (OnProgressChanged != null) OnProgressChanged(this, current, total);
-            EmitSignal("OnProgressChangedSignal", this, current, total);
-
         }
 
         public void AddProgress(int amount)
@@ -163,9 +135,7 @@ public partial class Log : Node
             current += amount;
             if (current > total) current = total;
             if (Log.OnProgressChanged != null) Log.OnProgressChanged(this, current, total);
-            Singleton.EmitSignal("OnProgressChangedSignal", this);
             if (OnProgressChanged != null) OnProgressChanged(this, current, total);
-            EmitSignal("OnProgressChangedSignal", this, current, total);
         }
 
         public void Finish()
@@ -173,11 +143,8 @@ public partial class Log : Node
             current = total;
             progresses.Remove(this);
             if (Log.OnProgressFinished != null) Log.OnProgressFinished(this);
-            Singleton.EmitSignal("OnProgressFinishedSignal", this);
             if (OnProgressChanged != null) OnProgressChanged(this, current, total);
-            EmitSignal("OnProgressChangedSignal", this, current, total);
-            if (progresses.Count == 0 && Log.OnProgressAllFinished != null) Log.OnProgressAllFinished();
-            Singleton.EmitSignal("OnProgressAllFinishedSignal");
+            if (progresses.Count == 0 && OnProgressAllFinished != null) OnProgressAllFinished();
         }
     }
 }
