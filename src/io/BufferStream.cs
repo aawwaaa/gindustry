@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class BufferStream : GodotObject, ReadableStream, WriteableStream
+public class BufferStream : ReadableStream, WriteableStream
 {
     public long expandSize;
 

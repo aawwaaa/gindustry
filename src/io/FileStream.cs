@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class FileStream : GodotObject, ReadableStream, WriteableStream
+public class FileStream: ReadableStream, WriteableStream
 {
     private FileAccess access;
 
@@ -9,49 +9,49 @@ public class FileStream : GodotObject, ReadableStream, WriteableStream
         this.access = access;
     }
 
-    public void Close() {
+    public virtual void Close() {
         access.Close();
     }
 
-    public void Flush() {
+    public virtual void Flush() {
         access.Flush();
     }
 
-    public void Seek(long offset){
+    public virtual void Seek(long offset){
         access.Seek((ulong)((long)Position + offset));
     }
 
-    public ulong Position
+    public virtual ulong Position
     {
         get{ return access.GetPosition(); }
     }
 
-    public byte[] Bytes(long length)
+    public virtual byte[] Bytes(long length)
     {
         return access.GetBuffer(length);
     }
-    public byte Byte()
+    public virtual byte Byte()
     {
         return access.Get8();
     }
-    public ushort ShortUnsigned()
+    public virtual ushort ShortUnsigned()
     {
         return access.Get16();
     }
-    public uint IntUnsigned()
+    public virtual uint IntUnsigned()
     {
         return access.Get32();
     }
-    public ulong LongUnsigned()
+    public virtual ulong LongUnsigned()
     {
         return access.Get64();
     }
 
-    public float Float()
+    public virtual float Float()
     {
         return access.GetFloat();
     }
-    public double Double()
+    public virtual double Double()
     {
         return access.GetDouble();
     }
