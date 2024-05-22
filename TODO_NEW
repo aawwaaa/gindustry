@@ -1,3 +1,15 @@
+[X] Rename&Move
+    state_machine -> core
+    start_load -> core
+    remove client
+    remove server
+[ ] Rename
+    生命周期:
+        init/load
+        ready
+        (optional)save
+        reset
+
 [ ] 实体
 [ ] 世界
     [ ] 全量加载/卸载, 不分区块

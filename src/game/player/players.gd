@@ -54,7 +54,7 @@ func remove_player(player: Player) -> void:
     players.erase(player.player_id)
     player.queue_free()
 
-func reset_players() -> void:
+func reset() -> void:
     player_inc_id = 1
     player_datas = {}
     player_tokens = {}

@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="BuildingCategory" load_steps=4 format=3 uid="uid://h2f6h25e2qt7"]
 
 [ext_resource type="Texture2D" uid="uid://bfnno2826v8pe" path="res://assets/building_category_icons.png" id="1_53qy8"]
-[ext_resource type="Script" path="res://types/resource_types/building_category.gd" id="2_4yb4i"]
+[ext_resource type="Script" path="res://src/type/building_category.gd" id="2_4yb4i"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qkrfv"]
 atlas = ExtResource("1_53qy8")

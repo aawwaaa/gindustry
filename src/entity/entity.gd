@@ -1,11 +1,11 @@
 class_name Entity
-extends Vars_Objects.RefObject
+extends RefObject
 
 signal transform_changed()
 signal child_entity_added(entity: Entity)
 signal child_entity_removed(entity: Entity)
 
-static var entity_object_type: Vars_Objects.GDScriptObjectType
+static var entity_object_type: GDScriptObjectType
 
 var parent_entity: Entity:
     set = set_parent_entity
@@ -22,12 +22,12 @@ var transform: Transform3D:
     set = set_transform
 
 static func _static_init() -> void:
-    entity_object_type = Vars_Objects.GDScriptObjectType.new()
-    entity_object_type.uuid = "gindustry-builtin-entity"
+    entity_object_type = GDScriptObjectType.new()
+    entity_object_type.id = "gindustry-builtin-entity"
     entity_object_type.type_script = Entity
     Vars_Objects.add_object_type(entity_object_type)
 
-static func get_type() -> Vars_Objects.ObjectType:
+static func get_type() -> ObjectType:
     return entity_object_type
 
 func set_parent_entity(new_parent: Entity) -> void:

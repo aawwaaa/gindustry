@@ -31,7 +31,7 @@ func create_world() -> World:
     Vars.objects.make_ready(world)
     return world;
 
-func cleanup() -> void:
+func reset() -> void:
     for world in worlds.values():
         world.free()
     current_toggled_world = null

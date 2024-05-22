@@ -1,18 +1,20 @@
 class_name World
 extends Entity
 
-const TILE_SIZE = 0.5
+const TILE_SIZE = 0.25
 const TILE_SIZE_VECTOR = Vector3.ONE * TILE_SIZE
+const CHUNK_SIZE = 32
+const CHUNK_SIZE_VECTOR = Vector3.ONE * CHUNK_SIZE
 
-static var world_object_type: Vars_Objects.GDScriptObjectType
+static var world_object_type: GDScriptObjectType
 
 static func _static_init() -> void:
-    world_object_type = Vars_Objects.GDScriptObjectType.new()
+    world_object_type = GDScriptObjectType.new()
     world_object_type.uuid = "gindustry-builtin-world"
     world_object_type.type_script = World
     Vars_Objects.add_object_type(world_object_type)
 
-static func get_type() -> Vars_Objects.ObjectType:
+static func get_type() -> ObjectType:
     return world_object_type
 
 var is_root_world: bool = false;

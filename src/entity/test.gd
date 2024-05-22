@@ -1,17 +1,17 @@
 class_name TestEntity
 extends Entity
 
-static var test_entity_object_type: Vars_Objects.GDScriptObjectType
+static var test_entity_object_type: GDScriptObjectType
 
 static func _static_init() -> void:
-    test_entity_object_type = Vars_Objects.GDScriptObjectType.new()
-    test_entity_object_type.uuid = "gindustry-builtin-test-entity"
+    test_entity_object_type = GDScriptObjectType.new()
+    test_entity_object_type.id = "gindustry-builtin-test-entity"
     test_entity_object_type.type_script = TestEntity
     Vars_Objects.add_object_type(test_entity_object_type)
 
     mesh.size = Vector3(1, 1, 1)
 
-static func get_type() -> Vars_Objects.ObjectType:
+static func get_type() -> ObjectType:
     return test_entity_object_type
 
 static var mesh = BoxMesh.new()

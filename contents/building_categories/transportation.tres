@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="BuildingCategory" load_steps=4 format=3 uid="uid://bqc777vs32a3j"]
 
-[ext_resource type="Script" path="res://types/resource_types/building_category.gd" id="1_g8iku"]
+[ext_resource type="Script" path="res://src/type/building_category.gd" id="1_g8iku"]
 [ext_resource type="Texture2D" uid="uid://bfnno2826v8pe" path="res://assets/building_category_icons.png" id="1_n7ikk"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3exf7"]

@@ -1,6 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dro0rp2echkiv"]
 
-[ext_resource type="Script" path="res://types/game/player/player.gd" id="1_vdcw8"]
+[ext_resource type="Script" path="res://src/game/player/player.gd" id="1_vdcw8"]
+
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_34dhd"]
 properties/0/path = NodePath("PlayerController:move_velocity")

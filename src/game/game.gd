@@ -3,51 +3,8 @@ extends Vars.Vars_Object
 
 signal save_meta_changed(meta: SaveMeta);
 signal current_player_changed(player: Player, from: Player);
-signal state_changed(state: States, from: States);
 
-enum States{
-    LOADING,
-    MAIN_MENU,
-    PRESET_CONFIG,
-    LOADING_GAME,
-    GAME,
-    PAUSED
-}
-
-var state: StateMachine
-
-func _ready() -> void:
-    state = StateMachine.new()
-    state.state_changed.connect(func(s, f): state_changed.emit(s, f))
-
-func is_in_game() -> bool:
-    return state.get_state() in [States.GAME, States.PAUSED]
-
-func is_in_loading() -> bool:
-    return state.get_state() in [States.LOADING, States.LOADING_GAME]
-
-func get_state() -> States:
-    return state.get_state()
-
-func set_state(v: States) -> void:
-    state.set_state(v)
-
-@rpc("any_peer", "call_local", "reliable")
-func set_paused_rpc(v: bool) -> void:
-    if not Vars.server.is_peer_admin(Vars.client.get_sender_id()):
-        return
-    if get_state() not in [States.GAME, States.PAUSED]: return
-    var target_state = States.PAUSED if v else States.GAME
-    if get_state() != target_state: set_state(target_state)
-    Vars.tree.paused = v
-
-func set_paused(v: bool) -> void:
-    Vars.server.rpc_node(self, "set_paused_rpc", [v])
-
-func is_paused() -> bool:
-    return get_state() == States.PAUSED
-
-# var world_load_source: WorldLoadSource;
+var __is_paused: bool
 
 var save_preset: Preset:
     set(v):
@@ -73,13 +30,27 @@ var current_player: Player:
 # func create_temp_tile() -> void:
 #     temp_tile = Tile.new();
 
+func __set_paused(v: bool) -> void:
+    __is_paused = v
+    get_tree().paused = v
+    PhysicsServer3D.set_active(not v)
+
+func _on_state_state_changed(state: Vars_Core.State, from: Vars_Core.State) -> void:
+    if state != Vars_Core.State.IN_GAME:
+        __set_paused(true)
+    else:
+        __set_paused(false)
+
+func is_paused() -> bool:
+    return __is_paused
+
 func cleanup() -> void:
     if save_preset: save_preset._disable_preset()
-    Vars.worlds.cleanup()
+    Vars.worlds.reset()
     Vars.objects.cleanup()
     save_preset = null
     current_player = null;
-    Vars.players.reset_players();
+    Vars.players.reset();
 
 func reset_game() -> void:
     cleanup()

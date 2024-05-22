@@ -18,9 +18,9 @@ config/icon="res://mods/gindustry/icon.png"
 
 [autoload]
 
-Utils="*res://scripts/utils.gd"
-Log="*res://scripts/log.gd"
-Vars="*res://scripts/vars.gd"
+Utils="*res://src/utils.gd"
+Log="*res://src/log.gd"
+Vars="*res://src/vars.gd"
 
 [debug]
 
@@ -31,6 +31,10 @@ gdscript/warnings/enable=false
 window/stretch/aspect="expand"
 window/custom=""
 window/version="1.0.0"
+
+[dotnet]
+
+project/assembly_name="gindustry"
 
 [editor]
 
