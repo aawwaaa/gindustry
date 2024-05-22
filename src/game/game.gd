@@ -40,52 +40,40 @@ func _on_state_state_changed(state: Vars_Core.State, from: Vars_Core.State) -> v
         __set_paused(true)
     else:
         __set_paused(false)
+    if from == Vars_Core.State.IN_GAME and state != Vars_Core.State.IN_GAME:
+        reset_game()
 
 func is_paused() -> bool:
     return __is_paused
 
-func cleanup() -> void:
+func reset_game() -> void:
     if save_preset: save_preset._disable_preset()
     Vars.worlds.reset()
-    Vars.objects.cleanup()
+    Vars.objects.reset()
     save_preset = null
     current_player = null;
     Vars.players.reset();
 
-func reset_game() -> void:
-    cleanup()
-    Vars.server.rpc_node(self, "set_paused_rpc", [true])
-    state.set_state(States.LOADING_GAME)
-#     create_temp_tile()
-    
-#     Controller._on_game_signal_reset_game();
-#     Entity._on_game_signal_reset_game();
+func start_game_load() -> void:
+    Vars.core.state.set_state(Vars_Core.State.LOADING_GAME)
 
 func init_game() -> void:
-    reset_game();
     save_meta = SaveMeta.new();
     save_configs = ConfigsGroup.new();
     Vars.objects.init_object_types_mapping();
     Vars.contents.init_contents_mapping();
+
+func ready_game() -> void:
     Vars.objects.object_ready()
-
-func game_loaded() -> void:
-    state.set_state(States.GAME)
-    Vars.server.send_world_data()
-    Vars.server.rpc_node(self, "set_paused_rpc", [false])
-
-func back_to_menu() -> void:
-    Vars.client.disconnect_multiplayer()
-    cleanup()
-    state.set_state(States.MAIN_MENU)
+    Vars.core.state.set_state(Vars_Core.State.IN_GAME)
 
 const current_data_version = 0;
 
-func load_game(stream: Stream, call_loaded: bool = true) -> void:
-    reset_game();
+func load_game(stream: Stream) -> void:
+    start_game_load();
     save_meta = SaveMeta.load_from(stream);
     var version = stream.get_16();
-    if version < 0: return game_loaded();
+    if version < 0: return ready_game();
     save_configs = ConfigsGroup.load_from(stream);
     Vars.objects.load_object_types_mapping(stream);
     Vars.contents.load_contents_mapping(stream);
@@ -98,8 +86,7 @@ func load_game(stream: Stream, call_loaded: bool = true) -> void:
     Vars.worlds.load_data(stream)
     Vars.players.load_data(stream)
     save_preset._load_after_world_load()
-    Vars.objects.object_ready()
-    if call_loaded: game_loaded()
+    ready_game();
 
 func save_game(stream: Stream, to_client: bool = false) -> void:
     save_meta.save_to(stream);

@@ -3,7 +3,7 @@
     start_load -> core
     remove client
     remove server
-[ ] Rename
+[X] Rename
     生命周期:
         init/load
         ready

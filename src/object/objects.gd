@@ -74,7 +74,7 @@ func get_object_id(object: RefObject) -> int:
 func object_ready() -> void:
     Vars.tree.call_group(&"objects", &"_object_ready")
 
-func cleanup() -> void:
+func reset() -> void:
     for object in objects.values():
         if is_instance_valid(object):
             object.free()

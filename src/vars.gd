@@ -27,8 +27,8 @@ var worlds: Vars_Worlds
 var presets: Vars_Presets
 var saves: Vars_Saves
 
-var client: Vars_Client
-var server: Vars_Server
+# var client: Vars_Client
+# var server: Vars_Server
 
 var headless: Vars_Headless
 var input: Vars_Input
@@ -59,8 +59,8 @@ func init() -> void:
     presets = add(Vars_Presets.new(), "Presets")
     saves = add(Vars_Saves.new(), "Saves")
 
-    client = add(Vars_Client.new(), "Client")
-    server = add(Vars_Server.new(), "Server")
+    # client = add(Vars_Client.new(), "Client")
+    # server = add(Vars_Server.new(), "Server")
 
     headless = add(Vars_Headless.new(), "Headless")
     input = add(Vars_Input.new(), "Input")
