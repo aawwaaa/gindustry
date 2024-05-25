@@ -33,6 +33,10 @@ func _entity_deinit() -> void:
     if rid.is_valid(): RenderingServer.free_rid(rid)
     super._entity_deinit()
 
+func _process(delta: float) -> void:
+    if not object_ready: return
+    transform = transform.translated(Vector3.FORWARD * delta)
+
 func _on_transform_changed() -> void:
     super._on_transform_changed()
     if rid.is_valid(): RenderingServer.instance_set_transform(rid, get_global_transform())

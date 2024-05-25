@@ -38,5 +38,5 @@ func g(key: String, default_value: Variant = defaults[key] if defaults.has(key) 
 func p(key: String, value: Variant) -> void:
     dict[key] = value;
 
-func set_defaults(defaults: Dictionary) -> void:
-    self.defaults.merge(defaults)
+func set_defaults(defs: Dictionary) -> void:
+    self.defaults.merge(defs)

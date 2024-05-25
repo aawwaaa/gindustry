@@ -12,16 +12,16 @@ func _init_data() -> void:
 func _init_private_data() -> void:
     pass
 
-func _load_data(stream: Stream) -> void:
+func _load_data(_stream: Stream) -> void:
     pass
 
-func _save_data(stream: Stream) -> void:
+func _save_data(_stream: Stream) -> void:
     pass
 
-func _load_private_data(stream: Stream) -> void:
+func _load_private_data(_stream: Stream) -> void:
     pass
 
-func _save_private_data(stream: Stream) -> void:
+func _save_private_data(_stream: Stream) -> void:
     pass
 
 func _apply_data() -> void:

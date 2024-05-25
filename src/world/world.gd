@@ -10,7 +10,7 @@ static var world_object_type: GDScriptObjectType
 
 static func _static_init() -> void:
     world_object_type = GDScriptObjectType.new()
-    world_object_type.uuid = "gindustry-builtin-world"
+    world_object_type.id = "gindustry-builtin-world"
     world_object_type.type_script = World
     Vars_Objects.add_object_type(world_object_type)
 
@@ -22,6 +22,9 @@ var is_root_world: bool = false;
 var world_3d: World3D:
     get: return  parent_entity.world_3d if parent_entity and parent_entity != self else world_3d
     set(v): world_3d = v;
+var camera: RID:
+    get: return parent_entity.camera if parent_entity and parent_entity != self else camera
+    set(v): camera = v
 
 static func create() -> World:
     return TYPE.create();
@@ -35,6 +38,10 @@ func _object_init() -> void:
     if is_root_world:
         self.world = self
         world_3d = World3D.new()
+        camera = RenderingServer.camera_create()
+        RenderingServer.camera_set_perspective(camera, 90, 0.1, 1000)
+        RenderingServer.camera_set_cull_mask(camera, 1)
+        RenderingServer.camera_set_transform(camera, Transform3D.IDENTITY)
 
 func _object_ready() -> void:
     if object_ready: return
@@ -42,11 +49,20 @@ func _object_ready() -> void:
 
 func _object_free() -> void:
     super._object_free()
+    if is_root_world:
+        if Vars.worlds.current_toggled_world == self:
+            get_viewport().world_3d = null
+            Vars.worlds.current_toggled_world = null
+        world_3d.queue_free()
+        RenderingServer.free_rid(camera)
 
 func toggle_to() -> void:
     if Vars.worlds.current_toggled_world == root_world: return
     Vars.worlds.current_toggled_world = root_world
-    get_viewport().world_3d = world_3d
+
+    var viewport = get_viewport()
+    RenderingServer.viewport_set_scenario(viewport.get_viewport_rid(), root_world.world_3d.scenario)
+    RenderingServer.viewport_attach_camera(viewport.get_viewport_rid(), root_world.camera)
 
 func _load_data(stream: Stream) -> void:
     Utils.load_data_with_version(stream, [func():

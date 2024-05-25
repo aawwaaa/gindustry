@@ -8,13 +8,13 @@ static var builtin_mod_info: ModInfo = load("res://contents/builtin.tres")
 static func load_builtin() -> void:
     builtin_mod_info.enabled = true
 
-    Vars.contents.current_loading_mod = Mod.new(builtin_mod_info)
+    Vars.mods.current_loading_mod = Mod.new(builtin_mod_info)
     
     Vars.mods.mod_info_list[builtin_mod_info.id] = builtin_mod_info
-    Vars.mods.mod_inst_list[builtin_mod_info.id] = Vars.contents.current_loading_mod
+    Vars.mods.mod_inst_list[builtin_mod_info.id] = Vars.mods.current_loading_mod
 
 static func start_load() -> void:
-    Vars.contents.current_loading_mod = Vars.mods.mod_inst_list[builtin_mod_info.id]
+    Vars.mods.current_loading_mod = Vars.mods.mod_inst_list[builtin_mod_info.id]
 
     # InputHandler.register_input_handler("desktop", InputHandler.InputHandlerMeta.new({
     #     "input_handler": DesktopInputHandler,
@@ -58,9 +58,9 @@ static func start_load() -> void:
         "research.tres",
         "misc.tres",
     ])
-    await load_type("tile_ore_types/", [
-        "item.tres",
-    ])
+    # await load_type("tile_ore_types/", [
+    #     "item.tres",
+    # ])
 
     # await load_content(entity, "entities/", [
     #     "building_shadow_container/entity.tres",

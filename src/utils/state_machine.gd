@@ -13,7 +13,7 @@ func _init(default_state: int = -1) -> void:
 func get_state() -> int:
     return state
 
-func _get_next_state(state: int, delta: float) -> int:
+func _get_next_state(_current_state: int, _delta: float) -> int:
     return KEEP_CURRENT_STATE
 
 func update_state(delta: float) -> void:
@@ -28,5 +28,5 @@ func set_state(new_state: int) -> void:
     _on_state_changed(state, old_state)
     emit_signal("state_changed", state, old_state)
 
-func _on_state_changed(new_state: int, old_state: int) -> void:
+func _on_state_changed(_new_state: int, _old_state: int) -> void:
     pass

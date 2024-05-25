@@ -21,10 +21,12 @@ func apply_args_from_cmdline() -> void:
     apply_args(args, props)
 
 func restart(args: PackedStringArray = []) -> void:
+    logger.info(tr("Headless_Restart"))
     OS.set_restart_on_exit(true, args)
-    Vars.tree.quit()
+    exit()
 
 func exit() -> void:
+    logger.info(tr("Headless_Exit"))
     Vars.tree.quit()
 
 var props_handlers = {
@@ -41,7 +43,7 @@ var args_handlers = {
 func props_lang(value: String) -> void:
     TranslationServer.set_locale(value)
 
-func args_default(args: Array = []) -> void:
+func args_default(_args: Array = []) -> void:
     pass
 
 func args_help() -> void:
@@ -56,6 +58,7 @@ func args_load_preset(preset_id: String) -> void:
     if not preset:
         logger.error(tr("Headless_UnknownPreset {name}").format({name = preset_id}))
         exit()
+        return
     Vars.presets.load_preset(preset)
 
 func apply_args(args: Dictionary, props: Dictionary) -> void:
@@ -65,9 +68,11 @@ func apply_args(args: Dictionary, props: Dictionary) -> void:
         else:
             logger.error(tr("Headless_UnknownProperty {name}").format({name = prop}))
             exit()
+            return
     for arg in args:
         if arg in args_handlers:
             args_handlers[arg].callv(args[arg])
         else:
             logger.error(tr("Headless_UnknownArgument {name}").format({name = arg}))
             exit()
+            return

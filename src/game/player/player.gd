@@ -1,14 +1,13 @@
 class_name Player
 extends Node
 
-static var scene = load("res://types/game/player/player.tscn")
+static var scene = load("res://src/game/player/player.tscn")
 
 static func create() -> Player:
     return scene.instantiate();
 
 var player_id: int
-var peer_id: int
-var peer_data: Vars_Server.PeerData
+var peer_data: PeerData
 
 var player_name: String
 
@@ -20,7 +19,7 @@ func init_player() -> void:
 
 func _ready() -> void:
     name = "Player#" + str(player_id)
-    set_multiplayer_authority(peer_id, true)
+    set_multiplayer_authority(peer_data.peer_id, true)
 
 func get_datas_node() -> Node:
     return %Datas

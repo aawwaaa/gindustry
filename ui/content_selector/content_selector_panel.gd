@@ -8,7 +8,7 @@ var content_type: ContentType
 func _load_contents() -> void:
     pass
 
-func _set_selected(selected: Content) -> void:
+func _set_selected(_selected: Content) -> void:
     pass
 
 func _get_texture_for(content: Content) -> Texture2D:

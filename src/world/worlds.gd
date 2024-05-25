@@ -1,6 +1,8 @@
 class_name Vars_Worlds
 extends Vars.Vars_Object
 
+signal worlds_changed()
+
 var logger: Log.Logger = Log.register_logger("Worlds_LogSource")
 
 var worlds: Dictionary = {}
@@ -29,6 +31,7 @@ func create_world() -> World:
     world.is_root_world = true;
     world.handle_create()
     Vars.objects.make_ready(world)
+    worlds_changed.emit()
     return world;
 
 func reset() -> void:
@@ -45,6 +48,7 @@ func load_data(stream: Stream) -> void:
                 logger.error(tr("Worlds_UnknownWorldObject {id}").format({id = world.object_id}))
                 continue
             worlds[world.object_id] = world
+        worlds_changed.emit()
     ])
 
 func save_data(stream: Stream) -> void:

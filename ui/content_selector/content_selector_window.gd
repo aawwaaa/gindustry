@@ -7,9 +7,9 @@ class SelectContentReturnValue extends RefCounted:
     var content: Content
     var amount: float
 
-    func _init(content: Content, amount: float) -> void:
-        self.content = content
-        self.amount = amount
+    func _init(c: Content, a: float) -> void:
+        self.content = c
+        self.amount = a
 
 var content_type_to_panel: Dictionary = {}
 var content_type_to_button: Dictionary = {}
@@ -19,7 +19,7 @@ var current_type: ContentType = null
 var current_content: Content = null
 var current_amount: float = 1:
     set = set_current_amount
-var current_filter: Callable = func(v): return true; # (type: ContentType) -> bool
+var current_filter: Callable = func(_v): return true; # (type: ContentType) -> bool
 var old_content: Content = null
 var old_amount: float = 1;
 var current_allow_float: bool = false
@@ -71,7 +71,7 @@ func show_content_type(content_type: ContentType) -> void:
     current_type = content_type
 
 func select_content(content: Content, amount: float, \
-        allow_float: bool = false, filter: Callable = func(v): return true) -> SelectContentReturnValue:
+        allow_float: bool = false, filter: Callable = func(_v): return true) -> SelectContentReturnValue:
     if in_use:
         submit.emit(current_content, current_amount)
     in_use = true
@@ -93,14 +93,14 @@ func update_filter() -> void:
     var first: ContentType = null
     var types = Vars.types.get_types(ContentType.TYPE).values() as Array[ContentType]
     for content_type in types:
-        var visible = current_filter.call(content_type) 
-        content_type_to_button[content_type].visible = visible
-        if not visible: continue
+        var vis = current_filter.call(content_type) 
+        content_type_to_button[content_type].visible = vis
+        if not vis: continue
         first = content_type
     if current_type:
-        var visible = current_filter.call(current_type)
-        if visible: return
-    show_content_type(first)
+        var vis = current_filter.call(current_type)
+        if not vis:
+            show_content_type(first)
 
 func set_current_content(value: Content) -> void:
     current_content = value
@@ -119,7 +119,7 @@ func set_current_amount(value: float) -> void:
 
 func set_current_allow_float(value: bool) -> void:
     current_allow_float = value
-    %AmountSlider.step = 0.1 if value else 1
+    %AmountSlider.step = 0.1 if value else 1.0
 
 func _on_amount_text_changed(new_text: String) -> void:
     var number = float(new_text)
@@ -154,7 +154,7 @@ func _on_clear_pressed() -> void:
 func _on_instance_selected_changed(selected: Content) -> void:
     set_current_content(selected)
 
-func _on_amount_text_submitted(new_text: String) -> void:
+func _on_amount_text_submitted(_new_text: String) -> void:
     %Amount.release_focus()
 
 func _on_game_ui_ui_hidden() -> void:
@@ -164,7 +164,7 @@ func _on_game_ui_ui_hidden() -> void:
     hide()
     await get_tree().process_frame
     hide_by_ui = false
-    current_filter = func(v): return true
+    current_filter = func(_v): return true
     update_filter()
 
 func _on_close_requested() -> void:

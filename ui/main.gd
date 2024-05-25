@@ -9,15 +9,15 @@ func _ready() -> void:
     get_tree().root.process_mode = Node.PROCESS_MODE_ALWAYS
     
     logger = Log.register_logger("Main_LogSource")
-    Log.all_progress_tracker_finished.connect(_on_all_progress_tracker_finished)
     Vars.init()
-    Vars.game.state.state_changed.connect(_on_state_changed)
+    Vars.core.state.state_changed.connect(_on_state_changed)
     Vars.main = self;
     
-    init_configs();
+    Vars.core.init_configs()
+    Vars.core.start_load()
 
-    Vars.game.set_state(Vars.game.States.LOADING);
-    start_load();
+func _on_viewport_size_changed() -> void:
+    pass
 
 func open_window(window_name: String) -> void:
     %Windows.get_node(window_name).show()
@@ -32,86 +32,40 @@ func _on_saves_pressed() -> void:
     get_window_node("Saves").set_save_ui(false)
     open_window("Saves")
 
-func _on_all_progress_tracker_finished() -> void:
-    if Vars.game.get_state() == Vars.game.States.LOADING:
-        Vars.game.set_state(Vars.game.States.MAIN_MENU);
-        Vars.headless.apply_args_from_cmdline()
-
-func _on_state_changed(state: Vars_Game.States, from: Vars_Game.States) -> void:
+func _on_state_changed(state: Vars_Core.State, from: Vars_Core.State) -> void:
     for node in %Windows.get_children():
         node.hide();
-    %Loading.visible = Vars.game.is_in_loading()
-    %MainMenu.visible = Vars.game.get_state() == Vars.game.States.MAIN_MENU;
-    if Vars.game.is_in_game():
+    %Loading.visible = Vars.core.is_in_loading()
+    %MainMenu.visible = Vars.core.state.get_state() == Vars_Core.State.MAIN_MENU;
+    if Vars.core.is_in_game():
         %GameUI.show_ui()
     else:
         %GameUI.hide_ui()
     logger.info(tr("Main_StateChanged {from} {state}").format({
-        from = Vars.game.States.find_key(from),
-        state = Vars.game.States.find_key(state)}
+        from = tr("Core_State_" + str(Vars_Core.State.find_key(from))),
+        state = tr("Core_State_" + str(Vars_Core.State.find_key(state)))}
     ))
 
-func init_configs() -> void:
-    if not DirAccess.dir_exists_absolute("user://mods/"):
-        DirAccess.make_dir_absolute("user://mods/");
-    if not DirAccess.dir_exists_absolute("user://saves/"):
-        DirAccess.make_dir_absolute("user://saves/");
+func load_ui(progress: Log.ProgressTracker) -> void:
+    # total: 10
 
-func start_load() -> void:
-    var progress = Log.register_progress_tracker(100, "Main_Load", logger.source);
-    progress.name = "Main_Load_SearchMods"
-    Vars.mods.search_mod_folder("res://mods/", false);
-    Vars.mods.search_mod_folder("user://mods/");
-    Vars.mods.load_enable_configs();
-    progress.progress += 5
-
-    # add builtin to mod lists
-    Builtin.load_builtin()
-    
-    progress.name = "Main_Load_CheckModErrors"
-    var errors = Vars.mods.check_errors();
-    if errors.size() != 0:
-        Vars.mods.logger.error(tr("Mods_DetectedExceptsInLoading"))
-        for info in Vars.mods.mod_info_list.values():
-            info.enabled = false;
-        await get_tree().create_timer(3).timeout;
-        progress.progress = progress.total
-        Vars.mods.display_order = Vars.mods.mod_info_list.keys()
-        %Windows/Mods.load_mod_list();
-        return;
-    
-    progress.name = "Main_Load_LoadConfigs"
-    Vars.configs.load_configs();
-    %Windows/Settings.load_tabs()
-    progress.progress += 5
-
-    progress.name = "Main_Load_LoadBuiltin"
-    await Builtin.start_load()
-    progress.progress += 10
-    progress.name = "Main_Load_LoadMods"
-    await Vars.mods.load_mods();
-    progress.progress += 50
-    progress.name = "Main_Load_LoadSaves"
-    Vars.saves.load_saves();
-    progress.progress += 20
-    
     progress.name = "Main_Load_LoadUI"
     %Windows/Mods.load_mod_list();
     %Windows/NewGame.load_presets();
     %Windows/Saves.load_saves();
     progress.progress += 5
 
-    progress.name = "Main_Load_LoadUI"
-    Vars.input.camera_base_node = %CameraBase
-    Vars.input.camera_node = %Camera;
-    
+    progress.name = "Main_Load_LoadGameUI"
     GameUI.instance = %GameUI
+
+    get_viewport().size_changed.connect(_on_viewport_size_changed)
+    _on_viewport_size_changed()
     
     %GameUI.loaded()
     progress.progress += 3
     
     progress.name = "Main_Load_LoadInputHandler"
     Vars.input.ui_node = %GameUI.input_handler_ui
+
     # Vars.input.set_input_handler()
     progress.progress += 2
-    progress.finish()

@@ -25,17 +25,19 @@ func register_preset_group(group_name: String) -> PresetGroup:
 func load_preset(preset: Preset) -> void:
     logger.info(tr("Presets_LoadPreset {name}") \
         .format({name = tr(preset.get_tr_name())}))
-    Vars.game.set_state(Vars.game.States.PRESET_CONFIG)
+    Vars.core.state.set_state(Vars_Core.State.PRESET_CONFIG)
+    @warning_ignore("redundant_await")
     var result = await preset._pre_config_preset();
     if not result:
-        Vars.game.set_state(Vars.game.States.MAIN_MENU)
+        Vars.core.state.set_state(Vars_Core.State.MAIN_MENU)
         return
     Vars.game.init_game()
     Vars.game.save_preset = preset
     preset._enable_preset()
     preset._init_preset();
-    var player = Vars.client.join_local()
+    var _player = Vars.client.join_local()
     preset._init_after_world_load()
     preset._load_preset();
-    Vars.game.game_loaded()
+    Vars.game.ready_game()
+    preset._after_ready();
 

@@ -1,0 +1,64 @@
+[gd_scene load_steps=4 format=3 uid="uid://bt3nv63nvpy3s"]
+
+[ext_resource type="Script" path="res://ui/debug_menu/tabs/basic.gd" id="1_xfnqw"]
+[ext_resource type="PackedScene" uid="uid://bdb6owr5ijsdc" path="res://ui/debug_menu/tabs/basic/root_worlds.tscn" id="2_x2v61"]
+[ext_resource type="Script" path="res://src/input/camera_controller.gd" id="3_cxugf"]
+
+[node name="Basic" type="VBoxContainer"]
+custom_minimum_size = Vector2(320, 0)
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
+script = ExtResource("1_xfnqw")
+
+[node name="Camera" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("3_cxugf")
+
+[node name="FreeCamera" type="Button" parent="."]
+layout_mode = 2
+toggle_mode = true
+text = "Free camera"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "Camera speed:"
+
+[node name="CameraMoveSpeed" type="HSlider" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 0.05
+step = 0.01
+value = 1.0
+exp_edit = true
+
+[node name="CameraTransform" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "CameraTransform"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+text = "Root worlds:"
+
+[node name="RootWorlds" parent="." instance=ExtResource("2_x2v61")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 2
+
+[node name="ToggleTo" type="Button" parent="GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Toggle to"
+
+[connection signal="toggled" from="FreeCamera" to="." method="_on_free_camera_toggled"]
+[connection signal="pressed" from="GridContainer/ToggleTo" to="." method="_on_toggle_to_pressed"]

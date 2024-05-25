@@ -21,7 +21,7 @@ func handle_create() -> void:
 func _object_init() -> void:
     Vars.objects.add_object(self) 
     add_to_group(&"objects")
-    name = object_type.uuid + "#" + str(object_id)
+    name = object_type.id + "#" + str(object_id)
 
 func _object_free() -> void:
     pass
@@ -37,7 +37,7 @@ func _object_ready() -> void:
     if not is_inside_tree():
         Vars.objects.add_child(self)
 
-func _load_data(stream: Stream) -> void:
+func _load_data(_stream: Stream) -> void:
     pass
 
 func load_data(stream: Stream) -> void:
@@ -47,7 +47,7 @@ func load_data(stream: Stream) -> void:
     ])
     _object_init()
 
-func _save_data(stream: Stream) -> void:
+func _save_data(_stream: Stream) -> void:
     pass
 
 func save_data(stream: Stream) -> void:
@@ -55,3 +55,6 @@ func save_data(stream: Stream) -> void:
         stream.store_64(object_id)
         _save_data(stream)
     ])
+
+func sync(method: StringName, args: Array[Variant]) -> void:
+    Vars.server.sync(self, method, args)

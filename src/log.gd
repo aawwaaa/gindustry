@@ -56,10 +56,10 @@ class ProgressTracker extends RefCounted:
 
     signal updated()
 
-    func _init(total: int, name: String, source: String) -> void:
-        self.name = name
-        self.source = source
-        self.total = total
+    func _init(t: int, n: String, src: String) -> void:
+        self.name = n
+        self.source = src
+        self.total = t
         self.progress = 0
         Log.active_progress_trackers.append(self)
         Log.progress_tracker_created.emit(self)
@@ -77,8 +77,8 @@ func print_log(formatted: String, _1, _2, _3) -> void:
     print(formatted);
     log_access.store_string(formatted + "\n");
 
-func register_progress_tracker(total: int, name: String, source: String) -> ProgressTracker:
-    return ProgressTracker.new(total, name, source)
+func register_progress_tracker(total: int, n: String, source: String) -> ProgressTracker:
+    return ProgressTracker.new(total, n, source)
 
 func _ready() -> void:
     log_access = FileAccess.open("user://log_file.log", FileAccess.WRITE);

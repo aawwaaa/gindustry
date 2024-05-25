@@ -1,5 +1,11 @@
 extends Preset
 
+var directional_light: RID
+var instance: RID
+var instance2: RID
+
+var mesh = BoxMesh.new()
+
 func _get_type() -> ResourceType:
     return TYPE
 
@@ -24,6 +30,26 @@ func _init_after_world_load() -> void:
 func _load_after_world_load() -> void:
     pass
 
+func _after_ready() -> void:
+    directional_light = RenderingServer.directional_light_create()
+    RenderingServer.light_set_color(directional_light, Color.WHITE)
+    RenderingServer.light_set_param(directional_light, RenderingServer.LIGHT_PARAM_ENERGY, 1)
+    RenderingServer.light_set_param(directional_light, RenderingServer.LIGHT_PARAM_INDIRECT_ENERGY, 1)
+    RenderingServer.light_set_param(directional_light, RenderingServer.LIGHT_PARAM_RANGE, 100)
+
+    instance = RenderingServer.instance_create()
+    RenderingServer.instance_set_base(instance, directional_light)
+    RenderingServer.instance_set_transform(instance, Transform3D.IDENTITY.rotated(Vector3.RIGHT, PI / 4))
+    RenderingServer.instance_set_scenario(instance, Vars.worlds.worlds[1].world_3d.scenario)
+
+    mesh.size = Vector3(100, 2, 100)
+
+    instance2 = RenderingServer.instance_create()
+    RenderingServer.instance_set_base(instance2, mesh.get_rid())
+    RenderingServer.instance_set_transform(instance, Transform3D.IDENTITY \
+            .translated(Vector3.DOWN * 0.2))
+    RenderingServer.instance_set_scenario(instance2, Vars.worlds.worlds[1].world_3d.scenario)
+
 func _load_preset() -> void:
     pass
 
@@ -31,10 +57,12 @@ func _enable_preset() -> void:
     pass
 
 func _disable_preset() -> void:
+    RenderingServer.free_rid(directional_light)
+    RenderingServer.free_rid(instance)
+    RenderingServer.free_rid(instance2)
+
+func _load_preset_data(_stream: Stream) -> void:
     pass
 
-func _load_preset_data(stream: Stream) -> void:
-    pass
-
-func _save_preset_data(stream: Stream) -> void:
+func _save_preset_data(_stream: Stream) -> void:
     pass

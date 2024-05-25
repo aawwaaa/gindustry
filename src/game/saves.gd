@@ -49,47 +49,53 @@ func search_save_folder(path: String, dict: Dictionary = saves) -> void:
 func load_saves() -> void:
     search_save_folder("user://saves/")
 
-func create_save(name: String) -> void:
-    logger.info(tr("Saves_CreateSave {name}").format({name = name}))
-    var path = "user://saves/"+name+".gsav"
+func create_save(save_name: String) -> void:
+    logger.info(tr("Saves_CreateSave {name}").format({name = save_name}))
+    var path = "user://saves/"+save_name+".gsav"
     var access = FileAccess.open(path, FileAccess.WRITE)
     var stream = FileStream.new(access)
     var buffer = PackedByteArray()
     buffer.resize(save_head.size())
     stream.store_buffer(buffer)
-    Vars.game.save_meta.save_name = name
+    Vars.game.save_meta.save_name = save_name
     Vars.game.save_meta.file_path = path
     Vars.game.save_game(stream)
     access.seek(0)
     stream.store_buffer(save_head)
     access.close()
-    saves[name] = Vars.game.save_meta
+    saves[save_name] = Vars.game.save_meta
     saves_changed.emit()
 
-func load_save(name: String) -> void:
-    logger.info(tr("Saves_LoadSave {name}").format({name = name}))
-    var meta = saves[name]
+func load_save(save_name: String) -> void:
+    logger.info(tr("Saves_LoadSave {name}").format({name = save_name}))
+    var meta = saves[save_name]
+    # TODO check null
+    assert(meta != null, "Null")
     var access = FileAccess.open(meta.file_path, FileAccess.READ)
     var stream = FileStream.new(access)
     var buffer = stream.get_buffer(save_head.size())
     if buffer != save_head:
-        logger.error(tr("Saves_InvalidSaveFile {name}").format({name = name}))
+        logger.error(tr("Saves_InvalidSaveFile {name}").format({name = save_name}))
         access.close()
         return
     Vars.game.load_game(stream)
     access.close()
-    var player = Vars.client.join_local()
+    var _player = Vars.client.join_local()
 
-func delete_save(name: String) -> void:
-    logger.info(tr("Saves_DeleteSave {name}").format({name = name}))
-    var info = saves[name]
+func delete_save(save_name: String) -> void:
+    logger.info(tr("Saves_DeleteSave {name}").format({name = save_name}))
+    var info = saves[save_name]
+    # TODO check null
+    assert(info != null, "Null")
     DirAccess.remove_absolute(info.file_path)
-    saves.erase(name)
+    saves.erase(save_name)
     saves_changed.emit()
 
-func rename_save(name: String, new_name: String) -> void:
-    logger.info(tr("Saves_RenameSave {name} {new_name}").format({name = name, new_name = new_name}))
-    var info = saves[name]
+func rename_save(save_name: String, new_name: String) -> void:
+    logger.info(tr("Saves_RenameSave {name} {new_name}").format({name = save_name, new_name = new_name}))
+    var info = saves[save_name]
+    # TODO check null
+    assert(info != null, "Null")
     var new_path = "user://saves/"+new_name+".gsav"
     DirAccess.rename_absolute(info.file_path, new_path)
     var access = FileAccess.open(new_path, FileAccess.READ_WRITE)
@@ -100,13 +106,15 @@ func rename_save(name: String, new_name: String) -> void:
     stream.seek(save_head.size())
     saves[new_name] = SaveMeta.load_from(stream)
     saves[new_name].file_path = new_path
-    saves.erase(name)
+    saves.erase(save_name)
     access.close()
     saves_changed.emit()
 
-func copy_save(name: String, new_name: String) -> void:
+func copy_save(save_name: String, new_name: String) -> void:
     logger.info(tr("Saves_CopySave {name} {new_name}").format({name = name, new_name = new_name}))
-    var info = saves[name]
+    var info = saves[save_name]
+    # TODO check null
+    assert(info != null, "Null")
     var new_path = "user://saves/"+new_name+".gsav"
     DirAccess.copy_absolute(info.file_path, new_path)
     var new_access = FileAccess.open(new_path, FileAccess.READ_WRITE)

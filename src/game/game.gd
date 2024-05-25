@@ -17,18 +17,11 @@ var save_meta: SaveMeta:
         save_meta_changed.emit(v)
 var save_configs: ConfigsGroup = ConfigsGroup.new();
 
-# var temp_tile: Tile;
-
 var current_player: Player:
     set(v):
         var old = current_player if current_player else null
         current_player = v
         current_player_changed.emit(v, old)
-# var current_entity: Entity:
-#     get: return current_player.get_controller().entity if current_player else null
-
-# func create_temp_tile() -> void:
-#     temp_tile = Tile.new();
 
 func __set_paused(v: bool) -> void:
     __is_paused = v
@@ -41,6 +34,8 @@ func _on_state_state_changed(state: Vars_Core.State, from: Vars_Core.State) -> v
     else:
         __set_paused(false)
     if from == Vars_Core.State.IN_GAME and state != Vars_Core.State.IN_GAME:
+        reset_game()
+    if from == Vars_Core.State.LOADING_GAME and state != Vars_Core.State.IN_GAME:
         reset_game()
 
 func is_paused() -> bool:
@@ -87,8 +82,9 @@ func load_game(stream: Stream) -> void:
     Vars.players.load_data(stream)
     save_preset._load_after_world_load()
     ready_game();
+    save_preset._after_ready();
 
-func save_game(stream: Stream, to_client: bool = false) -> void:
+func save_game(stream: Stream, _to_client: bool = false) -> void:
     save_meta.save_to(stream);
     stream.store_16(current_data_version)
     # version 0

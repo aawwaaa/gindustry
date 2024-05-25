@@ -6,7 +6,7 @@ class Serializer extends Object:
     func _get_name() -> String: return "."
     func get_name() -> String: return _get_name()
 
-    func _matched(object: Variant) -> bool: return true
+    func _matched(_object: Variant) -> bool: return true
     func matched(object: Variant) -> bool: return _matched(object)
 
     func _serialize(object: Variant) -> Variant: return object
@@ -29,7 +29,7 @@ class ContentSerializer extends Serializer:
 
 class RefObjectSerializer extends Serializer:
     func _get_name() -> String: return "r"
-    func _matched(object: Variant) -> bool: return object is Vars_Objects.RefObject
+    func _matched(object: Variant) -> bool: return object is RefObject
     func _serialize(object: Variant) -> Variant: return object.object_id
     func _unserialize(object: Variant) -> Variant: return Vars.objects.get_object_or_null(object)
 

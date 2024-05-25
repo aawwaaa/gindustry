@@ -12,8 +12,8 @@ func get_16() -> int: return access.get_16();
 func get_32() -> int: return access.get_32();
 func get_64() -> int: return access.get_64();
 func get_string() -> String:
-    var len = access.get_32();
-    var buffer = get_buffer(len)
+    var length = access.get_32();
+    var buffer = get_buffer(length)
     return buffer.get_string_from_utf8()
 func get_buffer(data_len: int) -> PackedByteArray: return access.get_buffer(data_len);
 func get_float() -> float: return access.get_float();

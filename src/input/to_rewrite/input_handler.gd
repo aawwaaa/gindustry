@@ -38,7 +38,7 @@ var player: Player:
 
 var world_pos: Vector2;
 
-func _load_ui(node: Control) -> void:
+func _load_ui(_node: Control) -> void:
     pass
 
 func _unload_ui(node: Control) -> void:
@@ -105,7 +105,7 @@ func clear_configuring_target() -> void:
 #     if not target: return
 #     target.input_operate(operation, args)
 # 
-func _extend_properties(from: InputHandler) -> void:
+func _extend_properties(_from: InputHandler) -> void:
 #     configuring_target = from.configuring_target
 #     interacting_entities = from.interacting_entities
 #     interacting_adapters = from.interacting_adapters
@@ -114,13 +114,13 @@ func _extend_properties(from: InputHandler) -> void:
 func extend_properties(from: InputHandler) -> void:
     _extend_properties(from)
 
-func _accept_input(name: StringName, func_name: StringName, args: Array = []) -> bool:
+func _accept_input(_processor_name: StringName, _func_name: StringName, _args: Array = []) -> bool:
     return true
 
-func call_input_processor(name: StringName, func_name: StringName, args: Array = []) -> void:
-    if not input_processors.has(name): return
-    if not _accept_input(name, func_name, args): return
-    var processor = input_processors[name]
+func call_input_processor(processor_name: StringName, func_name: StringName, args: Array = []) -> void:
+    if not input_processors.has(processor_name): return
+    if not _accept_input(processor_name, func_name, args): return
+    var processor = input_processors[processor_name]
     if not processor or not processor.has_method(func_name): return
     processor[func_name].callv(args)
 
@@ -136,7 +136,7 @@ func interact_clear_access_target() -> void:
 func interact_access_and_operate(args: Array = []) -> void:
     call_input_processor(InputInteracts.INTERACT_PROCESSOR, InputInteracts.INTERACT_ACCESS_AND_OPERATE, args)
 
-func _on_player_changed(player: Player, from: Player) -> void:
+func _on_player_changed(_player: Player, _from: Player) -> void:
     pass
 #     Utils.signal_dynamic_connect(controller, from.get_controller() if from else null,
 #             "target_changed", _on_controller_target_changed)
@@ -159,11 +159,11 @@ func _process(delta: float) -> void:
     if player == null: return
     _handle_process(delta)
 
-func _handle_unhandled_input(event: InputEvent) -> void:
+func _handle_unhandled_input(_event: InputEvent) -> void:
     pass
 
-func _handle_input(event: InputEvent) -> void:
+func _handle_input(_event: InputEvent) -> void:
     pass
 
-func _handle_process(delta: float) -> void:
+func _handle_process(_delta: float) -> void:
     pass

@@ -21,6 +21,9 @@ func _init_after_world_load() -> void:
 func _load_after_world_load() -> void:
     pass
 
+func _after_ready() -> void:
+    pass
+
 func _load_preset() -> void:
     pass
 
@@ -33,10 +36,10 @@ func _enable_preset() -> void:
 func _disable_preset() -> void:
     pass
 
-func _load_preset_data(stream: Stream) -> void:
+func _load_preset_data(_stream: Stream) -> void:
     pass
 
-func _save_preset_data(stream: Stream) -> void:
+func _save_preset_data(_stream: Stream) -> void:
     pass
 
 """

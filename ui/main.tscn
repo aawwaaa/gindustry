@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cx8o3df6tuhy8"]
+[gd_scene load_steps=9 format=3 uid="uid://cxbi14y7r7q5f"]
 
 [ext_resource type="Script" path="res://ui/main.gd" id="1_w18yf"]
 [ext_resource type="PackedScene" uid="uid://btxboyi6ctpxq" path="res://ui/loading/loading.tscn" id="2_jpl0v"]
@@ -11,17 +11,6 @@
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_w18yf")
-
-[node name="Worlds" type="Node3D" parent="."]
-unique_name_in_owner = true
-process_mode = 1
-
-[node name="CameraBase" type="Node3D" parent="."]
-unique_name_in_owner = true
-
-[node name="Camera" type="Camera3D" parent="CameraBase"]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

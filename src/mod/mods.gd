@@ -6,6 +6,8 @@ var logger = Log.register_logger("Mods_LogSource");
 var mod_info_list: Dictionary = {}
 var mod_inst_list: Dictionary = {}
 
+var current_loading_mod: Mod;
+
 func search_mod_folder(path: String, ignore_folder: bool = true) -> void:
     var dir_access = DirAccess.open(path);
     if not dir_access:
@@ -221,7 +223,7 @@ func load_mods() -> void:
         progress.progress += 30
         var Main = load(info.main)
         var mod = Main.new(info);
-        Vars.contents.current_loading_mod = mod;
+        current_loading_mod = mod
         mod_inst_list[info.id] = mod;
         await load_mod_configs(mod);
         progress.progress += 15

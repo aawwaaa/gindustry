@@ -2,17 +2,7 @@
 
 [ext_resource type="Script" path="res://src/game/player/player.gd" id="1_vdcw8"]
 
-
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_34dhd"]
-properties/0/path = NodePath("PlayerController:move_velocity")
-properties/0/spawn = false
-properties/0/replication_mode = 1
-properties/1/path = NodePath("PlayerController:datas")
-properties/1/spawn = false
-properties/1/replication_mode = 2
-properties/2/path = NodePath("PlayerController:build_paused")
-properties/2/spawn = false
-properties/2/replication_mode = 2
 
 [node name="Player" type="Node"]
 script = ExtResource("1_vdcw8")

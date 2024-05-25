@@ -21,14 +21,14 @@ func load(data: PackedByteArray) -> void:
 
 func seek(data_len: int) -> void: position += data_len;
 
-func get_n(len: int = 1) -> int:
+func get_n(length: int = 1) -> int:
     var data: int;
-    match len:
+    match length:
         1: data = array.decode_u8(position)
         2: data = array.decode_u16(position)
         4: data = array.decode_u32(position)
         8: data = array.decode_u64(position)
-    position += len
+    position += length
     return data
 
 func get_8() -> int: return get_n(1);
@@ -36,8 +36,8 @@ func get_16() -> int: return get_n(2);
 func get_32() -> int: return get_n(4);
 func get_64() -> int: return get_n(8);
 func get_string() -> String:
-    var len: int = get_32();
-    var buffer = get_buffer(len);
+    var length: int = get_32();
+    var buffer = get_buffer(length);
     return buffer.get_string_from_utf8()
 func get_buffer(data_len: int) -> PackedByteArray:
     var buffer = array.slice(position, position + data_len)

@@ -10,18 +10,19 @@ var cancel_callable: Callable;
 func load_saves() -> void:
     for button in %SavesList.get_children():
         button.queue_free()
-    for name in Vars.saves.saves.keys():
+    for save_name in Vars.saves.saves.keys():
         var button = Button.new()
         button.auto_translate = false
-        button.text = name
+        button.text = save_name
         button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-        button.pressed.connect(load_save_info.bind(name))
+        button.pressed.connect(load_save_info.bind(save_name))
         %SavesList.add_child(button)
     if not Vars.saves.saves_changed.is_connected(load_saves):
         Vars.saves.saves_changed.connect(load_saves)
 
-func load_save_info(name: String) -> void:
-    var save = Vars.saves.saves[name] if name in Vars.saves.saves else null
+func load_save_info(save_name: String) -> void:
+    var save = Vars.saves.saves[save_name] \
+            if save_name in Vars.saves.saves else null
     if save == null:
         return
     current = save
@@ -52,8 +53,8 @@ func _on_search_text_changed(new_text: String) -> void:
             child.visible = true
         return
     for child in %SavesList.get_children():
-        var name = child.text
-        child.visible = name.find(new_text) != -1
+        var save_name = child.text
+        child.visible = save_name.find(new_text) != -1
 
 func wait_for_confirm(callback: Callable, cancel: Callable = func(): pass) -> void:
     cancel_callable = cancel
@@ -162,8 +163,8 @@ func _on_confirmation_dialog_confirmed() -> void:
     if missings.size() != 0:
         for mod in modifies:
             Vars.mods.mod_info_list[mod].enabled = modifies[mod]
-        var str = "\n".join(PackedStringArray(missings))
-        %AcceptDialog.dialog_text = tr("Vars.saves_FailedToApplyG.mods_MissingG.mods") + "\n" + str
+        var s = "\n".join(PackedStringArray(missings))
+        %AcceptDialog.dialog_text = tr("Vars.saves_FailedToApplyG.mods_MissingG.mods") + "\n" + s
         %AcceptDialog.show()
         return
     Vars.mods.save_enable_configs()

@@ -101,7 +101,10 @@ func disconnect_signal_by_table(target: Node, table: Dictionary) -> void:
 
 func load_data_with_version(stream: Stream, loaders: Array[Callable] = []) -> void:
     var version = stream.get_16();
+    var count = 0
     for loader in loaders:
+        if version < count: break
+        count += 1
         loader.call()
 
 func save_data_with_version(stream: Stream, savers: Array[Callable] = []) -> void:

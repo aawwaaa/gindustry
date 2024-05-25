@@ -26,3 +26,7 @@ func load() -> Settings.SettingsUIGroup:
     )
 
     return group
+
+func _notification(what: int) -> void:
+    if what == NOTIFICATION_PREDELETE:
+        InputHandler.add_input_handler_listener = Callable()

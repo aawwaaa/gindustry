@@ -28,7 +28,7 @@ func _load_contents() -> void:
         button_to_content[button] = content
         content_to_button[content] = button
 
-func _on_button_toggled(pressed: bool) -> void:
+func _on_button_toggled(_pressed: bool) -> void:
     var button = group.get_pressed_button()
     if not button:
         selected_changed.emit(null)

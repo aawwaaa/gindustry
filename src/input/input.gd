@@ -1,16 +1,16 @@
 class_name Vars_Input
 extends Vars.Vars_Object
 
-var camera_node: Camera3D;
-var camera_base_node: Node3D;
-
 var ui_node: Control;
+
+var camera: CameraController;
+var debug: DebugMenu
 
 # signal input_handler_changed(handler: InputHandler, from: InputHandler);
 
 # var input_handler: InputHandler;
 
-func set_input_handler(name: String = "") -> void:
+func set_input_handler(_name: String = "") -> void:
     pass
 #     if name != "":
 #         configs.p("input-handler", name)
@@ -28,3 +28,11 @@ func set_input_handler(name: String = "") -> void:
 #         input_handler.extend_properties(old)
 #         old.queue_free()
 
+func _ready() -> void:
+    camera = CameraController.new()
+    camera.name = "CameraController"
+    add_child(camera)
+
+    debug = DebugMenu.scene.instantiate()
+    debug.name = "DebugMenu"
+    add_child(debug)

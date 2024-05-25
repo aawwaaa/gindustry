@@ -14,10 +14,8 @@ var contents_mapping_index = 1;
 
 var contents_wait = {}
 
-var current_loading_mod: Mod = null;
-
 func register_content(content: Content) -> void:
-    content.apply_mod(current_loading_mod);
+    content.apply_mod(Vars.mods.current_loading_mod);
     logger.debug("Load content: " + content.full_id + " " + content.get_content_type().name)
     contents.append(content);
     contents_indexed[content.full_id] = content;
