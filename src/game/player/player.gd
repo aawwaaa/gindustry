@@ -1,6 +1,9 @@
 class_name Player
 extends Node
 
+const PLAYER_TOKEN_CONFIG = "player/player_token"
+static var player_token_key = ConfigsGroup.ConfigKey.new(PLAYER_TOKEN_CONFIG, "")
+
 static var scene = load("res://src/game/player/player.tscn")
 
 static func create() -> Player:

@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://cfot584oajru0"]
+
+[ext_resource type="Script" path="res://ui/panels/message_panel/text.gd" id="1_su4k1"]
+
+[node name="Text" type="PanelContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+script = ExtResource("1_su4k1")
+
+[node name="Label" type="RichTextLabel" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+bbcode_enabled = true
+text = "text...
+[b][ b][/b][i][ i][/i][u][ u][/u]
+[color=red][ color=red][/color]
+[url=http://baidu.com][ url=http://baidu.com][/url]
+[img]res://assets/ui/arrows/right_arrow_1.tres[/img][ img]res://assets/ui/arrows/right_arrow_1.tres[ /img]"
+fit_content = true

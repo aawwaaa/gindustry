@@ -11,6 +11,9 @@ var config_value_changed = false
 func g(key: String, default: Variant = null) -> Variant:
     return configs.g(key, default)
 
+func k(key: ConfigsGroup.ConfigKey) -> Variant:
+    return configs.k(key)
+
 func p(key: String, value: Variant) -> void:
     configs.p(key, value)
 
@@ -20,7 +23,7 @@ func set_default(key: String, value: Variant) -> void:
         config_value_changed = true
 
 func generate_player_configs() -> void:
-    set_default("player-token", Utils.generate_token())
+    set_default(Player.PLAYER_TOKEN_CONFIG, Utils.generate_token())
 
     var token_mapping_key = PackedByteArray();
     token_mapping_key.resize(32)
@@ -28,7 +31,7 @@ func generate_player_configs() -> void:
     rng.randomize();
     for i in range(token_mapping_key.size()):
         token_mapping_key[i] = rng.randi_range(0, 255)
-    set_default("token-mapping-key", token_mapping_key)
+    set_default(Vars_Players.TOKEN_MAPPING_KEY_CONFIG, token_mapping_key)
 
 func load_configs() -> void:
     if not FileAccess.file_exists("user://configs.bin"):

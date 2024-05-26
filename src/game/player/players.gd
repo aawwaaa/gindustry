@@ -1,6 +1,9 @@
 class_name Vars_Players
 extends Vars.Vars_Object
 
+const TOKEN_MAPPING_KEY_CONFIG = "players/token_mapping_key"
+static var token_mapping_key_key = ConfigsGroup.ConfigKey.new(TOKEN_MAPPING_KEY_CONFIG, "")
+
 var player_tokens: Dictionary = {}
 var player_datas: Dictionary = {}
 var player_inc_id: int = 1
@@ -128,7 +131,7 @@ func load_data(stream: Stream) -> void:
     player_inc_id = stream.get_64()
 
     player_tokens = {}
-    var aes_key = Vars.configs.g("token-mapping-key")
+    var aes_key = Vars.configs.g(TOKEN_MAPPING_KEY_CONFIG)
     for _1 in range(stream.get_64()):
         var token_buffer = stream.get_buffer(stream.get_32())
         token_buffer.resize(ceili(token_buffer.size() / 16.0) * 16)
@@ -143,7 +146,7 @@ func load_data(stream: Stream) -> void:
     aes_context.finish()
     if buffer_decrypted != magic_number:
         player_tokens = {}
-        player_tokens[Vars.configs.g("player-token")] = 1
+        player_tokens[Vars.configs.g(Player.PLAYER_TOKEN_CONFIG)] = 1
 
     player_datas = {}
     for _1 in range(stream.get_64()):
@@ -157,7 +160,7 @@ func save_data(stream: Stream) -> void:
     stream.store_64(player_inc_id)
 
     stream.store_64(player_tokens.size())
-    var aes_key = Vars.configs.g("token-mapping-key")
+    var aes_key = Vars.configs.g(TOKEN_MAPPING_KEY_CONFIG)
     for token in player_tokens:
         var player_id = player_tokens[token]
         var token_buffer = token.to_ascii_buffer()

@@ -1,0 +1,72 @@
+[gd_scene load_steps=5 format=3 uid="uid://qpvbyyr77huf"]
+
+[ext_resource type="Script" path="res://ui/panels/message_panel/message_panel.gd" id="1_wkdmk"]
+[ext_resource type="Texture2D" uid="uid://d4h3l85gk7ahu" path="res://assets/ui/icons/check.tres" id="3_bc4mk"]
+[ext_resource type="Texture2D" uid="uid://butsfwwab3mnv" path="res://assets/ui/arrows/up_arrow_1.tres" id="3_dcwal"]
+[ext_resource type="Texture2D" uid="uid://cl4rvw5ro16gb" path="res://assets/ui/arrows/down_arrow_1.tres" id="4_rttqk"]
+
+[node name="MessagePanel" type="CanvasLayer"]
+script = ExtResource("1_wkdmk")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -512.0
+offset_right = 840.0
+offset_bottom = -32.0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="MessagesScroll" type="ScrollContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(840, 420)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Messages" type="VBoxContainer" parent="VBoxContainer/MessagesScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+alignment = 2
+
+[node name="InputPanel" type="PanelContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/InputPanel"]
+layout_mode = 2
+
+[node name="Prompt" type="RichTextLabel" parent="VBoxContainer/InputPanel/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+bbcode_enabled = true
+fit_content = true
+autowrap_mode = 0
+
+[node name="Text" type="LineEdit" parent="VBoxContainer/InputPanel/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+flat = true
+
+[node name="Prev" type="Button" parent="VBoxContainer/InputPanel/HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("3_dcwal")
+
+[node name="Next" type="Button" parent="VBoxContainer/InputPanel/HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("4_rttqk")
+
+[node name="Confirm" type="Button" parent="VBoxContainer/InputPanel/HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("3_bc4mk")
+
+[connection signal="pressed" from="VBoxContainer/InputPanel/HBoxContainer/Prev" to="." method="_on_prev_pressed"]
+[connection signal="pressed" from="VBoxContainer/InputPanel/HBoxContainer/Next" to="." method="_on_next_pressed"]
+[connection signal="pressed" from="VBoxContainer/InputPanel/HBoxContainer/Confirm" to="." method="_on_confirm_pressed"]

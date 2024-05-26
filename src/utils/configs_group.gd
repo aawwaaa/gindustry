@@ -1,6 +1,14 @@
 class_name ConfigsGroup
 extends Resource
 
+class ConfigKey extends Object:
+    var name: String
+    var default_value: Variant
+
+    func _init(n: String, dv: Variant):
+        name = n
+        default_value = dv
+
 var dict: Dictionary
 var defaults: Dictionary = {}
 
@@ -34,6 +42,9 @@ func g(key: String, default_value: Variant = defaults[key] if defaults.has(key) 
     if not dict.has(key):
         dict[key] = default_value;
     return dict[key];
+
+func k(key: ConfigKey) -> Variant:
+    return g(key.name, key.default_value)
 
 func p(key: String, value: Variant) -> void:
     dict[key] = value;
