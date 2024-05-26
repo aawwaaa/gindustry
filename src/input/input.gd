@@ -5,6 +5,7 @@ var ui_node: Control;
 
 var camera: CameraController;
 var debug: DebugMenu
+var focus: FocusManager
 
 # signal input_handler_changed(handler: InputHandler, from: InputHandler);
 
@@ -36,3 +37,7 @@ func _ready() -> void:
     debug = DebugMenu.scene.instantiate()
     debug.name = "DebugMenu"
     add_child(debug)
+
+    focus = FocusManager.new()
+    focus.name = "FocusManager"
+    add_child(focus)

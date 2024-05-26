@@ -39,7 +39,6 @@ func _object_init() -> void:
         self.world = self
         world_3d = World3D.new()
         camera = RenderingServer.camera_create()
-        RenderingServer.camera_set_perspective(camera, 90, 0.1, 1000)
         RenderingServer.camera_set_cull_mask(camera, 1)
         RenderingServer.camera_set_transform(camera, Transform3D.IDENTITY)
 

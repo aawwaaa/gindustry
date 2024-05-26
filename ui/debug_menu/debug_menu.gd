@@ -4,7 +4,10 @@ extends CanvasLayer
 const scene = preload("res://ui/debug_menu/debug_menu.tscn")
 
 var debug_enabled: bool = false:
-    set(v): debug_enabled = v; visible = v
+    set(v):
+        debug_enabled = v;
+        visible = v
+        if v: Vars.input.focus.set_focused(self)
 @onready var basic: DebugMenu_Basic = %Basic
 
 func _ready() -> void:

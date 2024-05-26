@@ -28,6 +28,7 @@ LayerWindow - Layer
 
 func create_nodes() -> Container:
     panel = PanelContainer.new()
+    panel.focus_mode = Control.FOCUS_CLICK
     add_child(panel)
 
     var box = VBoxContainer.new()
@@ -49,7 +50,6 @@ func create_nodes() -> Container:
     close_button.custom_minimum_size = Vector2(32, 32)
     close_button.icon = CLOSE_ICON
     close_button.pressed.connect(_on_close_pressed)
-    close_button.focus_mode = Control.FOCUS_NONE
 
     hbox.add_child(close_button)
 
@@ -61,6 +61,7 @@ func create_nodes() -> Container:
     return container
 
 func _on_close_pressed() -> void:
+    Vars.input.focus.set_focused(self)
     close_requested.emit()
 
 func _enter_tree() -> void:
@@ -90,6 +91,9 @@ func to_top() -> void:
     for index in windows.size():
         windows[index].layer = index + 512
 
+func is_top() -> bool:
+    return windows.back() == self
+
 func center() -> void:
     if not panel: return
     panel.anchors_preset = Control.PRESET_CENTER
@@ -111,20 +115,32 @@ func show_window() -> void:
 
 func hide_window() -> void:
     hide()
+    Vars.input.focus.remove_focused_if_is(self)
 
 func _on_title_button_gui_input(event: InputEvent) -> void:
     var velocity = Vector2.ZERO
     if event is InputEventMouseMotion:
         if event.button_mask & MOUSE_BUTTON_MASK_LEFT:
             velocity = event.relative
+            Vars.input.focus.set_focused(self)
     if event is InputEventScreenDrag:
         velocity = event.relative
+        Vars.input.focus.set_focused(self)
     if velocity != Vector2.ZERO:
         panel.position += velocity
 
-func _handle_input(event: InputEvent) -> void:
+func _handle_input(_event: InputEvent) -> void:
     pass
 
 func _input(event: InputEvent) -> void:
     if not visible: return
+    if event is InputEventMouseButton:
+        var current = get_viewport().gui_get_focus_owner()
+        while current:
+            if current == self: break
+            current = current.get_parent()
+        if current == self:
+            to_top()
+            Vars.input.focus.set_focused(self)
+    if not Vars.input.focus.is_focused(self): return
     _handle_input(event)

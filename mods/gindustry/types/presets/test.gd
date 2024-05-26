@@ -44,11 +44,11 @@ func _after_ready() -> void:
 
     mesh.size = Vector3(100, 2, 100)
 
-    instance2 = RenderingServer.instance_create()
-    RenderingServer.instance_set_base(instance2, mesh.get_rid())
-    RenderingServer.instance_set_transform(instance, Transform3D.IDENTITY \
-            .translated(Vector3.DOWN * 0.2))
-    RenderingServer.instance_set_scenario(instance2, Vars.worlds.worlds[1].world_3d.scenario)
+    # instance2 = RenderingServer.instance_create()
+    # RenderingServer.instance_set_base(instance2, mesh.get_rid())
+    # RenderingServer.instance_set_transform(instance, Transform3D.IDENTITY \
+    #         .translated(Vector3.DOWN * 0.2))
+    # RenderingServer.instance_set_scenario(instance2, Vars.worlds.worlds[1].world_3d.scenario)
 
 func _load_preset() -> void:
     pass
