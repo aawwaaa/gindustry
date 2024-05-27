@@ -1,7 +1,8 @@
 class_name CameraController
 extends Node
 
-var active: bool = true
+var active: bool = true:
+    set(v): active = v; if v: update_transform()
 var camera_rid: RID
 var transform: Transform3D:
     set(v): transform = v; update_transform()

@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://qpvbyyr77huf"]
+[gd_scene load_steps=6 format=3 uid="uid://qpvbyyr77huf"]
 
 [ext_resource type="Script" path="res://ui/panels/message_panel/message_panel.gd" id="1_wkdmk"]
 [ext_resource type="Texture2D" uid="uid://d4h3l85gk7ahu" path="res://assets/ui/icons/check.tres" id="3_bc4mk"]
 [ext_resource type="Texture2D" uid="uid://butsfwwab3mnv" path="res://assets/ui/arrows/up_arrow_1.tres" id="3_dcwal"]
 [ext_resource type="Texture2D" uid="uid://cl4rvw5ro16gb" path="res://assets/ui/arrows/down_arrow_1.tres" id="4_rttqk"]
+[ext_resource type="Texture2D" uid="uid://c7l4rxpdys3a3" path="res://assets/ui/icons/transfer.tres" id="4_ujoct"]
 
 [node name="MessagePanel" type="CanvasLayer"]
 script = ExtResource("1_wkdmk")
@@ -63,10 +64,19 @@ icon = ExtResource("3_dcwal")
 layout_mode = 2
 icon = ExtResource("4_rttqk")
 
+[node name="AutoComplete" type="Button" parent="VBoxContainer/InputPanel/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("4_ujoct")
+
 [node name="Confirm" type="Button" parent="VBoxContainer/InputPanel/HBoxContainer"]
 layout_mode = 2
 icon = ExtResource("3_bc4mk")
 
+[connection signal="gui_input" from="VBoxContainer/InputPanel/HBoxContainer/Text" to="." method="_on_text_gui_input"]
+[connection signal="text_changed" from="VBoxContainer/InputPanel/HBoxContainer/Text" to="." method="_on_text_text_changed"]
+[connection signal="text_submitted" from="VBoxContainer/InputPanel/HBoxContainer/Text" to="." method="_on_text_text_submitted"]
 [connection signal="pressed" from="VBoxContainer/InputPanel/HBoxContainer/Prev" to="." method="_on_prev_pressed"]
 [connection signal="pressed" from="VBoxContainer/InputPanel/HBoxContainer/Next" to="." method="_on_next_pressed"]
+[connection signal="pressed" from="VBoxContainer/InputPanel/HBoxContainer/AutoComplete" to="." method="_on_auto_complete_pressed"]
 [connection signal="pressed" from="VBoxContainer/InputPanel/HBoxContainer/Confirm" to="." method="_on_confirm_pressed"]

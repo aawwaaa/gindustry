@@ -34,6 +34,7 @@ var server: Vars_Server
 
 var headless: Vars_Headless
 var input: Vars_Input
+var ui: Vars_UI
 
 func _ready() -> void:
     tree = get_tree()
@@ -73,3 +74,4 @@ func init() -> void:
 
     headless = add(Vars_Headless.new(), "Headless")
     input = add(Vars_Input.new(), "Input")
+    ui = add(Vars_UI.new(), "UI")

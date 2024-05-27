@@ -23,10 +23,6 @@ Utils="*res://src/utils.gd"
 Log="*res://src/log.gd"
 Vars="*res://src/vars.gd"
 
-[debug]
-
-settings/stdout/verbose_stdout=true
-
 [display]
 
 window/stretch/aspect="expand"

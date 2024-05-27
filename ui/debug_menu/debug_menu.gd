@@ -7,7 +7,7 @@ var debug_enabled: bool = false:
     set(v):
         debug_enabled = v;
         visible = v
-        if v: Vars.input.focus.set_focused(self)
+        if v: Vars.ui.focus.set_focused(self)
 @onready var basic: DebugMenu_Basic = %Basic
 
 func _ready() -> void:
