@@ -1,11 +1,8 @@
 extends Window
 
+func _on_create_pressed() -> void:
+    Vars.server.create_server(int(%CreatePort.text))
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-    pass # Replace with function body.
+func _on_join_pressed() -> void:
+    Vars.client.connect_to(%Host.text, int(%Port.text))
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-    pass

@@ -3,6 +3,7 @@ extends Vars.Vars_Object
 
 signal client_request_join(peer_data: PeerData)
 signal client_message(peer_data: PeerData, message: String)
+signal client_request_auto_complete(peer_data: PeerData, message: String)
 
 const PeerState = PeerData.PeerState
 const MultiplayerState = Vars_Client.MultiplayerState
@@ -53,6 +54,7 @@ func create_server(port: int) -> Error:
     multiplayer.multiplayer_peer = peer
     multiplayer_state = MultiplayerState.SERVER_LOADING
     logger.info(tr("Server_Loading {port}").format({port = port}))
+    call_deferred("server_ready") # TODO
     return err
 
 func server_ready() -> void:
@@ -62,7 +64,8 @@ func server_ready() -> void:
     logger.info(tr("Server_Ready"))
 
 func sync(node: Node, method: StringName, args: Array[Variant]) -> void:
-    pass
+    for peer in peers:
+        peer.sync(node, method, args)
 
 func set_peer_state(peer_id: int, state: PeerState) -> void:
     Vars.server.set_peer_state_rpc.rpc(peer_id, state)
@@ -79,12 +82,34 @@ func request_join() -> void:
         multiplayer.peer.disconnect_peer(peer_id, true)
         return
     var peer_data = create_peer_data(peer_id)
+    peer_data.state = PeerState.CONNECTING
     client_request_join.emit(peer_data)
     Vars.client.continue_join.rpc_id(peer_id)
 
+@rpc("any_peer", "call_remote", "reliable")
+func request_auto_complete(message: String) -> void:
+    var peer_id = multiplayer.get_remote_sender_id()
+    if not has_peer_data(peer_id): return
+    client_request_auto_complete.emit(get_peer_data(peer_id), message)
+
+func get_peer_data(peer_id: int) -> PeerData:
+    return peers.get(peer_id)
+
+func has_peer_data(peer_id: int) -> bool:
+    return peers.has(peer_id)
+
+@rpc("any_peer", "call_remote", "reliable")
+func request_message(message: String) -> void:
+    var peer_id = multiplayer.get_remote_sender_id()
+    if not has_peer_data(peer_id): return
+    client_message.emit(get_peer_data(peer_id), message)
+
+func send_message(message: String) -> void:
+    sync(Vars.client, "post_message", [message])
+
 func create_peer_data(peer_id: int) -> PeerData:
     var peer_data = PeerData.new()
-    peer_data.peer = peer_id
+    peer_data.peer_id = peer_id
     peers[peer_id] = peer_data
     return peer_data
 

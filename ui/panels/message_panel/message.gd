@@ -20,7 +20,7 @@ func hide_message() -> void:
 
 func show_short_time() -> void:
     show()
-    scene_tree_timer = get_tree().create_timer(Vars.configs.k(message_duration_key))
+    scene_tree_timer = Vars.tree.create_timer(Vars.configs.k(message_duration_key))
     await scene_tree_timer.timeout
     scene_tree_timer = null
     if showing: return

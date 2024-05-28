@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cxbi14y7r7q5f"]
+[gd_scene load_steps=10 format=3 uid="uid://cxbi14y7r7q5f"]
 
 [ext_resource type="Script" path="res://ui/main.gd" id="1_w18yf"]
 [ext_resource type="PackedScene" uid="uid://btxboyi6ctpxq" path="res://ui/loading/loading.tscn" id="2_jpl0v"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://chotu7f2vsjke" path="res://ui/menus/new_game/new_game.tscn" id="5_cyego"]
 [ext_resource type="PackedScene" uid="uid://c5gi1kfmoo02i" path="res://ui/menus/settings/settings.tscn" id="5_r7vc2"]
 [ext_resource type="PackedScene" uid="uid://c7uj4kdkhepli" path="res://ui/game/game_ui.tscn" id="8_8l6oa"]
+[ext_resource type="PackedScene" uid="uid://cd7x0p0fsdn7g" path="res://ui/menus/servers/servers.tscn" id="8_lwtn2"]
 [ext_resource type="PackedScene" uid="uid://bpse7iuci88lr" path="res://ui/menus/saves/saves.tscn" id="8_ysqt5"]
 
 [node name="Main" type="Node3D"]
@@ -28,6 +29,11 @@ text = "MainMenu_NewGame"
 [node name="Saves" type="Button" parent="CanvasLayer/MainMenu"]
 layout_mode = 2
 text = "MainMenu_Saves"
+
+[node name="Servers" type="Button" parent="CanvasLayer/MainMenu"]
+layout_mode = 2
+text = "MainMenu_Servers
+"
 
 [node name="Mods" type="Button" parent="CanvasLayer/MainMenu"]
 layout_mode = 2
@@ -54,11 +60,15 @@ visible = false
 [node name="Saves" parent="CanvasLayer/Windows" instance=ExtResource("8_ysqt5")]
 visible = false
 
+[node name="Servers" parent="CanvasLayer/Windows" instance=ExtResource("8_lwtn2")]
+visible = false
+
 [node name="GameUI" parent="CanvasLayer" instance=ExtResource("8_8l6oa")]
 unique_name_in_owner = true
 visible = false
 
 [connection signal="pressed" from="CanvasLayer/MainMenu/NewGame" to="CanvasLayer/Windows/NewGame" method="show"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/Saves" to="." method="_on_saves_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/Servers" to="CanvasLayer/Windows/Servers" method="show"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/Mods" to="CanvasLayer/Windows/Mods" method="show"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/Settings" to="CanvasLayer/Windows/Settings" method="show"]
