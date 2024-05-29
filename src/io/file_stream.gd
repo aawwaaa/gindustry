@@ -6,6 +6,8 @@ var access: FileAccess;
 func _init(acc: FileAccess): self.access = acc;
 
 func seek(data_len: int) -> void: access.seek(data_len + access.get_position());
+func flush() -> void: access.flush();
+func close() -> void: access.close();
 
 func get_8() -> int: return access.get_8();
 func get_16() -> int: return access.get_16();
