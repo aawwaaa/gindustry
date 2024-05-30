@@ -111,6 +111,7 @@ func create_peer_data(peer_id: int) -> PeerData:
     var peer_data = PeerData.new()
     peer_data.peer_id = peer_id
     peers[peer_id] = peer_data
+    peer_data.init_server()
     return peer_data
 
 func reset_local_join() -> void:

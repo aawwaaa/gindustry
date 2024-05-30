@@ -29,8 +29,6 @@ func sync(node: Node, method: StringName, args: Array[Variant]) -> void:
         return
     var serialized = Utils.serialize.serialize_args(args)
     if state in [PeerState.RECEIVING, PeerState.CONNECTING]:
-        if wbas == null:
-            wbas = ByteArrayStream.new(sync_queue)
         wbas.store_string(node.get_path())
         wbas.store_string(method)
         wbas.store_16(args.size())
@@ -44,4 +42,8 @@ func sync(node: Node, method: StringName, args: Array[Variant]) -> void:
         return
     call_remote("sync_receive", cargs)
 
+func init_client() -> void:
+    pass
 
+func init_server() -> void:
+    wbas = ByteArrayStream.new(sync_queue)

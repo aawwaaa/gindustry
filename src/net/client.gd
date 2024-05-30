@@ -132,6 +132,7 @@ func append_sync_queue(path: NodePath, method: StringName, args: Array[Variant],
 @rpc("authority", "call_remote", "reliable")
 func player_joined(peer_id: int, data: Dictionary) -> void:
     # TODO
+    # TODO if exists, use already exists
     pass
 
 @rpc("authority", "call_remote", "reliable")
