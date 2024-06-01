@@ -33,7 +33,7 @@ func sync(node: Node, method: StringName, args: Array[Variant]) -> void:
         node.callv(method, args)
         return
     var serialized = Utils.serialize.serialize_args(args)
-    if state in [PeerState.RECEIVING, PeerState.CONNECTING]:
+    if state == PeerState.CONNECTING:
         wbas.store_string(node.get_path())
         wbas.store_string(method)
         wbas.store_16(args.size())
@@ -42,6 +42,9 @@ func sync(node: Node, method: StringName, args: Array[Variant]) -> void:
             wbas.store_var(serialized["args"][i])
         return
     var cargs = [node.get_path(), method, serialized["args"], serialized["types"]]
+    if state == PeerState.RECEIVING:
+        call_remote("push_back_sync_queue", cargs)
+        return
     if state == PeerState.CATCHINGUP:
         call_remote("append_sync_queue", cargs)
         return

@@ -22,12 +22,16 @@ var local_joined: bool = false
 var local_join_peer_data: PeerData
 
 var data_block_processor: DataBlockProcessor = DataBlockProcessor.new()
+var sync_queue_received: bool = false
+var world_data_received: bool = false
+var player_list_received: bool = false
 
 func _ready() -> void:
     multiplayer.connected_to_server.connect(_on_connected_to_server)
     await get_tree().process_frame
     Vars.ui.message_panel.submit.connect(_on_message_panel_submit)
     Vars.ui.message_panel.request_auto_complete.connect(_on_message_panel_request_auto_comlete)
+    reset()
 
     data_block_processor.send_rpc.connect(func(args):
         call_remote("dbp", [args])
@@ -48,9 +52,14 @@ func reset() -> void:
     if not client_active(): return
     for peer in peers:
         peer.reset_client()
+    if not Vars.server.server_active():
+        peers.clear()
     if multiplayer.has_multiplayer_peer():
         multiplayer.multiplayer_peer.close()
     multiplayer_state = MultiplayerState.IDLE
+    sync_queue_received = false
+    world_data_received = false
+    player_list_received = false
     logger.info(tr("Client_Reseted"))
 
 func disconnect_from_server() -> void:
@@ -150,12 +159,16 @@ func continue_join() -> void:
 
 @rpc("authority", "call_remote", "reliable")
 func append_sync_queue(path: NodePath, method: StringName, args: Array[Variant], types: Array) -> void:
-    # TODO
+    # TODO call when new sync call
+    pass
+
+@rpc("authority", "call_remote", "reliable")
+func push_back_sync_queue(path: NodePath, method: StringName, args: Array[Variant], types: Array) -> void:
+    # TODO call when new sync call in receiving sync queue
     pass
 
 @rpc("authority", "call_remote", "reliable")
 func player_joined(peer_id: int, data: Dictionary) -> void:
-    # TODO
     # TODO if exists, use already exists
     pass
 
@@ -165,4 +178,8 @@ func player_left(peer_id: int) -> void:
     pass
 
 func join_local() -> Player:
+    var peer = Vars.server.init_local_join()
+    sync_queue_received = true
+    world_data_received = true
+    player_list_received = true
     return null

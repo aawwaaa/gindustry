@@ -23,6 +23,7 @@ var current_player: Player:
         current_player = v
         current_player_changed.emit(v, old)
 
+# RPC Call this
 func __set_paused(v: bool) -> void:
     __is_paused = v
     get_tree().paused = v
@@ -45,9 +46,14 @@ func reset_game() -> void:
     if save_preset: save_preset._disable_preset()
     Vars.worlds.reset()
     Vars.objects.reset()
+
     save_preset = null
     current_player = null;
+
     Vars.players.reset();
+    
+    Vars.client.reset();
+    Vars.server.reset();
 
 func start_game_load() -> void:
     Vars.core.state.set_state(Vars_Core.State.LOADING_GAME)
