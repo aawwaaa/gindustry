@@ -12,17 +12,21 @@ class ConfigKey extends Object:
 var dict: Dictionary
 var defaults: Dictionary = {}
 
-static func load_from(stream: Stream):
-    var group = ConfigsGroup.new();
-    group.init_configs();
-    group.load_configs(stream);
-    return group;
+func load_from(stream: Stream) -> Error:
+    init_configs();
+    var err = load_configs(stream);
+    if err: return err
+    return OK
 
-func load_configs(stream: Stream):
+func load_configs(stream: Stream) -> Error:
     var size = stream.get_32();
+    if stream.get_error(): return stream.get_error();
     for _1 in range(size):
         var key = stream.get_string();
+        if stream.get_error(): return stream.get_error();
         dict[key] = stream.get_var();
+        if stream.get_error(): return stream.get_error();
+    return OK
 
 func save_configs(stream: Stream):
     stream.store_32(dict.size())

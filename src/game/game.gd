@@ -4,6 +4,8 @@ extends Vars.Vars_Object
 signal save_meta_changed(meta: SaveMeta);
 signal current_player_changed(player: Player, from: Player);
 
+var logger: Log.Logger = Log.register_logger("Game_LogSource")
+
 var __is_paused: bool
 
 var save_preset: Preset:
@@ -43,7 +45,9 @@ func is_paused() -> bool:
     return __is_paused
 
 func reset_game() -> void:
-    if save_preset: save_preset._disable_preset()
+    if save_preset:
+        save_preset._disable_preset()
+        save_preset._reset_preset()
     Vars.worlds.reset()
     Vars.objects.reset()
 
@@ -56,6 +60,7 @@ func reset_game() -> void:
     Vars.server.reset();
 
 func start_game_load() -> void:
+    logger.info(tr("Game_LoadStarted"))
     Vars.core.state.set_state(Vars_Core.State.LOADING_GAME)
 
 func init_game() -> void:
@@ -65,32 +70,56 @@ func init_game() -> void:
     Vars.contents.init_contents_mapping();
 
 func ready_game() -> void:
+    logger.info(tr("Game_Ready"))
     Vars.objects.object_ready()
     Vars.core.state.set_state(Vars_Core.State.IN_GAME)
 
 const current_data_version = 0;
 
-func load_game(stream: Stream) -> void:
+func handle_load_error(err: Error) -> Error:
+    if err:
+        reset_game()
+        logger.error(tr("Game_LoadError {err}").format({err = error_string(err)}))
+    return err
+
+func load_game(stream: Stream, make_ready = true) -> Error:
     start_game_load();
-    save_meta = SaveMeta.load_from(stream);
+    save_meta = SaveMeta.new()
+    var err = save_meta.load_from(stream);
+    if err: handle_load_error(err)
     var version = stream.get_16();
-    if version < 0: return ready_game();
-    save_configs = ConfigsGroup.load_from(stream);
-    Vars.objects.load_object_types_mapping(stream);
-    Vars.contents.load_contents_mapping(stream);
+    if stream.get_error(): return handle_load_error(stream.get_error());
+    if version < 0: 
+        ready_game();
+        return OK
+    save_configs = ConfigsGroup.new()
+    err = save_configs.load_from(stream);
+    if err: return handle_load_error(err);
+    err = Vars.objects.load_object_types_mapping(stream);
+    if err: return handle_load_error(err);
+    err = Vars.contents.load_contents_mapping(stream);
+    if err: return handle_load_error(err);
 
     save_preset = Vars.types.get_type(Preset.TYPE, stream.get_string()) as Preset
-    save_preset._load_preset_data(stream)
+    if stream.get_error(): return handle_load_error(stream.get_error());
+    err = save_preset._load_preset_data(stream)
+    if err: return handle_load_error(err)
     save_preset._enable_preset()
-    save_preset._load_preset()
+    save_preset._apply_preset()
     
-    Vars.worlds.load_data(stream)
-    Vars.players.load_data(stream)
+    err = Vars.worlds.load_data(stream)
+    if err: return handle_load_error(err)
+    err = Vars.players.load_data(stream)
+    if err: return handle_load_error(err)
     save_preset._load_after_world_load()
+    if make_ready: make_ready_game()
+    return OK
+
+func make_ready_game() -> void:
     ready_game();
     save_preset._after_ready();
 
-func save_game(stream: Stream, _to_client: bool = false) -> void:
+func save_game(stream: Stream, to_client: bool = false) -> void:
     save_meta.save_to(stream);
     stream.store_16(current_data_version)
     # version 0
@@ -98,9 +127,13 @@ func save_game(stream: Stream, _to_client: bool = false) -> void:
     Vars.objects.save_object_types_mapping(stream);
     Vars.contents.save_contents_mapping(stream);
 
-    stream.store_string(save_preset.name)
+    stream.store_string(save_preset.full_id)
     save_preset._save_preset_data(stream)
 
     Vars.worlds.save_data(stream)
-    Vars.players.save_data(stream)
+    if to_client:
+        # Vars.players.save_data_client(stream)
+        Vars.players.save_data_empty(stream)
+    else:
+        Vars.players.save_data(stream)
 

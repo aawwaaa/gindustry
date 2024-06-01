@@ -31,6 +31,8 @@ func get_n(length: int = 1) -> int:
     position += length
     return data
 
+func get_error() -> Error: return ERR_FILE_EOF if position >= array.size() else OK;
+
 func get_8() -> int: return get_n(1);
 func get_16() -> int: return get_n(2);
 func get_32() -> int: return get_n(4);

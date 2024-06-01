@@ -22,6 +22,8 @@ var logger: Log.Logger = Log.register_logger("Objects_LogSource")
 var object_inc_id: int = 1
 var objects: Dictionary = {}
 
+var err: Error = OK
+
 static func _static_init() -> void:
     if __objects_reg == null:
         __objects_reg = __ObjectsReg.new()
@@ -100,7 +102,11 @@ func cleanup_object_types() -> void:
     __objects_reg.object_types_sorted = []
 
 func load_object(stream: Stream) -> RefObject:
+    err = OK
     var type_id = stream.get_64()
+    if stream.get_error():
+        err = stream.get_error()
+        return null
     if type_id == 0: return null
     if not __objects_reg.object_types.has(type_id):
         logger.error(tr("Objects_UnknownObjectID {id}").format({id = type_id}))
@@ -110,7 +116,10 @@ func load_object(stream: Stream) -> RefObject:
         logger.error(tr("Objects_UnknownObjectType {uuid}").format({uuid = type.uuid}))
         return null
     var object: RefObject = type.create()
-    object.load_data(stream)
+    err = object.load_data(stream)
+    if err:
+        object.free()
+        return null
     return object
 
 func save_object(stream: Stream, object: RefObject) -> void:
@@ -146,19 +155,22 @@ func init_object_types_mapping() -> void:
         __objects_reg.object_types_sorted.append(type)  
         __objects_reg.object_type_inc_id += 1
 
-func load_object_types_mapping(stream: Stream) -> void:
+func load_object_types_mapping(stream: Stream) -> Error:
     cleanup_object_types()
     for type in __objects_reg.object_types_list:
         type.index = -1
     __objects_reg.object_type_inc_id = 1
-    for _1 in range(stream.get_32()):
+    var size = stream.get_32()
+    if stream.get_error(): return stream.get_error()
+    for _1 in range(size):
         var uuid = stream.get_string()
+        if stream.get_error(): return stream.get_error()
         var type: ObjectType
         if __objects_reg.object_types_indexed.has(uuid):
             type = __objects_reg.object_types_indexed[uuid]
         else:
             type = PlaceholderObjectType.new()
-            type.uuid = uuid
+            type.full_id = uuid
             logger.warn(tr("Objects_UnknownObjectType {uuid}").format({uuid = uuid}))
         type.index = __objects_reg.object_type_inc_id
         __objects_reg.object_types[type.index] = type
@@ -170,8 +182,9 @@ func load_object_types_mapping(stream: Stream) -> void:
             __objects_reg.object_types[type.index] = type
             __objects_reg.object_types_sorted.append(type)
             __objects_reg.object_type_inc_id += 1
+    return OK
 
 func save_object_types_mapping(stream: Stream) -> void:
     stream.store_32(__objects_reg.object_types_sorted.size())
     for type in __objects_reg.object_types_sorted:
-        stream.store_string(type.uuid)
+        stream.store_string(type.full_id)

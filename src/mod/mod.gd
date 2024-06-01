@@ -17,8 +17,9 @@ func _mod_init() -> void:
 func _load_contents() -> void:
     pass
 
-func load_configs(stream: Stream) -> void:
-    mod_configs = ConfigsGroup.load_from(stream);
+func load_configs(stream: Stream) -> Error:
+    mod_configs = ConfigsGroup.new()
+    return mod_configs.load_from(stream);
 
 func init_configs() -> void:
     mod_configs = ConfigsGroup.new()

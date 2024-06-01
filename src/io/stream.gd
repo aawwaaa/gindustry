@@ -5,6 +5,8 @@ func seek(_len: int) -> void: return;
 func flush() -> void: return;
 func close() -> void: return;
 
+func get_error() -> Error: return OK;
+
 func get_8() -> int: return 0;
 func get_16() -> int: return 0;
 func get_32() -> int: return 0;

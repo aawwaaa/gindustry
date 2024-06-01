@@ -37,7 +37,7 @@ func load_preset(preset: Preset) -> void:
     preset._init_preset();
     var _player = Vars.client.join_local()
     preset._init_after_world_load()
-    preset._load_preset();
+    preset._apply_preset();
     Vars.game.ready_game()
     preset._after_ready();
 

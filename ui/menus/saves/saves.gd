@@ -108,10 +108,10 @@ func set_save_ui(v: bool) -> void:
     save_ui = v
     if not v:
         %ForceLoad.visible = true
-        %Button.text = tr("Vars.saves_Load")
+        %Button.text = tr("Saves_Load")
         return
     %ForceLoad.visible = false
-    %Button.text = tr("Vars.saves_Save")
+    %Button.text = tr("Saves_Save")
     %TargetName.text = ""
 
 func _on_button_pressed() -> void:
@@ -164,11 +164,11 @@ func _on_confirmation_dialog_confirmed() -> void:
         for mod in modifies:
             Vars.mods.mod_info_list[mod].enabled = modifies[mod]
         var s = "\n".join(PackedStringArray(missings))
-        %AcceptDialog.dialog_text = tr("Vars.saves_FailedToApplyG.mods_MissingG.mods") + "\n" + s
+        %AcceptDialog.dialog_text = tr("Saves_FailedToApplyMods_MissingMods") + "\n" + s
         %AcceptDialog.show()
         return
     Vars.mods.save_enable_configs()
-    %AcceptDialog.dialog_text = tr("Vars.mods_NeedRestart")
+    %AcceptDialog.dialog_text = tr("Mods_NeedRestart")
     %AcceptDialog.confirmed.connect(func():
         Vars.headless.restart(["--load-save", %TargetName.text])
     , CONNECT_ONE_SHOT)

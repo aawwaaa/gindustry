@@ -46,6 +46,7 @@ func _on_confirm_pressed() -> void:
     submit.emit(%Text.text)
     %Text.text = ""
     history_index = -2
+    hide_input()
 
 func _on_prev_pressed() -> void:
     if history_index >= histories.size() - 1:

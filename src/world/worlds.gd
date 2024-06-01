@@ -40,15 +40,19 @@ func reset() -> void:
     current_toggled_world = null
     worlds = {};
 
-func load_data(stream: Stream) -> void:
-    Utils.load_data_with_version(stream, [func():
-        for _1 in stream.get_32():
+func load_data(stream: Stream) -> Error:
+    return Utils.load_data_with_version(stream, [func():
+        var size = stream.get_32()
+        if stream.get_error(): return stream.get_error()
+        for _1 in size:
             var world = Vars.objects.load_object(stream)
+            if Vars.objects.err: return Vars.objects.err
             if not (world is World):
                 logger.error(tr("Worlds_UnknownWorldObject {id}").format({id = world.object_id}))
-                continue
+                return ERR_INVALID_DATA
             worlds[world.object_id] = world
         worlds_changed.emit()
+        return OK
     ])
 
 func save_data(stream: Stream) -> void:

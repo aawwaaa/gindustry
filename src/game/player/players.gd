@@ -124,22 +124,50 @@ func save_player(player: Player, with_private_data: bool = true) -> PackedByteAr
 
 const current_data_version = 0
 
-func load_data(stream: Stream) -> void:
+func load_data(stream: Stream) -> Error:
     var version = stream.get_16();
+    if stream.get_error(): return stream.get_error();
     # version 0
-    if version < 0: return
+    if version < 0: return OK
     player_inc_id = stream.get_64()
+    if stream.get_error(): return stream.get_error();
+    
+    var err = load_tokens(stream)
+    if err: return err
 
+    player_datas = {}
+    var size = stream.get_64()
+    if stream.get_error(): return stream.get_error();
+    for _1 in range(size):
+        var player_id = stream.get_64()
+        if stream.get_error(): return stream.get_error();
+        var length = stream.get_64()
+        if stream.get_error(): return stream.get_error();
+        var player_data = stream.get_buffer(length)
+        if stream.get_error(): return stream.get_error();
+        player_datas[player_id] = player_data
+    return OK
+
+func load_tokens(stream: Stream) -> Error:
     player_tokens = {}
-    var aes_key = Vars.configs.g(TOKEN_MAPPING_KEY_CONFIG)
-    for _1 in range(stream.get_64()):
-        var token_buffer = stream.get_buffer(stream.get_32())
+    var aes_key = Vars.configs.k(token_mapping_key_key)
+    var size = stream.get_64()
+    if stream.get_error(): return stream.get_error();
+    for _1 in range(size):
+        var length = stream.get_32()
+        if stream.get_error(): return stream.get_error();
+        var token_buffer = stream.get_buffer(length)
+        if stream.get_error(): return stream.get_error();
         token_buffer.resize(ceili(token_buffer.size() / 16.0) * 16)
         aes_context.start(AESContext.MODE_ECB_DECRYPT, aes_key)
         var token_decrypted = aes_context.update(token_buffer).get_string_from_ascii()
         player_tokens[token_decrypted] = stream.get_64()
+        if stream.get_error(): return stream.get_error();
         aes_context.finish() 
-    var buffer = stream.get_buffer(stream.get_16())
+    var buflen = stream.get_16()
+    if stream.get_error(): return stream.get_error();
+    var buffer = stream.get_buffer(buflen)
+    if stream.get_error(): return stream.get_error();
     buffer.resize(ceili(buffer.size() / 16.0) * 16)
     aes_context.start(AESContext.MODE_ECB_DECRYPT, aes_key)
     var buffer_decrypted = aes_context.update(buffer)
@@ -147,12 +175,7 @@ func load_data(stream: Stream) -> void:
     if buffer_decrypted != magic_number:
         player_tokens = {}
         player_tokens[Vars.configs.g(Player.PLAYER_TOKEN_CONFIG)] = 1
-
-    player_datas = {}
-    for _1 in range(stream.get_64()):
-        var player_id = stream.get_64()
-        var player_data = stream.get_buffer(stream.get_64())
-        player_datas[player_id] = player_data
+    return OK
 
 func save_data(stream: Stream) -> void:
     stream.store_16(current_data_version)
@@ -208,3 +231,14 @@ func save_data_client(stream: Stream) -> void:
         stream.store_64(datas[player_id].size())
         stream.store_buffer(datas[player_id])
 
+func save_data_empty(stream: Stream) -> void:
+    stream.store_16(current_data_version)
+    # version 0
+    stream.store_64(player_inc_id)
+
+    stream.store_64(0)
+    var buffer = PackedByteArray()
+    stream.store_16(buffer.size())
+    stream.store_buffer(buffer)
+
+    stream.store_64(0)

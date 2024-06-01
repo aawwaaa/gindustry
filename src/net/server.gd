@@ -129,6 +129,25 @@ func request_debug_data_block() -> void:
         stream.store_8(rng.randi_range(0, 255))
     stream.close()
 
+@rpc("any_peer", "call_remote", "reliable")
+func request_world_data() -> void:
+    var peer_id = multiplayer.get_remote_sender_id()
+    if not has_peer_data(peer_id): return
+    var data = get_peer_data(peer_id)
+    var stream = data.data_block_processor.send_data("world")
+    Vars.game.save_game(stream, true)
+    stream.close()
+
+@rpc("any_peer", "call_remote", "reliable")
+func request_sync_queue_data() -> void:
+    return
+    var peer_id = multiplayer.get_remote_sender_id()
+    if not has_peer_data(peer_id): return
+    var data = get_peer_data(peer_id)
+    var stream = data.data_block_processor.send_data("sync_queue")
+    # TODO
+    stream.close()
+
 func send_message(message: String) -> void:
     sync(Vars.client, "post_message", [message])
 
@@ -142,7 +161,7 @@ func create_peer_data(peer_id: int) -> PeerData:
 func init_local_join() -> PeerData:
     local_joined = true
     var peer_data = create_peer_data(Vars.client.multiplayer.get_unique_id())
-    # continue local join ... -> call player_joined to all
+    # TODO continue local join ... -> call player_joined to all
     return peer_data
 
 func reset_local_join() -> void:

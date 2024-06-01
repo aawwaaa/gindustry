@@ -87,8 +87,29 @@ func _object_free() -> void:
     _entity_deinit()
     super._object_free()
 
-func _load_data(stream: Stream) -> void:
-    super._load_data(stream)
+func _load_data(stream: Stream) -> Error:
+    var err = super._load_data(stream)
+    if err: return err
+    return Utils.load_data_with_version(stream, [func():
+        var tran = stream.get_var()
+        if stream.get_error(): return stream.get_error()
+        if not (tran is Transform3D): return ERR_INVALID_DATA
+        transform = tran
+        var size = stream.get_64()
+        if stream.get_error(): return stream.get_error()
+        for _1 in range(size):
+            var object = Vars.objects.load_object(stream)
+            if Vars.objects.err: return Vars.objects.err
+            if not (object is Entity): return ERR_INVALID_DATA
+            add_child_entity(object)
+        return OK
+    ])
 
 func _save_data(stream: Stream) -> void:
     super._save_data(stream)
+    Utils.save_data_with_version(stream, [func():
+        stream.store_var(transform, true)
+        stream.store_64(child_entities.size())
+        for child in child_entities:
+            Vars.objects.save_object(stream, child)
+    ])

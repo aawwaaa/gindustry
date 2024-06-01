@@ -22,9 +22,9 @@ var local_joined: bool = false
 var local_join_peer_data: PeerData
 
 var data_block_processor: DataBlockProcessor = DataBlockProcessor.new()
+var data_receive_progresses: Dictionary = {}
 var sync_queue_received: bool = false
 var world_data_received: bool = false
-var player_list_received: bool = false
 
 func _ready() -> void:
     multiplayer.connected_to_server.connect(_on_connected_to_server)
@@ -39,6 +39,9 @@ func _ready() -> void:
     data_block_processor.send_rpc_unreliable.connect(func(args):
         call_remote("dbpur", [args])
     )
+    data_block_processor.new_data_transfer.connect(_on_new_data_transfer)
+    data_block_processor.data_transfer_progress_changed.connect(_on_data_transfer_progress_changed)
+    data_block_processor.data_transfer_complete.connect(_on_data_transfer_complete)
 
 func client_active() -> bool:
     return multiplayer_state in [
@@ -56,10 +59,13 @@ func reset() -> void:
         peers.clear()
     if multiplayer.has_multiplayer_peer():
         multiplayer.multiplayer_peer.close()
+    for progress in data_receive_progresses:
+        progress.finish()
+    data_receive_progresses.clear()
     multiplayer_state = MultiplayerState.IDLE
     sync_queue_received = false
     world_data_received = false
-    player_list_received = false
+    data_block_processor.reset()
     logger.info(tr("Client_Reseted"))
 
 func disconnect_from_server() -> void:
@@ -123,6 +129,9 @@ func _on_connected_to_server() -> void:
     multiplayer_state = MultiplayerState.CLIENT_RECEIVING
     logger.info(tr("Client_ConnectedToServer"))
     call_remote("request_join")
+    # -> continue_join
+    # -> connection_refused
+    # -> post_message -> ...
 
 @rpc("authority", "call_remote", "reliable")
 func post_message(msg: String) -> void:
@@ -144,6 +153,10 @@ func set_prompt(prompt: String) -> void:
     Vars.ui.message_panel.set_prompt(prompt)
 
 @rpc("authority", "call_remote", "reliable")
+func show_message_input() -> void:
+    Vars.ui.message_panel.show_input()
+
+@rpc("authority", "call_remote", "reliable")
 func sync_receive(path: NodePath, method: StringName, args: Array[Variant], types: Array) -> void:
     var node = Vars.tree.root.get_node(path)
     if not node: return
@@ -153,9 +166,47 @@ func sync_receive(path: NodePath, method: StringName, args: Array[Variant], type
 
 @rpc("authority", "call_remote", "reliable")
 func continue_join() -> void:
-    call_remote("request_debug_data_block")
-    # Request: player list, world data(data block), sync queue(data block)
-    pass
+    call_remote("request_world_data")
+    call_remote("request_sync_queue_data")
+    # -> _on_data_transfer_complete
+
+func _on_new_data_transfer(data_name: String, _blocks: DataBlockProcessor.DataBlocks) -> void:
+    if data_name not in ["world", "sync_queue"]: return
+    data_receive_progresses[data_name] = Log.register_progress_tracker(0,
+        tr("Client_ReceivingData {name}").format({name = data_name}),
+        logger.source)
+
+func _on_data_transfer_progress_changed(data_name: String, blocks: DataBlockProcessor.DataBlocks) -> void:
+    if data_name not in ["world", "sync_queue"]: return
+    data_receive_progresses[data_name].total = blocks.server_sended
+    data_receive_progresses[data_name].progress = blocks.current_received
+
+func _on_data_transfer_complete(data_name: String, blocks: DataBlockProcessor.DataBlocks) -> void:
+    if data_name not in ["world", "sync_queue"]: return
+    data_receive_progresses[data_name].finish()
+    data_receive_progresses.erase(data_name)
+    match data_name:
+        "world":
+            load_world(blocks.as_stream())
+        "sync_queue":
+            load_sync_queue(blocks.as_stream())
+    blocks.finish()
+    # -> check_finished
+
+func check_finished() -> void:
+    if not world_data_received: return
+    if not sync_queue_received: return
+    logger.info(tr("Client_ReadyForCatchup"))
+    Vars.game.make_ready_game()
+    # TODO continue
+
+func load_world(stream: ByteArrayStream) -> void:
+    Vars.game.load_game(stream)
+    world_data_received = true
+
+func load_sync_queue(stream: ByteArrayStream) -> void:
+    # TODO
+    sync_queue_received = true
 
 @rpc("authority", "call_remote", "reliable")
 func append_sync_queue(path: NodePath, method: StringName, args: Array[Variant], types: Array) -> void:
@@ -168,8 +219,12 @@ func push_back_sync_queue(path: NodePath, method: StringName, args: Array[Varian
     pass
 
 @rpc("authority", "call_remote", "reliable")
-func player_joined(peer_id: int, data: Dictionary) -> void:
+func player_joined(peer_id: int, player_id: int, data: PackedByteArray) -> void:
     # TODO if exists, use already exists
+    if local_joined: return
+    Vars.players.player_datas[player_id] = data
+    Vars.players.load_player(player_id)
+    # TODO init peers, others
     pass
 
 @rpc("authority", "call_remote", "reliable")
@@ -181,5 +236,5 @@ func join_local() -> Player:
     var peer = Vars.server.init_local_join()
     sync_queue_received = true
     world_data_received = true
-    player_list_received = true
+    # TODO
     return null

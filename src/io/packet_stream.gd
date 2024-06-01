@@ -43,6 +43,8 @@ func close() -> void:
     post_packet()
     buffer = PackedByteArray()
 
+func get_error() -> Error: return ERR_FILE_EOF if position >= buffer.size() else OK
+
 func get_8() -> int:
     var value = buffer.decode_u8(position)
     position += 1

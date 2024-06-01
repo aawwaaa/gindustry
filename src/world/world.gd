@@ -63,19 +63,17 @@ func toggle_to() -> void:
     RenderingServer.viewport_set_scenario(viewport.get_viewport_rid(), root_world.world_3d.scenario)
     RenderingServer.viewport_attach_camera(viewport.get_viewport_rid(), root_world.camera)
 
-func _load_data(stream: Stream) -> void:
-    Utils.load_data_with_version(stream, [func():
+func _load_data(stream: Stream) -> Error:
+    super._load_data(stream)
+    return Utils.load_data_with_version(stream, [func():
         is_root_world = stream.get_8() == 1;
-        for _1 in range(stream.get_64()):
-            var object = Vars.objects.load_object(stream)
-            add_child_entity(object)
+        if stream.get_error(): return stream.get_error()
+        return OK
     ])
 
 func _save_data(stream: Stream) -> void:
+    super._save_data(stream)
     Utils.save_data_with_version(stream, [func():
         stream.store_8(1 if is_root_world else 0);
-        stream.store_64(child_entities.size())
-        for child in child_entities:
-            Vars.objects.save_object(stream, child)
     ])
 

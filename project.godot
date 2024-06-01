@@ -37,7 +37,7 @@ project/assembly_name="gindustry"
 
 movie_writer/movie_file="E:/workspace/out.avi"
 movie_writer/disable_vsync=true
-run/main_run_args="-- --multiplayer-test"
+run/main_run_args="-- --multiplayer-test gindustry_preset_test"
 
 [filesystem]
 
@@ -132,7 +132,7 @@ interact_click={
 [internationalization]
 
 locale/translations=PackedStringArray("res://bundles/en.po", "res://bundles/zh.po")
-locale/test="en"
+locale/test="zh_CN"
 
 [layer_names]
 

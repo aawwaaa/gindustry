@@ -62,7 +62,8 @@ func args_load_preset(preset_id: String) -> void:
         return
     Vars.presets.load_preset(preset)
 
-func args_multiplayer_test() -> void:
+func args_multiplayer_test(preset_id: String) -> void:
+    await get_tree().create_timer(randf_range(0, 0.4)).timeout
     var file;
     var run_id;
     if FileAccess.file_exists("user://runid"):
@@ -77,6 +78,8 @@ func args_multiplayer_test() -> void:
     file.close()
     logger.info("Runid " + str(run_id))
     if run_id % 2 == 0:
+        var preset = Vars.types.get_type(Preset.TYPE, preset_id) as Preset
+        await Vars.presets.load_preset(preset)
         Vars.server.create_server(1234);
     else:
         get_tree().create_timer(0.1).timeout.connect(func():

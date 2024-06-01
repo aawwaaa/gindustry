@@ -50,13 +50,16 @@ func init_contents_mapping() -> void:
         contents_mapping[contents_mapping_index] = content
         contents_mapping_index += 1;
     
-func load_contents_mapping(stream: Stream) -> void:
+func load_contents_mapping(stream: Stream) -> Error:
     contents_mapping = {}
     for content in contents:
         content.index = -1;
     contents_mapping_index = 1;
-    for _1 in range(stream.get_32()):
+    var size = stream.get_32();
+    if stream.get_error(): return stream.get_error();
+    for _1 in range(size):
         var full_id = stream.get_string();
+        if stream.get_error(): return stream.get_error();
         if contents_indexed.has(full_id):
             contents_indexed[full_id].index = contents_mapping_index;
             contents_mapping[contents_mapping_index] = contents_indexed[full_id]
@@ -66,6 +69,7 @@ func load_contents_mapping(stream: Stream) -> void:
             content.index = contents_mapping_index;
             contents_mapping[contents_mapping_index] = content
             contents_mapping_index += 1;
+    return OK
 
 func save_contents_mapping(stream: Stream) -> void:
     var values = contents_mapping.values()

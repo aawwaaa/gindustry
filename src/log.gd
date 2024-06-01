@@ -5,11 +5,15 @@ signal progress_tracker_created(tracker: ProgressTracker);
 signal progress_tracker_finished(tracker: ProgressTracker);
 signal all_progress_tracker_finished();
 
+enum LogLevel{
+    INFO, WARN, ERROR, DEBUG
+}
+
 var log_levels = {
-    "info" = "LogLevel_Info",
-    "warn" = "LogLevel_Warn",
-    "error" = "LogLevel_Error",
-    "debug" = "LogLevel_Debug"
+    LogLevel.INFO: "LogLevel_Info",
+    LogLevel.WARN: "LogLevel_Warn",
+    LogLevel.ERROR: "LogLevel_Error",
+    LogLevel.DEBUG: "LogLevel_Debug"
 }
 
 var enable_debug_log = false;
@@ -26,25 +30,25 @@ class Logger extends RefCounted:
         self.template = "[{source}]\t[{level}]\t{message}" \
             .format({source = tr(source)});
     
-    func log(level: String, message: String):
+    func log(level: LogLevel, message: String):
         var formatted = template.format({level = \
             Log.log_levels[level], \
             message = message})
-        if level != "debug" or Log.enable_debug_log:
+        if level != LogLevel.DEBUG or Log.enable_debug_log:
             Log.log_created.emit(formatted, \
             source, level, message);
     
     func info(message: String):
-        self.log("info", message);
+        self.log(LogLevel.INFO, message);
     
     func warn(message: String):
-        self.log("warn", message);
+        self.log(LogLevel.WARN, message);
     
     func error(message: String):
-        self.log("error", message);
+        self.log(LogLevel.ERROR, message);
     
     func debug(message: String):
-        self.log("debug", message);
+        self.log(LogLevel.DEBUG, message);
 
 class ProgressTracker extends RefCounted:
     var name: String:
@@ -52,7 +56,8 @@ class ProgressTracker extends RefCounted:
     var source: String
     var progress: int:
         set(v): progress = v; updated.emit()
-    var total: int
+    var total: int:
+        set(v): total = v; updated.emit()
 
     signal updated()
 

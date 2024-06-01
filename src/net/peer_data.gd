@@ -20,6 +20,7 @@ var state: PeerState = PeerState.DISCONNECTED:
 var sync_queue: PackedByteArray = PackedByteArray()
 var wbas: ByteArrayStream = null;
 
+var start_time: float = 0
 var data_block_processor: DataBlockProcessor
 
 func call_remote(name: StringName, args: Array = []) -> void:
@@ -34,6 +35,7 @@ func sync(node: Node, method: StringName, args: Array[Variant]) -> void:
         return
     var serialized = Utils.serialize.serialize_args(args)
     if state == PeerState.CONNECTING:
+        wbas.store_float(Time.get_ticks_msec() / 1000.0 - start_time)
         wbas.store_string(node.get_path())
         wbas.store_string(method)
         wbas.store_16(args.size())
@@ -54,6 +56,7 @@ func init_client() -> void:
     pass
 
 func init_server() -> void:
+    start_time = Time.get_ticks_msec() / 1000.0
     wbas = ByteArrayStream.new(sync_queue)
     data_block_processor = DataBlockProcessor.new()
     data_block_processor.send_rpc.connect(func(args): call_remote("dbp", [args]))

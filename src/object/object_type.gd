@@ -8,6 +8,7 @@ var index: int
 
 func _create() -> RefObject:
     return null
+
 func create(no_create: bool = false) -> RefObject:
     var obj = _create()
     if obj: obj.object_type = self

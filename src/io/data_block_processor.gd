@@ -41,15 +41,17 @@ class DataBlocks extends RefCounted:
     func get_received() -> PackedByteArray:
         if not completed: return PackedByteArray()
         var buf = PackedByteArray()
-        for index in server_sended:
+        for index in (server_sended+1):
             buf.append_array(received_datas[index])
         return buf
 
     func as_stream() -> ByteArrayStream:
-        return ByteArrayStream.new(get_received())
+        var rec = get_received()
+        return ByteArrayStream.new(rec)
 
     func finish() -> void:
         processor.data_blcoks_dict.erase(name)
+        received_datas.clear()
     
     func handle_data(id: int, data: PackedByteArray) -> void:
         received_datas[id] = data
@@ -65,6 +67,7 @@ class DataBlocks extends RefCounted:
         progress_changed.emit(name, self)
 
     func handle_end(id: int) -> void:
+        if server_ended: return
         server_sended = id
         server_ended = true
         if current_received == id:
@@ -133,3 +136,7 @@ func get_data_blocks(data_name: String) -> DataBlocks:
 
 func get_all_data_blocks() -> Array[DataBlocks]:
     return data_blcoks_dict.values()
+
+func reset() -> void:
+    for block in data_blcoks_dict.values():
+        block.finish()

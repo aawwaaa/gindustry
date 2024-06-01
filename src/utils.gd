@@ -99,13 +99,15 @@ func disconnect_signal_by_table(target: Node, table: Dictionary) -> void:
     for signal_name in table:
         target.disconnect(signal_name, table[signal_name])
 
-func load_data_with_version(stream: Stream, loaders: Array[Callable] = []) -> void:
+func load_data_with_version(stream: Stream, loaders: Array[Callable] = []) -> Error:
     var version = stream.get_16();
     var count = 0
     for loader in loaders:
         if version < count: break
         count += 1
-        loader.call()
+        var err = loader.call()
+        if err != OK: return err
+    return OK
 
 func save_data_with_version(stream: Stream, savers: Array[Callable] = []) -> void:
     stream.store_16(savers.size())

@@ -37,15 +37,17 @@ func _object_ready() -> void:
     if not is_inside_tree():
         Vars.objects.add_child(self)
 
-func _load_data(_stream: Stream) -> void:
-    pass
+func _load_data(_stream: Stream) -> Error:
+    return OK
 
-func load_data(stream: Stream) -> void:
-    Utils.load_data_with_version(stream, [func():
+func load_data(stream: Stream) -> Error:
+    var err = Utils.load_data_with_version(stream, [func():
         object_id = stream.get_64()
-        _load_data(stream)
+        return _load_data(stream)
     ])
+    if err: return err
     _object_init()
+    return OK
 
 func _save_data(_stream: Stream) -> void:
     pass

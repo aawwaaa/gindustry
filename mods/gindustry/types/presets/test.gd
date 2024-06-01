@@ -50,7 +50,7 @@ func _after_ready() -> void:
     #         .translated(Vector3.DOWN * 0.2))
     # RenderingServer.instance_set_scenario(instance2, Vars.worlds.worlds[1].world_3d.scenario)
 
-func _load_preset() -> void:
+func _apply_preset() -> void:
     pass
 
 func _enable_preset() -> void:
@@ -61,8 +61,8 @@ func _disable_preset() -> void:
     RenderingServer.free_rid(instance)
     RenderingServer.free_rid(instance2)
 
-func _load_preset_data(_stream: Stream) -> void:
-    pass
+func _load_preset_data(_stream: Stream) -> Error:
+    return OK
 
 func _save_preset_data(_stream: Stream) -> void:
     pass

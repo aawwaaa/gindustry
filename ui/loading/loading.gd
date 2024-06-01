@@ -1,9 +1,10 @@
 extends PanelContainer
 
 static var progress_line_scene: PackedScene = load("res://ui/loading/progress_line.tscn")
+static var log_line_scene: PackedScene = load("res://ui/loading/log_line.tscn")
 
 @export var max_logs = 8;
-var log_buffer: Array[Label] = [];
+var log_buffer: Array[Loading_LogLine] = [];
 var progress_buffer: Dictionary = {};
 
 func _ready() -> void:
@@ -15,14 +16,13 @@ func _ready() -> void:
     Log.progress_tracker_created.connect(_on_log_progress_tracker_created)
     Log.progress_tracker_finished.connect(_on_log_progress_tracker_finished)
 
-func add_log(formatted: String, _1, _2, _3) -> void:
-    var node = Label.new()
-    node.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-    node.text = formatted
+func add_log(_1, source: String, level: Log.LogLevel, message: String) -> void:
+    var node = log_line_scene.instantiate()
     %Logs.add_child(node)
+    node.apply(tr(source), level, message)
     log_buffer.append(node)
     if log_buffer.size() > max_logs:
-        log_buffer.pop_front().queue_free()
+        (log_buffer.pop_front() as Node).queue_free()
 
 func _on_log_progress_tracker_created(tracker: Log.ProgressTracker) -> void:
     var line = progress_line_scene.instantiate()
