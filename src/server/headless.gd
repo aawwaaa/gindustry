@@ -37,6 +37,7 @@ var args_handlers = {
     "help" = args_help,
     "load-save" = args_load_save,
     "load-preset" = args_load_preset,
+    "multiplayer-test" = args_multiplayer_test,
     "_" = args_default
 }
 
@@ -60,6 +61,27 @@ func args_load_preset(preset_id: String) -> void:
         exit()
         return
     Vars.presets.load_preset(preset)
+
+func args_multiplayer_test() -> void:
+    var file;
+    var run_id;
+    if FileAccess.file_exists("user://runid"):
+        file = FileAccess.open("user://runid", FileAccess.READ)
+        var s = file.get_as_text()
+        file.close()
+        run_id = int(s)
+    else:
+        run_id = 0
+    file = FileAccess.open("user://runid", FileAccess.WRITE)
+    file.store_string(str(run_id + 1))
+    file.close()
+    logger.info("Runid " + str(run_id))
+    if run_id % 2 == 0:
+        Vars.server.create_server(1234);
+    else:
+        get_tree().create_timer(0.1).timeout.connect(func():
+            Vars.client.connect_to("localhost", 1234)
+        )
 
 func apply_args(args: Dictionary, props: Dictionary) -> void:
     for prop in props:

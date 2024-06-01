@@ -20,7 +20,12 @@ var state: PeerState = PeerState.DISCONNECTED:
 var sync_queue: PackedByteArray = PackedByteArray()
 var wbas: ByteArrayStream = null;
 
+var data_block_processor: DataBlockProcessor
+
 func call_remote(name: StringName, args: Array = []) -> void:
+    if peer_id == Vars.client.multiplayer.get_unique_id():
+        Vars.client.callv(name, args)
+        return
     Vars.client.rpc_id.bindv(args).call(peer_id, name)
 
 func sync(node: Node, method: StringName, args: Array[Variant]) -> void:
@@ -47,3 +52,12 @@ func init_client() -> void:
 
 func init_server() -> void:
     wbas = ByteArrayStream.new(sync_queue)
+    data_block_processor = DataBlockProcessor.new()
+    data_block_processor.send_rpc.connect(func(args): call_remote("dbp", [args]))
+    data_block_processor.send_rpc_unreliable.connect(func(args): call_remote("dbpur", [args]))
+
+func reset_client() -> void:
+    pass
+
+func reset_server() -> void:
+    pass

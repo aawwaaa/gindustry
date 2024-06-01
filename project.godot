@@ -37,7 +37,11 @@ project/assembly_name="gindustry"
 
 movie_writer/movie_file="E:/workspace/out.avi"
 movie_writer/disable_vsync=true
-run/main_run_args="--"
+run/main_run_args="-- --multiplayer-test"
+
+[filesystem]
+
+import/fbx/enabled=false
 
 [gindustry_tools]
 

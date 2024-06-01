@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://cphlr14ignpce"
+path="res://.godot/imported/machine-framework.obj-40e4ccbcb22b4b529c93fd86814f0fac.mesh"
+
+[deps]
+
+files=["res://.godot/imported/machine-framework.obj-40e4ccbcb22b4b529c93fd86814f0fac.mesh"]
+
+source_file="res://assets_source/machine-framework.obj"
+dest_files=["res://.godot/imported/machine-framework.obj-40e4ccbcb22b4b529c93fd86814f0fac.mesh", "res://.godot/imported/machine-framework.obj-40e4ccbcb22b4b529c93fd86814f0fac.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

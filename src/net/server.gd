@@ -7,6 +7,7 @@ signal client_request_auto_complete(peer_data: PeerData, message: String)
 
 const PeerState = PeerData.PeerState
 const MultiplayerState = Vars_Client.MultiplayerState
+const DATA_BLOCK_PROCESSOR_CHANNEL = 1
 
 var logger: Log.Logger = Log.register_logger("Server_LogSource")
 
@@ -31,6 +32,7 @@ func reset() -> void:
     if not server_active(): return
     for peer in peers:
         Vars.client.connection_refused.rpc_id(peer, "Client_Refused_ServerReseted")
+        peer.reset_server()
     server_port = -1
     multiplayer.multiplayer_peer.close()
     peers.clear()
@@ -92,6 +94,18 @@ func request_auto_complete(message: String) -> void:
     if not has_peer_data(peer_id): return
     client_request_auto_complete.emit(get_peer_data(peer_id), message)
 
+@rpc("any_peer", "call_remote", "reliable", DATA_BLOCK_PROCESSOR_CHANNEL)
+func dbp(args: Array[Variant]) -> void:
+    var peer_id = multiplayer.get_remote_sender_id()
+    if not has_peer_data(peer_id): return
+    get_peer_data(peer_id).data_block_processor.handle_rpc(args)
+
+@rpc("any_peer", "call_remote", "unreliable", DATA_BLOCK_PROCESSOR_CHANNEL)
+func dbpur(args: Array[Variant]) -> void:
+    var peer_id = multiplayer.get_remote_sender_id()
+    if not has_peer_data(peer_id): return
+    get_peer_data(peer_id).data_block_processor.handle_rpc_unreliable(args)
+
 func get_peer_data(peer_id: int) -> PeerData:
     return peers.get(peer_id)
 
@@ -104,6 +118,17 @@ func request_message(message: String) -> void:
     if not has_peer_data(peer_id): return
     client_message.emit(get_peer_data(peer_id), message)
 
+@rpc("any_peer", "call_remote", "reliable")
+func request_debug_data_block() -> void:
+    var peer_id = multiplayer.get_remote_sender_id()
+    if not has_peer_data(peer_id): return
+    var data = get_peer_data(peer_id)
+    var stream = data.data_block_processor.send_data("debug")
+    var rng = RandomNumberGenerator.new()
+    for _1 in range(100000):
+        stream.store_8(rng.randi_range(0, 255))
+    stream.close()
+
 func send_message(message: String) -> void:
     sync(Vars.client, "post_message", [message])
 
@@ -114,5 +139,11 @@ func create_peer_data(peer_id: int) -> PeerData:
     peer_data.init_server()
     return peer_data
 
+func init_local_join() -> PeerData:
+    local_joined = true
+    var peer_data = create_peer_data(Vars.client.multiplayer.get_unique_id())
+    # continue local join ... -> call player_joined to all
+    return peer_data
+
 func reset_local_join() -> void:
-    pass
+    local_joined = false

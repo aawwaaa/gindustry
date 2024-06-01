@@ -11,6 +11,7 @@ enum MultiplayerState{
     CLIENT_CATCTINGUP, CLIENT_CONNECTED,
     SERVER_LOADING, SERVER_READY,
 }
+const DATA_BLOCK_PROCESSOR_CHANNEL = 1
 
 var logger: Log.Logger = Log.register_logger("Client_LogSource")
 
@@ -20,11 +21,20 @@ var multiplayer_state: MultiplayerState:
 var local_joined: bool = false
 var local_join_peer_data: PeerData
 
+var data_block_processor: DataBlockProcessor = DataBlockProcessor.new()
+
 func _ready() -> void:
     multiplayer.connected_to_server.connect(_on_connected_to_server)
     await get_tree().process_frame
     Vars.ui.message_panel.submit.connect(_on_message_panel_submit)
     Vars.ui.message_panel.request_auto_complete.connect(_on_message_panel_request_auto_comlete)
+
+    data_block_processor.send_rpc.connect(func(args):
+        call_remote("dbp", [args])
+    )
+    data_block_processor.send_rpc_unreliable.connect(func(args):
+        call_remote("dbpur", [args])
+    )
 
 func client_active() -> bool:
     return multiplayer_state in [
@@ -36,6 +46,8 @@ func client_active() -> bool:
 
 func reset() -> void:
     if not client_active(): return
+    for peer in peers:
+        peer.reset_client()
     if multiplayer.has_multiplayer_peer():
         multiplayer.multiplayer_peer.close()
     multiplayer_state = MultiplayerState.IDLE
@@ -46,6 +58,9 @@ func disconnect_from_server() -> void:
     Vars.core.state.set_state(Vars_Core.State.MAIN_MENU)
 
 func call_remote(name: StringName, args: Array = []) -> void:
+    if Vars.server.local_joined:
+        Vars.server.callv(name, args)
+        return
     Vars.server.rpc_id.bindv(args).call(1, name)
 
 @rpc("authority", "call_local", "reliable")
@@ -61,6 +76,14 @@ func connection_refused(reason: String) -> void:
     logger.error(message)
     Vars.ui.message_panel.add_message(message)
     disconnect_from_server()
+
+@rpc("authority", "call_remote", "reliable")
+func dbp(args: Array[Variant]) -> void:
+    data_block_processor.handle_rpc(args)
+
+@rpc("authority", "call_remote", "reliable")
+func dbpur(args: Array[Variant]) -> void:
+    data_block_processor.handle_rpc(args)
 
 func connect_to(host: String, port: int) -> Error:
     Vars.core.state.set_state(Vars_Core.State.LOADING_GAME)
@@ -121,6 +144,7 @@ func sync_receive(path: NodePath, method: StringName, args: Array[Variant], type
 
 @rpc("authority", "call_remote", "reliable")
 func continue_join() -> void:
+    call_remote("request_debug_data_block")
     # Request: player list, world data(data block), sync queue(data block)
     pass
 
