@@ -1,10 +1,10 @@
 class_name CameraController
 extends Node
 
-# TODO current world follow actived camera
-
 var active: bool = true:
     set(v): active = v; if v: update_transform()
+var world: World:
+    set = set_world
 var camera_rid: RID
 var transform: Transform3D:
     set(v): transform = v; update_transform()
@@ -17,6 +17,7 @@ func _on_toggled_world_changed(world: World) -> void:
     set_world(world)
 
 func set_world(v: World) -> void:
+    world = v
     if v == null:
         camera_rid = RID()
         return
@@ -28,5 +29,8 @@ func set_world(v: World) -> void:
 
 func update_transform() -> void:
     if not camera_rid.is_valid(): return
+    if not is_instance_valid(world): return
     if not active: return
+    if Vars.worlds.current_toggled_world != world:
+        world.toggle_to()
     RenderingServer.camera_set_transform(camera_rid, transform)
