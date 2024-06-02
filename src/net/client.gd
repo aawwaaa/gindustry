@@ -69,8 +69,7 @@ func reset() -> void:
     logger.info(tr("Client_Reseted"))
 
 func disconnect_from_server() -> void:
-    reset()
-    Vars.core.state.set_state(Vars_Core.State.MAIN_MENU)
+    Vars.game.reset_to_menu()
 
 func call_remote(name: StringName, args: Array = []) -> void:
     if Vars.server.local_joined:
@@ -201,8 +200,9 @@ func check_finished() -> void:
     # TODO continue
 
 func load_world(stream: ByteArrayStream) -> void:
-    Vars.game.load_game(stream)
+    var err = Vars.game.load_game(stream)
     world_data_received = true
+    if err: disconnect_from_server()
 
 func load_sync_queue(stream: ByteArrayStream) -> void:
     # TODO

@@ -2,9 +2,26 @@ class_name ObjectType
 extends Resource
 
 @export var id: String;
-var full_id: String:
-    get: return id
+var full_id: String = "":
+    get:
+        if full_id != "": return full_id
+        if mod == null: full_id = "builtin_" + id
+        else: full_id = mod.mod_info.id + "_" + id
+        return full_id
 var index: int
+
+var mod: Mod
+
+func _init() -> void:
+    if Vars == null or Vars.mods == null:
+        mod = null
+        return
+    mod = Vars.mods.current_loading_mod
+
+# static func generate_full_id(id: String) -> String:
+#     if Vars == null or Vars.mods == null: return "builtin_" + id
+#     if not Vars.mods.current_loading_mod: return "builtin_" + id
+#     return Vars.mods.current_loading_mod.mod_info.id + "_" + id
 
 func _create() -> RefObject:
     return null
@@ -12,5 +29,5 @@ func _create() -> RefObject:
 func create(no_create: bool = false) -> RefObject:
     var obj = _create()
     if obj: obj.object_type = self
-    if obj and not no_create: obj.handle_create()
+    if obj and not no_create: obj.object_create()
     return obj

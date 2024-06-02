@@ -6,6 +6,7 @@ static var building: Dictionary = {}
 static var builtin_mod_info: ModInfo = load("res://contents/builtin.tres")
 
 static func load_builtin() -> void:
+    if builtin_mod_info.enabled: return
     builtin_mod_info.enabled = true
 
     Vars.mods.current_loading_mod = Mod.new(builtin_mod_info)

@@ -2,11 +2,13 @@ class_name Vars_Worlds
 extends Vars.Vars_Object
 
 signal worlds_changed()
+signal toggled_world_changed(world: World)
 
 var logger: Log.Logger = Log.register_logger("Worlds_LogSource")
 
 var worlds: Dictionary = {}
-var current_toggled_world: World
+var current_toggled_world: World:
+    set(v): current_toggled_world = v; toggled_world_changed.emit(v)
 
 func get_world_or_null(world_id: int) -> World:
     if not Vars.objects.has_object(world_id) \
@@ -29,13 +31,14 @@ func get_world(world_id: int) -> World:
 func create_world() -> World:
     var world = World.TYPE.create(true);
     world.is_root_world = true;
-    world.handle_create()
+    world.object_create()
     Vars.objects.make_ready(world)
     worlds_changed.emit()
     return world;
 
 func reset() -> void:
     for world in worlds.values():
+        if not is_instance_valid(world): continue
         world.free()
     current_toggled_world = null
     worlds = {};

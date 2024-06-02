@@ -7,19 +7,19 @@ static var TYPE: ObjectType:
 static func get_type() -> ObjectType:
     return null
 
-var object_id: int;
+var object_id: int = 0;
 var object_type: ObjectType
 var object_ready: bool
 
 func _object_create() -> void:
     pass
 
-func handle_create() -> void:
+func object_create() -> void:
     _object_create()
     _object_init()
 
 func _object_init() -> void:
-    Vars.objects.add_object(self) 
+    Vars.objects.add_object(self, object_id)
     add_to_group(&"objects")
     name = object_type.id + "#" + str(object_id)
 

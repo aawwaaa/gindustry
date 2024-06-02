@@ -9,10 +9,7 @@ const CHUNK_SIZE_VECTOR = Vector3.ONE * CHUNK_SIZE
 static var world_object_type: GDScriptObjectType
 
 static func _static_init() -> void:
-    world_object_type = GDScriptObjectType.new()
-    world_object_type.id = "gindustry-builtin-world"
-    world_object_type.type_script = World
-    Vars_Objects.add_object_type(world_object_type)
+    world_object_type = GDScriptObjectType.add("world", World)
 
 static func get_type() -> ObjectType:
     return world_object_type
@@ -47,13 +44,13 @@ func _object_ready() -> void:
     super._object_ready()
 
 func _object_free() -> void:
-    super._object_free()
     if is_root_world:
         if Vars.worlds.current_toggled_world == self:
             get_viewport().world_3d = null
             Vars.worlds.current_toggled_world = null
         world_3d.queue_free()
         RenderingServer.free_rid(camera)
+    super._object_free()
 
 func toggle_to() -> void:
     if Vars.worlds.current_toggled_world == root_world: return

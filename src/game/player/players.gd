@@ -154,7 +154,7 @@ func load_tokens(stream: Stream) -> Error:
     var size = stream.get_64()
     if stream.get_error(): return stream.get_error();
     for _1 in range(size):
-        var length = stream.get_32()
+        var length = stream.get_16()
         if stream.get_error(): return stream.get_error();
         var token_buffer = stream.get_buffer(length)
         if stream.get_error(): return stream.get_error();
@@ -191,7 +191,7 @@ func save_data(stream: Stream) -> void:
         aes_context.start(AESContext.MODE_ECB_ENCRYPT, aes_key)
         var token_encrypted = aes_context.update(token_buffer)
         aes_context.finish()
-        stream.store_32(token_encrypted.size())
+        stream.store_16(token_encrypted.size())
         stream.store_buffer(token_encrypted)
         stream.store_64(player_id)
     aes_context.start(AESContext.MODE_ECB_ENCRYPT, aes_key)

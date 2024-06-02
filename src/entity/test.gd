@@ -4,10 +4,7 @@ extends Entity
 static var test_entity_object_type: GDScriptObjectType
 
 static func _static_init() -> void:
-    test_entity_object_type = GDScriptObjectType.new()
-    test_entity_object_type.id = "gindustry-builtin-test-entity"
-    test_entity_object_type.type_script = TestEntity
-    Vars_Objects.add_object_type(test_entity_object_type)
+    test_entity_object_type = GDScriptObjectType.add("test_entity", TestEntity)
 
     mesh.size = Vector3(1, 1, 1)
 

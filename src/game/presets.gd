@@ -31,6 +31,7 @@ func load_preset(preset: Preset) -> void:
     if not result:
         Vars.core.state.set_state(Vars_Core.State.MAIN_MENU)
         return
+    Vars.game.start_game_load()
     Vars.game.init_game()
     Vars.game.save_preset = preset
     preset._enable_preset()

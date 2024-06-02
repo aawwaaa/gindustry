@@ -45,6 +45,9 @@ func is_paused() -> bool:
     return __is_paused
 
 func reset_game() -> void:
+    logger.info(tr("Game_GameReset"))
+    Vars.client.reset();
+
     if save_preset:
         save_preset._disable_preset()
         save_preset._reset_preset()
@@ -56,12 +59,15 @@ func reset_game() -> void:
 
     Vars.players.reset();
     
-    Vars.client.reset();
     Vars.server.reset();
+
+func reset_to_menu() -> void:
+    Vars.core.state.set_state(Vars_Core.State.MAIN_MENU)
 
 func start_game_load() -> void:
     logger.info(tr("Game_LoadStarted"))
-    Vars.core.state.set_state(Vars_Core.State.LOADING_GAME)
+    if Vars.core.state.get_state() != Vars_Core.State.LOADING_GAME:
+        Vars.core.state.set_state(Vars_Core.State.LOADING_GAME)
 
 func init_game() -> void:
     save_meta = SaveMeta.new();
@@ -79,7 +85,9 @@ const current_data_version = 0;
 func handle_load_error(err: Error) -> Error:
     if err:
         reset_game()
-        logger.error(tr("Game_LoadError {err}").format({err = error_string(err)}))
+        var msg = tr("Game_LoadError {err}").format({err = error_string(err)})
+        logger.error(msg)
+        Vars.ui.message_panel.add_message(msg)
     return err
 
 func load_game(stream: Stream, make_ready = true) -> Error:
@@ -102,6 +110,7 @@ func load_game(stream: Stream, make_ready = true) -> Error:
 
     save_preset = Vars.types.get_type(Preset.TYPE, stream.get_string()) as Preset
     if stream.get_error(): return handle_load_error(stream.get_error());
+    if not save_preset: return handle_load_error(ERR_INVALID_DATA)
     err = save_preset._load_preset_data(stream)
     if err: return handle_load_error(err)
     save_preset._enable_preset()

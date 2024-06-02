@@ -22,4 +22,4 @@ func _on_settings_pressed() -> void:
 
 func _on_exit_pressed() -> void:
     visible = false
-    Vars.game.back_to_menu()
+    Vars.game.reset_to_menu()

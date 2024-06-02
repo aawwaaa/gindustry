@@ -22,10 +22,7 @@ var transform: Transform3D:
     set = set_transform
 
 static func _static_init() -> void:
-    entity_object_type = GDScriptObjectType.new()
-    entity_object_type.id = "gindustry-builtin-entity"
-    entity_object_type.type_script = Entity
-    Vars_Objects.add_object_type(entity_object_type)
+    entity_object_type = GDScriptObjectType.add("entity", Entity)
 
 static func get_type() -> ObjectType:
     return entity_object_type
