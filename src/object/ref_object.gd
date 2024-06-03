@@ -3,6 +3,7 @@ extends Node
 
 static var TYPE: ObjectType:
     get = get_type
+const OBJECT_TYPE_META = &"object_type"
 
 static func get_type() -> ObjectType:
     return null
@@ -17,6 +18,8 @@ func _object_create() -> void:
 func object_create() -> void:
     _object_create()
     _object_init()
+    if Vars.objects.auto_ready:
+        _object_ready()
 
 func _object_init() -> void:
     Vars.objects.add_object(self, object_id)

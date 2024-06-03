@@ -13,6 +13,6 @@ func _ready() -> void:
 
 func _on_tracker_updated() -> void:
     name_label.text = "["+tr(tracker.source)+"] " + tr(tracker.name)
-    var per = float(tracker.progress) / tracker.total
+    var per = float(tracker.progress) / tracker.total if tracker.total > 0 else 0.0
     per_label.text = str(round(per*100)) + "%"
     progress_bar.value = per

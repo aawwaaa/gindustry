@@ -6,13 +6,8 @@ const TILE_SIZE_VECTOR = Vector3.ONE * TILE_SIZE
 const CHUNK_SIZE = 32
 const CHUNK_SIZE_VECTOR = Vector3.ONE * CHUNK_SIZE
 
-static var world_object_type: GDScriptObjectType
-
-static func _static_init() -> void:
-    world_object_type = GDScriptObjectType.add("world", World)
-
 static func get_type() -> ObjectType:
-    return world_object_type
+    return (World as Object).get_meta(OBJECT_TYPE_META)
 
 var is_root_world: bool = false;
 
@@ -53,6 +48,8 @@ func _object_free() -> void:
     super._object_free()
 
 func toggle_to() -> void:
+    if not object_ready: return
+
     if Vars.worlds.current_toggled_world == root_world: return
     Vars.worlds.current_toggled_world = root_world
 

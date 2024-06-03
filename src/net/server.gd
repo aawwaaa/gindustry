@@ -140,7 +140,6 @@ func request_world_data() -> void:
 
 @rpc("any_peer", "call_remote", "reliable")
 func request_sync_queue_data() -> void:
-    return
     var peer_id = multiplayer.get_remote_sender_id()
     if not has_peer_data(peer_id): return
     var data = get_peer_data(peer_id)

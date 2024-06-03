@@ -11,10 +11,14 @@ config_version=5
 [application]
 
 config/name="gindustry"
+config/name_localized={
+"zh_CN": "G工业"
+}
 config/version="1.0.0"
 config/tags=PackedStringArray("projects")
 run/main_scene="res://ui/main.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
+run/max_fps=60
 config/icon="res://mods/gindustry/icon.png"
 
 [autoload]
@@ -26,6 +30,7 @@ Vars="*res://src/vars.gd"
 [display]
 
 window/stretch/aspect="expand"
+window/vsync/vsync_mode=0
 window/custom=""
 window/version="1.0.0"
 
@@ -143,8 +148,9 @@ locale/test="zh_CN"
 
 [physics]
 
+common/physics_jitter_fix=0.0
 3d/default_gravity=0.0
-2d/default_gravity_vector=Vector2(0, 0)
+2d/default_gravity=0.0
 
 [rendering]
 

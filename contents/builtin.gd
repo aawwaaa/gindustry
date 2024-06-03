@@ -17,6 +17,13 @@ static func load_builtin() -> void:
 static func start_load() -> void:
     Vars.mods.current_loading_mod = Vars.mods.mod_inst_list[builtin_mod_info.id]
 
+    register_object_types({
+        "entity": Entity,
+
+        "world": World,
+        "test_entity": TestEntity,
+    })
+
     # InputHandler.register_input_handler("desktop", InputHandler.InputHandlerMeta.new({
     #     "input_handler": DesktopInputHandler,
     #     "tr_name": "InputHandler_desktop",
@@ -81,3 +88,11 @@ static func load_type(prefix: String, paths: Array[String]) -> void:
     var results = await Utils.load_contents_async("res://contents/" + prefix, paths, "Loader_ModLoad_Types", "Builtin")
     for type in results:
         Vars.types.register_type(type)
+
+static func register_object_types(types: Dictionary) -> void:
+    for key in types:
+        var type = types[key]
+        var reg = GDScriptObjectType.new()
+        reg.id = key
+        reg.type_script = type
+        Vars_Objects.add_object_type(reg)

@@ -34,11 +34,14 @@ func load_preset(preset: Preset) -> void:
     Vars.game.start_game_load()
     Vars.game.init_game()
     Vars.game.save_preset = preset
+    preset._pre_init_preset();
     preset._enable_preset()
     preset._init_preset();
-    var _player = Vars.client.join_local()
-    preset._init_after_world_load()
     preset._apply_preset();
-    Vars.game.ready_game()
+    preset._load_after_world_load()
+    Vars.game.make_ready_game()
+    var _player = Vars.client.join_local()
+    preset._init_after_local_player_join()
+    Vars.game.enter_game()
     preset._after_ready();
 

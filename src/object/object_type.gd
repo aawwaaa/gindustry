@@ -26,8 +26,8 @@ func _init() -> void:
 func _create() -> RefObject:
     return null
 
-func create(no_create: bool = false) -> RefObject:
+func create(call_create: bool = true) -> RefObject:
     var obj = _create()
     if obj: obj.object_type = self
-    if obj and not no_create: obj.object_create()
+    if obj and call_create: obj.object_create()
     return obj

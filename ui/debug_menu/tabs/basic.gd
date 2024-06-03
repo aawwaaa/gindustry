@@ -13,7 +13,7 @@ func _on_free_camera_toggled(toggled_on: bool) -> void:
     camera.set_world(Vars.worlds.current_toggled_world)
     %ToggleTo.disabled = not free_camera
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
     if free_camera: process_free_camera(delta)
     update_camera_transform()
 

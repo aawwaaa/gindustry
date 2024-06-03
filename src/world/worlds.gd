@@ -29,10 +29,9 @@ func get_world(world_id: int) -> World:
     return world;
 
 func create_world() -> World:
-    var world = World.TYPE.create(true);
+    var world = World.TYPE.create(false);
     world.is_root_world = true;
     world.object_create()
-    Vars.objects.make_ready(world)
     worlds_changed.emit()
     return world;
 

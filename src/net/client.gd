@@ -26,8 +26,15 @@ var data_receive_progresses: Dictionary = {}
 var sync_queue_received: bool = false
 var world_data_received: bool = false
 
+var catchup_controller: CatchupController
+
 func _ready() -> void:
     multiplayer.connected_to_server.connect(_on_connected_to_server)
+    multiplayer.connection_failed.connect(_on_connection_failed)
+    multiplayer.server_disconnected.connect(_on_server_disconnected)
+
+    catchup_controller = CatchupController.new()
+    add_child(catchup_controller)
     await get_tree().process_frame
     Vars.ui.message_panel.submit.connect(_on_message_panel_submit)
     Vars.ui.message_panel.request_auto_complete.connect(_on_message_panel_request_auto_comlete)
@@ -115,14 +122,13 @@ func connect_to(host: String, port: int) -> Error:
     message = tr("Client_Connecting {host}:{port}").format({host = host, port = port})
     logger.info(message)
     Vars.ui.message_panel.add_message(message)
-    add_connect_timeout()
+#    add_connect_timeout()
     return OK
 
 func add_connect_timeout() -> void:
-    await get_tree().create_timer(5.0).timeout
+    await get_tree().create_timer(5.0, true, false, true).timeout
     if multiplayer_state == MultiplayerState.CLIENT_CONNECTING:
         connection_refused("Client_Refused_Timeout")
-        disconnect_from_server()
 
 func _on_connected_to_server() -> void:
     multiplayer_state = MultiplayerState.CLIENT_RECEIVING
@@ -131,6 +137,12 @@ func _on_connected_to_server() -> void:
     # -> continue_join
     # -> connection_refused
     # -> post_message -> ...
+
+func _on_connection_failed() -> void:
+    connection_refused("Client_Refused_ConnectionFailed")
+
+func _on_server_disconnected() -> void:
+    connection_refused("Client_Refused_Disconnected")
 
 @rpc("authority", "call_remote", "reliable")
 func post_message(msg: String) -> void:
@@ -203,10 +215,12 @@ func load_world(stream: ByteArrayStream) -> void:
     var err = Vars.game.load_game(stream)
     world_data_received = true
     if err: disconnect_from_server()
+    else: check_finished()
 
 func load_sync_queue(stream: ByteArrayStream) -> void:
     # TODO
     sync_queue_received = true
+    check_finished()
 
 @rpc("authority", "call_remote", "reliable")
 func append_sync_queue(path: NodePath, method: StringName, args: Array[Variant], types: Array) -> void:

@@ -93,7 +93,9 @@ func load_save(save_name: String) -> Error:
         access.close()
         return err
     access.close()
+    Vars.game.make_ready_game()
     var _player = Vars.client.join_local()
+    Vars.game.enter_game()
     return OK
 
 func delete_save(save_name: String) -> Error:

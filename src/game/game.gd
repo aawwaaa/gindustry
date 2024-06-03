@@ -2,7 +2,7 @@ class_name Vars_Game
 extends Vars.Vars_Object
 
 signal save_meta_changed(meta: SaveMeta);
-signal current_player_changed(player: Player, from: Player);
+signal player_changed(player: Player, from: Player);
 
 var logger: Log.Logger = Log.register_logger("Game_LogSource")
 
@@ -19,11 +19,11 @@ var save_meta: SaveMeta:
         save_meta_changed.emit(v)
 var save_configs: ConfigsGroup = ConfigsGroup.new();
 
-var current_player: Player:
+var player: Player:
     set(v):
-        var old = current_player if current_player else null
-        current_player = v
-        current_player_changed.emit(v, old)
+        var old = player if player else null
+        player = v
+        player_changed.emit(v, old)
 
 # RPC Call this
 func __set_paused(v: bool) -> void:
@@ -55,7 +55,7 @@ func reset_game() -> void:
     Vars.objects.reset()
 
     save_preset = null
-    current_player = null;
+    player = null;
 
     Vars.players.reset();
     
@@ -78,6 +78,9 @@ func init_game() -> void:
 func ready_game() -> void:
     logger.info(tr("Game_Ready"))
     Vars.objects.object_ready()
+
+func enter_game() -> void:
+    logger.info(tr("Game_Enter"))
     Vars.core.state.set_state(Vars_Core.State.IN_GAME)
 
 const current_data_version = 0;
@@ -90,7 +93,7 @@ func handle_load_error(err: Error) -> Error:
         Vars.ui.message_panel.add_message(msg)
     return err
 
-func load_game(stream: Stream, make_ready = true) -> Error:
+func load_game(stream: Stream) -> Error:
     start_game_load();
     save_meta = SaveMeta.new()
     var err = save_meta.load_from(stream);
@@ -120,8 +123,8 @@ func load_game(stream: Stream, make_ready = true) -> Error:
     if err: return handle_load_error(err)
     err = Vars.players.load_data(stream)
     if err: return handle_load_error(err)
+
     save_preset._load_after_world_load()
-    if make_ready: make_ready_game()
     return OK
 
 func make_ready_game() -> void:

@@ -1,18 +1,9 @@
 class_name GDScriptObjectType
 extends ObjectType
 
-@export var type_script: GDScript
+@export var type_script: GDScript:
+    set(v): type_script = v; v.set_meta(RefObject.OBJECT_TYPE_META, self)
 
 func _create() -> RefObject:
+    if not type_script: return null
     return type_script.new()
-
-static func add(type_id: String, script: GDScript) -> GDScriptObjectType:
-    for type in Vars_Objects.objects_reg.object_types_list:
-        if type.id == type_id and type is GDScriptObjectType and type.type_script == null:
-            type.type_script = script
-            return
-    var object_type = GDScriptObjectType.new()
-    object_type.id = type_id
-    object_type.type_script = script
-    Vars_Objects.add_object_type(object_type)
-    return object_type

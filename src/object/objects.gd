@@ -26,6 +26,8 @@ var logger: Log.Logger = Log.register_logger("Objects_LogSource")
 var object_inc_id: int = 1
 var objects: Dictionary = {}
 
+var auto_ready: bool = false
+
 var err: Error = OK
 
 func create_id() -> int:
@@ -85,6 +87,7 @@ func get_object_id(object: RefObject) -> int:
 func object_ready() -> void:
     for object in objects.values():
         make_ready(object)
+    auto_ready = true
 
 func reset() -> void:
     for object in objects.values():
@@ -92,6 +95,7 @@ func reset() -> void:
             object.free()
     object_registed.emit(null)
     object_inc_id = 1
+    auto_ready = false
     cleanup_object_types()
 
 func cleanup_object_types() -> void:
@@ -116,7 +120,7 @@ func load_object(stream: Stream) -> RefObject:
     if type is PlaceholderObjectType:
         logger.error(tr("Objects_UnknownObjectType {uuid}").format({uuid = type.uuid}))
         return null
-    var object: RefObject = type.create()
+    var object: RefObject = type.create(false)
     err = object.load_data(stream)
     if err:
         object.free()

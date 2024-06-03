@@ -1,0 +1,47 @@
+[gd_scene load_steps=2 format=3 uid="uid://c6h6012c5opki"]
+
+[ext_resource type="Script" path="res://ui/debug_menu/tabs/network.gd" id="1_u4u76"]
+
+[node name="Network" type="VBoxContainer"]
+custom_minimum_size = Vector2(320, 0)
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
+script = ExtResource("1_u4u76")
+
+[node name="Duration" type="LineEdit" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Duration"
+
+[node name="CatchupProgress" type="ProgressBar" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+step = 0.0
+
+[node name="CatchupStatus" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="MarkStart" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "MarkStart"
+
+[node name="SetDuration" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "SetDuration"
+
+[node name="Start" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Start"
+
+[connection signal="pressed" from="HBoxContainer/MarkStart" to="." method="_on_mark_start_pressed"]
+[connection signal="pressed" from="HBoxContainer/SetDuration" to="." method="_on_set_duration_pressed"]
+[connection signal="pressed" from="HBoxContainer/Start" to="." method="_on_start_pressed"]

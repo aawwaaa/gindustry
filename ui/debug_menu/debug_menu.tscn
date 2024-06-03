@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bvgr3sk1yoly2"]
+[gd_scene load_steps=4 format=3 uid="uid://bvgr3sk1yoly2"]
 
 [ext_resource type="Script" path="res://ui/debug_menu/debug_menu.gd" id="1_t815d"]
 [ext_resource type="PackedScene" uid="uid://bt3nv63nvpy3s" path="res://ui/debug_menu/tabs/basic.tscn" id="2_isijn"]
+[ext_resource type="PackedScene" uid="uid://c6h6012c5opki" path="res://ui/debug_menu/tabs/network.tscn" id="3_lgnsv"]
 
 [node name="DebugMenu" type="CanvasLayer"]
 script = ExtResource("1_t815d")
@@ -16,5 +17,9 @@ grow_horizontal = 0
 grow_vertical = 2
 
 [node name="Basic" parent="TabContainer" instance=ExtResource("2_isijn")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Network" parent="TabContainer" instance=ExtResource("3_lgnsv")]
 unique_name_in_owner = true
 layout_mode = 2

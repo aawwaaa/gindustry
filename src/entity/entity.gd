@@ -5,8 +5,6 @@ signal transform_changed()
 signal child_entity_added(entity: Entity)
 signal child_entity_removed(entity: Entity)
 
-static var entity_object_type: GDScriptObjectType
-
 var parent_entity: Entity:
     set = set_parent_entity
 var child_entities: Array[Entity] = []
@@ -21,11 +19,8 @@ var root_world: World:
 var transform: Transform3D:
     set = set_transform
 
-static func _static_init() -> void:
-    entity_object_type = GDScriptObjectType.add("entity", Entity)
-
 static func get_type() -> ObjectType:
-    return entity_object_type
+    return (Entity as Object).get_meta(OBJECT_TYPE_META)
 
 func set_parent_entity(new_parent: Entity) -> void:
     if object_ready: _entity_deinit()

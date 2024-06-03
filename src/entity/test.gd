@@ -1,15 +1,11 @@
 class_name TestEntity
 extends Entity
 
-static var test_entity_object_type: GDScriptObjectType
-
 static func _static_init() -> void:
-    test_entity_object_type = GDScriptObjectType.add("test_entity", TestEntity)
-
     mesh.size = Vector3(1, 1, 1)
 
 static func get_type() -> ObjectType:
-    return test_entity_object_type
+    return (TestEntity as Object).get_meta(OBJECT_TYPE_META)
 
 static var mesh = BoxMesh.new()
 
@@ -30,7 +26,7 @@ func _entity_deinit() -> void:
     if rid.is_valid(): RenderingServer.free_rid(rid)
     super._entity_deinit()
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
     if not object_ready: return
     transform = transform.translated(Vector3.FORWARD * delta)
 

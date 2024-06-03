@@ -9,9 +9,11 @@ var debug_enabled: bool = false:
         visible = v
         if v: Vars.ui.focus.set_focused(self)
 @onready var basic: DebugMenu_Basic = %Basic
+@onready var network: DebugMenu_Network = %Network
 
 func _ready() -> void:
     basic.menu = self
+    network.menu = self
     visible = false
 
 func _input(event: InputEvent) -> void:

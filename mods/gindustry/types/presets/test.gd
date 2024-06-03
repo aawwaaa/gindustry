@@ -19,12 +19,14 @@ func _pre_config_preset() -> bool:
 
 func _init_preset() -> void:
     var world = Vars.worlds.create_world()
-    var entity = TestEntity.TYPE.create()
-    world.add_child_entity(entity)
-    Vars.objects.make_ready(entity)
-    world.toggle_to()
+    var entity = TestEntity.TYPE.create(false)
 
-func _init_after_world_load() -> void:
+    world.add_child_entity(entity)
+    entity.object_create()
+
+    world.toggle_to.call_deferred()
+
+func _init_after_local_player_join() -> void:
     pass
 
 func _load_after_world_load() -> void:
