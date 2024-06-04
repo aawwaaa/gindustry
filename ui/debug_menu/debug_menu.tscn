@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://c6h6012c5opki" path="res://ui/debug_menu/tabs/network.tscn" id="3_lgnsv"]
 
 [node name="DebugMenu" type="CanvasLayer"]
+layer = 96
 script = ExtResource("1_t815d")
 
 [node name="TabContainer" type="TabContainer" parent="."]

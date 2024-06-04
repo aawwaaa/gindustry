@@ -16,11 +16,12 @@ func _process(_delta: float) -> void:
     var delta = Time.get_ticks_usec() / 1000000.0 - last_time
     var controller = Vars.client.catchup_controller
     catchup_progress.value = controller.counter / controller.duration if controller.started else 0
-    catchup_status.text = "Process: {fps} {delta}\nPhysics: {pfps} {physics_delta}".format({
+    catchup_status.text = "Process: {fps} {delta}\nPhysics: {pfps} {physics_delta} {acdelta}".format({
         fps = Engine.get_frames_per_second(),
         delta = round(delta * 100000) / 100000.0,
         pfps = round((Engine.get_physics_frames() - last_physics_frame) / delta * 100) / 100.0,
-        physics_delta = round(physics_delta * 100000) / 100000,
+        physics_delta = round(physics_delta * 100000) / 100000.0,
+        acdelta = round(get_physics_process_delta_time() * 100000) / 100000.0
     })
     last_time = Time.get_ticks_usec() / 1000000.0
     last_physics_frame = Engine.get_physics_frames()

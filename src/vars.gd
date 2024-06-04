@@ -3,7 +3,8 @@ extends Node
 # rename to Vars
 
 class Vars_Object extends Node:
-    pass
+    func sync(method: StringName, args: Array[Variant]) -> void:
+        Vars.server.sync_node(self, method, args)
 
 var gobjects: Array[Vars_Object] = []
 var logger: Log.Logger = Log.register_logger("G_LogSource");

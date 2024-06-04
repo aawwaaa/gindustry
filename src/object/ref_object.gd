@@ -34,6 +34,11 @@ func free() -> void:
     Vars.objects.object_freed(object_id)
     super.free()
 
+func packed() -> RefObjectPacked:
+    var obj = RefObjectPacked.new()
+    obj.object = self
+    return obj
+
 func _object_ready() -> void:
     if object_ready: return
     object_ready = true
@@ -62,4 +67,4 @@ func save_data(stream: Stream) -> void:
     ])
 
 func sync(method: StringName, args: Array[Variant]) -> void:
-    Vars.server.sync(self, method, args)
+    Vars.server.sync_node(self, method, args)

@@ -27,6 +27,8 @@ var sync_queue_received: bool = false
 var world_data_received: bool = false
 
 var catchup_controller: CatchupController
+# TODO reset when joined
+var sync_queue: Array[PeerData.ClientSyncPack] = []
 
 func _ready() -> void:
     multiplayer.connected_to_server.connect(_on_connected_to_server)
@@ -34,6 +36,7 @@ func _ready() -> void:
     multiplayer.server_disconnected.connect(_on_server_disconnected)
 
     catchup_controller = CatchupController.new()
+    catchup_controller.name = "CatchupController"
     add_child(catchup_controller)
     await get_tree().process_frame
     Vars.ui.message_panel.submit.connect(_on_message_panel_submit)
@@ -72,6 +75,7 @@ func reset() -> void:
     multiplayer_state = MultiplayerState.IDLE
     sync_queue_received = false
     world_data_received = false
+    sync_queue = []
     data_block_processor.reset()
     logger.info(tr("Client_Reseted"))
 
@@ -168,14 +172,6 @@ func show_message_input() -> void:
     Vars.ui.message_panel.show_input()
 
 @rpc("authority", "call_remote", "reliable")
-func sync_receive(path: NodePath, method: StringName, args: Array[Variant], types: Array) -> void:
-    var node = Vars.tree.root.get_node(path)
-    if not node: return
-    if not method.ends_with("_rpc"): return
-    var unserialized = Utils.serialize.unserialize_args(args, types)
-    node.callv(method, unserialized)
-
-@rpc("authority", "call_remote", "reliable")
 func continue_join() -> void:
     call_remote("request_world_data")
     call_remote("request_sync_queue_data")
@@ -218,19 +214,34 @@ func load_world(stream: ByteArrayStream) -> void:
     else: check_finished()
 
 func load_sync_queue(stream: ByteArrayStream) -> void:
-    # TODO
+    var arr = PeerData.ClientSyncPack.load_array(stream)
+    if PeerData.ClientSyncPack.err:
+        disconnect_from_server()
+        return
+    sync_queue.append_array(arr)
+    sync_queue.sort_custom(func(a, b): return a.time < b.time)
     sync_queue_received = true
     check_finished()
 
 @rpc("authority", "call_remote", "reliable")
-func append_sync_queue(path: NodePath, method: StringName, args: Array[Variant], types: Array) -> void:
-    # TODO call when new sync call
-    pass
+func sync_receive(data: PackedByteArray) -> void:
+    Vars.temp.bas.load_data(data)
+    var pack = PeerData.ClientSyncPack.load(Vars.temp.bas)
+    Vars.temp.bas.clear()
+    if PeerData.ClientSyncPack.err:
+        disconnect_from_server()
+        return
+    pack.run()
 
 @rpc("authority", "call_remote", "reliable")
-func push_back_sync_queue(path: NodePath, method: StringName, args: Array[Variant], types: Array) -> void:
-    # TODO call when new sync call in receiving sync queue
-    pass
+func append_sync_queue(data: PackedByteArray) -> void:
+    Vars.temp.bas.load_data(data)
+    var pack = PeerData.ClientSyncPack.load(Vars.temp.bas)
+    Vars.temp.bas.clear()
+    if PeerData.ClientSyncPack.err:
+        disconnect_from_server()
+        return
+    sync_queue.append(pack)
 
 @rpc("authority", "call_remote", "reliable")
 func player_joined(peer_id: int, player_id: int, data: PackedByteArray) -> void:

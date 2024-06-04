@@ -3,6 +3,8 @@ extends Node
 
 signal finished()
 
+const TIME_SCALE = 2000
+
 var start_time: float
 var duration: float
 var counter: float
@@ -18,11 +20,10 @@ func set_duration(dur: float) -> void:
     duration = dur
 
 func start() -> void:
-    # TODO auto time scale
-    Engine.time_scale = 10000
-    Engine.max_fps = 6
-    Engine.physics_ticks_per_second = 600000
-    Engine.max_physics_steps_per_frame = 8000
+    Engine.time_scale = TIME_SCALE
+    Engine.max_fps = 60
+    Engine.physics_ticks_per_second = 60 * TIME_SCALE
+    Engine.max_physics_steps_per_frame = 2 * TIME_SCALE
     started = true
 
 func stop() -> void:
@@ -38,3 +39,4 @@ func _physics_process(delta: float) -> void:
     if counter >= duration:
         stop()
         finished.emit()
+

@@ -65,9 +65,10 @@ func server_ready() -> void:
     multiplayer.multiplayer_peer.refuse_new_connections = false
     logger.info(tr("Server_Ready"))
 
-func sync(node: Node, method: StringName, args: Array[Variant]) -> void:
-    for peer in peers:
-        peer.sync(node, method, args)
+func sync_node(node: Node, method: StringName, args: Array[Variant]) -> void:
+    var pack = PeerData.ServerSyncPack.new(node, method, args)
+    for peer in peers.values():
+        peer.sync(pack)
 
 func set_peer_state(peer_id: int, state: PeerState) -> void:
     Vars.server.set_peer_state_rpc.rpc(peer_id, state)
@@ -86,6 +87,7 @@ func request_join() -> void:
     var peer_data = create_peer_data(peer_id)
     peer_data.state = PeerState.CONNECTING
     client_request_join.emit(peer_data)
+    Vars.client.sync("post_message", ["Hello world!"])
     Vars.client.continue_join.rpc_id(peer_id)
 
 @rpc("any_peer", "call_remote", "reliable")
@@ -144,11 +146,11 @@ func request_sync_queue_data() -> void:
     if not has_peer_data(peer_id): return
     var data = get_peer_data(peer_id)
     var stream = data.data_block_processor.send_data("sync_queue")
-    # TODO
+    data.send_sync_queue(stream)
     stream.close()
 
 func send_message(message: String) -> void:
-    sync(Vars.client, "post_message", [message])
+    Vars.client.sync("post_message", [message])
 
 func create_peer_data(peer_id: int) -> PeerData:
     var peer_data = PeerData.new()
