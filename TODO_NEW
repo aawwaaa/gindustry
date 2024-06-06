@@ -10,6 +10,9 @@
         (optional)save
         reset
 
+RefObject.ref(id) -> {object: RefObject} dynamic serializable
+Content.ref(id) -> {content: Content} dynamic serializable
+
 [ ] 实体
 [ ] 世界
     [ ] 全量加载/卸载, 不分区块
