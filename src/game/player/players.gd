@@ -9,7 +9,7 @@ var player_datas: Dictionary = {}
 var player_inc_id: int = 1
 
 var players: Dictionary = {}
-var players_node: Node;
+var players_node: Node = self;
 
 var player_data_types: Dictionary = {}
 
@@ -17,9 +17,7 @@ var aes_context = AESContext.new()
 var magic_number = "gindustry--|---|".to_ascii_buffer()
 
 func _ready() -> void:
-    players_node = Node.new();
-    players_node.name = "Players"
-    add_child(players_node)
+    pass
 
 func get_player(player_id: int, update_data: Callable = func(): pass) -> Player:
     if players.has(player_id):
@@ -174,7 +172,7 @@ func load_tokens(stream: Stream) -> Error:
     aes_context.finish()
     if buffer_decrypted != magic_number:
         player_tokens = {}
-        player_tokens[Vars.configs.g(Player.PLAYER_TOKEN_CONFIG)] = 1
+        player_tokens[Vars.configs.k(Vars_Client.player_token_key)] = 1
     return OK
 
 func save_data(stream: Stream) -> void:

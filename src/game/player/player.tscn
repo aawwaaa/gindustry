@@ -1,14 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://dro0rp2echkiv"]
+[gd_scene load_steps=2 format=3 uid="uid://dro0rp2echkiv"]
 
 [ext_resource type="Script" path="res://src/game/player/player.gd" id="1_vdcw8"]
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_34dhd"]
 
 [node name="Player" type="Node"]
 script = ExtResource("1_vdcw8")
 
 [node name="Datas" type="Node" parent="."]
 unique_name_in_owner = true
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_34dhd")

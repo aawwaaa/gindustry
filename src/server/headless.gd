@@ -1,7 +1,8 @@
 class_name Vars_Headless
 extends Vars.Vars_Object
 
-var headless_client: bool = false
+var headless_client: bool:
+    get: return Vars.core.is_headless_client()
 
 var logger: Log.Logger = Log.register_logger("Headless_LogSource")
 
@@ -83,6 +84,7 @@ func args_multiplayer_test(preset_id: String) -> void:
         Vars.server.create_server(1234);
     else:
         get_tree().create_timer(0.1).timeout.connect(func():
+            Vars.configs.pk(Vars_Client.player_token_key, Utils.generate_token())
             Vars.client.connect_to("localhost", 1234)
         )
 

@@ -24,14 +24,6 @@ func _init_preset() -> void:
     world.add_child_entity(entity)
     entity.object_create()
 
-    world.toggle_to.call_deferred()
-
-func _init_after_local_player_join() -> void:
-    pass
-
-func _load_after_world_load() -> void:
-    pass
-
 func _after_ready() -> void:
     directional_light = RenderingServer.directional_light_create()
     RenderingServer.light_set_color(directional_light, Color.WHITE)
@@ -45,6 +37,8 @@ func _after_ready() -> void:
     RenderingServer.instance_set_scenario(instance, Vars.worlds.worlds[1].world_3d.scenario)
 
     mesh.size = Vector3(100, 2, 100)
+
+    Vars.worlds.worlds[1].toggle_to.call_deferred()
 
     # instance2 = RenderingServer.instance_create()
     # RenderingServer.instance_set_base(instance2, mesh.get_rid())

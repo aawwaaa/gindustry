@@ -17,13 +17,16 @@ func k(key: ConfigsGroup.ConfigKey) -> Variant:
 func p(key: String, value: Variant) -> void:
     configs.p(key, value)
 
+func pk(key: ConfigsGroup.ConfigKey, value: Variant) -> void:
+    configs.pk(key, value)
+
 func set_default(key: String, value: Variant) -> void:
     if configs.g(key, null) == null:
         configs.p(key, value)
         config_value_changed = true
 
 func generate_player_configs() -> void:
-    set_default(Player.PLAYER_TOKEN_CONFIG, Utils.generate_token())
+    set_default(Vars_Client.PLAYER_TOKEN_CONFIG, Utils.generate_token())
 
     var token_mapping_key = PackedByteArray();
     token_mapping_key.resize(32)

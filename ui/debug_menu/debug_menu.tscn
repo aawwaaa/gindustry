@@ -23,4 +23,5 @@ layout_mode = 2
 
 [node name="Network" parent="TabContainer" instance=ExtResource("3_lgnsv")]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2

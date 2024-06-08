@@ -47,6 +47,9 @@ func _on_all_progress_tracker_finished() -> void:
         state.set_state(State.MAIN_MENU);
         Vars.headless.apply_args_from_cmdline()
 
+func is_headless_client() -> bool:
+    return DisplayServer.get_name() == "headless"
+
 func start_load() -> void:
     state.set_state(State.LOADING);
     var progress = Log.register_progress_tracker(100, "Core_Load", logger.source);

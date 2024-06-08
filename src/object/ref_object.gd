@@ -30,6 +30,7 @@ func _object_free() -> void:
     pass
 
 func free() -> void:
+    print("free")
     _object_free()
     Vars.objects.object_freed(object_id)
     super.free()

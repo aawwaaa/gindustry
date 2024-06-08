@@ -3,6 +3,15 @@ extends Vars.Vars_Object
 
 signal multiplayer_state_changed(state: MultiplayerState, from: MultiplayerState);
 signal server_message(message: String);
+signal prepare_join_data(data: Dictionary)
+
+signal player_joined(player: Player);
+signal player_left(player: Player);
+
+const PLAYER_TOKEN_CONFIG = "player/player_token"
+static var player_token_key = ConfigsGroup.ConfigKey.new(PLAYER_TOKEN_CONFIG, "")
+const PLAYER_NAME_CONFIG = "player/player_name"
+static var player_name_key = ConfigsGroup.ConfigKey.new(PLAYER_NAME_CONFIG, "Player")
 
 const PeerState = PeerData.PeerState
 enum MultiplayerState{
@@ -27,7 +36,6 @@ var sync_queue_received: bool = false
 var world_data_received: bool = false
 
 var catchup_controller: CatchupController
-# TODO reset when joined
 var sync_queue: Array[PeerData.ClientSyncPack] = []
 
 func _ready() -> void:
@@ -53,6 +61,10 @@ func _ready() -> void:
     data_block_processor.data_transfer_progress_changed.connect(_on_data_transfer_progress_changed)
     data_block_processor.data_transfer_complete.connect(_on_data_transfer_complete)
 
+func _process(delta: float) -> void:
+    if multiplayer_state == MultiplayerState.CLIENT_CATCTINGUP:
+        process_catchup(delta)
+
 func client_active() -> bool:
     return multiplayer_state in [
         MultiplayerState.CLIENT_CONNECTING,
@@ -72,6 +84,9 @@ func reset() -> void:
     for progress in data_receive_progresses:
         progress.finish()
     data_receive_progresses.clear()
+    if catchup_controller.started:
+        catchup_controller.stop()
+        catchup_controller.auto_stop = true
     multiplayer_state = MultiplayerState.IDLE
     sync_queue_received = false
     world_data_received = false
@@ -82,11 +97,11 @@ func reset() -> void:
 func disconnect_from_server() -> void:
     Vars.game.reset_to_menu()
 
-func call_remote(name: StringName, args: Array = []) -> void:
+func call_remote(method_name: StringName, args: Array = []) -> void:
     if Vars.server.local_joined:
-        Vars.server.callv(name, args)
+        Vars.server.callv(method_name, args)
         return
-    Vars.server.rpc_id.bindv(args).call(1, name)
+    Vars.server.rpc_id.bindv(args).call(1, method_name)
 
 @rpc("authority", "call_local", "reliable")
 func set_peer_state_rpc(peer_id: int, state: PeerState) -> void:
@@ -126,7 +141,7 @@ func connect_to(host: String, port: int) -> Error:
     message = tr("Client_Connecting {host}:{port}").format({host = host, port = port})
     logger.info(message)
     Vars.ui.message_panel.add_message(message)
-#    add_connect_timeout()
+    add_connect_timeout()
     return OK
 
 func add_connect_timeout() -> void:
@@ -134,10 +149,19 @@ func add_connect_timeout() -> void:
     if multiplayer_state == MultiplayerState.CLIENT_CONNECTING:
         connection_refused("Client_Refused_Timeout")
 
+func create_join_data() -> Dictionary:
+    var data = {
+        "player_name": Vars.configs.k(player_name_key),
+        "player_token": Vars.configs.k(player_token_key),
+    }
+    prepare_join_data.emit(data)
+    return data
+
 func _on_connected_to_server() -> void:
     multiplayer_state = MultiplayerState.CLIENT_RECEIVING
     logger.info(tr("Client_ConnectedToServer"))
-    call_remote("request_join")
+    var join_data = create_join_data()
+    call_remote("request_join", [join_data])
     # -> continue_join
     # -> connection_refused
     # -> post_message -> ...
@@ -148,17 +172,22 @@ func _on_connection_failed() -> void:
 func _on_server_disconnected() -> void:
     connection_refused("Client_Refused_Disconnected")
 
-@rpc("authority", "call_remote", "reliable")
+@rpc("authority", "call_local", "reliable")
 func post_message(msg: String) -> void:
     server_message.emit(msg)
-    Vars.ui.message_panel.add_message(msg)
+    if Vars.headless.headless_client:
+        logger.info(tr("Client_ServerMessage {message}").format({
+            message = msg
+        }))
+    else:
+        Vars.ui.message_panel.add_message(msg)
 
 @rpc("authority", "call_remote", "reliable")
 func set_auto_complete(msg: String) -> void:
     Vars.ui.message_panel.set_input(msg)
 
 func _on_message_panel_submit(message: String) -> void:
-    call_remote("request_message", [message])
+    call_remote("request_send_message", [message])
 
 func _on_message_panel_request_auto_comlete(message: String) -> void:
     call_remote("request_auto_complete", [message])
@@ -200,13 +229,6 @@ func _on_data_transfer_complete(data_name: String, blocks: DataBlockProcessor.Da
     blocks.finish()
     # -> check_finished
 
-func check_finished() -> void:
-    if not world_data_received: return
-    if not sync_queue_received: return
-    logger.info(tr("Client_ReadyForCatchup"))
-    Vars.game.make_ready_game()
-    # TODO continue
-
 func load_world(stream: ByteArrayStream) -> void:
     var err = Vars.game.load_game(stream)
     world_data_received = true
@@ -225,7 +247,7 @@ func load_sync_queue(stream: ByteArrayStream) -> void:
 
 @rpc("authority", "call_remote", "reliable")
 func sync_receive(data: PackedByteArray) -> void:
-    Vars.temp.bas.load_data(data)
+    Vars.temp.bas.load(data)
     var pack = PeerData.ClientSyncPack.load(Vars.temp.bas)
     Vars.temp.bas.clear()
     if PeerData.ClientSyncPack.err:
@@ -235,7 +257,7 @@ func sync_receive(data: PackedByteArray) -> void:
 
 @rpc("authority", "call_remote", "reliable")
 func append_sync_queue(data: PackedByteArray) -> void:
-    Vars.temp.bas.load_data(data)
+    Vars.temp.bas.load(data)
     var pack = PeerData.ClientSyncPack.load(Vars.temp.bas)
     Vars.temp.bas.clear()
     if PeerData.ClientSyncPack.err:
@@ -243,23 +265,75 @@ func append_sync_queue(data: PackedByteArray) -> void:
         return
     sync_queue.append(pack)
 
-@rpc("authority", "call_remote", "reliable")
-func player_joined(peer_id: int, player_id: int, data: PackedByteArray) -> void:
-    # TODO if exists, use already exists
-    if local_joined: return
-    Vars.players.player_datas[player_id] = data
-    Vars.players.load_player(player_id)
-    # TODO init peers, others
-    pass
+func check_finished() -> void:
+    if not world_data_received: return
+    if not sync_queue_received: return
+    logger.info(tr("Client_ReadyForCatchup"))
+    Vars.game.make_ready_game()
+    call_remote("request_start_catchup")
 
 @rpc("authority", "call_remote", "reliable")
-func player_left(peer_id: int) -> void:
-    # TODO
-    pass
+func start_catchup(duration: float) -> void:
+    multiplayer_state = MultiplayerState.CLIENT_CATCTINGUP
+    catchup_controller.mark_start()
+    catchup_controller.set_duration(duration)
+    # catchup_controller.auto_stop = false
+    catchup_controller.start()
+    catchup_controller.finished.connect(func():
+        call_remote("report_catchup", [catchup_controller.counter])
+    )
 
-func join_local() -> Player:
+@rpc("authority", "call_remote", "unreliable_ordered")
+func report_catchup(duration: float) -> void:
+    catchup_controller.set_duration(duration)
+
+func process_catchup(_delta: float) -> void:
+    if not catchup_controller.started: return
+    call_remote("report_catchup", [catchup_controller.counter])
+
+@rpc("authority", "call_remote", "reliable")
+func enter_game() -> void:
+    catchup_controller.stop()
+    multiplayer_state = MultiplayerState.CLIENT_CONNECTED
+    sync_queue = []
+    Vars.game.enter_game()
+
+func player_joined_rpc(peer_id: int, peer_data: Dictionary) -> void:
+    var peer = peers[peer_id] if peer_id in peers else PeerData.new()
+    if local_joined:
+        player_joined.emit(peer.player)
+        return
+    peer.peer_id = peer_id
+    peer.apply_client(peer_data)
+    var player_id = peer_data["player_id"]
+    if "player_data" in peer_data:
+        Vars.players.player_datas[player_id] = peer_data["player_data"]
+    peer.load_player()
+    player_joined.emit(peer.player)
+
+func player_left_rpc(peer_id: int) -> void:
+    if peer_id not in peers: return
+    var data = peers[peer_id]
+    player_left.emit(data.player)
+    if local_joined:
+        peers[peer_id].reset_client()
+        return
+    Vars.players.remove_player(data.player_id)
+    data.reset_client()
+    peers.erase(peer_id)
+
+func catchup_test_rpc(message: String) -> void:
+    var msg = tr("Client_CatchupTest {message}").format({message = message})
+    logger.info(msg)
+    post_message(msg)
+
+func join_local(if_not_headless: bool = true) -> Player:
+    if if_not_headless and Vars.headless.headless_client: return
     var peer = Vars.server.init_local_join()
     sync_queue_received = true
     world_data_received = true
-    # TODO
-    return null
+    peer.apply(create_join_data())
+    peer.state = PeerState.CONNECTED
+    peer.load_player()
+    sync("player_joined_rpc", [peer.peer_id, peer.to_client()])
+    return peer.player

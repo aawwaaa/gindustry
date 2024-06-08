@@ -53,5 +53,8 @@ func k(key: ConfigKey) -> Variant:
 func p(key: String, value: Variant) -> void:
     dict[key] = value;
 
+func pk(key: ConfigKey, value: Variant) -> void:
+    p(key.name, value)
+
 func set_defaults(defs: Dictionary) -> void:
     self.defaults.merge(defs)

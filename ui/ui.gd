@@ -21,8 +21,6 @@ func _ready() -> void:
 
     message_panel = MessagePanel.scene.instantiate()
     message_panel.name = "MessagePanel"
-    # TODO connect -> Vars.client.send_message
-    # TODO server control prompt
     message_panel.auto_complete_allowed = true
     message_panel.show_input() 
     add_child(message_panel)

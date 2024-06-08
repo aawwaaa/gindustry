@@ -25,17 +25,23 @@ var player: Player:
         player = v
         player_changed.emit(v, old)
 
-# RPC Call this
-func __set_paused(v: bool) -> void:
+@rpc("authority", "call_remote", "reliable")
+func set_paused(v: bool) -> void:
+    if multiplayer.get_remote_sender_id() == 0:
+        set_paused.rpc_id(1, v)
+        return
+    if not Vars.server.is_caller_has_permission(multiplayer, "game/set_pause"):
+        return
+    sync("set_paused_rpc", [v])
+
+func set_paused_rpc(v: bool) -> void:
     __is_paused = v
     get_tree().paused = v
     PhysicsServer3D.set_active(not v)
 
 func _on_state_state_changed(state: Vars_Core.State, from: Vars_Core.State) -> void:
     if state != Vars_Core.State.IN_GAME:
-        __set_paused(true)
-    else:
-        __set_paused(false)
+        set_paused_rpc(true)
     if from == Vars_Core.State.IN_GAME and state != Vars_Core.State.IN_GAME:
         reset_game()
     if from == Vars_Core.State.LOADING_GAME and state != Vars_Core.State.IN_GAME:
@@ -43,6 +49,9 @@ func _on_state_state_changed(state: Vars_Core.State, from: Vars_Core.State) -> v
 
 func is_paused() -> bool:
     return __is_paused
+
+func _ready() -> void:
+    Vars.core.state.state_changed.connect(_on_state_state_changed)
 
 func reset_game() -> void:
     logger.info(tr("Game_GameReset"))
@@ -111,6 +120,9 @@ func load_game(stream: Stream) -> Error:
     err = Vars.contents.load_contents_mapping(stream);
     if err: return handle_load_error(err);
 
+    set_paused_rpc(stream.get_8() != 0)
+    if stream.get_error(): return handle_load_error(stream.get_error());
+
     save_preset = Vars.types.get_type(Preset.TYPE, stream.get_string()) as Preset
     if stream.get_error(): return handle_load_error(stream.get_error());
     if not save_preset: return handle_load_error(ERR_INVALID_DATA)
@@ -138,6 +150,8 @@ func save_game(stream: Stream, to_client: bool = false) -> void:
     save_configs.save_configs(stream);
     Vars.objects.save_object_types_mapping(stream);
     Vars.contents.save_contents_mapping(stream);
+    
+    stream.store_8(1 if is_paused() else 0)
 
     stream.store_string(save_preset.full_id)
     save_preset._save_preset_data(stream)

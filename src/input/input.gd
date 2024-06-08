@@ -1,6 +1,9 @@
 class_name Vars_Input
 extends Vars.Vars_Object
 
+const INPUT_HANDLER_CONFIG = "input/input_handler"
+static var input_handler_key = ConfigsGroup.ConfigKey.new(INPUT_HANDLER_CONFIG, "")
+
 var ui_node: Control;
 
 var camera: CameraController;

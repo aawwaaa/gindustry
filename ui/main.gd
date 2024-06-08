@@ -48,6 +48,9 @@ func _on_state_changed(state: Vars_Core.State, from: Vars_Core.State) -> void:
 
 func load_ui(progress: Log.ProgressTracker) -> void:
     # total: 10
+    if Vars.core.is_headless_client():
+        progress.progress += 10;
+        return
 
     progress.name = "Main_Load_LoadUI"
     %Windows/Mods.load_mod_list();
@@ -66,6 +69,7 @@ func load_ui(progress: Log.ProgressTracker) -> void:
     
     progress.name = "Main_Load_LoadInputHandler"
     Vars.input.ui_node = %GameUI.input_handler_ui
+    Vars_Input.input_handler_key.default_value = Vars.main.get_default_input_handler()
 
-    # Vars.input.set_input_handler()
+    Vars.input.set_input_handler()
     progress.progress += 2

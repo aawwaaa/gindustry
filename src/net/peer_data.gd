@@ -61,7 +61,7 @@ class ClientSyncPack extends RefCounted:
 
     func run() -> void:
         if not method.ends_with("_rpc"):
-            push_error("Invalid call to %" % method)
+            push_error("Invalid call to %s" % method)
             return
         node.callv(method, args)
 
@@ -90,7 +90,15 @@ var state: PeerState = PeerState.DISCONNECTED:
 var sync_queue: Array[ServerSyncPackWithTime] = []
 
 var start_time: float = 0
+var catchup_counter: float = 0
 var data_block_processor: DataBlockProcessor
+
+var data_raw: Dictionary
+
+var player_token: String = "<No data>"
+var player_name: String = "Player"
+
+var player_id: int = -1
 
 func call_remote(name: StringName, args: Array = []) -> void:
     if peer_id == Vars.client.multiplayer.get_unique_id():
@@ -102,7 +110,7 @@ func sync(pack: ServerSyncPack) -> void:
     if peer_id == Vars.client.multiplayer.get_unique_id():
         pack.run()
         return
-    var time = Time.get_ticks_msec() / 1000.0 - start_time
+    var time = Vars.server.time - start_time
     if state == PeerState.CONNECTING:
         sync_queue.append(ServerSyncPackWithTime.new(time, pack))
         return
@@ -120,11 +128,39 @@ func send_sync_queue(stream: Stream) -> void:
         pack.save(stream)
     sync_queue.clear()
 
+func apply(data: Dictionary) -> void:
+    data_raw = data
+    apply_client(data)
+
+    player_token = data["player_token"]
+    player_id = Vars.players.get_player_id_by_token(player_token)
+
+func to_client() -> Dictionary:
+    var data = {
+        "player_name": player_name,
+        "player_id": player_id,
+    }
+    if player_id in Vars.players.player_datas:
+        data["player_data"] = Vars.players.player_datas[player_id]
+    return data
+
+func apply_client(data: Dictionary) -> void:
+    if data_raw.size() == 0: data_raw = data
+    player_name = data["player_name"]
+    player_id = data["player_id"] if "player_id" in data else -1
+
+func load_player() -> void:
+    Vars.players.get_player(player_id, func(p):
+        player = p
+        player.player_name = player_name
+        player.peer_data = self
+    )
+
 func init_client() -> void:
     pass
 
 func init_server() -> void:
-    start_time = Time.get_ticks_msec() / 1000.0
+    start_time = Vars.server.time
     data_block_processor = DataBlockProcessor.new()
     data_block_processor.send_rpc.connect(func(args): call_remote("dbp", [args]))
     data_block_processor.send_rpc_unreliable.connect(func(args): call_remote("dbpur", [args]))

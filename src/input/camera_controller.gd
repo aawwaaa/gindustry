@@ -12,9 +12,9 @@ var transform: Transform3D:
 func _ready() -> void:
     Vars.worlds.toggled_world_changed.connect(_on_toggled_world_changed)
 
-func _on_toggled_world_changed(world: World) -> void:
+func _on_toggled_world_changed(new_world: World) -> void:
     if not active: return
-    set_world(world)
+    set_world(new_world)
 
 func set_world(v: World) -> void:
     world = v
