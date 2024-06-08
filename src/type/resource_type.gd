@@ -6,6 +6,9 @@ var mod: Mod
 
 var full_id: String = "";
 
+var type: ResourceType:
+    get = get_type
+
 func init_full_id() -> void:
     var mod_id = (mod.mod_info.id + "_") if mod else ""
     if self is ResourceTypeType: full_id = mod_id + name

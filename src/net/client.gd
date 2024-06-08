@@ -309,6 +309,8 @@ func player_joined_rpc(peer_id: int, peer_data: Dictionary) -> void:
     if "player_data" in peer_data:
         Vars.players.player_datas[player_id] = peer_data["player_data"]
     peer.load_player()
+    if peer_id == multiplayer.get_unique_id():
+        current_player(player_id)
     player_joined.emit(peer.player)
 
 func player_left_rpc(peer_id: int) -> void:
@@ -321,6 +323,9 @@ func player_left_rpc(peer_id: int) -> void:
     Vars.players.remove_player(data.player_id)
     data.reset_client()
     peers.erase(peer_id)
+
+func current_player(id: int) -> void:
+    Vars.game.player = Vars.players.get_player(id)
 
 func catchup_test_rpc(message: String) -> void:
     var msg = tr("Client_CatchupTest {message}").format({message = message})
@@ -336,4 +341,5 @@ func join_local(if_not_headless: bool = true) -> Player:
     peer.state = PeerState.CONNECTED
     peer.load_player()
     sync("player_joined_rpc", [peer.peer_id, peer.to_client()])
+    current_player(peer.player_id)
     return peer.player

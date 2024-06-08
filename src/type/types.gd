@@ -26,3 +26,6 @@ func get_types(type: ResourceTypeType) -> Dictionary:
 
 func get_type(type: ResourceTypeType, n: String) -> ResourceType:
     return get_types(type)[n] if get_types(type).has(n) else null
+
+func get_type_type(n: String) -> ResourceTypeType:
+    return resource_type_types[n]

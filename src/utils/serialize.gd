@@ -91,6 +91,39 @@ class ContentSerializer extends Serializer:
             return null
         return Vars.contents.get_content_by_index(cid)
 
+class ResourceTypeSerializer extends Serializer:
+    func _get_name() -> String: return "builtin_resource_type"
+    func _matched(object: Variant) -> bool: return object is ResourceType
+    func _serialize(stream: Stream, object: Variant) -> void: 
+        stream.store_string(object.get_type().full_id)
+        stream.store_string(object.full_id)
+    func _unserialize(stream: Stream) -> Variant:
+        var type = stream.get_string()
+        if stream.get_error():
+            err = stream.get_error()
+            return null
+        var id = stream.get_string()
+        if stream.get_error():
+            err = stream.get_error()
+            return null
+        var type_obj = Vars.types.get_type_type(type)
+        if not type_obj: return null
+        return Vars.types.get_type(type_obj, id)
+
+class ObjectTypeSerializer extends Serializer:
+    func _get_name() -> String: return "builtin_object_type"
+    func _matched(object: Variant) -> bool: return object is ObjectType
+    func _serialize(stream: Stream, object: Variant) -> void: 
+        stream.store_64(object.index)
+    func _unserialize(stream: Stream) -> Variant:
+        var index = stream.get_64()
+        if stream.get_error():
+            err = stream.get_error()
+            return null
+        return Vars_Objects.objects_reg.object_types_indexed[index] \
+                if Vars_Objects.objects_reg.object_types_indexed.has(index) \
+                else null
+
 class RefObjectSerializer extends Serializer:
     func _get_name() -> String: return "builtin_ref_object"
     func _matched(object: Variant) -> bool: return object is RefObject
@@ -102,6 +135,19 @@ class RefObjectSerializer extends Serializer:
             err = stream.get_error()
             return null
         return Vars.objects.get_object_or_null(object_id)
+
+class RefObjectRefSerializer extends Serializer:
+    func _get_name() -> String: return "builtin_ref_object_ref"
+    func _matched(object: Variant) -> bool: return object is RefObjectRef
+    func _serialize(stream: Stream, object: Variant) -> void: 
+        stream.store_64(object.id)
+    func _unserialize(stream: Stream) -> Variant:
+        var ref = RefObjectRef.new()
+        ref.id = stream.get_64()
+        if stream.get_error():
+            err = stream.get_error()
+            return null
+        return ref
 
 class RefObjectPackedSerializer extends Serializer:
     func _get_name() -> String: return "builtin_ref_object_packed"
@@ -115,11 +161,17 @@ class RefObjectPackedSerializer extends Serializer:
             return null
         return obj
 
-# class EntitySerializer extends Serializer:
-#     func _get_name() -> String: return "e"
-#     func _matched(object: Variant) -> bool: return object is Entity
-#     func _serialize(object: Variant) -> Variant: return object.entity_id
-#     func _unserialize(object: Variant) -> Variant: return Entity.get_entity_by_ref_or_null(object)
+class PlayerSerializer extends Serializer:
+    func _get_name() -> String: return "builtin_player"
+    func _matched(object: Variant) -> bool: return object is Player
+    func _serialize(stream: Stream, object: Variant) -> void: 
+        stream.store_64(object.player_id)
+    func _unserialize(stream: Stream) -> Variant:
+        var player_id = stream.get_64()
+        if stream.get_error():
+            err = stream.get_error()
+            return null
+        return Vars.players.get_player_or_null(player_id)
 
 var serializers: Array[Serializer] = []
 var map: Dictionary = {}
@@ -171,8 +223,13 @@ func add_defaults() -> void:
     add_serializer(ArraySerializer.new())
     add_serializer(DictionarySerializer.new())
     add_serializer(NodeSerializer.new())
-
+    
     add_serializer(ContentSerializer.new())
+    add_serializer(ResourceTypeSerializer.new())
+    add_serializer(ObjectTypeSerializer.new())
     add_serializer(RefObjectSerializer.new())
+    add_serializer(RefObjectRefSerializer.new())
     add_serializer(RefObjectPackedSerializer.new())
+
+    add_serializer(PlayerSerializer.new())
 #     add_serializer(EntitySerializer.new())

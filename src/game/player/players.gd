@@ -27,6 +27,11 @@ func get_player(player_id: int, update_data: Callable = func(): pass) -> Player:
         return load_player(player_id, update_data)
     return create_player(player_id, update_data)
 
+func get_player_or_null(player_id: int) -> Player:
+    if players.has(player_id):
+        return players[player_id]
+    return null
+
 func create_player(player_id: int, update_data: Callable = func(): pass) -> Player:
     var player = Player.create();
     player.player_id = player_id
