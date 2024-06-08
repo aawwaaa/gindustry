@@ -3,6 +3,8 @@ extends Node
 
 static var TYPE: ObjectType:
     get = get_type
+static var TYPE_ID: StringName:
+    get: return TYPE.full_id
 const OBJECT_TYPE_META = &"object_type"
 
 static func get_type() -> ObjectType:

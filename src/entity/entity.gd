@@ -5,6 +5,8 @@ signal transform_changed()
 signal child_entity_added(entity: Entity)
 signal child_entity_removed(entity: Entity)
 
+const TARGET_SELF = &"self"
+
 var parent_entity: Entity:
     set = set_parent_entity
 var child_entities: Array[Entity] = []
@@ -21,6 +23,8 @@ var transform: Transform3D:
 
 var components: Dictionary = {}
 var components_id: Dictionary = {}
+var access_source: AccessOperation.EntityAccessSource = \
+        AccessOperation.EntityAccessSource.new(self)
 
 static func get_type() -> ObjectType:
     return (Entity as Object).get_meta(OBJECT_TYPE_META)
@@ -104,6 +108,24 @@ func _object_free() -> void:
     for component in components.values():
         component.queue_free()
     super._object_free()
+
+func _check_access_source(_source: AccessOperation.AccessSource) -> bool:
+    return true
+
+func _check_access(_source: AccessOperation.AccessSource, \
+        _method: StringName, _args: Array[Variant]) -> bool:
+    return _check_access_source(_source)
+
+func _check_access_component(_source: AccessOperation.AccessSource, \
+        _comp: EntityComponent, _method: StringName, _args: Array[Variant]) -> bool:
+    return _check_access_source(_source)
+
+func _handle_access(_source: AccessOperation.AccessSource, \
+        _method: StringName, _args: Array[Variant]) -> void:
+    pass
+
+func access_to(target: Variant, method: StringName, args: Array[Variant]) -> void:
+    AccessOperation.handle_access(access_source, target, method, args)
 
 func _load_data(stream: Stream) -> Error:
     var err = super._load_data(stream)

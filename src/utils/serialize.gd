@@ -173,6 +173,23 @@ class PlayerSerializer extends Serializer:
             return null
         return Vars.players.get_player_or_null(player_id)
 
+class EntityComponentSerializer extends Serializer:
+    func _get_name() -> String: return "builtin_entity_component"
+    func _matched(object: Variant) -> bool: return object is EntityComponent
+    func _serialize(stream: Stream, object: Variant) -> void: 
+        stream.store_serialized(object.entity)
+        stream.store_32(object.component_id)
+    func _unserialize(stream: Stream) -> Variant:
+        var entity = stream.get_serialized()
+        if stream.get_error():
+            err = stream.get_error()
+            return null
+        var component_id = stream.get_32()
+        if stream.get_error():
+            err = stream.get_error()
+            return null
+        return entity.components_id[component_id]
+
 var serializers: Array[Serializer] = []
 var map: Dictionary = {}
 

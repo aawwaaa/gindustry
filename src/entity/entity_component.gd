@@ -11,6 +11,9 @@ var component_id: int = -1
 var parent_component: EntityComponent
 var child_components: Array[EntityComponent] = []
 
+var access_source: AccessOperation.EntityComponentAccessSource = \
+        AccessOperation.EntityComponentAccessSource.new(self)
+
 func init(ent: Entity, comp_name: StringName = _get_default_component_name(), \
         parent_comp: EntityComponent = null) -> void:
     entity = ent
@@ -48,3 +51,19 @@ func _component_init() -> void:
 
 func _component_deinit() -> void:
     pass
+
+func _check_access_source(_source: AccessOperation.AccessSource) -> bool:
+    return true
+
+func _check_access(_source: AccessOperation.AccessSource, \
+        _method: StringName, _args: Array[Variant]) -> bool:
+    return entity._check_access_component(access_source, self, _method, _args) \
+            and _check_access_source(_source)
+
+func _handle_access(_source: AccessOperation.AccessSource, \
+        _method: StringName, _args: Array[Variant]) -> void:
+    pass
+
+func access_to(target: Variant, method: StringName, args: Array[Variant]) -> void:
+    AccessOperation.handle_access(access_source, target, method, args)
+

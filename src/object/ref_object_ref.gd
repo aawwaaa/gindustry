@@ -1,9 +1,9 @@
 class_name RefObjectRef
 extends RefCounted
 
-var v: RefObject:
+var v: RefObject = null:
     set = set_v
-var id: int:
+var id: int = 0:
     get = get_id,
     set = set_id
 

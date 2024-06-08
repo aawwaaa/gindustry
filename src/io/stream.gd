@@ -22,6 +22,8 @@ func get_var() -> Variant:
     var size = get_64()
     var buffer = get_buffer(size)
     return bytes_to_var_with_objects(buffer)
+func get_serialized() -> Variant:
+    return Utils.serialize.unserialize(self)
 
 func store_8(_value: int) -> void: return;
 func store_16(_value: int) -> void: return;
@@ -38,3 +40,5 @@ func store_var(value: Variant, full: bool = false) -> void:
     var buffer = var_to_bytes_with_objects(value) if full else var_to_bytes(value)
     store_64(buffer.size())
     store_buffer(buffer)
+func store_serialized(value: Variant) -> void:
+    Utils.serialize.serialize(self, value)
