@@ -19,8 +19,14 @@ var root_world: World:
 var transform: Transform3D:
     set = set_transform
 
+var components: Dictionary = {}
+var components_id: Dictionary = {}
+
 static func get_type() -> ObjectType:
     return (Entity as Object).get_meta(OBJECT_TYPE_META)
+
+func _init() -> void:
+    _components_init()
 
 func set_parent_entity(new_parent: Entity) -> void:
     if object_ready: _entity_deinit()
@@ -30,11 +36,22 @@ func set_parent_entity(new_parent: Entity) -> void:
     if object_ready: _entity_init()
     transform_changed.emit()
 
-func _entity_init() -> void:
+func get_component(comp_name: StringName) -> EntityComponent:
+    return components[comp_name]
+
+func has_component(comp_name: StringName) -> bool:
+    return components.has(comp_name)
+
+func _components_init() -> void:
     pass
 
+func _entity_init() -> void:
+    for component in components.values():
+        component._component_init()
+
 func _entity_deinit() -> void:
-    pass
+    for component in components.values():
+        component._component_deinit()
 
 func add_child_entity(entity: Entity) -> void:
     entity.parent_entity = self
@@ -63,6 +80,13 @@ func _on_transform_changed() -> void:
     for child in child_entities:
         child.transform_changed.emit()
 
+func add_component(comp: EntityComponent, \
+        comp_name: StringName = comp._get_default_component_name(), \
+        parent_comp: EntityComponent = null) -> void:
+    comp.init(self, comp_name, parent_comp)
+    components[comp_name] = comp
+    components_id[comp.component_id] = comp
+
 func _object_create() -> void:
     super._object_create()
 
@@ -77,6 +101,8 @@ func _object_ready() -> void:
 
 func _object_free() -> void:
     _entity_deinit()
+    for component in components.values():
+        component.queue_free()
     super._object_free()
 
 func _load_data(stream: Stream) -> Error:
@@ -87,7 +113,18 @@ func _load_data(stream: Stream) -> Error:
         if stream.get_error(): return stream.get_error()
         if not (tran is Transform3D): return ERR_INVALID_DATA
         transform = tran
+
         var size = stream.get_64()
+        if stream.get_error(): return stream.get_error()
+        for _1 in range(size):
+            var component_id = stream.get_32()
+            if stream.get_error(): return stream.get_error()
+            if not components_id.has(component_id): return ERR_INVALID_DATA
+            var comp = components_id[component_id]
+            err = comp.load_data(stream)
+            if err: return err
+
+        size = stream.get_64()
         if stream.get_error(): return stream.get_error()
         for _1 in range(size):
             var object = Vars.objects.load_object(stream)
@@ -101,6 +138,12 @@ func _save_data(stream: Stream) -> void:
     super._save_data(stream)
     Utils.save_data_with_version(stream, [func():
         stream.store_var(transform, true)
+
+        stream.store_64(components.size())
+        for comp in components.values():
+            stream.store_32(comp.component_id)
+            comp.save_data(stream)
+        
         stream.store_64(child_entities.size())
         for child in child_entities:
             Vars.objects.save_object(stream, child)

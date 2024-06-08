@@ -10,8 +10,8 @@
         (optional)save
         reset
 
-RefObject.ref(id) -> {object: RefObject} dynamic serializable
-Content.ref(id) -> {content: Content} dynamic serializable
+[X] RefObject.ref(id) -> {object: RefObject} dynamic serializable
+[ ] Content.ref(id) -> {content: Content} dynamic serializable
 
 [ ] 实体
 [ ] 世界
