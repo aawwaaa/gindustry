@@ -16,6 +16,7 @@ class EntityAccessSource extends AccessSource:
             true if type == Entity.TYPE_ID else \
             true if entity.has_component(type) else \
             false
+    @warning_ignore("incompatible_ternary")
     func as_type(type: StringName) -> Variant: return \
             entity if type == Entity.TYPE_ID else \
             entity.get_component(type) if entity.has_component(type) else \

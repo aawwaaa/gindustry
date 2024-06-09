@@ -60,9 +60,6 @@ class ClientSyncPack extends RefCounted:
         args = p_args
 
     func run() -> void:
-        if not method.ends_with("_rpc"):
-            push_error("Invalid call to %s" % method)
-            return
         node.callv(method, args)
 
     static func load(stream: Stream) -> ClientSyncPack:

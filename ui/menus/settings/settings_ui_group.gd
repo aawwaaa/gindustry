@@ -96,7 +96,7 @@ class Setting extends RefCounted:
         var label_node = Label.new()
         label_node.text = name
         label_node.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-        label_node.size_flags_stretch_ratio = 1
+        label_node.size_flags_stretch_ratio = 3
         line.add_child(label_node)
 
         var container = HBoxContainer.new()

@@ -13,15 +13,12 @@ func load() -> SettingsUIGroup:
     var input_handler = builtin.select("Settings_General_InputHandler", \
             Vars_Input.input_handler_key, \
             input_handlers_dict)
-    InputHandler.add_input_handler_listener = func(id, meta):
-        input_handler.add_selection(id, meta.tr_name)
+    InputHandler.input_handler_added.connect_to(func(meta):
+        input_handler.add_selection(meta.id, meta.tr_name)
         input_handler.load_setting()
+    )
     input_handler.setting_changed.connect(func(v):
         Vars.input.set_input_handler(v)
     )
 
     return group
-
-func _notification(what: int) -> void:
-    if what == NOTIFICATION_PREDELETE:
-        InputHandler.add_input_handler_listener = Callable()

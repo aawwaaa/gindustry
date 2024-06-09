@@ -1,14 +1,13 @@
 class_name Vars_UI
 extends Vars.Vars_Object
 
-# move input.debug input.focus -> here
-# create message_panel, console_panel
-
 var debug: DebugMenu
 var focus: FocusManager
 
 var message_panel: MessagePanel
 var console_panel: MessagePanel
+
+var input_ui: CanvasLayer
 
 func _ready() -> void:
     debug = DebugMenu.scene.instantiate()
@@ -31,3 +30,8 @@ func _ready() -> void:
     # TODO connect -> console
     console_panel.hide()
     add_child(console_panel)
+
+    input_ui = CanvasLayer.new()
+    input_ui.layer = 8
+    input_ui.name = "InputUI"
+    add_child(input_ui)

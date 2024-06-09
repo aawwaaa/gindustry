@@ -36,7 +36,8 @@ func get_localized_name() -> String:
     return tr(get_tr_name())
 
 func get_content_type() -> ContentType:
-    return Vars.types.get_type(ContentType.TYPE, "content")
+    # return Vars.types.get_type(ContentType.TYPE, "content")
+    return ContentType.PLACEHOLDER
 
 func _get_default_option(_n: StringName) -> Variant:
     return null

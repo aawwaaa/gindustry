@@ -26,6 +26,6 @@ func load_tabs() -> void:
 
 func _on_close_requested() -> void:
     for group in groups.values():
-        group.save()
+        group.save_setting()
     Vars.configs.save_configs()
     hide()

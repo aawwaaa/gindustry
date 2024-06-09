@@ -25,9 +25,6 @@ func open_window(window_name: String) -> void:
 func get_window_node(window_name: String) -> Control:
     return %Windows.get_node(window_name)
 
-func get_default_input_handler() -> String:
-    return "desktop"
-
 func _on_saves_pressed() -> void:
     get_window_node("Saves").set_save_ui(false)
     open_window("Saves")
@@ -68,8 +65,7 @@ func load_ui(progress: Log.ProgressTracker) -> void:
     progress.progress += 3
     
     progress.name = "Main_Load_LoadInputHandler"
-    Vars.input.ui_node = %GameUI.input_handler_ui
-    Vars_Input.input_handler_key.default_value = Vars.main.get_default_input_handler()
+    Vars_Input.input_handler_key.default_value = Vars.input.get_default_input_handler()
 
     Vars.input.set_input_handler()
     progress.progress += 2

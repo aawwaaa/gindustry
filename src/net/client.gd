@@ -81,6 +81,7 @@ func reset() -> void:
         peers.clear()
     if multiplayer.has_multiplayer_peer():
         multiplayer.multiplayer_peer.close()
+        multiplayer.multiplayer_peer = null
     for progress in data_receive_progresses:
         progress.finish()
     data_receive_progresses.clear()
@@ -343,3 +344,9 @@ func join_local(if_not_headless: bool = true) -> Player:
     sync("player_joined_rpc", [peer.peer_id, peer.to_client()])
     current_player(peer.player_id)
     return peer.player
+
+func post_to_server(node: Node, method_name: StringName, args: Array) -> bool:
+    if client_active():
+        node.rpc_id.bind(args).call(1, method_name)
+        return true
+    return false

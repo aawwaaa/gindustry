@@ -19,7 +19,7 @@ var magic_number = "gindustry--|---|".to_ascii_buffer()
 func _ready() -> void:
     pass
 
-func get_player(player_id: int, update_data: Callable = func(): pass) -> Player:
+func get_player(player_id: int, update_data: Callable = func(_p): pass) -> Player:
     if players.has(player_id):
         update_data.call(players[player_id])
         return players[player_id]
@@ -32,7 +32,7 @@ func get_player_or_null(player_id: int) -> Player:
         return players[player_id]
     return null
 
-func create_player(player_id: int, update_data: Callable = func(): pass) -> Player:
+func create_player(player_id: int, update_data: Callable = func(_p): pass) -> Player:
     var player = Player.create();
     player.player_id = player_id
     player.init_player();
@@ -43,7 +43,7 @@ func create_player(player_id: int, update_data: Callable = func(): pass) -> Play
     apply_data_for(player)
     return player;
 
-func get_player_by_token(token: String, update_data: Callable = func(): pass) -> Player:
+func get_player_by_token(token: String, update_data: Callable = func(_p): pass) -> Player:
     var id = get_player_id_by_token(token)
     var player = get_player(id, update_data)
     return player
@@ -68,14 +68,14 @@ func reset() -> void:
     for child in players_node.get_children():
         child.queue_free()
 
-func register_player_data_type(type_id: String, type: GDScript) -> String:
+func register_player_data_type(type_id: String, create: Callable) -> String:
     var id = Vars.contents.current_loading_mod.mod_info.id + "_" + type_id
-    player_data_types[id] = type
+    player_data_types[id] = create
     return id
 
 func init_data_for(player: Player) -> void:
     for type in player_data_types:
-        var inst = player_data_types[type].new()
+        var inst = player_data_types[type].call()
         inst.player = player
         inst.player_data_type = type
         inst._init_data()
@@ -99,7 +99,7 @@ func load_player(player_id: int, update_data: Callable = func(): pass) -> Player
     update_data.call(player)
     for _1 in range(stream.get_32()):
         var type = stream.get_string()
-        var inst = player_data_types[type].new()
+        var inst = player_data_types[type].call()
         inst.player = player
         inst.player_data_type = type
         inst._load_data(stream)

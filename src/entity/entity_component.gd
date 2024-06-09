@@ -67,3 +67,6 @@ func _handle_access(_source: AccessOperation.AccessSource, \
 func access_to(target: Variant, method: StringName, args: Array[Variant]) -> void:
     AccessOperation.handle_access(access_source, target, method, args)
 
+func access_to_self(method: StringName, args: Array[Variant]) -> void:
+    access_to(self, method, args)
+

@@ -27,9 +27,7 @@ var player: Player:
 
 @rpc("authority", "call_remote", "reliable")
 func set_paused(v: bool) -> void:
-    if multiplayer.get_remote_sender_id() == 0:
-        set_paused.rpc_id(1, v)
-        return
+    if Vars.client.post_to_server(self, "set_paused", [v]): return
     if not Vars.server.is_caller_has_permission(multiplayer, "game/set_pause"):
         return
     sync("set_paused_rpc", [v])

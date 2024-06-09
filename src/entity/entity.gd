@@ -46,6 +46,12 @@ func get_component(comp_name: StringName) -> EntityComponent:
 func has_component(comp_name: StringName) -> bool:
     return components.has(comp_name)
 
+func get_component_by_id(id: int) -> EntityComponent:
+    return components_id[id]
+
+func has_component_id(id: int) -> bool:
+    return components_id.has(id)
+
 func _components_init() -> void:
     pass
 
@@ -126,6 +132,9 @@ func _handle_access(_source: AccessOperation.AccessSource, \
 
 func access_to(target: Variant, method: StringName, args: Array[Variant]) -> void:
     AccessOperation.handle_access(access_source, target, method, args)
+
+func access_to_self(method: StringName, args: Array[Variant]) -> void:
+    access_to(self, method, args)
 
 func _load_data(stream: Stream) -> Error:
     var err = super._load_data(stream)

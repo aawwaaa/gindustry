@@ -23,31 +23,19 @@ static func start_load() -> void:
         "world": World,
         "test_entity": TestEntity,
     })
-
-    # InputHandler.register_input_handler("desktop", InputHandler.InputHandlerMeta.new({
-    #     "input_handler": DesktopInputHandler,
-    #     "tr_name": "InputHandler_desktop",
-    # }))
+    
+    DesktopInputHandler.load_handler()
 
     await load_type("resource_types/", [
         "building_category.tres",
         "building_attribute_type.tres",
         "consumer_type.tres",
         "provider_type.tres",
-        "content_type.tres",
         "content_category.tres",
         "preset.tres",
         "tile_ore_type.tres"
     ])
-    await load_type("content_types/", [
-        # "building.tres",
-        "content.tres",
-        # "entity.tres",
-        # "floor.tres",
-        # "item.tres",
-        # "overlay.tres",
-        # "recipe.tres",
-    ])
+    Vars.types.register_type(ContentType.TYPE)
     await load_type("content_categories/", [
         "uncategoried.tres",
     ])

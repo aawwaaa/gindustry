@@ -16,6 +16,9 @@ func set_focused(node: Node) -> void:
     if current_focused == node: return
     current_focused = node
 
+func is_current_focused() -> bool:
+    return current_focused != null
+
 func remove_focused_if_is(node: Node) -> void:
     if current_focused == node:
         current_focused = null
