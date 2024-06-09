@@ -25,7 +25,7 @@ func _entity_deinit() -> void:
 
 func _physics_process(delta: float) -> void:
     if not object_ready: return
-    transform = transform.translated(Vector3.FORWARD * delta)
+    #transform = transform.translated(Vector3.FORWARD * delta)
 
 func _on_transform_changed() -> void:
     super._on_transform_changed()

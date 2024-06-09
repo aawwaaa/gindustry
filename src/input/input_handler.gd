@@ -1,6 +1,9 @@
 class_name InputHandler
 extends Node
 
+const USE_GLOBAL_Y_AXIS_CONFIG = &"input/use_global_y_axis"
+static var use_global_y_axis_key = ConfigsGroup.ConfigKey.new(USE_GLOBAL_Y_AXIS_CONFIG, true)
+
 static var input_handlers: Dictionary = {}
 # static signal input_handler_added(InputHandlerMeta)
 static var input_handler_added: StaticSignal = StaticSignal.new()
@@ -144,13 +147,21 @@ class MovementModule extends InputHandlerModule:
     
     func _get_move_velocity() -> Vector3:
         return Vector3.ZERO
-    func _get_roll_velocity() -> Vector3:
-        return Vector3.ZERO
+    func _get_roll_velocity() -> Basis:
+        return Basis.IDENTITY
 
     func get_move_velocity() -> Vector3:
         return _get_move_velocity()
-    func get_roll_velocity() -> Vector3:
+    func get_roll_velocity() -> Basis:
         return _get_roll_velocity()
+
+    static func get_move_velocity_for(target_handler: InputHandler) -> Vector3:
+        if not target_handler.has_module(&"Movement"): return Vector3.ZERO
+        return target_handler.get_module(&"Movement").get_move_velocity()
+    
+    static func get_roll_velocity_for(target_handler: InputHandler) -> Basis:
+        if not target_handler.has_module(&"Movement"): return Basis.IDENTITY
+        return target_handler.get_module(&"Movement").get_roll_velocity()
 
 class MenuModule extends InputHandlerModule:
     static func get_type() -> StringName:

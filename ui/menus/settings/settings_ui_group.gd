@@ -65,6 +65,13 @@ func multiline(setting_name: String, key: ConfigsGroup.ConfigKey) -> MultilineIn
     add(setting)
     return setting
 
+func number(setting_name: String, key: ConfigsGroup.ConfigKey) -> NumberSetting:
+    var setting = NumberSetting.new()
+    setting.name = setting_name
+    setting.config_key = key
+    add(setting)
+    return setting
+
 func checkbox(setting_name: String, key: ConfigsGroup.ConfigKey) -> CheckboxSetting:
     var setting = CheckboxSetting.new()
     setting.name = setting_name
@@ -158,6 +165,29 @@ class MultilineInputSetting extends Setting:
         text_edit.text = str(get_config())
     func save_setting() -> void:
         set_config(text_edit.text)
+
+class NumberSetting extends Setting:
+    var spin_box: SpinBox
+    var validator: Callable = func(_v: float): return true
+
+    func add_to_group() -> void:
+        var container = default_add_line()
+
+        spin_box = SpinBox.new()
+        spin_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+        spin_box.value_changed.connect(_on_spin_box_value_changed)
+        container.add_child(spin_box)
+
+    func _on_spin_box_value_changed(new_value: float) -> void:
+        if not validator.call(new_value):
+            load_setting()
+            return
+        save_setting()
+
+    func load_setting() -> void:
+        spin_box.value = get_config()
+    func save_setting() -> void:
+        set_config(spin_box.value)
 
 class CheckboxSetting extends Setting:
     var checkbox: CheckBox

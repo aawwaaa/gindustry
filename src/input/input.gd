@@ -18,6 +18,7 @@ func set_input_handler(handler_name: String = "") -> void:
         handler_name = Vars.configs.k(input_handler_key)
     var old = input_handler if input_handler else null
     if input_handler:
+        input_handler.exit_game()
         input_handler.remove_ui(Vars.ui.input_ui)
     input_handler = InputHandler.input_handlers[handler_name].create.call() \
             if InputHandler.input_handlers.has(handler_name) else null
@@ -30,6 +31,8 @@ func set_input_handler(handler_name: String = "") -> void:
         input_handler.extend_from(old)
     if old:
         old.queue_free()
+    if Vars.core.is_in_game():
+        input_handler.enter_game()
 
 func _on_state_changed(state: Vars_Core.State, from: Vars_Core.State) -> void:
     if state == Vars_Core.State.IN_GAME:

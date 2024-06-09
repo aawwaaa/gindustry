@@ -7,6 +7,8 @@ static var groups: Dictionary = {}
 static var general: SettingsUIGroup
 static var about: SettingsUIGroup
 
+static var desktop = SettingsUIGroup
+
 static func create(group_name: String) -> SettingsUIGroup:
     var node = VBoxContainer.new()
     node.name = group_name
@@ -23,6 +25,9 @@ func _ready() -> void:
 func load_tabs() -> void:
     general = load("res://ui/menus/settings/general.gd").new().load()
     about = load("res://ui/menus/settings/about.gd").new().load()
+
+    if OS.has_feature("pc"):
+        desktop = load("res://ui/menus/settings/desktop.gd").new().load()
 
 func _on_close_requested() -> void:
     for group in groups.values():
