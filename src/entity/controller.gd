@@ -101,10 +101,10 @@ class MovementModule extends ControllerModule:
     func get_move_velocity() -> Vector3:
         return _get_move_velocity()
 
-    func _get_roll_velocity() -> Basis:
-        return Basis.IDENTITY
+    func _get_roll_velocity() -> Vector3:
+        return Vector3.ZERO
     # (x_axis_vel, y_axis_vel, z_axis_vel)
-    func get_roll_velocity() -> Basis:
+    func get_roll_velocity() -> Vector3:
         return _get_roll_velocity()
 
     static func get_move_velocity_for(comp: ControlHandleComponent) -> Vector3:
@@ -112,8 +112,8 @@ class MovementModule extends ControllerModule:
         if not module: return Vector3.ZERO
         return module.get_move_velocity()
 
-    static func get_roll_velocity_for(comp: ControlHandleComponent) -> Basis:
+    static func get_roll_velocity_for(comp: ControlHandleComponent) -> Vector3:
         var module = comp.get_module(MovementModule.TYPE)
-        if not module: return Basis.IDENTITY
+        if not module: return Vector3.ZERO
         return module.get_roll_velocity()
 

@@ -16,8 +16,5 @@ func load() -> SettingsUIGroup:
     var mouse_roll_duration = input.number("Settings_Desktop_Input_MouseRollDuration", \
             DesktopInputHandler_Movement.mouse_roll_duration_key)
     mouse_roll_duration.validator = func(v): return v > 0 and v < 1000
-    var camera_roll_speed = input.number("Settings_Desktop_Input_CameraRollSpeed", \
-            DesktopInputHandler_Movement.camera_roll_speed_key)
-    camera_roll_speed.validator = func(v): return v > 0 and v < TAU * 32
 
     return group

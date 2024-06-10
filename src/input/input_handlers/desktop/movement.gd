@@ -6,14 +6,12 @@ const FLIP_Y_CONFIG: StringName = &"input/desktop/flip_y"
 const SWAP_XY_CONFIG: StringName = &"input/desktop/swap_xy"
 const MOUSE_DEADZONE_CONFIG: StringName = &"input/desktop/mouse_deadzone"
 const MOUSE_ROLL_DURATION_CONFIG: StringName = &"input/desktop/mouse_roll_duration"
-const CAMERA_ROLL_SPEED_CONFIG: StringName = &"input/desktop/camera_roll_speed"
 
 static var flip_x_key = ConfigsGroup.ConfigKey.new(FLIP_X_CONFIG, false)
 static var flip_y_key = ConfigsGroup.ConfigKey.new(FLIP_Y_CONFIG, true)
 static var swap_xy_key = ConfigsGroup.ConfigKey.new(SWAP_XY_CONFIG, false)
 static var mouse_deadzone_key = ConfigsGroup.ConfigKey.new(MOUSE_DEADZONE_CONFIG, 4)
 static var mouse_roll_duration_key = ConfigsGroup.ConfigKey.new(MOUSE_ROLL_DURATION_CONFIG, 10)
-static var camera_roll_speed_key = ConfigsGroup.ConfigKey.new(CAMERA_ROLL_SPEED_CONFIG, 0.25 * TAU)
 
 const INPUT_MOVE_FORWARD: StringName = &"move_forward"
 const INPUT_MOVE_BACKWARD: StringName = &"move_backward"
@@ -64,6 +62,7 @@ func _ready() -> void:
 func _handle_input(input: InputEvent) -> bool:
     if not Vars.core.is_in_game(): return false
     if input is InputEventKey:
+        if input.echo: return false
         for action in ACTIONS:
             if not input.is_action(action): continue
             var index = ACTIONS.find(action)
@@ -104,8 +103,8 @@ func _get_move_velocity() -> Vector3:
     if vel != Vector3.ZERO: vel = vel.normalized()
     return vel
 
-func _get_roll_velocity() -> Basis:
-    var vel = Basis.IDENTITY
+func _get_roll_velocity() -> Vector3:
+    var vel = Vector3.ZERO
     for index in current_pressed.size():
         if current_pressed[index]:
             vel += ACTION_TO_ROLL[index]
@@ -115,7 +114,7 @@ func _get_roll_velocity() -> Basis:
         var y = mouse_velocity.y * (-1 if Vars.configs.k(flip_y_key) else 1)
         vel += Vector3(x, y, 0) if not Vars.configs.k(swap_xy_key) else Vector3(y, x, 0)
     if vel != Vector3.ZERO: vel = vel.normalized()
-    return vel * Vars.configs.k(camera_roll_speed_key)
+    return vel
 
 func _physics_process(_delta: float) -> void:
     if not Vars.core.is_in_game(): return

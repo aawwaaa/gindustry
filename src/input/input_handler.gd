@@ -147,20 +147,20 @@ class MovementModule extends InputHandlerModule:
     
     func _get_move_velocity() -> Vector3:
         return Vector3.ZERO
-    func _get_roll_velocity() -> Basis:
-        return Basis.IDENTITY
+    func _get_roll_velocity() -> Vector3:
+        return Vector3.ZERO
 
     func get_move_velocity() -> Vector3:
         return _get_move_velocity()
-    func get_roll_velocity() -> Basis:
+    func get_roll_velocity() -> Vector3:
         return _get_roll_velocity()
 
     static func get_move_velocity_for(target_handler: InputHandler) -> Vector3:
         if not target_handler.has_module(&"Movement"): return Vector3.ZERO
         return target_handler.get_module(&"Movement").get_move_velocity()
     
-    static func get_roll_velocity_for(target_handler: InputHandler) -> Basis:
-        if not target_handler.has_module(&"Movement"): return Basis.IDENTITY
+    static func get_roll_velocity_for(target_handler: InputHandler) -> Vector3:
+        if not target_handler.has_module(&"Movement"): return Vector3.ZERO
         return target_handler.get_module(&"Movement").get_roll_velocity()
 
 class MenuModule extends InputHandlerModule:

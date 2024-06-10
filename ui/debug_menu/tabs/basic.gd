@@ -1,6 +1,8 @@
 class_name DebugMenu_Basic
 extends VBoxContainer
 
+const CAMERA_ROLL_SPEED = 0.4 * TAU
+
 var menu: DebugMenu
 var free_camera: bool = false
 
@@ -23,7 +25,7 @@ func process_free_camera(delta: float) -> void:
     var move = InputHandler.MovementModule.get_move_velocity_for(input)
     var roll = InputHandler.MovementModule.get_roll_velocity_for(input)
     camera.transform = camera.transform.translated_local(move * delta * speed)
-    for axis_id in 3:
+    for axis_id in [1, 0, 2]:
         var axis = [Vector3.LEFT, Vector3.UP, Vector3.FORWARD][axis_id]
         camera.transform = camera.transform.rotated_local(axis, roll[axis_id] * delta * 0.5 * TAU)
 

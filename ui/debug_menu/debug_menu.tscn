@@ -16,6 +16,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 0
 grow_vertical = 2
+focus_mode = 2
+mouse_filter = 0
 
 [node name="Basic" parent="TabContainer" instance=ExtResource("2_isijn")]
 unique_name_in_owner = true
