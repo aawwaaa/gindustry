@@ -11,9 +11,13 @@ static func load_handler() -> void:
 
     InputHandler.register_input_handler(meta)
 
+var menu: DesktopInputHandler_Menu
 var movement: DesktopInputHandler_Movement
 
 func _ready() -> void:
+    menu = DesktopInputHandler_Menu.new()
+    add_module(menu)
+
     movement = DesktopInputHandler_Movement.new()
     add_module(movement)
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cxbi14y7r7q5f"]
+[gd_scene load_steps=9 format=3 uid="uid://cxbi14y7r7q5f"]
 
 [ext_resource type="Script" path="res://ui/main.gd" id="1_w18yf"]
 [ext_resource type="PackedScene" uid="uid://btxboyi6ctpxq" path="res://ui/loading/loading.tscn" id="2_jpl0v"]
@@ -6,69 +6,63 @@
 [ext_resource type="PackedScene" uid="uid://d2hoj6e4ao536" path="res://ui/menus/mods/mods.tscn" id="4_av7vb"]
 [ext_resource type="PackedScene" uid="uid://chotu7f2vsjke" path="res://ui/menus/new_game/new_game.tscn" id="5_cyego"]
 [ext_resource type="PackedScene" uid="uid://c5gi1kfmoo02i" path="res://ui/menus/settings/settings.tscn" id="5_r7vc2"]
-[ext_resource type="PackedScene" uid="uid://c7uj4kdkhepli" path="res://ui/game/game_ui.tscn" id="8_8l6oa"]
 [ext_resource type="PackedScene" uid="uid://cd7x0p0fsdn7g" path="res://ui/menus/servers/servers.tscn" id="8_lwtn2"]
 [ext_resource type="PackedScene" uid="uid://bpse7iuci88lr" path="res://ui/menus/saves/saves.tscn" id="8_ysqt5"]
 
-[node name="Main" type="Node3D"]
+[node name="Main" type="CanvasLayer"]
+layer = 0
 script = ExtResource("1_w18yf")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="Loading" parent="CanvasLayer" instance=ExtResource("2_jpl0v")]
+[node name="Loading" parent="." instance=ExtResource("2_jpl0v")]
 unique_name_in_owner = true
 
-[node name="MainMenu" parent="CanvasLayer" instance=ExtResource("3_q04lv")]
+[node name="MainMenu" parent="." instance=ExtResource("3_q04lv")]
 unique_name_in_owner = true
 visible = false
 
-[node name="NewGame" type="Button" parent="CanvasLayer/MainMenu"]
+[node name="NewGame" type="Button" parent="MainMenu"]
 layout_mode = 2
 text = "MainMenu_NewGame"
 
-[node name="Saves" type="Button" parent="CanvasLayer/MainMenu"]
+[node name="Saves" type="Button" parent="MainMenu"]
 layout_mode = 2
 text = "MainMenu_Saves"
 
-[node name="Servers" type="Button" parent="CanvasLayer/MainMenu"]
+[node name="Servers" type="Button" parent="MainMenu"]
 layout_mode = 2
 text = "MainMenu_Servers
 "
 
-[node name="Mods" type="Button" parent="CanvasLayer/MainMenu"]
+[node name="Mods" type="Button" parent="MainMenu"]
 layout_mode = 2
 text = "MainMenu_Mods"
 
-[node name="Settings" type="Button" parent="CanvasLayer/MainMenu"]
+[node name="Settings" type="Button" parent="MainMenu"]
 layout_mode = 2
 text = "MainMenu_Settings"
 
-[node name="Windows" type="Control" parent="CanvasLayer"]
+[node name="Windows" type="Control" parent="."]
 unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 0
 
-[node name="NewGame" parent="CanvasLayer/Windows" instance=ExtResource("5_cyego")]
+[node name="NewGame" parent="Windows" instance=ExtResource("5_cyego")]
 visible = false
 
-[node name="Mods" parent="CanvasLayer/Windows" instance=ExtResource("4_av7vb")]
+[node name="Mods" parent="Windows" instance=ExtResource("4_av7vb")]
 visible = false
 
-[node name="Settings" parent="CanvasLayer/Windows" instance=ExtResource("5_r7vc2")]
+[node name="Settings" parent="Windows" instance=ExtResource("5_r7vc2")]
 visible = false
 
-[node name="Saves" parent="CanvasLayer/Windows" instance=ExtResource("8_ysqt5")]
+[node name="Saves" parent="Windows" instance=ExtResource("8_ysqt5")]
 visible = false
 
-[node name="Servers" parent="CanvasLayer/Windows" instance=ExtResource("8_lwtn2")]
+[node name="Servers" parent="Windows" instance=ExtResource("8_lwtn2")]
 visible = false
 
-[node name="GameUI" parent="CanvasLayer" instance=ExtResource("8_8l6oa")]
-unique_name_in_owner = true
-visible = false
-
-[connection signal="pressed" from="CanvasLayer/MainMenu/NewGame" to="CanvasLayer/Windows/NewGame" method="show"]
-[connection signal="pressed" from="CanvasLayer/MainMenu/Saves" to="." method="_on_saves_pressed"]
-[connection signal="pressed" from="CanvasLayer/MainMenu/Servers" to="CanvasLayer/Windows/Servers" method="show"]
-[connection signal="pressed" from="CanvasLayer/MainMenu/Mods" to="CanvasLayer/Windows/Mods" method="show"]
-[connection signal="pressed" from="CanvasLayer/MainMenu/Settings" to="CanvasLayer/Windows/Settings" method="show"]
+[connection signal="pressed" from="MainMenu/NewGame" to="Windows/NewGame" method="show"]
+[connection signal="pressed" from="MainMenu/Saves" to="." method="_on_saves_pressed"]
+[connection signal="pressed" from="MainMenu/Servers" to="Windows/Servers" method="show"]
+[connection signal="pressed" from="MainMenu/Mods" to="Windows/Mods" method="show"]
+[connection signal="pressed" from="MainMenu/Settings" to="Windows/Settings" method="show"]

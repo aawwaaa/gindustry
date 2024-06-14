@@ -1,5 +1,5 @@
 class_name MainNode
-extends Node3D
+extends CanvasLayer
 
 var logger: Log.Logger
 
@@ -16,9 +16,6 @@ func _ready() -> void:
     Vars.core.init_configs()
     Vars.core.start_load()
 
-func _on_viewport_size_changed() -> void:
-    pass
-
 func open_window(window_name: String) -> void:
     %Windows.get_node(window_name).show()
 
@@ -34,10 +31,6 @@ func _on_state_changed(state: Vars_Core.State, from: Vars_Core.State) -> void:
         node.hide();
     %Loading.visible = Vars.core.is_in_loading()
     %MainMenu.visible = Vars.core.state.get_state() == Vars_Core.State.MAIN_MENU;
-    if Vars.core.is_in_game():
-        %GameUI.show_ui()
-    else:
-        %GameUI.hide_ui()
     logger.info(tr("Main_StateChanged {from} {state}").format({
         from = tr("Core_State_" + str(Vars_Core.State.find_key(from))),
         state = tr("Core_State_" + str(Vars_Core.State.find_key(state)))}
@@ -56,12 +49,8 @@ func load_ui(progress: Log.ProgressTracker) -> void:
     progress.progress += 5
 
     progress.name = "Main_Load_LoadGameUI"
-    GameUI.instance = %GameUI
-
-    get_viewport().size_changed.connect(_on_viewport_size_changed)
-    _on_viewport_size_changed()
     
-    %GameUI.loaded()
+    Vars.ui.game_ui.loaded()
     progress.progress += 3
     
     progress.name = "Main_Load_LoadInputHandler"

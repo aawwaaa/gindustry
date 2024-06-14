@@ -208,11 +208,12 @@ func is_player_has_permission(player: Player, permission: String) -> bool:
             if server_handler != null else true
 
 func is_caller_has_permission(mp: MultiplayerAPI, permission: String) -> bool:
+    if local_joined: return is_player_has_permission(Vars.game.player, permission)
     var peer_id = mp.get_remote_sender_id()
     if not has_peer_data(peer_id): return false
     var data = get_peer_data(peer_id)
     if data.player == null: return false
-    return server_handler.has_permission(data.player, permission)
+    return is_player_has_permission(data.player, permission)
 
 func init_local_join() -> PeerData:
     local_joined = true

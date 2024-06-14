@@ -4,16 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://ck815rqopv6fv" path="res://ui/content_selector/content_selector_window.tscn" id="4_k1l3q"]
 [ext_resource type="PackedScene" uid="uid://cinollqc0t0s0" path="res://ui/game/pause_menu.tscn" id="4_kutpy"]
 
-[node name="GameUI" type="Control"]
+[node name="GameUI" type="CanvasLayer"]
 process_mode = 3
-z_index = 1023
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
+layer = 6
 script = ExtResource("1_8q3go")
 
 [node name="ContentSelectorWindow" parent="." instance=ExtResource("4_k1l3q")]
@@ -23,11 +16,9 @@ visible = false
 [node name="PauseMenu" parent="." instance=ExtResource("4_kutpy")]
 unique_name_in_owner = true
 visible = false
-layout_mode = 1
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 unique_name_in_owner = true
-layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -38,16 +29,6 @@ grow_vertical = 0
 [node name="Debug" type="Label" parent="PanelContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="InputHandlerUI" type="Control" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
 
 [connection signal="contents_loaded" from="." to="ContentSelectorWindow" method="_on_game_ui_contents_loaded"]
 [connection signal="ui_hidden" from="." to="ContentSelectorWindow" method="_on_game_ui_ui_hidden"]
