@@ -84,6 +84,12 @@ func get_object_callback(id: int, callback: Callable) -> void:
 func get_object_id(object: RefObject) -> int:
     return object.object_id if object else 0
 
+func get_object_type_by_index(index: int) -> ObjectType:
+    return objects_reg.object_types[index]
+
+func get_object_type_by_full_id(full_id: String) -> ObjectType:
+    return objects_reg.object_types_indexed[full_id]
+
 func object_ready() -> void:
     for object in objects.values():
         make_ready(object)

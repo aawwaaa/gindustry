@@ -1,4 +1,4 @@
-class_name ContentList
+class_name ContentList_
 extends Resource
 
 @export var base_path: String = "res://"

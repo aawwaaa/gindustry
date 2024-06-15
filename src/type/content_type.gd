@@ -1,6 +1,8 @@
 class_name ContentType
 extends ResourceType
 
+const CONTENT = preload("res://contents/content_types/content.tres")
+
 static var TYPE: ResourceTypeType
 static func _static_init() -> void:
     TYPE = ResourceTypeType.new()

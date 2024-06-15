@@ -36,9 +36,8 @@ static func start_load() -> void:
         "tile_ore_type.tres"
     ])
     Vars.types.register_type(ContentType.TYPE)
-    await load_type("content_categories/", [
-        "uncategoried.tres",
-    ])
+    Vars.types.register_type(ContentType.CONTENT)
+    Vars.types.register_type(ContentCategory.UNCATEGORIZED)
     await load_type("building_attributes/", [
         "assembler.tres",
     ])

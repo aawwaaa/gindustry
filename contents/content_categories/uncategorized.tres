@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="ContentCategory" load_steps=4 format=3 uid="uid://dhx031ol3iair"]
+[gd_resource type="Resource" script_class="ContentCategory" load_steps=4 format=3 uid="uid://cnuvppxl127wx"]
 
 [ext_resource type="Script" path="res://src/type/content_category.gd" id="1_gbkl6"]
 [ext_resource type="Texture2D" uid="uid://bitk566038c3w" path="res://assets/content_types.png" id="1_gxdoh"]
@@ -11,4 +11,4 @@ region = Rect2(0, 0, 32, 32)
 script = ExtResource("1_gbkl6")
 order = 1000
 icon = SubResource("AtlasTexture_a8eas")
-name = "uncategoried"
+name = "uncategorized"

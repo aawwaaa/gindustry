@@ -5,8 +5,7 @@ extends Resource
 var full_id: String = "":
     get:
         if full_id != "": return full_id
-        if mod == null: full_id = "builtin_" + id
-        else: full_id = mod.mod_info.id + "_" + id
+        full_id = _get_full_id()
         return full_id
 var index: int
 
@@ -22,6 +21,16 @@ func _init() -> void:
 #     if Vars == null or Vars.mods == null: return "builtin_" + id
 #     if not Vars.mods.current_loading_mod: return "builtin_" + id
 #     return Vars.mods.current_loading_mod.mod_info.id + "_" + id
+
+func get_mod_id() -> String:
+    if mod == null: return "builtin"
+    return mod.mod_info.id
+
+func get_full_id_default(insert = "") -> String:
+    return get_mod_id() + "_" + (insert + "_" if insert else "") + id
+
+func _get_full_id() -> String:
+    return get_full_id_default()
 
 func _create() -> RefObject:
     return null

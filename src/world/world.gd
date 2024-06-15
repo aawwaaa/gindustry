@@ -3,8 +3,6 @@ extends Entity
 
 const TILE_SIZE = 0.25
 const TILE_SIZE_VECTOR = Vector3.ONE * TILE_SIZE
-const CHUNK_SIZE = 32
-const CHUNK_SIZE_VECTOR = Vector3.ONE * CHUNK_SIZE
 
 static func get_type() -> ObjectType:
     return (World as Object).get_meta(OBJECT_TYPE_META)
@@ -17,6 +15,8 @@ var world_3d: World3D:
 var camera: RID:
     get: return parent_entity.camera if parent_entity and parent_entity != self else camera
     set(v): camera = v
+
+var chunks: Dictionary = {} # Vector3i -> Chunk
 
 static func create() -> World:
     return TYPE.create();

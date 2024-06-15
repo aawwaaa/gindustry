@@ -1,0 +1,28 @@
+type: !type builtin_example_data
+id: example_data
+
+recipes:
+  - type: !type builtin_recipe_basic
+    id: example_recipe1
+    consumers:
+      - type: !type builtin_consumer_item
+        items:
+          - !item_stack builtin_item_copper 1
+          - type: !type builtin_item_stack
+            item: !content example_item
+            amount: 2
+      - type: !type builtin_consumer_fluid
+        liquid: !content example_liquid
+        amount: 10
+      - type: !type builtin_consumer_power
+        amount: 10
+    producers:
+      - type: !type builtin_producer_item
+        items:
+          - !item_stack builtin_item_lead 1
+          - type: !type builtin_item_stack
+            item: !content example_item2
+            amount: 2
+      - type: !type builtin_producer_fluid
+        liquid: !content example_liquid2
+        amount: 10
