@@ -254,5 +254,9 @@ class SelectSetting extends Setting:
         display_changed()
 
     func save_setting() -> void:
+        if select.get_selected_id() == -1:
+            set_config(null)
+            display_changed()
+            return
         set_config(selections_mapping[select.get_selected_id()])
         display_changed()

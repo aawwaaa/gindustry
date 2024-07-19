@@ -1,8 +1,6 @@
-class_name Gindustry
 extends Mod
 
-static var root = "res://mods/gindustry"
-static var logger: Log.Logger;
+var logger: Log.Logger;
 
 func _init(info: ModInfo) -> void:
     super._init(info);
@@ -12,7 +10,7 @@ func _mod_init() -> void:
     #logger.info("Hello world from mod!")
     pass
 
-func _load_contents() -> void:
+func _init_contents() -> void:
     var preset = load(root+"/contents/presets/test.tres")
     Vars.presets.register_preset_group("Gindustry").add(preset)
 

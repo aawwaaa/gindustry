@@ -8,10 +8,12 @@ var contents_mapping: Dictionary # String -> Content
 var contents_mapping_based_type: Dictionary # ContentType -> String -> Content
 var contents_mapping_based_category: Dictionary # ContentCategory -> ContentType -> String -> Content
 
-func register_content(content: Content) -> void:
+func register_content(content: Content) -> Content:
     content.mod = Vars.mods.current_loading_mod
+    content._data()
     Vars_Objects.add_object_type(content)
     contents.append(content)
+    content.mod.contents.append(content)
     var full_id = content.get_full_id()
     contents_mapping[full_id] = content
     if not contents_mapping_based_type.has(content.content_type):
@@ -23,6 +25,8 @@ func register_content(content: Content) -> void:
     contents_mapping_based_type[content.content_type][full_id] = content
     contents_mapping_based_category[content.content_category][content.content_type][full_id] = content
     content._content_registed()
+    content._assign()
+    return content
 
 func get_contents(type: ContentType) -> Array[Content]:
     return contents_mapping_based_type[type].values()

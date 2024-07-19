@@ -1,8 +1,8 @@
 class_name ContentCategory
 extends ResourceType
 
-const TYPE = preload("res://contents/resource_types/content_category.tres")
-const UNCATEGORIZED = preload("res://contents/content_categories/uncategorized.tres")
+static var TYPE: ResourceTypeType
+static var UNCATEGORIED: ContentCategory
 
 @export var order: int = 0
 @export var icon: Texture2D = load("res://assets/asset-not-found.png")

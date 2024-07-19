@@ -8,12 +8,12 @@ var mod_inst_list: Dictionary = {}
 
 var current_loading_mod: Mod;
 
-func search_mod_folder(path: String, ignore_folder: bool = true) -> void:
+func search_mod_folder(path: String) -> void:
     var dir_access = DirAccess.open(path);
     if not dir_access:
         logger.error(tr("Mods_SearchFailed {directory}") \
             .format({directory = path}))
-        return;    
+        return
     var progress = Log.register_progress_tracker(5, \
             tr("Mods_SearchMods {directory}").format({directory = path}), \
             logger.source);
@@ -23,12 +23,8 @@ func search_mod_folder(path: String, ignore_folder: bool = true) -> void:
     while dir_name != "":
         dir_name = path + dir_name;
         if dir_access.current_is_dir():
-            if ignore_folder:
-                logger.warn(tr("Mods_FolderNotSupported {path}") \
-                        .format({path = dir_name}))
-            else:
-                var info = ModInfo.load_from_folder(dir_name)
-                count += found_mod(info, dir_name);
+            var info = ModInfo.load_from_folder(dir_name)
+            count += found_mod(info, dir_name);
         else:
             var info = ModInfo.load_from_file(dir_name);
             count += found_mod(info, dir_name);
@@ -195,17 +191,18 @@ class __LoadListFinder:
 
 var __load_list_finder = __LoadListFinder.new();
 
+var load_list: Array[String];
 var display_order: Array[String];
 
-func load_mods() -> void:
+func load_mods_init() -> void:
     var enabled_list: Array[ModInfo] = []
     var disabled_list: Array[ModInfo] = []
     for info in mod_info_list.values():
         if info.enabled:
             enabled_list.append(info)
         else: disabled_list.append(info)
-    var progress = Log.register_progress_tracker(100 * enabled_list.size(), "Mods_Load", logger.source)
-    var load_list = __load_list_finder.get_slove(enabled_list);
+    var progress = Log.register_progress_tracker(100 * enabled_list.size(), "Mods_Load_Init", logger.source)
+    load_list = __load_list_finder.get_slove(enabled_list);
     display_order = load_list
     disabled_list.sort_custom(func(a, b): return a.id < b.id);
     for info in disabled_list:
@@ -218,26 +215,92 @@ func load_mods() -> void:
         progress.name = tr("Mods_Load_LoadResources {id} {name}") \
                 .format({id = info.id, name = info.name});
         logger.info(progress.name)
-        if info.file_path != "":
+        if info.file_path != "" and not info.folder:
             ProjectSettings.load_resource_pack(info.file_path);
         progress.progress += 30
-        var Main = load(info.main)
-        var mod = Main.new(info);
+        var main_script = load(info.root + info.main)
+        var mod = main_script.new(info);
         current_loading_mod = mod
         mod_inst_list[info.id] = mod;
+        await mod._mod_init();
+        progress.progress += 25
+        progress.name = tr("Mods_Load_InitContents {id} {name}") \
+                .format({id = info.id, name = info.name});
+        logger.info(progress.name)
         await load_mod_configs(mod);
         progress.progress += 15
-        progress.name = tr("Mods_Load_Initialize {id} {name}") \
-                .format({id = info.id, name = info.name});
-        logger.info(progress.name)
-        mod._mod_init();
-        progress.progress += 25
-        progress.name = tr("Mods_Load_LoadContents {id} {name}") \
-                .format({id = info.id, name = info.name});
-        logger.info(progress.name)
-        await mod._load_contents();
+        await mod._init_contents();
         progress.progress += 30
-    logger.info(tr_n("Mods_Load_LoadComplete {amount}", \
-            "Mods_Load_LoadComplete_plural {amount}", load_list.size()) \
+    logger.info(tr_n("Mods_Load_InitComplete {amount}", \
+            "Mods_Load_InitComplete_plural {amount}", load_list.size()) \
             .format({amount = load_list.size()}))
+    progress.finish()
+
+func load_mods_contents() -> void:
+    var progress = Log.register_progress_tracker(100 * load_list.size(), "Mods_Load_Contents", logger.source)
+    for id in load_list:
+        var inst = mod_inst_list[id];
+        if inst == null:
+            progress.progress += 100
+            return
+        current_loading_mod = inst
+        progress.name = tr("Mods_Load_LoadContents {id} {name}") \
+                .format({id = inst.mod_info.id, name = inst.mod_info.name});
+        logger.info(progress.name)
+        for type in inst.types:
+            await type._load()
+        for content in inst.contents:
+            await content._load()
+        await inst._load_contents()
+        progress.progress += 100
+    progress.finish()
+
+func load_mods_assets() -> void:
+    var headless = Vars.core.is_headless_client()
+    var progress = Log.register_progress_tracker(100 * load_list.size(), "Mods_Load_Assets", logger.source)
+    for id in load_list:
+        var inst = mod_inst_list[id];
+        if inst == null:
+            progress.progress += 100
+            return
+        current_loading_mod = inst
+        progress.name = tr("Mods_Load_LoadAssets {id} {name}") \
+                .format({id = inst.mod_info.id, name = inst.mod_info.name});
+        logger.info(progress.name)
+        var p1 = Log.register_progress_tracker(inst.types.size()
+                + inst.contents.size(), "-", "Mods_Load_LoadAssets")
+        for type in inst.types:
+            p1.name = tr(type.full_id)
+            if headless:
+                await type._load_headless()
+            else:
+                await type._load_assets()
+            p1.progress += 1
+        for content in inst.contents:
+            p1.name = tr(content.full_id)
+            if headless:
+                await content._load_headless()
+            else:
+                await content._load_assets()
+            p1.progress += 1
+        if headless:
+            await inst._load_headless()
+        else:
+            await inst._load_assets()
+        progress.progress += 100
+    progress.finish()
+
+func load_mods_post() -> void:
+    var progress = Log.register_progress_tracker(100 * load_list.size(), "Mods_Load_Post", logger.source)
+    for id in load_list:
+        var inst = mod_inst_list[id];
+        if inst == null:
+            progress.progress += 100
+            return
+        current_loading_mod = inst
+        progress.name = tr("Mods_Load_PostLoad {id} {name}") \
+                .format({id = inst.mod_info.id, name = inst.mod_info.name});
+        logger.info(progress.name)
+        await inst._post();
+        progress.progress += 100
     progress.finish()

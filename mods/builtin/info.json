@@ -1,0 +1,13 @@
+{
+   "id": "builtin",
+   "name": "Gindustry-builtin",
+   "description": "Gindustry builtin",
+   "author": "awa",
+   "version": "1.0.0",
+   "displayVersion": "1.0.0",
+   "depends": {},
+   "excepts": [],
+   "icon": "icon.png",
+   "iconType": "png",
+   "main": "/scripts/main.gd"
+}

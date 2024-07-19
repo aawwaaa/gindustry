@@ -54,14 +54,11 @@ func start_load() -> void:
     state.set_state(State.LOADING);
     var progress = Log.register_progress_tracker(100, "Core_Load", logger.source);
     progress.name = "Core_Load_SearchMods"
-    Vars.mods.search_mod_folder("res://mods/", false);
+    Vars.mods.search_mod_folder("res://mods/");
     Vars.mods.search_mod_folder("user://mods/");
     Vars.mods.load_enable_configs();
     progress.progress += 5
 
-    # add builtin to mod lists
-    Builtin.load_builtin()
-    
     progress.name = "Core_Load_CheckModErrors"
     var errors = Vars.mods.check_errors();
     if errors.size() != 0:
@@ -79,12 +76,13 @@ func start_load() -> void:
     Vars.main.get_window_node("Settings").load_tabs()
     progress.progress += 5
 
-    progress.name = "Core_Load_LoadBuiltin"
-    await Builtin.start_load()
-    progress.progress += 10
     progress.name = "Core_Load_LoadMods"
-    await Vars.mods.load_mods();
-    progress.progress += 50
+    await Vars.mods.load_mods_init();
+    progress.progress += 20
+    await Vars.mods.load_mods_contents();
+    progress.progress += 20
+    await Vars.mods.load_mods_post();
+    progress.progress += 20
     progress.name = "Core_Load_LoadSaves"
     Vars.saves.load_saves();
     progress.progress += 20

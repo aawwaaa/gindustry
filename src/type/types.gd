@@ -6,18 +6,23 @@ var logger = Log.register_logger("Types_LogSource")
 var resource_type_types: Dictionary = {}
 var types: Dictionary = {}
 
-func register_type(type: ResourceType) -> void:
-    logger.debug("Load type: " + str(type.get_type().full_id, " ", type.full_id))
+func register_type(type: ResourceType) -> ResourceType:
     type.mod = Vars.mods.current_loading_mod
+    type._data()
+    type.mod.types.append(type)
     type.init_full_id();
+    logger.debug("Load type: " + type.full_id)
     if type is ResourceTypeType:
         resource_type_types[type.full_id] = type
         if not types.has(type):
             types[type] = {}
-        return
-    if not types.has(type.get_type()):
-        types[type.get_type()] = {}
-    types[type.get_type()][type.full_id] = type
+    else:
+        if not types.has(type.get_type()):
+            types[type.get_type()] = {}
+        types[type.get_type()][type.full_id] = type
+    type._type_registed()
+    type._assign()
+    return type
 
 func get_types(type: ResourceTypeType) -> Dictionary:
     if not types.has(type):

@@ -16,7 +16,7 @@ var log_levels = {
     LogLevel.DEBUG: "LogLevel_Debug"
 }
 
-var enable_debug_log = false;
+var enable_debug_log = OS.has_feature("debug");
 var log_access: FileAccess;
 
 var active_progress_trackers: Array[ProgressTracker] = []

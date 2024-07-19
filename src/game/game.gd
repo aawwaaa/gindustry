@@ -80,7 +80,6 @@ func init_game() -> void:
     save_meta = SaveMeta.new();
     save_configs = ConfigsGroup.new();
     Vars.objects.init_object_types_mapping();
-    Vars.contents.init_contents_mapping();
 
 func ready_game() -> void:
     logger.info(tr("Game_Ready"))

@@ -4,7 +4,7 @@ extends ResourceType
 ## Preset
 
 ## Resource type of Preset
-const TYPE = preload("res://contents/resource_types/preset.tres")
+static var TYPE: ResourceTypeType
 
 func _get_type() -> ResourceType:
     return TYPE
@@ -56,7 +56,7 @@ func _reset_preset() -> void:
 
 ## Get the translation name of preset, will be as argument to `tr`
 func get_tr_name() -> String:
-    return Content.to_full_id(mod.mod_info.id, name, "preset")
+    return mod.mod_info.id + "_preset_" + id
 
 ## Call when preset is loaded, after _load_preset_data
 ## Datas of preset is ready

@@ -18,6 +18,8 @@ extends Resource
 
 var enabled: bool = false;
 var file_path: String = "";
+var root: String = "";
+var folder: bool = false
 
 static func load_from_file(path: String) -> ModInfo:
     var reader = ZIPReader.new();
@@ -35,6 +37,7 @@ static func load_from_file(path: String) -> ModInfo:
         info.icon = Utils.parse_image_data(icon_data, info_dict["iconType"]);
     reader.close();
     info.file_path = path;
+    info.root = "res://mods/" + info.id
     return info;
     
 static func load_from_folder(path: String) -> ModInfo:
@@ -50,6 +53,8 @@ static func load_from_folder(path: String) -> ModInfo:
         var texture = load(full) if path.begins_with("res://") \
             else ImageTexture.create_from_image(Image.load_from_file(full));
         info.icon = texture;
+    info.root = path
+    info.folder = true
     return info;
 
 static func parse_info_dict(dict: Dictionary) -> ModInfo:
