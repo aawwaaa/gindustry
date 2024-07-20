@@ -9,5 +9,5 @@
    "excepts": [],
    "icon": "icon.png",
    "iconType": "png",
-   "main": "/scripts/main.gd"
+   "main": "/src/main.gd"
 }

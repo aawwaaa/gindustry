@@ -78,11 +78,13 @@ func start_load() -> void:
 
     progress.name = "Core_Load_LoadMods"
     await Vars.mods.load_mods_init();
-    progress.progress += 20
+    progress.progress += 10
     await Vars.mods.load_mods_contents();
     progress.progress += 20
-    await Vars.mods.load_mods_post();
+    await Vars.mods.load_mods_assets();
     progress.progress += 20
+    await Vars.mods.load_mods_post();
+    progress.progress += 10
     progress.name = "Core_Load_LoadSaves"
     Vars.saves.load_saves();
     progress.progress += 20

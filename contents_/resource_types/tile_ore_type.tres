@@ -1,8 +1,0 @@
-[gd_resource type="Resource" script_class="ResourceTypeType" load_steps=2 format=3 uid="uid://cu8vorkmhdp62"]
-
-[ext_resource type="Script" path="res://src/type/resource_type_type.gd" id="1_ky17q"]
-
-
-[resource]
-script = ExtResource("1_ky17q")
-name = "tile_ore_type"

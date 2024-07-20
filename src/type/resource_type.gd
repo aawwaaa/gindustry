@@ -10,9 +10,9 @@ var type: ResourceType:
     get = get_type
 
 func init_full_id() -> void:
-    var mod_id = (mod.mod_info.id + "_") if mod else ""
+    var mod_id = (mod.mod_info.id + ":") if mod else ""
     if self is ResourceTypeType: full_id = mod_id + id
-    else: full_id = mod_id + get_type().id + "_" + id
+    else: full_id = mod_id + get_type().id + ":" + id
 
 func _get_type() -> ResourceType:
     return null

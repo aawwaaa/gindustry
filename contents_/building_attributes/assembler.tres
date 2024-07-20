@@ -1,7 +1,0 @@
-[gd_resource type="Resource" script_class="BuildingAttributeType" load_steps=2 format=3 uid="uid://4bqd3cdcmimx"]
-
-[ext_resource type="Script" path="res://src/type/building_attribute_type.gd" id="1_iwpd7"]
-
-[resource]
-script = ExtResource("1_iwpd7")
-name = "assembler"

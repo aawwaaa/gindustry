@@ -1,13 +1,19 @@
 class_name ContentType
 extends ResourceType
 
+static var TYPE: ResourceTypeType
+
+static var CONTENT: ContentType
+static var ENTITY: ContentType
+static var BLOCK: ContentType
+static var ITEM: ContentType
+static var FLUID: ContentType
+static var ENERGY: ContentType
+
 @export var order: int = 0
 @export var icon: Texture2D = load("res://assets/asset-not-found.png")
 
 @export var selector_panel: PackedScene
-
-static var TYPE: ResourceTypeType
-static var CONTENT: ContentType
 
 var contents: Array[Content] = []
 

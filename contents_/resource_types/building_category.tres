@@ -1,7 +1,0 @@
-[gd_resource type="Resource" script_class="ResourceTypeType" load_steps=2 format=3 uid="uid://c2couplqm6cy7"]
-
-[ext_resource type="Script" path="res://src/type/resource_type_type.gd" id="1_kilv4"]
-
-[resource]
-script = ExtResource("1_kilv4")
-name = "building_category"

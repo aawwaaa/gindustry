@@ -19,7 +19,7 @@ func _content_registed() -> void:
 
 func _data() -> void:
     content_type = ContentType.CONTENT
-    content_category = ContentCategory.UNCATEGORIED
+    content_category = ContentCategory.MISC
 
 func _assign() -> void:
     pass

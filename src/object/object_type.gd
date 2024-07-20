@@ -7,6 +7,11 @@ var full_id: String = "":
         if full_id != "": return full_id
         full_id = _get_full_id()
         return full_id
+var node_id: String = "":
+    get:
+        if node_id != "": return node_id
+        node_id = full_id.replace(":", "-")
+        return node_id
 var index: int
 
 var mod: Mod
@@ -27,7 +32,7 @@ func get_mod_id() -> String:
     return mod.mod_info.id
 
 func get_full_id_default(insert = "") -> String:
-    return get_mod_id() + "_" + (insert + "_" if insert else "") + id
+    return get_mod_id() + ":" + (insert + ":" if insert else "") + id
 
 func _get_full_id() -> String:
     return get_full_id_default()

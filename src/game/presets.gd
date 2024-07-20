@@ -12,14 +12,17 @@ class PresetGroup:
     
     func add(preset: Preset) -> void:
         presets.append(preset)
-        Vars.types.register_type(preset)
 
 var preset_groups: Array[PresetGroup] = []
+var preset_groups_map: Dictionary = {}
 
 func register_preset_group(group_name: String) -> PresetGroup:
+    if preset_groups_map.has(group_name):
+        return preset_groups_map[group_name]
     var group = PresetGroup.new();
     group.group_name = group_name
     preset_groups.append(group)
+    preset_groups_map[group_name] = group
     return group;
 
 func load_preset(preset: Preset) -> void:

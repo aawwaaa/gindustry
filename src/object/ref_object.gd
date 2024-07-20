@@ -8,7 +8,7 @@ static var TYPE_ID: StringName:
 const OBJECT_TYPE_META = &"object_type"
 
 static func get_type() -> ObjectType:
-    return null
+    return (RefObject as Object).get_meta(OBJECT_TYPE_META)
 
 var object_id: int = 0;
 var object_type: ObjectType
@@ -26,7 +26,7 @@ func object_create() -> void:
 func _object_init() -> void:
     Vars.objects.add_object(self, object_id)
     add_to_group(&"objects")
-    name = object_type.id + "#" + str(object_id)
+    name = object_type.node_id + "#" + str(object_id)
 
 func _object_free() -> void:
     pass

@@ -6,8 +6,12 @@ var instance2: RID
 
 var mesh = BoxMesh.new()
 
-func _get_type() -> ResourceType:
-    return TYPE
+func _data() -> void:
+    super._data()
+    id = "test"
+
+func _assign() -> void:
+    Vars.presets.register_preset_group("Gindustry").add(self)
 
 func _show_description(node: ScrollContainer) -> void:
     var label = Label.new()

@@ -287,6 +287,7 @@ func load_mods_assets() -> void:
             await inst._load_headless()
         else:
             await inst._load_assets()
+        p1.finish()
         progress.progress += 100
     progress.finish()
 
