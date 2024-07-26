@@ -1,7 +1,7 @@
 class_name Entity
 extends RefObject
 
-signal transform_changed()
+signal transform_changed(source: Entity)
 signal child_entity_added(entity: Entity)
 signal child_entity_removed(entity: Entity)
 
@@ -21,6 +21,8 @@ var root_world: World:
 var transform: Transform3D:
     set = set_transform
 
+var entity_active = false
+
 var components: Dictionary = {}
 var components_id: Dictionary = {}
 var access_source: AccessOperation.EntityAccessSource = \
@@ -33,11 +35,11 @@ func _init() -> void:
     _components_init()
 
 func set_parent_entity(new_parent: Entity) -> void:
-    if object_ready: _entity_deinit()
+    if object_ready: entity_deinit()
     if parent_entity: parent_entity.handle_remove_child_entity(self)
     parent_entity = new_parent
     if parent_entity: parent_entity.handle_add_child_entity(self)
-    if object_ready: _entity_init()
+    if object_ready: entity_init()
     transform_changed.emit()
 
 func get_component(comp_name: StringName) -> EntityComponent:
@@ -54,6 +56,18 @@ func has_component_id(id: int) -> bool:
 
 func _components_init() -> void:
     pass
+
+func entity_init() -> void:
+    for child in child_entities:
+        child.entity_init()
+    _entity_init()
+    entity_active = true
+
+func entity_deinit() -> void:
+    entity_active = false
+    for child in child_entities:
+        child.entity_deinit()
+    _entity_deinit()
 
 func _entity_init() -> void:
     for component in components.values():
@@ -82,13 +96,18 @@ func get_global_transform() -> Transform3D:
     if parent_entity == null: return transform
     return parent_entity.get_global_transform() * transform
 
+func get_relative_transform(entity: Entity) -> Transform3D:
+    if parent_entity == null: return transform
+    if entity == self: return Transform3D.IDENTITY
+    return parent_entity.get_relative_transform(entity) * transform
+
 func set_transform(new_transform: Transform3D) -> void:
     transform = new_transform
-    transform_changed.emit()
+    transform_changed.emit(self)
 
-func _on_transform_changed() -> void:
+func _on_transform_changed(source: Entity) -> void:
     for child in child_entities:
-        child.transform_changed.emit()
+        child.transform_changed.emit(source)
 
 func add_component(comp: EntityComponent, \
         comp_name: StringName = comp._get_default_component_name(), \
@@ -107,10 +126,10 @@ func _object_init() -> void:
 func _object_ready() -> void:
     if object_ready: return
     super._object_ready()
-    _entity_init()
+    entity_init()
 
 func _object_free() -> void:
-    _entity_deinit()
+    entity_deinit()
     for component in components.values():
         component.queue_free()
     super._object_free()

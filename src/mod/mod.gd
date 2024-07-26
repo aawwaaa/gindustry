@@ -12,6 +12,9 @@ var root: String:
 var contents: Array[Content] = [];
 var types: Array[ResourceType] = [];
 
+static func current() -> Mod:
+    return Vars.mods.current_loading_mod
+
 func _init(info: ModInfo) -> void:
     self.mod_info = info;
 
