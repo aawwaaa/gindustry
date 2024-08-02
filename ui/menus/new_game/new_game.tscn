@@ -2,11 +2,10 @@
 
 [ext_resource type="Script" path="res://ui/menus/new_game/new_game.gd" id="1_itsr7"]
 
-[node name="NewGame" type="Window"]
-title = "NewGame_Title"
-initial_position = 2
-size = Vector2i(960, 450)
+[node name="NewGame" type="CanvasLayer"]
 script = ExtResource("1_itsr7")
+title = "NewGame_Title"
+size = Vector2(960, 450)
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 anchors_preset = 15
@@ -68,6 +67,6 @@ layout_mode = 2
 disabled = true
 text = "NewGame_Confirm"
 
-[connection signal="close_requested" from="." to="." method="hide"]
+[connection signal="close_requested" from="." to="." method="hide_window"]
 [connection signal="text_changed" from="PanelContainer/HSplitContainer/VBoxContainer/Search" to="." method="_on_search_text_changed"]
 [connection signal="pressed" from="PanelContainer/HSplitContainer/PanelContainer/VBoxContainer/HBoxContainer/ConfirmButton" to="." method="_on_confirm_button_pressed"]

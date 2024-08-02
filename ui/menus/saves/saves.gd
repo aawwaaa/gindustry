@@ -1,4 +1,4 @@
-extends Window
+extends LayerWindow
 
 var save_ui = false:
     set = set_save_ui

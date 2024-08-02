@@ -16,7 +16,7 @@ func _entity_init() -> void:
     rid = RenderingServer.instance_create()
     RenderingServer.instance_set_base(rid, mesh.get_rid())
     RenderingServer.instance_attach_object_instance_id(rid, get_instance_id())
-    RenderingServer.instance_set_scenario(rid, root_world.world_3d.scenario)
+    RenderingServer.instance_set_scenario(rid, root_world.scenario)
     _on_transform_changed(self)
 
 func _entity_deinit() -> void:

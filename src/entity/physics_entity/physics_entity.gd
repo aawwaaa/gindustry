@@ -3,6 +3,9 @@ extends Entity
 
 signal shape_data_changed(shapeidx: int)
 
+static func get_type() -> ObjectType:
+    return (PhysicsEntity as Object).get_meta(OBJECT_TYPE_META)
+
 func _get_physics_body_rid() -> RID:
     return RID()
 
@@ -10,7 +13,7 @@ func get_physics_body_rid() -> RID:
     return _get_physics_body_rid()
 
 func get_parent_standalone_physics_entity() -> StandalonePhysicsEntity:
-    var curr = self.parent_entity
+    var curr = self
     while curr:
         if curr is StandalonePhysicsEntity:
             return curr
@@ -30,9 +33,9 @@ func __attach_shape(shapeidx: int) -> void:
     __update_shape(shapeidx)
 
 func __update_shape(shapeidx: int) -> void:
-    var parent = get_parent_standvalone_physics_entity()
+    var parent = get_parent_standalone_physics_entity()
     var shape_local = get_relative_transform(parent).affine_inverse() * shape_transforms[shapeidx]
-    PhysicsServer3D.body_set_shapee_transform(get_physics_body_rid(), \
+    PhysicsServer3D.body_set_shape_transform(get_physics_body_rid(), \
         shape_attached_idxs[shapeidx], shape_local)
     shape_data_changed.emit(shapeidx)
     parent.physics_child_shape_changed(self)
@@ -82,6 +85,6 @@ func _entity_init() -> void:
         __attach_shape(shapeidx)
 
 func _entity_deinit() -> void:
-    for shapeidx in shapes:
+    for shapeidx in shape_attached_idxs:
         __detach_shape(shapeidx)
     super._entity_deinit()

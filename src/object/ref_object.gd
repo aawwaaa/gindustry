@@ -31,11 +31,10 @@ func _object_init() -> void:
 func _object_free() -> void:
     pass
 
-func free() -> void:
-    print("free")
+func object_free() -> void:
     _object_free()
     Vars.objects.object_freed(object_id)
-    super.free()
+    call_deferred("free")
 
 func packed() -> RefObjectPacked:
     var obj = RefObjectPacked.new()

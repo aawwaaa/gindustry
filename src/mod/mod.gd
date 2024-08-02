@@ -56,23 +56,6 @@ func configs_changed() -> void:
     signal_configs_changed.emit(self);
 
 func get_files(path: String) -> Array[String]:
-    var arr: Array[String] = []
-    var access = DirAccess.open(path)
-    if not access:
-        return arr
-    access.list_dir_begin()
-    var file_name = access.get_next()
-    while file_name != "":
-        var file = path + "/" + file_name
-        if access.current_is_dir():
-            arr += get_files(file)
-        else:
-            arr.append(file)
-        file_name = access.get_next()
-    access.list_dir_end()
-    return arr
-
-func get_files_relative(path: String) -> Array[String]:
     path = to_absolute(path)
     var arr: Array[String] = []
     var access = DirAccess.open(path)
@@ -83,7 +66,7 @@ func get_files_relative(path: String) -> Array[String]:
     while file_name != "":
         var file = to_relative(path + "/" + file_name)
         if access.current_is_dir():
-            arr += get_files_relative(file)
+            arr += get_files(file)
         else:
             arr.append(file)
         file_name = access.get_next()
@@ -91,20 +74,24 @@ func get_files_relative(path: String) -> Array[String]:
     return arr
 
 func to_absolute(path: String) -> String:
-    return root + path
+    if path.begins_with("mod://"):
+        return root + "/" + path.substr(6)
+    return path
 
 func to_relative(path: String) -> String:
     if path.begins_with(root):
-        return path.substr(root.length())
+        return "mod://" + path.substr(root.length()+1)
     return path
 
 func load_relative(path: String) -> Resource:
     return load(to_absolute(path))
 
 func each_resource(path: String, callback: Callable,
-        hint: String = "Load_LoadResources", source: String = "Unknown") -> void:
-    var reses_path = get_files_relative(path)
+        hint: String = "Load_LoadResources", source: String = "Unknown", 
+        filter: Callable = func(_a): return true) -> void:
+    var reses_path = get_files(path)
     for index in reses_path.size():
+        if not filter.call(reses_path[index]): continue
         reses_path[index] = to_absolute(reses_path[index])
     var reses = await Utils.load_contents_async("", reses_path, hint, source)
     for res in reses:
@@ -127,6 +114,21 @@ func load_resources(path: String, hint: String = "Load_LoadTypes", source: Strin
         else:
             push_error("Unknown resource type: %s" % res.resource_path)
     , hint, source)
+
+func load_scripts(path: String, source: String = "Unknown") -> void:
+    var types_path = get_files(path)
+    var removes = []
+    for p in types_path:
+        if p.contains("__ignore__"):
+            removes.append(p)
+    for p in removes:
+        types_path.erase(p)
+    for i in types_path.size():
+        types_path[i] = to_absolute(types_path[i])
+    var scripts = await Utils.load_contents_async("", types_path, "Load_LoadScripts", source)
+    for script in scripts:
+        if script.has_method(&"__script__init"):
+            script.__script__init()
 
 func _open_configs() -> Window:
     var window = AcceptDialog.new();

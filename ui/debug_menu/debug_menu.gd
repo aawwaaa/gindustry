@@ -19,4 +19,7 @@ func _ready() -> void:
 func _input(event: InputEvent) -> void:
     if not OS.is_debug_build(): return
     if event.is_action_pressed("debug_open_menu"):
+        if debug_enabled and not Vars.ui.focus.is_focused(self):
+            Vars.ui.focus.set_focused(self)
+            return
         debug_enabled = not debug_enabled

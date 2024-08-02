@@ -1,4 +1,4 @@
-extends Window
+extends LayerWindow
 
 var ModLine = preload("res://ui/menus/mods/mod_line.tscn")
 var state_changed = false;

@@ -1,6 +1,8 @@
 class_name Entity
 extends RefObject
 
+# TODO transform_sync
+
 signal transform_changed(source: Entity)
 signal child_entity_added(entity: Entity)
 signal child_entity_removed(entity: Entity)
@@ -72,6 +74,7 @@ func entity_deinit() -> void:
 func _entity_init() -> void:
     for component in components.values():
         component._component_init()
+    _on_transform_changed(self)
 
 func _entity_deinit() -> void:
     for component in components.values():
@@ -126,10 +129,13 @@ func _object_init() -> void:
 func _object_ready() -> void:
     if object_ready: return
     super._object_ready()
-    entity_init()
+    if parent_entity: entity_init()
+
+func object_free() -> void:
+    entity_deinit()
+    super.object_free()
 
 func _object_free() -> void:
-    entity_deinit()
     for component in components.values():
         component.queue_free()
     super._object_free()

@@ -3,11 +3,10 @@
 [ext_resource type="Script" path="res://ui/menus/mods/mods.gd" id="1_q5bn3"]
 [ext_resource type="PackedScene" uid="uid://bwtjx2xrsrk7e" path="res://ui/menus/mods/mod_detail.tscn" id="2_lyxu1"]
 
-[node name="Mods" type="Window"]
-title = "Mods_Title"
-initial_position = 2
-size = Vector2i(960, 450)
+[node name="Mods" type="CanvasLayer"]
 script = ExtResource("1_q5bn3")
+title = "Mods_Title"
+size = Vector2(960, 450)
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 anchors_preset = 15

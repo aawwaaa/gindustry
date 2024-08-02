@@ -7,6 +7,11 @@ func toggle_pause_menu() -> void:
     else:
         hide_menu()
 
+func _process(_delta: float) -> void:
+    if not visible: return
+    if not Vars.ui.focus.is_current_focused():
+        Vars.ui.focus.set_current_focused(self)
+
 func _on_game_ui_ui_hidden() -> void:
     hide_menu()
 

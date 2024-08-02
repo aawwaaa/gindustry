@@ -12,7 +12,7 @@ config_version=5
 
 config/name="gindustry"
 config/name_localized={
-"zh_CN": "G工业"
+"zh_CN": "网格工业"
 }
 config/version="1.0.0"
 config/tags=PackedStringArray("projects")
@@ -31,7 +31,6 @@ Vars="*res://src/vars.gd"
 
 window/stretch/aspect="expand"
 window/vsync/vsync_mode=0
-window/custom=""
 window/version="1.0.0"
 
 [dotnet]
@@ -42,7 +41,7 @@ project/assembly_name="gindustry"
 
 movie_writer/movie_file="E:/workspace/out.avi"
 movie_writer/disable_vsync=true
-run/main_run_args="--load-preset gindustry_preset_test"
+run/main_run_args="--load-preset gindustry:preset:test"
 
 [filesystem]
 
@@ -137,7 +136,7 @@ interact_click={
 [internationalization]
 
 locale/translations=PackedStringArray("res://bundles/en.po", "res://bundles/zh.po")
-locale/test="zh_CN"
+locale/test="en"
 
 [layer_names]
 
@@ -149,7 +148,6 @@ locale/test="zh_CN"
 [physics]
 
 common/physics_jitter_fix=0.0
-3d/default_gravity=0.0
 2d/default_gravity=0.0
 
 [rendering]

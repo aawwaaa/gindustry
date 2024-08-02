@@ -1,6 +1,9 @@
 class_name PartialPhysicsEntity
 extends PhysicsEntity
 
+static func get_type() -> ObjectType:
+    return (PartialPhysicsEntity as Object).get_meta(OBJECT_TYPE_META)
+
 func _get_physics_body_rid() -> RID:
     return get_parent_standalone_physics_entity().get_physics_body_rid()
 

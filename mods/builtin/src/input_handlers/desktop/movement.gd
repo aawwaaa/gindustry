@@ -55,6 +55,7 @@ const ACTION_TO_ROLL: Array[Vector3] = [
 var current_pressed: Array[bool] = [false, false, false, false, false, false, false, false]
 var mouse_velocity: Vector2 = Vector2.ZERO
 var mouse_update: int = 0
+var mouse_capture_timer: float = 0
 
 func _ready() -> void:
     Vars.ui.focus.focus_changed.connect(_on_focus_changed)
@@ -83,7 +84,8 @@ func _on_focus_changed(_1, _2) -> void:
     if Vars.ui.focus.is_current_focused():
         Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
         mouse_velocity = Vector2.ZERO
-    else:
+        mouse_capture_timer = Time.get_ticks_msec()
+    elif mouse_capture_timer + 20 < Time.get_ticks_msec():
         Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _enter_game() -> void:

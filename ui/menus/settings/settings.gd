@@ -1,5 +1,5 @@
 class_name Settings
-extends Window
+extends LayerWindow
 
 static var instance: Settings
 static var groups: Dictionary = {}
@@ -12,7 +12,7 @@ static var desktop = SettingsUIGroup
 static func create(group_name: String) -> SettingsUIGroup:
     var node = VBoxContainer.new()
     node.name = group_name
-    instance.get_node("TabContainer").add_child(node)
+    instance.get_node("%TabContainer").add_child(node)
     var group = SettingsUIGroup.new()
     group.node = node
     groups[group_name] = group
@@ -20,6 +20,7 @@ static func create(group_name: String) -> SettingsUIGroup:
     return group
 
 func _ready() -> void:
+    super._ready()
     instance = self
 
 func load_tabs() -> void:

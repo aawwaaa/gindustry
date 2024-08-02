@@ -15,7 +15,7 @@ static var region_index: int = 0
 static var region_size: Vector2i = Vector2i(32, 32)
 
 static func __resource__static_init(mod: Mod) -> void:
-    category_atlas = mod.load_relative("/assets/content_categories.png")
+    category_atlas = mod.load_relative("mod://assets/content_categories.png")
     ContentCategoryTemplate.category_atlas = category_atlas
     region_index = 0
 

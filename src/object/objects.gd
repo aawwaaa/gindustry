@@ -98,7 +98,7 @@ func object_ready() -> void:
 func reset() -> void:
     for object in objects.values():
         if is_instance_valid(object):
-            object.free()
+            object.object_free()
     object_registed.emit(null)
     object_inc_id = 1
     auto_ready = false

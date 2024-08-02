@@ -1,13 +1,16 @@
 class_name StandalonePhysicsEntity
 extends PhysicsEntity
 
+# TODO velocity sync
+
+static func get_type() -> ObjectType:
+    return (StandalonePhysicsEntity as Object).get_meta(OBJECT_TYPE_META)
+
 var physics_body_rid: RID
 var physics_child_entities: Array[PartialPhysicsEntity]
 var in_physics_transform_sync: bool = false
 
 var physics_last_transform: Transform3D
-
-# TODO phychild(shapes_changed) -> calculate_mass & calcuate_centroid
 
 func _object_init() -> void:
     super._object_init()
@@ -26,7 +29,9 @@ func _object_free() -> void:
 func _entity_init() -> void:
     super._entity_init()
     __update_physics()
-    PhysicsServer3D.body_set_space(physics_body_rid, world.world_3d.space)
+    PhysicsServer3D.body_set_space(physics_body_rid, world.space)
+
+    PhysicsServer3D.body_apply_force(physics_body_rid, Vector3.UP * 100, Vector3.ZERO)
 
 func _entity_deinit() -> void:
     PhysicsServer3D.body_set_space(physics_body_rid, RID())
@@ -50,7 +55,7 @@ func physics_transform_changed(new_transform: Transform3D) -> void:
 func _on_transform_changed(source: Entity) -> void:
     super._on_transform_changed(source)
     if in_physics_transform_sync: return
-    if source is StandalonePhysicsEntity:
+    if source is StandalonePhysicsEntity and source != self:
         var rid = get_physics_body_rid()
         var new_transform = PhysicsServer3D.body_get_state(rid, PhysicsServer3D.BODY_STATE_TRANSFORM)
         physics_transform_changed(new_transform)
@@ -68,22 +73,25 @@ func remove_physics_child(child: PartialPhysicsEntity) -> void:
     physics_child_entities.erase(child)
     if entity_active: __update_physics()
 
-func physics_child_shape_changed(_child: PartialPhysicsEntity) -> void:
+func physics_child_shape_changed(_child: PhysicsEntity) -> void:
     __update_physics()
 
 func __update_physics() -> void:
     var centroid_sum = Vector3()
     var mass = 0
-    var process = func(entity: PhysicsEntity) -> void:
-        for shapeidx in entity.shape_attached_idxs:
-            var origin = entity.shape_transforms[shapeidx].origin
-            origin = entity.get_relative_transform(self).affine_inverse() * origin
-            var shape_mass = entity.shape_masses[shapeidx]
+    for shapeidx in shape_attached_idxs:
+        var origin = shape_transforms[shapeidx].origin
+        origin = get_relative_transform(self).affine_inverse() * origin
+        var shape_mass = shape_masses[shapeidx]
+        centroid_sum += origin * shape_mass
+        mass += shape_mass
+    for child in physics_child_entities:
+        for shapeidx in child.shape_attached_idxs:
+            var origin = child.shape_transforms[shapeidx].origin
+            origin = child.get_relative_transform(self).affine_inverse() * origin
+            var shape_mass = child.shape_masses[shapeidx]
             centroid_sum += origin * shape_mass
             mass += shape_mass
-    process.call(self)
-    for child in physics_child_entities:
-        process.call(child)
     PhysicsServer3D.body_set_param(physics_body_rid, PhysicsServer3D.BODY_PARAM_CENTER_OF_MASS, \
             centroid_sum / mass)
     PhysicsServer3D.body_set_param(physics_body_rid, PhysicsServer3D.BODY_PARAM_MASS, mass)

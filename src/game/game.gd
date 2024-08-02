@@ -38,8 +38,6 @@ func set_paused_rpc(v: bool) -> void:
     PhysicsServer3D.set_active(not v)
 
 func _on_state_state_changed(state: Vars_Core.State, from: Vars_Core.State) -> void:
-    if state != Vars_Core.State.IN_GAME:
-        set_paused_rpc(true)
     if from == Vars_Core.State.IN_GAME and state != Vars_Core.State.IN_GAME:
         reset_game()
     if from == Vars_Core.State.LOADING_GAME and state != Vars_Core.State.IN_GAME:
@@ -53,6 +51,7 @@ func _ready() -> void:
 
 func reset_game() -> void:
     logger.info(tr("Game_GameReset"))
+    set_paused_rpc(false);
     Vars.client.reset();
 
     if save_preset:
@@ -114,8 +113,6 @@ func load_game(stream: Stream) -> Error:
     if err: return handle_load_error(err);
     err = Vars.objects.load_object_types_mapping(stream);
     if err: return handle_load_error(err);
-    err = Vars.contents.load_contents_mapping(stream);
-    if err: return handle_load_error(err);
 
     set_paused_rpc(stream.get_8() != 0)
     if stream.get_error(): return handle_load_error(stream.get_error());
@@ -138,7 +135,6 @@ func load_game(stream: Stream) -> Error:
 
 func make_ready_game() -> void:
     ready_game();
-    save_preset._after_ready();
 
 func save_game(stream: Stream, to_client: bool = false) -> void:
     save_meta.save_to(stream);
@@ -146,7 +142,6 @@ func save_game(stream: Stream, to_client: bool = false) -> void:
     # version 0
     save_configs.save_configs(stream);
     Vars.objects.save_object_types_mapping(stream);
-    Vars.contents.save_contents_mapping(stream);
     
     stream.store_8(1 if is_paused() else 0)
 

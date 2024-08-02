@@ -4,9 +4,9 @@ extends InputHandler
 static var meta: InputHandlerMeta
 static func load_handler() -> void:
     meta = InputHandlerMeta.new({
-        "id": "desktop",
+        "id": "builtin:input_handler:desktop",
         "create": func(): return DesktopInputHandler.new(),
-        "tr_name": "builtin_input_handler_desktop",
+        "tr_name": "builtin:input_handler:desktop",
     })
 
     InputHandler.register_input_handler(meta)

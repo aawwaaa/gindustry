@@ -1,4 +1,4 @@
-extends Window
+extends LayerWindow
 
 var current_preset: Preset;
 var PresetGroup = preload("res://ui/menus/new_game/preset_group.tscn");

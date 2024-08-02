@@ -17,9 +17,9 @@ func _ready() -> void:
     Vars.core.start_load()
 
 func open_window(window_name: String) -> void:
-    %Windows.get_node(window_name).show()
+    %Windows.get_node(window_name).show_window()
 
-func get_window_node(window_name: String) -> Control:
+func get_window_node(window_name: String) -> Node:
     return %Windows.get_node(window_name)
 
 func _on_saves_pressed() -> void:
@@ -28,7 +28,7 @@ func _on_saves_pressed() -> void:
 
 func _on_state_changed(state: Vars_Core.State, from: Vars_Core.State) -> void:
     for node in %Windows.get_children():
-        node.hide();
+        node.hide_window();
     %Loading.visible = Vars.core.is_in_loading()
     %MainMenu.visible = Vars.core.state.get_state() == Vars_Core.State.MAIN_MENU;
     logger.info(tr("Main_StateChanged {from} {state}").format({
