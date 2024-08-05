@@ -1,13 +1,16 @@
 class_name Entity
 extends RefObject
 
-# TODO transform_sync
-
 signal transform_changed(source: Entity)
 signal child_entity_added(entity: Entity)
 signal child_entity_removed(entity: Entity)
 
 const TARGET_SELF = &"self"
+
+const SNAPSHOT_SYNC_INTERVAL = 15.0
+const SNAPSHOT_CHANGED_SYNC_INTERVAL = 0.5
+
+static var logger: Log.Logger = Log.register_logger("Entity_LogSource")
 
 var parent_entity: Entity:
     set = set_parent_entity
@@ -29,6 +32,9 @@ var components: Dictionary = {}
 var components_id: Dictionary = {}
 var access_source: AccessOperation.EntityAccessSource = \
         AccessOperation.EntityAccessSource.new(self)
+
+var last_snapshot_sync: float = 0.0
+var last_snapshot_data: PackedByteArray
 
 static func get_type() -> ObjectType:
     return (Entity as Object).get_meta(OBJECT_TYPE_META)
@@ -139,6 +145,49 @@ func _object_free() -> void:
     for component in components.values():
         component.queue_free()
     super._object_free()
+
+func _physics_process(_delta: float) -> void:
+    if not entity_active: return
+    snapshot_update()
+
+func snapshot_sync_rpc(data: PackedByteArray) -> void:
+    if Vars.server.server_active(): return
+    Vars.temp.bas.load(data)
+    var err = _snapshot_load(Vars.temp.bas)
+    if err != OK:
+        logger.warn(tr("Entity_SnapshotLoadError {id} {error} {str}").format({
+            "id" = object_id,
+            "error" = error_string(err),
+            "str" = str(self)
+        }))
+    Vars.temp.bas.clear()
+
+func snapshot_update() -> void:
+    if not Vars.server.server_active(): return
+    Vars.temp.bas.load(last_snapshot_data)
+    var check_result = _snapshot_check(Vars.temp.bas)
+    Vars.temp.bas.clear()
+    var interval = SNAPSHOT_CHANGED_SYNC_INTERVAL if check_result \
+            else SNAPSHOT_SYNC_INTERVAL
+    if last_snapshot_sync + interval >= Vars.server.time: return
+    last_snapshot_sync = Vars.server.time
+    _snapshot_save(Vars.temp.bas)
+    last_snapshot_data = Vars.temp.bas.submit()
+    Vars.temp.bas.clear()
+    sync("snapshot_sync_rpc", [last_snapshot_data])
+
+## return true if something is changed
+func _snapshot_check(stream: Stream) -> bool:
+    if not transform.is_equal_approx(stream.get_var()): return true
+    return false
+
+func _snapshot_save(stream: Stream) -> void:
+    stream.store_var(transform, true)
+
+func _snapshot_load(stream: Stream) -> Error:
+    transform = stream.get_var()
+    if stream.get_error(): return stream.get_error()
+    return OK
 
 func _check_access_source(_source: AccessOperation.AccessSource) -> bool:
     return true

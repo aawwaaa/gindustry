@@ -1,7 +1,7 @@
 class_name StandalonePhysicsEntity
 extends PhysicsEntity
 
-# TODO velocity sync
+# physics state
 
 static func get_type() -> ObjectType:
     return (StandalonePhysicsEntity as Object).get_meta(OBJECT_TYPE_META)
@@ -37,7 +37,8 @@ func _entity_deinit() -> void:
     PhysicsServer3D.body_set_space(physics_body_rid, RID())
     super._entity_deinit()
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
+    super._physics_process(delta)
     if not entity_active: return
     var rid = get_physics_body_rid()
     if not rid.is_valid(): return
@@ -96,4 +97,29 @@ func __update_physics() -> void:
             centroid_sum / mass)
     PhysicsServer3D.body_set_param(physics_body_rid, PhysicsServer3D.BODY_PARAM_MASS, mass)
 
+func _snapshot_check(stream: Stream) -> bool:
+    if super._snapshot_check(stream): return true
+    return false
 
+func _snapshot_save(stream: Stream) -> void:
+    super._snapshot_save(stream)
+    pass
+
+func _snapshot_load(stream: Stream) -> Error:
+    var err = super._snapshot_load(stream)
+    if err: return err
+    if stream.get_error(): return stream.get_error()
+    return OK
+
+func _load_data(stream: Stream) -> Error:
+    var err = super._load_data(stream)
+    if err: return err
+    return Utils.load_data_with_version(stream, [func():
+        pass
+    ])
+
+func _save_data(stream: Stream) -> void:
+    super._save_data(stream)
+    Utils.save_data_with_version(stream, [func():
+        pass
+    ])
