@@ -13,6 +13,7 @@ static func load_handler() -> void:
 
 var menu: DesktopInputHandler_Menu
 var movement: DesktopInputHandler_Movement
+var cmaera: DesktopInputHandler_Camera
 
 func _ready() -> void:
     menu = DesktopInputHandler_Menu.new()
@@ -20,6 +21,9 @@ func _ready() -> void:
 
     movement = DesktopInputHandler_Movement.new()
     add_module(movement)
+
+    cmaera = DesktopInputHandler_Camera.new()
+    add_module(cmaera)
 
 func _input(event: InputEvent) -> void:
     if Vars.ui.focus.is_current_focused(): return

@@ -52,6 +52,8 @@ const ACTION_TO_ROLL: Array[Vector3] = [
     Vector3(0, 0, 1),
 ]
 
+var space_axis_panel: SpaceAxisPanel
+
 var current_pressed: Array[bool] = [false, false, false, false, false, false, false, false]
 var mouse_velocity: Vector2 = Vector2.ZERO
 var mouse_update: int = 0
@@ -91,18 +93,19 @@ func _on_focus_changed(_1, _2) -> void:
 func _enter_game() -> void:
     if not Vars.ui.focus.is_current_focused():
         Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+    space_axis_panel.visible = true
 
 func _exit_game() -> void:
     Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
     current_pressed.fill(false)
     mouse_velocity = Vector2.ZERO
+    space_axis_panel.visible = false
 
 func _get_move_velocity() -> Vector3:
     var vel = Vector3.ZERO
     for index in current_pressed.size():
         if current_pressed[index]:
             vel += ACTION_TO_MOVEMENT[index]
-    if vel != Vector3.ZERO: vel = vel.normalized()
     return vel
 
 func _get_roll_velocity() -> Vector3:
@@ -113,9 +116,11 @@ func _get_roll_velocity() -> Vector3:
     if mouse_update + Vars.configs.k(mouse_roll_duration_key) > Time.get_ticks_msec() \
             and mouse_velocity.length_squared() > Vars.configs.k(mouse_deadzone_key) ** 2:
         var x = mouse_velocity.x * (-1 if Vars.configs.k(flip_x_key) else 1)
-        var y = mouse_velocity.y * (-1 if Vars.configs.k(flip_y_key) else 1)
-        vel += Vector3(x, y, 0) if not Vars.configs.k(swap_xy_key) else Vector3(y, x, 0)
-    if vel != Vector3.ZERO: vel = vel.normalized()
+        var z = mouse_velocity.y * (-1 if Vars.configs.k(flip_y_key) else 1)
+        vel += Vector3(x, z, 0) if not Vars.configs.k(swap_xy_key) else Vector3(z, x, 0)
+    var basis = controller.movement.entity_basis.inverse()
+    vel = vel - basis * (controller.movement.entity_angular_velocity.normalized() * 1 \
+            if controller.movement.entity_angular_velocity != Vector3.ZERO else Vector3.ZERO)
     return vel
 
 func _physics_process(_delta: float) -> void:
@@ -123,3 +128,15 @@ func _physics_process(_delta: float) -> void:
     if controller and sync_to_controller:
         controller.movement.input_move_velocity = get_move_velocity()
         controller.movement.input_roll_velocity = get_roll_velocity()
+    if space_axis_panel:
+        space_axis_panel.basis = controller.movement.entity_basis
+
+func _add_ui(node: Control) -> void:
+    space_axis_panel = SpaceAxisPanel.scene.instantiate()
+    space_axis_panel.name = "SpaceAxisPanel"
+    space_axis_panel.visible = false
+    node.add_child(space_axis_panel)
+
+func _remove_ui(node: Control) -> void:
+    node.remove_child(space_axis_panel)
+    space_axis_panel.queue_free()

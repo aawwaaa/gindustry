@@ -3,7 +3,7 @@ extends Controller
 
 const SYNC_PERIOD = 0.05
 
-class PlayerMovementModule extends ControllerModule:
+class PlayerMovementModule extends MovementModule:
     var synced_move_velocity: Vector3
     var synced_roll_velocity: Vector3
 
@@ -34,12 +34,15 @@ class PlayerMovementModule extends ControllerModule:
         synced_roll_velocity = dict["roll_velocity"]
 
     func _get_move_velocity() -> Vector3:
-        return Vector3.ZERO
+        return synced_move_velocity
     func _get_roll_velocity() -> Vector3:
-        return Vector3.ZERO
+        return synced_roll_velocity
 
 var movement: PlayerMovementModule
+var camera_output: Controller.CameraOutputModule
 
 func _ready() -> void:
     movement = PlayerMovementModule.new()
     add_module(movement)
+    camera_output = Controller.CameraOutputModule.new()
+    add_module(camera_output)

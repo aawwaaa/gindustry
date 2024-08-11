@@ -7,6 +7,8 @@ var instance2: RID
 var body: RID
 var shape: RID
 
+var player: Entity
+
 var mesh = BoxMesh.new()
 
 func _data() -> void:
@@ -26,11 +28,9 @@ func _pre_config_preset() -> bool:
 
 func _init_preset() -> void:
     var world = Vars.worlds.create_world()
-    var entity = TestEntity.TYPE.create(false)
-    world.add_child_entity(entity)
-    entity.object_create()
 
-    entity = Gindustry_Entity_Test.TYPE.create(false)
+    var entity = Vars.contents.get_content_by_full_id("gindustry:entity:player").create(false)
+    player = entity
     entity.transform = Transform3D(Basis.IDENTITY, Vector3(0, 8, 0))
 
     world.add_child_entity(entity)
@@ -39,8 +39,8 @@ func _init_preset() -> void:
 func _after_ready() -> void:
     directional_light = RenderingServer.directional_light_create()
     RenderingServer.light_set_color(directional_light, Color.WHITE)
-    RenderingServer.light_set_param(directional_light, RenderingServer.LIGHT_PARAM_ENERGY, 1)
-    RenderingServer.light_set_param(directional_light, RenderingServer.LIGHT_PARAM_INDIRECT_ENERGY, 1)
+    RenderingServer.light_set_param(directional_light, RenderingServer.LIGHT_PARAM_ENERGY, 5)
+    RenderingServer.light_set_param(directional_light, RenderingServer.LIGHT_PARAM_INDIRECT_ENERGY, 2)
     RenderingServer.light_set_param(directional_light, RenderingServer.LIGHT_PARAM_RANGE, 100)
 
     instance = RenderingServer.instance_create()
@@ -48,13 +48,15 @@ func _after_ready() -> void:
     RenderingServer.instance_set_transform(instance, Transform3D.IDENTITY.rotated(Vector3.RIGHT, -PI / 6).rotated(Vector3.UP, PI / 6))
     RenderingServer.instance_set_scenario(instance, Vars.worlds.worlds[1].scenario)
 
-    # mesh.size = Vector3(100, 2, 100)
+    mesh.size = Vector3(5, 1, 5)
+    mesh.material = StandardMaterial3D.new()
+    mesh.material.albedo_color = Color(1, 0.8, 0.2)
 
-    PhysicsServer3D.area_set_param(Vars.worlds.worlds[1].space, PhysicsServer3D.AREA_PARAM_GRAVITY, 9.8)
+    PhysicsServer3D.area_set_param(Vars.worlds.worlds[1].space, PhysicsServer3D.AREA_PARAM_GRAVITY, 0)
     PhysicsServer3D.area_set_param(Vars.worlds.worlds[1].space, PhysicsServer3D.AREA_PARAM_GRAVITY_VECTOR, Vector3.DOWN)
 
     shape = PhysicsServer3D.box_shape_create()
-    PhysicsServer3D.shape_set_data(shape, Vector3(5, 1, 5) / 2)
+    PhysicsServer3D.shape_set_data(shape, Vector3(1000, 1, 1000) / 2)
 
     body = PhysicsServer3D.body_create()
     PhysicsServer3D.body_add_shape(body, shape, Transform3D.IDENTITY)
@@ -66,11 +68,10 @@ func _after_ready() -> void:
 
     Vars.worlds.worlds[1].toggle_to.call_deferred()
 
-    # instance2 = RenderingServer.instance_create()
-    # RenderingServer.instance_set_base(instance2, mesh.get_rid())
-    # RenderingServer.instance_set_transform(instance, Transform3D.IDENTITY \
-    #         .translated(Vector3.DOWN * 0.2))
-    # RenderingServer.instance_set_scenario(instance2, Vars.worlds.worlds[1].scenario)
+    instance2 = RenderingServer.instance_create()
+    RenderingServer.instance_set_base(instance2, mesh.get_rid())
+    RenderingServer.instance_set_transform(instance2, Transform3D.IDENTITY.translated(Vector3(0, -5, 0)))
+    RenderingServer.instance_set_scenario(instance2, Vars.worlds.worlds[1].scenario)
 
 func _apply_preset() -> void:
     pass
@@ -82,6 +83,9 @@ func _disable_preset() -> void:
     RenderingServer.free_rid(directional_light)
     RenderingServer.free_rid(instance)
     RenderingServer.free_rid(instance2)
+
+func _init_after_local_player_join() -> void:
+    Vars.game.player.controller.control_to(player.get_component(ControlHandleComponent.NAME))
 
 func _load_preset_data(_stream: Stream) -> Error:
     return OK

@@ -1,0 +1,38 @@
+[gd_scene load_steps=5 format=3 uid="uid://drd6cmg6ovmcr"]
+
+[ext_resource type="ArrayMesh" uid="uid://rw1x75s04rov" path="res://assets/ui/axises_axises.res" id="1_nogw0"]
+[ext_resource type="Script" path="res://ui/panels/space_axis_panel/space_axis_panel.gd" id="1_p2n4b"]
+
+[sub_resource type="Environment" id="Environment_1s0k8"]
+background_color = Color(0.468232, 0.468232, 0.468232, 1)
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+
+[sub_resource type="World3D" id="World3D_qqoou"]
+environment = SubResource("Environment_1s0k8")
+
+[node name="SpaceAxisPanel" type="SubViewportContainer"]
+custom_minimum_size = Vector2(128, 128)
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -128.0
+offset_right = 128.0
+grow_vertical = 0
+script = ExtResource("1_p2n4b")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+own_world_3d = true
+world_3d = SubResource("World3D_qqoou")
+handle_input_locally = false
+size = Vector2i(128, 128)
+render_target_update_mode = 4
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewport"]
+unique_name_in_owner = true
+mesh = ExtResource("1_nogw0")
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+projection = 1
+size = 2.2

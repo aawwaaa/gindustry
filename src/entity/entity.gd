@@ -10,7 +10,7 @@ const TARGET_SELF = &"self"
 const SNAPSHOT_SYNC_INTERVAL = 15.0
 const SNAPSHOT_CHANGED_SYNC_INTERVAL = 0.5
 
-static var logger: Log.Logger = Log.register_logger("Entity_LogSource")
+static var logger: Log.Logger
 
 var parent_entity: Entity:
     set = set_parent_entity
@@ -25,6 +25,8 @@ var root_world: World:
             else parent_entity.root_world
 var transform: Transform3D:
     set = set_transform
+var entity_type: EntityType:
+    get: return object_type as EntityType
 
 var entity_active = false
 
@@ -38,6 +40,9 @@ var last_snapshot_data: PackedByteArray
 
 static func get_type() -> ObjectType:
     return (Entity as Object).get_meta(OBJECT_TYPE_META)
+
+static func __script__init() -> void:
+    logger = Log.register_logger("Entity_LogSource")
 
 func _init() -> void:
     _components_init()
@@ -119,8 +124,8 @@ func _on_transform_changed(source: Entity) -> void:
         child.transform_changed.emit(source)
 
 func add_component(comp: EntityComponent, \
-        comp_name: StringName = comp._get_default_component_name(), \
-        parent_comp: EntityComponent = null) -> void:
+        parent_comp: EntityComponent = null, \
+        comp_name: StringName = comp._get_default_component_name()) -> void:
     comp.init(self, comp_name, parent_comp)
     components[comp_name] = comp
     components_id[comp.component_id] = comp
@@ -209,6 +214,11 @@ func access_to(target: Variant, method: StringName, args: Array[Variant]) -> voi
 
 func access_to_self(method: StringName, args: Array[Variant]) -> void:
     access_to(self, method, args)
+
+func _controller_feedback(control_handle: ControlHandleComponent) -> void:
+    var movement = control_handle.get_module(Controller.MovementModule.TYPE)
+    if movement:
+        movement.entity_basis = transform.basis
 
 func _load_data(stream: Stream) -> Error:
     var err = super._load_data(stream)

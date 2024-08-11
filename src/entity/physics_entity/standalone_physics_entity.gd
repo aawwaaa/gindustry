@@ -1,12 +1,11 @@
 class_name StandalonePhysicsEntity
 extends PhysicsEntity
 
-# physics state
-
 static func get_type() -> ObjectType:
     return (StandalonePhysicsEntity as Object).get_meta(OBJECT_TYPE_META)
 
 var physics_body_rid: RID
+var physics_body_direct_state: PhysicsDirectBodyState3D
 var physics_child_entities: Array[PartialPhysicsEntity]
 var in_physics_transform_sync: bool = false
 
@@ -19,6 +18,11 @@ func _object_init() -> void:
 
 func _get_physics_body_rid() -> RID:
     return physics_body_rid
+
+func _get_body_direct_state() -> PhysicsDirectBodyState3D:
+    if not physics_body_direct_state:
+        physics_body_direct_state = PhysicsServer3D.body_get_direct_state(physics_body_rid)
+    return physics_body_direct_state
 
 func _object_free() -> void:
     if physics_body_rid:
@@ -99,15 +103,21 @@ func __update_physics() -> void:
 
 func _snapshot_check(stream: Stream) -> bool:
     if super._snapshot_check(stream): return true
+    if not linear_velocity.is_equal_approx(stream.get_var()): return true
+    if not angular_velocity.is_equal_approx(stream.get_var()): return true
     return false
 
 func _snapshot_save(stream: Stream) -> void:
     super._snapshot_save(stream)
-    pass
+    stream.store_var(linear_velocity, true)
+    stream.store_var(angular_velocity, true)
 
 func _snapshot_load(stream: Stream) -> Error:
     var err = super._snapshot_load(stream)
     if err: return err
+    linear_velocity = stream.get_var()
+    if stream.get_error(): return stream.get_error()
+    angular_velocity = stream.get_var()
     if stream.get_error(): return stream.get_error()
     return OK
 
@@ -115,11 +125,16 @@ func _load_data(stream: Stream) -> Error:
     var err = super._load_data(stream)
     if err: return err
     return Utils.load_data_with_version(stream, [func():
-        pass
+        linear_velocity = stream.get_var()
+        if stream.get_error(): return stream.get_error()
+        angular_velocity = stream.get_var()
+        if stream.get_error(): return stream.get_error()
+        return OK
     ])
 
 func _save_data(stream: Stream) -> void:
     super._save_data(stream)
     Utils.save_data_with_version(stream, [func():
-        pass
+        stream.store_var(linear_velocity, true)
+        stream.store_var(angular_velocity, true)
     ])

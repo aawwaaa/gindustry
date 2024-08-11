@@ -6,11 +6,27 @@ signal shape_data_changed(shapeidx: int)
 static func get_type() -> ObjectType:
     return (PhysicsEntity as Object).get_meta(OBJECT_TYPE_META)
 
+var direct_state: PhysicsDirectBodyState3D:
+    get = get_body_direct_state
+var linear_velocity: Vector3:
+    get: return direct_state.linear_velocity
+    set(v): PhysicsServer3D.body_set_state(get_physics_body_rid(), PhysicsServer3D.BODY_STATE_LINEAR_VELOCITY, v)
+
+var angular_velocity: Vector3:
+    get: return direct_state.angular_velocity
+    set(v): PhysicsServer3D.body_set_state(get_physics_body_rid(), PhysicsServer3D.BODY_STATE_ANGULAR_VELOCITY, v)
+
 func _get_physics_body_rid() -> RID:
     return RID()
 
 func get_physics_body_rid() -> RID:
     return _get_physics_body_rid()
+
+func _get_body_direct_state() -> PhysicsDirectBodyState3D:
+    return null
+
+func get_body_direct_state() -> PhysicsDirectBodyState3D:
+    return _get_body_direct_state()
 
 func get_parent_standalone_physics_entity() -> StandalonePhysicsEntity:
     var curr = self
@@ -88,3 +104,18 @@ func _entity_deinit() -> void:
     for shapeidx in shape_attached_idxs:
         __detach_shape(shapeidx)
     super._entity_deinit()
+
+func _apply_shape() -> void:
+    if entity_type is PhysicsEntityType:
+        entity_type.apply_shape(self)
+
+func _object_init() -> void:
+    super._object_init()
+    _apply_shape()
+
+func _controller_feedback(control_handle: ControlHandleComponent) -> void:
+    super._controller_feedback(control_handle)
+    var movement = control_handle.get_module(Controller.MovementModule.TYPE)
+    if movement:
+        movement.entity_linear_velocity = linear_velocity
+        movement.entity_angular_velocity = angular_velocity

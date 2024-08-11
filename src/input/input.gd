@@ -4,8 +4,6 @@ extends Vars.Vars_Object
 const INPUT_HANDLER_CONFIG = "input/input_handler"
 static var input_handler_key = ConfigsGroup.ConfigKey.new(INPUT_HANDLER_CONFIG, "")
 
-var camera: CameraController;
-
 signal input_handler_changed(handler: InputHandler, from: InputHandler);
 
 var input_handler: InputHandler;
@@ -44,9 +42,5 @@ func get_default_input_handler() -> String:
     return "desktop"
    
 func _ready() -> void:
-    camera = CameraController.new()
-    camera.name = "CameraController"
-    add_child(camera)
-
     Vars.core.state.state_changed.connect(_on_state_changed)
 

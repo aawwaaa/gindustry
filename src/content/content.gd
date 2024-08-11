@@ -6,7 +6,7 @@ var content_category: ContentCategory
 var content_tags: Array[ContentTag] = []
 
 func _get_full_id() -> String:
-    return get_full_id_default(content_type.name)
+    return get_full_id_default(content_type.id)
 
 func get_tr_name() -> String:
     return full_id
@@ -31,4 +31,7 @@ func _load() -> void:
 func _load_assets() -> void:
     pass
 func _load_headless() -> void:
+    pass
+
+func _init_from_scene(_node: ContentScene) -> void:
     pass

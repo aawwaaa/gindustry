@@ -96,24 +96,54 @@ class MovementModule extends ControllerModule:
     static func get_type() -> StringName:
         return &"Movement"
 
+    var entity_basis: Basis
+    var entity_linear_velocity: Vector3
+    var entity_angular_velocity: Vector3
+
     func _get_move_velocity() -> Vector3:
         return Vector3.ZERO
     func get_move_velocity() -> Vector3:
         return _get_move_velocity()
+    func get_move_velocity_normalized() -> Vector3:
+        var vel = get_move_velocity()
+        if vel == Vector3.ZERO: return vel
+        return vel.normalized() if vel.is_finite() \
+                else vel.clamp(Vector3(-1, -1, -1), Vector3(1, 1, 1)).normalized()
 
     func _get_roll_velocity() -> Vector3:
         return Vector3.ZERO
     # (x_axis_vel, y_axis_vel, z_axis_vel)
     func get_roll_velocity() -> Vector3:
         return _get_roll_velocity()
+    func get_roll_velocity_normalized() -> Vector3:
+        var vel = get_roll_velocity()
+        if vel == Vector3.ZERO: return vel
+        return vel.normalized() if vel.is_finite() \
+                else vel.clamp(Vector3(-1, -1, -1), Vector3(1, 1, 1)).normalized()
 
     static func get_move_velocity_for(comp: ControlHandleComponent) -> Vector3:
         var module = comp.get_module(MovementModule.TYPE)
         if not module: return Vector3.ZERO
         return module.get_move_velocity()
+    static func get_move_velocity_normalized_for(comp: ControlHandleComponent) -> Vector3:
+        var module = comp.get_module(MovementModule.TYPE)
+        if not module: return Vector3.ZERO
+        return module.get_move_velocity_normalized()
 
     static func get_roll_velocity_for(comp: ControlHandleComponent) -> Vector3:
         var module = comp.get_module(MovementModule.TYPE)
         if not module: return Vector3.ZERO
         return module.get_roll_velocity()
+    static func get_roll_velocity_normalized_for(comp: ControlHandleComponent) -> Vector3:
+        var module = comp.get_module(MovementModule.TYPE)
+        if not module: return Vector3.ZERO
+        return module.get_roll_velocity_normalized()
+
+class CameraOutputModule extends ControllerModule:
+    static func get_type() -> StringName:
+        return &"CameraOutput"
+
+    var camera_world: World:
+        get: return controller.entity.world if controller.entity else null
+    var camera_transform: Transform3D
 

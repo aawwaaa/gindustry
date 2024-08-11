@@ -1,8 +1,6 @@
 class_name World
 extends Entity
 
-static var logger: Log.Logger
-
 const TILE_SIZE = 0.25
 const TILE_SIZE_VECTOR = Vector3.ONE * TILE_SIZE
 
@@ -26,21 +24,14 @@ var chunks: Dictionary = {} # Vector3i -> Chunk
 static func create() -> World:
     return TYPE.create();
 
-func _object_create() -> void:
-    super._object_create()
-    if not logger:
-        logger = Log.register_logger("World_LogSource")
-
 func _object_init() -> void:
     super._object_init()
     Vars.worlds.worlds[object_id] = self 
     if is_root_world:
         self.world = self
         scenario = RenderingServer.scenario_create()
-        logger.debug("Scenario created: %s" % str(scenario))
 
         space = PhysicsServer3D.space_create()
-        logger.debug("Space created: %s" % str(space))
 
         camera = RenderingServer.camera_create()
         RenderingServer.camera_set_cull_mask(camera, 1)
@@ -52,7 +43,6 @@ func _object_ready() -> void:
 
     if is_root_world:
         PhysicsServer3D.space_set_active(space, true)
-        logger.debug("Space active: %s" % str(space))
 
 func _object_free() -> void:
     if is_root_world:

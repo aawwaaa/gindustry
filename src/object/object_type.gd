@@ -17,6 +17,7 @@ var index: int
 var mod: Mod
 
 func _init() -> void:
+    if Engine.is_editor_hint(): return
     if Vars == null or Vars.mods == null:
         mod = null
         return

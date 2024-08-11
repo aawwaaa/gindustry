@@ -77,6 +77,7 @@ func start_game_load() -> void:
 
 func init_game() -> void:
     save_meta = SaveMeta.new();
+    save_meta.apply_current_mods();
     save_configs = ConfigsGroup.new();
     Vars.objects.init_object_types_mapping();
 

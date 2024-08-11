@@ -23,7 +23,7 @@ func set_world(v: World) -> void:
         return
     camera_rid = v.camera
 
-    RenderingServer.camera_set_perspective(camera_rid, 90, 0.1, 100)
+    RenderingServer.camera_set_perspective(camera_rid, 75, 0.1, 1000)
 
     update_transform()
 

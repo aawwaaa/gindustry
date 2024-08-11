@@ -1,0 +1,48 @@
+[gd_scene load_steps=7 format=3 uid="uid://balhsswpcfgiv"]
+
+[ext_resource type="Script" path="res://src/content/content_scene.gd" id="1_upoch"]
+[ext_resource type="ArrayMesh" uid="uid://cw3paafpe4wg" path="res://mods/gindustry/assets/entities/player_player.res" id="2_1cvbf"]
+[ext_resource type="Script" path="res://mods/gindustry/src/entities/player.gd" id="2_q5pbw"]
+[ext_resource type="Script" path="res://src/entity/physics_entity/entity_collision_shape_3d.gd" id="3_r031s"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wxi2i"]
+size = Vector3(2, 2, 4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_unkr8"]
+size = Vector3(5, 1, 1)
+
+[node name="ContentScene" type="Node"]
+script = ExtResource("1_upoch")
+content_type = ExtResource("2_q5pbw")
+storaged = {
+"abc": "123",
+"camera_transform": Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0),
+"collision_shapes": [],
+"id": "player",
+"max_force": Array[float]([1000.0, 1000.0, 2000.0, 1000.0, 1000.0, 1000.0]),
+"max_torque": 1000.0,
+"mesh": null,
+"scene_camera": NodePath("Camera3D"),
+"scene_collision_shape_nodes": Array[NodePath]([]),
+"scene_collision_shapes": NodePath("RigidBody3D"),
+"scene_mesh": NodePath("MeshInstance3D")
+}
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = ExtResource("2_1cvbf")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+
+[node name="EntityCollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+shape = SubResource("BoxShape3D_wxi2i")
+script = ExtResource("3_r031s")
+mass = 50.0
+
+[node name="EntityCollisionShape3D2" type="CollisionShape3D" parent="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+shape = SubResource("BoxShape3D_unkr8")
+script = ExtResource("3_r031s")
+mass = 30.0
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-1, 8.74228e-08, 0, 8.74228e-08, 1, 8.74228e-08, 7.64274e-15, 8.74228e-08, -1, 0, 0.15, 1)

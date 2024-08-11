@@ -4,6 +4,11 @@ extends EntityComponent
 signal controller_added(controller: Controller)
 signal controller_removed(controller: Controller)
 
+static func _get_default_component_name_static() -> StringName:
+    return &"ControlHandleComponent"
+func _get_default_component_name() -> StringName:
+    return &"ControlHandleComponent"
+
 var controllers: Array[Controller] = []
 
 var modules: Dictionary = {} # StringName => Array[ControllerModule](sorted by priority)

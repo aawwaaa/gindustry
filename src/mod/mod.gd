@@ -97,23 +97,40 @@ func each_resource(path: String, callback: Callable,
     for res in reses:
         await callback.call(res)
 
-func load_resources(path: String, hint: String = "Load_LoadTypes", source: String = "Unknown") -> void:
-    await each_resource(path, func(res: GDScript):
-        if res.has_method("__resource__static_init"):
-            res.__resource__static_init(self)
+func register_resource(res: Object) -> void:
+    if res.has_method("__resource__static_init"):
+        res.__resource__static_init(self)
+        return
+    if res is PackedScene:
+        var node = res.instantiate()
+        var free = node.__packed_scene__init(self)
+        register_resource(node.__packed_scene__get_resource())
+        if free: node.queue_free()
+        return
+    if res is GDScript:
+        if res.has_method("__resource__ignore"):
             return
         var inst = res.new()
-        if inst.has_method("__resource__init"):
-            inst.__resource__init(self)
-        if inst is ResourceType:
-            Vars.types.register_type(inst)
-        elif inst is Content:
-            Vars.contents.register_content(inst)
-        elif inst is ObjectType:
-            Vars_Objects.add_object_type(inst)
-        else:
-            push_error("Unknown resource type: %s" % res.resource_path)
-    , hint, source)
+        if not register_object(inst):
+            push_error("Unknown instance type: %s" % res.resource_path)
+        return
+    if not register_object(res):
+        push_error("Unknown resource type: %s" % res.resource_path)
+
+func register_object(inst: Object) -> bool:
+    if inst.has_method("__resource__init"):
+        inst.__resource__init(self)
+    if inst is ResourceType:
+        Vars.types.register_type(inst)
+    elif inst is Content:
+        Vars.contents.register_content(inst)
+    elif inst is ObjectType:
+        Vars_Objects.add_object_type(inst)
+    else: return false
+    return true
+
+func load_resources(path: String, hint: String = "Load_LoadTypes", source: String = "Unknown") -> void:
+    await each_resource(path, register_resource, hint, source)
 
 func load_scripts(path: String, source: String = "Unknown") -> void:
     var types_path = get_files(path)

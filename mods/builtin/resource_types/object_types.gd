@@ -10,8 +10,6 @@ static func __resource__static_init(_mod: Mod) -> void:
 
     type(World, "world")
 
-    type(TestEntity, "test_entity")
-
 static func type(script: GDScript, id: String) -> void:
     var t = GDScriptObjectType.new()
     t.type_script = script

@@ -1,9 +1,6 @@
 class_name InputHandler
 extends Node
 
-const USE_GLOBAL_Y_AXIS_CONFIG = &"input/use_global_y_axis"
-static var use_global_y_axis_key = ConfigsGroup.ConfigKey.new(USE_GLOBAL_Y_AXIS_CONFIG, true)
-
 static var input_handlers: Dictionary = {}
 # static signal input_handler_added(InputHandlerMeta)
 static var input_handler_added: StaticSignal = StaticSignal.new()
@@ -52,6 +49,8 @@ func _add_ui(node: CanvasLayer) -> void:
     for module in modules_ordered:
         var sub = Control.new()
         sub.name = module._get_type()
+        sub.set_anchors_preset(Control.PRESET_FULL_RECT)
+        sub.mouse_filter = Control.MOUSE_FILTER_IGNORE
         module._add_ui(sub)
         node.add_child(sub)
 func add_ui(node: CanvasLayer) -> void:
@@ -155,14 +154,50 @@ class MovementModule extends InputHandlerModule:
     func get_roll_velocity() -> Vector3:
         return _get_roll_velocity()
 
+    func get_move_velocity_normalized() -> Vector3:
+        var vel = get_move_velocity()
+        if vel == Vector3.ZERO: return vel
+        return vel.normalized() if vel.is_finite() \
+                else vel.clamp(Vector3(-1, -1, -1), Vector3(1, 1, 1)).normalized()
+    func get_roll_velocity_normalized() -> Vector3:
+        var vel = get_roll_velocity()
+        if vel == Vector3.ZERO: return vel
+        return vel.normalized() if vel.is_finite() \
+                else vel.clamp(Vector3(-1, -1, -1), Vector3(1, 1, 1)).normalized()
+
     static func get_move_velocity_for(target_handler: InputHandler) -> Vector3:
-        if not target_handler.has_module(&"Movement"): return Vector3.ZERO
-        return target_handler.get_module(&"Movement").get_move_velocity()
+        if not target_handler.has_module(TYPE): return Vector3.ZERO
+        return target_handler.get_module(TYPE).get_move_velocity()
+    static func get_move_velocity_normalized_for(target_handler: InputHandler) -> Vector3:
+        if not target_handler.has_module(TYPE): return Vector3.ZERO
+        return target_handler.get_module(TYPE).get_move_velocity_normalized()
     
     static func get_roll_velocity_for(target_handler: InputHandler) -> Vector3:
-        if not target_handler.has_module(&"Movement"): return Vector3.ZERO
-        return target_handler.get_module(&"Movement").get_roll_velocity()
+        if not target_handler.has_module(TYPE): return Vector3.ZERO
+        return target_handler.get_module(TYPE).get_roll_velocity()
+    static func get_roll_velocity_normalized_for(target_handler: InputHandler) -> Vector3:
+        if not target_handler.has_module(TYPE): return Vector3.ZERO
+        return target_handler.get_module(TYPE).get_roll_velocity_normalized()
 
 class MenuModule extends InputHandlerModule:
     static func get_type() -> StringName:
         return &"Menu"
+
+class CameraModule extends InputHandlerModule:
+    static func get_type() -> StringName:
+        return &"Camera"
+
+    var camera: CameraController
+    var get_from_controller: bool = true
+
+    var world: World:
+        get: return camera.world
+        set(v): camera.world = v
+    var transform: Transform3D:
+        get: return camera.transform
+        set(v): camera.transform = v
+
+    func _init() -> void:
+        camera = CameraController.new()
+        camera.name = "CameraController"
+        add_child(camera)

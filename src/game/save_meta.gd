@@ -9,6 +9,10 @@ var mods: Dictionary = {};
 
 static var current_save_meta_version: int = 1;
 
+func apply_current_mods() -> void:
+    for mod in Vars.mods.mod_inst_list.values():
+        mods[mod.mod_info.id] = mod.mod_info.version
+
 func load_from(stream: Stream) -> Error:
     save_meta_version = stream.get_16();
     if stream.get_error(): return stream.get_error();
