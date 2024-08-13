@@ -1,11 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://pdad0nu4jswt"]
+[gd_scene load_steps=6 format=3 uid="uid://pdad0nu4jswt"]
 
 [ext_resource type="Script" path="res://test.gd" id="1_55y6q"]
+[ext_resource type="ArrayMesh" uid="uid://cw3paafpe4wg" path="res://mods/gindustry/assets/entities/player_player.res" id="2_21n2b"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_j78tt"]
 size = Vector3(5, 1, 5)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_i8a3e"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_hcd6l"]
+radius = 20.0
 
 [node name="Test" type="Node"]
 script = ExtResource("1_55y6q")
@@ -23,4 +27,22 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 0)
 shape = SubResource("BoxShape3D_i8a3e")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.64898)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 26.511)
+
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.9596, 13.0876, 0)
+gravity_space_override = 1
+gravity_point = true
+gravity_point_unit_distance = 16.0
+gravity_point_center = Vector3(0, 0, 0)
+gravity_direction = Vector3(0, 0, 0)
+gravity = -8.0
+linear_damp_space_override = 1
+linear_damp = 0.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("SphereShape3D_hcd6l")
+
+[node name="PlayerPlayer" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.927184, -0.374607, 0, 0.242292, 0.599693, 0.762668, -0.285701, -0.707134, 0.64679, 1.43057, 20.7922, -145.949)
+mesh = ExtResource("2_21n2b")

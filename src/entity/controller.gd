@@ -99,6 +99,10 @@ class MovementModule extends ControllerModule:
     var entity_basis: Basis
     var entity_linear_velocity: Vector3
     var entity_angular_velocity: Vector3
+    var entity_max_force: float
+    var entity_max_torque: float
+    var entity_mass: float
+    var entity_gravity: Vector3
 
     func _get_move_velocity() -> Vector3:
         return Vector3.ZERO

@@ -1,17 +1,25 @@
 class_name DesktopInputHandler_Movement
 extends InputHandler.MovementModule
 
-const FLIP_X_CONFIG: StringName = &"input/desktop/flip_x"
-const FLIP_Y_CONFIG: StringName = &"input/desktop/flip_y"
-const SWAP_XY_CONFIG: StringName = &"input/desktop/swap_xy"
-const MOUSE_DEADZONE_CONFIG: StringName = &"input/desktop/mouse_deadzone"
-const MOUSE_ROLL_DURATION_CONFIG: StringName = &"input/desktop/mouse_roll_duration"
+const FLIP_X_CONFIG: StringName = &"desktop/input/flip_x"
+const FLIP_Y_CONFIG: StringName = &"desktop/input/flip_y"
+const SWAP_XY_CONFIG: StringName = &"desktop/input/swap_xy"
+const MOUSE_DEADZONE_CONFIG: StringName = &"desktop/input/mouse_deadzone"
+const MOUSE_FACTOR_CONFIG: StringName = &"desktop/input/mouse_factor"
+const MOUSE_ROLL_DURATION_CONFIG: StringName = &"desktop/input/mouse_roll_duration"
+const KEEP_Y_UP_IN_GRAVITY_CONFIG: StringName = &"desktop/input/keep_y_up_in_gravity"
+const KEEP_Y_UP_IN_GRAVITY_RATE_CONFIG: StringName = &"desktop/input/keep_y_up_in_gravity_rate"
+const ANTI_LINEAR_VELOCITY_CONFIG: StringName = &"desktop/input/anti_linear_velocity"
 
-static var flip_x_key = ConfigsGroup.ConfigKey.new(FLIP_X_CONFIG, false)
+static var flip_x_key = ConfigsGroup.ConfigKey.new(FLIP_X_CONFIG, true)
 static var flip_y_key = ConfigsGroup.ConfigKey.new(FLIP_Y_CONFIG, true)
-static var swap_xy_key = ConfigsGroup.ConfigKey.new(SWAP_XY_CONFIG, false)
+static var swap_xy_key = ConfigsGroup.ConfigKey.new(SWAP_XY_CONFIG, true)
 static var mouse_deadzone_key = ConfigsGroup.ConfigKey.new(MOUSE_DEADZONE_CONFIG, 4)
+static var mouse_factor_key = ConfigsGroup.ConfigKey.new(MOUSE_FACTOR_CONFIG, 0.02)
 static var mouse_roll_duration_key = ConfigsGroup.ConfigKey.new(MOUSE_ROLL_DURATION_CONFIG, 10)
+static var keep_y_up_in_gravity_key = ConfigsGroup.ConfigKey.new(KEEP_Y_UP_IN_GRAVITY_CONFIG, true)
+static var keep_y_up_in_gravity_rate_key = ConfigsGroup.ConfigKey.new(KEEP_Y_UP_IN_GRAVITY_RATE_CONFIG, 0.3 * 9.8)
+static var anti_linear_velocity_key = ConfigsGroup.ConfigKey.new(ANTI_LINEAR_VELOCITY_CONFIG, true)
 
 const INPUT_MOVE_FORWARD: StringName = &"move_forward"
 const INPUT_MOVE_BACKWARD: StringName = &"move_backward"
@@ -48,9 +56,11 @@ const ACTION_TO_ROLL: Array[Vector3] = [
     Vector3.ZERO,
     Vector3.ZERO,
     Vector3.ZERO,
-    Vector3(0, 0, -1),
-    Vector3(0, 0, 1),
+    Vector3(0, 0, -10),
+    Vector3(0, 0, 10),
 ]
+
+const HUGE = 100
 
 var space_axis_panel: SpaceAxisPanel
 
@@ -101,14 +111,27 @@ func _exit_game() -> void:
     mouse_velocity = Vector2.ZERO
     space_axis_panel.visible = false
 
-func _get_move_velocity() -> Vector3:
+func _get_input_move_velocity() -> Vector3:
     var vel = Vector3.ZERO
     for index in current_pressed.size():
         if current_pressed[index]:
             vel += ACTION_TO_MOVEMENT[index]
     return vel
 
-func _get_roll_velocity() -> Vector3:
+func _get_move_velocity() -> Vector3:
+    var vel = get_input_move_velocity()
+    vel += get_fix_move_velocity_anti_linear_velocity()
+    return vel
+
+func get_fix_move_velocity_anti_linear_velocity() -> Vector3:
+    if not Vars.configs.k(anti_linear_velocity_key): return Vector3.ZERO
+    var vel = controller.movement.entity_linear_velocity
+    var mass = controller.movement.entity_mass
+    var fix = - (vel * mass if vel != Vector3.ZERO else Vector3.ZERO)
+    fix /= controller.movement.entity_max_force
+    return fix
+
+func _get_input_roll_velocity() -> Vector3:
     var vel = Vector3.ZERO
     for index in current_pressed.size():
         if current_pressed[index]:
@@ -116,12 +139,41 @@ func _get_roll_velocity() -> Vector3:
     if mouse_update + Vars.configs.k(mouse_roll_duration_key) > Time.get_ticks_msec() \
             and mouse_velocity.length_squared() > Vars.configs.k(mouse_deadzone_key) ** 2:
         var x = mouse_velocity.x * (-1 if Vars.configs.k(flip_x_key) else 1)
-        var z = mouse_velocity.y * (-1 if Vars.configs.k(flip_y_key) else 1)
-        vel += Vector3(x, z, 0) if not Vars.configs.k(swap_xy_key) else Vector3(z, x, 0)
-    var basis = controller.movement.entity_basis.inverse()
-    vel = vel - basis * (controller.movement.entity_angular_velocity.normalized() * 1 \
-            if controller.movement.entity_angular_velocity != Vector3.ZERO else Vector3.ZERO)
+        var y = mouse_velocity.y * (-1 if Vars.configs.k(flip_y_key) else 1)
+        vel += (Vector3(x, y, 0) if not Vars.configs.k(swap_xy_key) else Vector3(y, x, 0)) \
+                * Vars.configs.k(mouse_factor_key)
     return vel
+
+func _get_roll_velocity() -> Vector3:
+    var vel = get_input_roll_velocity()
+    vel += get_fix_roll_velocity_keep_y_up()
+    vel += get_fix_roll_velocity_anti_angular_velocity()
+    return vel
+
+func get_fix_roll_velocity_anti_angular_velocity() -> Vector3:
+    var inverse = controller.movement.entity_basis.inverse()
+    var fix = - (inverse * controller.movement.entity_angular_velocity \
+            if controller.movement.entity_angular_velocity != Vector3.ZERO else Vector3.ZERO)
+    return fix
+
+func get_fix_roll_velocity_keep_y_up() -> Vector3:
+    if not Vars.configs.k(keep_y_up_in_gravity_key): return Vector3.ZERO
+    var gravity = controller.movement.entity_gravity
+    if gravity.length_squared() < Vars.configs.k(keep_y_up_in_gravity_rate_key) ** 2:
+        return Vector3.ZERO
+    var basis = controller.movement.entity_basis
+    var local_up = - gravity.normalized()
+    var global_up = basis.inverse() * local_up
+    var angle_z = global_up.signed_angle_to(local_up, basis * Vector3.FORWARD)
+
+    var local_forward = basis * Vector3.FORWARD
+    var vec = local_forward.cross(global_up)
+    var global_forward = global_up.cross(vec)
+    var angle = local_forward.signed_angle_to(global_forward, vec)
+    
+    var factor = min(abs(PI/6/ angle) if angle != 0 else 5, 5) / 5 * 0.003
+    return Vector3(0, 0, angle_z / PI).clamp(-Vector3.ONE, Vector3.ONE) \
+            * controller.movement.entity_max_torque * factor
 
 func _physics_process(_delta: float) -> void:
     if not Vars.core.is_in_game(): return

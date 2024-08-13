@@ -174,6 +174,7 @@ class NumberSetting extends Setting:
         var container = default_add_line()
 
         spin_box = SpinBox.new()
+        spin_box.step = 0.00001
         spin_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
         spin_box.value_changed.connect(_on_spin_box_value_changed)
         container.add_child(spin_box)

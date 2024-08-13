@@ -143,11 +143,21 @@ class MovementModule extends InputHandlerModule:
         return &"Movement"
 
     var sync_to_controller: bool = true
+
+    func _get_input_move_velocity() -> Vector3:
+        return Vector3.ZERO
+    func _get_input_roll_velocity() -> Vector3:
+        return Vector3.ZERO
     
     func _get_move_velocity() -> Vector3:
         return Vector3.ZERO
     func _get_roll_velocity() -> Vector3:
         return Vector3.ZERO
+
+    func get_input_move_velocity() -> Vector3:
+        return _get_input_move_velocity()
+    func get_input_roll_velocity() -> Vector3:
+        return _get_input_roll_velocity()
 
     func get_move_velocity() -> Vector3:
         return _get_move_velocity()

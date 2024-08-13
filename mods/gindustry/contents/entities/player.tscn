@@ -9,7 +9,7 @@
 size = Vector3(2, 2, 4)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_unkr8"]
-size = Vector3(5, 1, 1)
+size = Vector3(1.5, 1, 1)
 
 [node name="ContentScene" type="Node"]
 script = ExtResource("1_upoch")
@@ -39,10 +39,16 @@ script = ExtResource("3_r031s")
 mass = 50.0
 
 [node name="EntityCollisionShape3D2" type="CollisionShape3D" parent="RigidBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.75, 0, 1)
 shape = SubResource("BoxShape3D_unkr8")
 script = ExtResource("3_r031s")
-mass = 30.0
+mass = 15.0
+
+[node name="EntityCollisionShape3D3" type="CollisionShape3D" parent="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.75, 0, 1)
+shape = SubResource("BoxShape3D_unkr8")
+script = ExtResource("3_r031s")
+mass = 15.0
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-1, 8.74228e-08, 0, 8.74228e-08, 1, 8.74228e-08, 7.64274e-15, 8.74228e-08, -1, 0, 0.15, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, -1)

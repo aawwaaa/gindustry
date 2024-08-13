@@ -44,25 +44,27 @@ func _components_init() -> void:
     add_component(control_handle_component)
 
 func process_move(velocity: Vector3) -> void:
-    var x = -clampf(velocity.x * max(player_type.max_force[1], player_type.max_force[0]), \
+    var x = clampf(velocity.x * max(player_type.max_force[1], player_type.max_force[0]), \
             -player_type.max_force[1], player_type.max_force[0])
     var y = clampf(velocity.y * max(player_type.max_force[3], player_type.max_force[2]), \
             -player_type.max_force[3], player_type.max_force[2])
-    var z = -clampf(velocity.z * max(player_type.max_force[5], player_type.max_force[4]), \
+    var z = clampf(velocity.z * max(player_type.max_force[5], player_type.max_force[4]), \
             -player_type.max_force[5], player_type.max_force[4])
     var force = transform.basis * Vector3(x, y, z)
+    print(force)
     direct_state.apply_central_force(force)
 
-func process_roll(normalized_velocity: Vector3) -> void:
-    normalized_velocity = transform.basis * normalized_velocity
-    var velocity = normalized_velocity * player_type.max_torque
+func process_roll(velocity: Vector3) -> void:
+    velocity = transform.basis * velocity * player_type.max_torque
+    velocity = velocity.clamp(Vector3.ONE * -player_type.max_torque, Vector3.ONE * player_type.max_torque)
     direct_state.apply_torque(velocity)
 
 func _physics_process(delta: float) -> void:
     super._physics_process(delta)
+    if not entity_active: return
     _controller_feedback(control_handle_component)
     process_move(Controller.MovementModule.get_move_velocity_for(control_handle_component))
-    process_roll(Controller.MovementModule.get_roll_velocity_normalized_for(control_handle_component))
+    process_roll(Controller.MovementModule.get_roll_velocity_for(control_handle_component))
 
 func _object_init() -> void:
     super._object_init()
@@ -91,6 +93,10 @@ func _on_transform_changed(source: Entity) -> void:
 
 func _controller_feedback(control_handle: ControlHandleComponent) -> void:
     super._controller_feedback(control_handle)
+    var movement = control_handle.get_module(Controller.MovementModule.TYPE)
+    if movement:
+        movement.entity_max_force = player_type.max_force.max()
+        movement.entity_max_torque = player_type.max_torque
     var camera_output = control_handle.get_module(Controller.CameraOutputModule.TYPE)
     if camera_output:
         camera_output.camera_transform = get_global_transform() * player_type.camera_transform

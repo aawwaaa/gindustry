@@ -31,7 +31,7 @@ func _init_preset() -> void:
 
     var entity = Vars.contents.get_content_by_full_id("gindustry:entity:player").create(false)
     player = entity
-    entity.transform = Transform3D(Basis.IDENTITY, Vector3(0, 8, 0))
+    entity.transform = Transform3D(Basis.IDENTITY, Vector3(0, 1000, 0))
 
     world.add_child_entity(entity)
     entity.object_create()
@@ -52,7 +52,7 @@ func _after_ready() -> void:
     mesh.material = StandardMaterial3D.new()
     mesh.material.albedo_color = Color(1, 0.8, 0.2)
 
-    PhysicsServer3D.area_set_param(Vars.worlds.worlds[1].space, PhysicsServer3D.AREA_PARAM_GRAVITY, 0)
+    PhysicsServer3D.area_set_param(Vars.worlds.worlds[1].space, PhysicsServer3D.AREA_PARAM_GRAVITY, 9.8)
     PhysicsServer3D.area_set_param(Vars.worlds.worlds[1].space, PhysicsServer3D.AREA_PARAM_GRAVITY_VECTOR, Vector3.DOWN)
 
     shape = PhysicsServer3D.box_shape_create()
