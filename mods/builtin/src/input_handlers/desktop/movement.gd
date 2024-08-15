@@ -11,8 +11,8 @@ const KEEP_Y_UP_IN_GRAVITY_CONFIG: StringName = &"desktop/input/keep_y_up_in_gra
 const KEEP_Y_UP_IN_GRAVITY_RATE_CONFIG: StringName = &"desktop/input/keep_y_up_in_gravity_rate"
 const ANTI_LINEAR_VELOCITY_CONFIG: StringName = &"desktop/input/anti_linear_velocity"
 
-static var flip_x_key = ConfigsGroup.ConfigKey.new(FLIP_X_CONFIG, true)
-static var flip_y_key = ConfigsGroup.ConfigKey.new(FLIP_Y_CONFIG, true)
+static var flip_x_key = ConfigsGroup.ConfigKey.new(FLIP_X_CONFIG, false)
+static var flip_y_key = ConfigsGroup.ConfigKey.new(FLIP_Y_CONFIG, false)
 static var swap_xy_key = ConfigsGroup.ConfigKey.new(SWAP_XY_CONFIG, true)
 static var mouse_deadzone_key = ConfigsGroup.ConfigKey.new(MOUSE_DEADZONE_CONFIG, 4)
 static var mouse_factor_key = ConfigsGroup.ConfigKey.new(MOUSE_FACTOR_CONFIG, 0.02)
@@ -125,10 +125,11 @@ func _get_move_velocity() -> Vector3:
 
 func get_fix_move_velocity_anti_linear_velocity() -> Vector3:
     if not Vars.configs.k(anti_linear_velocity_key): return Vector3.ZERO
-    var vel = controller.movement.entity_linear_velocity
+    var vel = controller.movement.entity_linear_velocity \
+            + controller.movement.entity_gravity
     var mass = controller.movement.entity_mass
     var fix = - (vel * mass if vel != Vector3.ZERO else Vector3.ZERO)
-    fix /= controller.movement.entity_max_force
+    fix = controller.movement.normalize_force(fix)
     return fix
 
 func _get_input_roll_velocity() -> Vector3:
@@ -151,29 +152,25 @@ func _get_roll_velocity() -> Vector3:
     return vel
 
 func get_fix_roll_velocity_anti_angular_velocity() -> Vector3:
-    var inverse = controller.movement.entity_basis.inverse()
-    var fix = - (inverse * controller.movement.entity_angular_velocity \
+    var fix = - (controller.movement.entity_angular_velocity \
             if controller.movement.entity_angular_velocity != Vector3.ZERO else Vector3.ZERO)
     return fix
 
 func get_fix_roll_velocity_keep_y_up() -> Vector3:
     if not Vars.configs.k(keep_y_up_in_gravity_key): return Vector3.ZERO
-    var gravity = controller.movement.entity_gravity
+    # var gravity = controller.movement.entity_gravity
+    var gravity = controller.movement.entity_basis.inverse() * Vector3(0, -9.8, 0)
     if gravity.length_squared() < Vars.configs.k(keep_y_up_in_gravity_rate_key) ** 2:
         return Vector3.ZERO
-    var basis = controller.movement.entity_basis
-    var local_up = - gravity.normalized()
-    var global_up = basis.inverse() * local_up
-    var angle_z = global_up.signed_angle_to(local_up, basis * Vector3.FORWARD)
+    var local_up = -gravity.normalized()
+    var local_up_projected = Vector2(local_up.x, local_up.y).normalized()
 
-    var local_forward = basis * Vector3.FORWARD
-    var vec = local_forward.cross(global_up)
-    var global_forward = global_up.cross(vec)
-    var angle = local_forward.signed_angle_to(global_forward, vec)
+    var angle_z = local_up_projected.angle_to(Vector2.UP)
+    var s = signi(angle_z)
+    angle_z = s * (PI - abs(angle_z))
+    var vel = angle_z
     
-    var factor = min(abs(PI/6/ angle) if angle != 0 else 5, 5) / 5 * 0.003
-    return Vector3(0, 0, angle_z / PI).clamp(-Vector3.ONE, Vector3.ONE) \
-            * controller.movement.entity_max_torque * factor
+    return Vector3(0, 0, vel)
 
 func _physics_process(_delta: float) -> void:
     if not Vars.core.is_in_game(): return
@@ -181,7 +178,7 @@ func _physics_process(_delta: float) -> void:
         controller.movement.input_move_velocity = get_move_velocity()
         controller.movement.input_roll_velocity = get_roll_velocity()
     if space_axis_panel:
-        space_axis_panel.basis = controller.movement.entity_basis
+        space_axis_panel.basis = controller.movement.entity_basis.inverse()
 
 func _add_ui(node: Control) -> void:
     space_axis_panel = SpaceAxisPanel.scene.instantiate()

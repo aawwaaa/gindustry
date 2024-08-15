@@ -117,7 +117,8 @@ func _controller_feedback(control_handle: ControlHandleComponent) -> void:
     super._controller_feedback(control_handle)
     var movement = control_handle.get_module(Controller.MovementModule.TYPE)
     if movement:
-        movement.entity_linear_velocity = transform.basis * linear_velocity
-        movement.entity_angular_velocity = angular_velocity
+        var inverse = transform.basis.inverse()
+        movement.entity_linear_velocity = inverse * linear_velocity
+        movement.entity_angular_velocity = inverse * angular_velocity
         movement.entity_mass = PhysicsServer3D.body_get_param(get_physics_body_rid(), PhysicsServer3D.BODY_PARAM_MASS)
-        movement.entity_gravity = transform.basis * direct_state.total_gravity
+        movement.entity_gravity = inverse * direct_state.total_gravity

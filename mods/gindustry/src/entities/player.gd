@@ -44,14 +44,11 @@ func _components_init() -> void:
     add_component(control_handle_component)
 
 func process_move(velocity: Vector3) -> void:
-    var x = clampf(velocity.x * max(player_type.max_force[1], player_type.max_force[0]), \
-            -player_type.max_force[1], player_type.max_force[0])
-    var y = clampf(velocity.y * max(player_type.max_force[3], player_type.max_force[2]), \
-            -player_type.max_force[3], player_type.max_force[2])
-    var z = clampf(velocity.z * max(player_type.max_force[5], player_type.max_force[4]), \
-            -player_type.max_force[5], player_type.max_force[4])
+    velocity = velocity.clamp(-Vector3.ONE, Vector3.ONE)
+    var x = velocity.x * player_type.max_force[0 + floori((1-signf(velocity.x)) / 2)]
+    var y = velocity.y * player_type.max_force[2 + floori((1-signf(velocity.y)) / 2)]
+    var z = velocity.z * player_type.max_force[4 + floori((1-signf(velocity.z)) / 2)]
     var force = transform.basis * Vector3(x, y, z)
-    print(force)
     direct_state.apply_central_force(force)
 
 func process_roll(velocity: Vector3) -> void:
@@ -95,7 +92,7 @@ func _controller_feedback(control_handle: ControlHandleComponent) -> void:
     super._controller_feedback(control_handle)
     var movement = control_handle.get_module(Controller.MovementModule.TYPE)
     if movement:
-        movement.entity_max_force = player_type.max_force.max()
+        movement.entity_max_force = player_type.max_force
         movement.entity_max_torque = player_type.max_torque
     var camera_output = control_handle.get_module(Controller.CameraOutputModule.TYPE)
     if camera_output:

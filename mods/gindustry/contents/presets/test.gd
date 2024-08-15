@@ -31,7 +31,7 @@ func _init_preset() -> void:
 
     var entity = Vars.contents.get_content_by_full_id("gindustry:entity:player").create(false)
     player = entity
-    entity.transform = Transform3D(Basis.IDENTITY, Vector3(0, 1000, 0))
+    entity.transform = Transform3D(Basis.IDENTITY, Vector3(0, 10, 0))
 
     world.add_child_entity(entity)
     entity.object_create()

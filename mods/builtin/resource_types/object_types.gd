@@ -8,6 +8,9 @@ static func __resource__static_init(_mod: Mod) -> void:
     type(PartialPhysicsEntity, "partial_physics_entity")
     type(StandalonePhysicsEntity, "standalone_physics_entity")
 
+    type(MeshEntity, "mesh_entity")
+    type(MeshBlockEntity, "mesh_block_entity")
+
     type(World, "world")
 
 static func type(script: GDScript, id: String) -> void:

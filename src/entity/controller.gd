@@ -99,10 +99,19 @@ class MovementModule extends ControllerModule:
     var entity_basis: Basis
     var entity_linear_velocity: Vector3
     var entity_angular_velocity: Vector3
-    var entity_max_force: float
+    var entity_max_force: Array[float]
     var entity_max_torque: float
     var entity_mass: float
     var entity_gravity: Vector3
+
+    func normalize_force(force: Vector3) -> Vector3:
+        if force.x >= 0: force.x /= entity_max_force[0]
+        else: force.x /= entity_max_force[1]
+        if force.y >= 0: force.y /= entity_max_force[2]
+        else: force.y /= entity_max_force[3]
+        if force.z >= 0: force.z /= entity_max_force[4]
+        else: force.z /= entity_max_force[5]
+        return force
 
     func _get_move_velocity() -> Vector3:
         return Vector3.ZERO

@@ -47,7 +47,7 @@ func process_free_camera(delta: float) -> void:
             else roll.clamp(Vector3.ONE * -1, Vector3.ONE).normalized()
     camera.transform = camera.transform.translated_local(move * delta * speed)
     for axis_id in [1, 0, 2]:
-        var axis = [Vector3.LEFT, Vector3.UP, Vector3.FORWARD][axis_id]
+        var axis = [Vector3.RIGHT, Vector3.UP, Vector3.FORWARD][axis_id]
         camera.transform = camera.transform.rotated_local(axis, roll[axis_id] * delta * 0.5 * TAU)
 
 func update_camera_transform() -> void:
