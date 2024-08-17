@@ -32,7 +32,11 @@ var err: Error = OK
 
 func create_id() -> int:
     var id = object_inc_id
-    object_inc_id += 1
+    object_inc_id = object_inc_id + 1
+    if object_inc_id > 0x7fff_ffff_ffff_ffff:
+        object_inc_id = -(1 << 63)
+    if object_inc_id == 0:
+        object_inc_id = 1
     return id
 
 func add_object(object: RefObject, id: int = 0) -> void:
@@ -52,6 +56,7 @@ func has_object(id: int) -> bool:
     return objects.has(id)
 
 func get_object_or_null(id: int) -> RefObject:
+    if id == 0: return null
     if objects.has(id):
         return objects[id]
     return null

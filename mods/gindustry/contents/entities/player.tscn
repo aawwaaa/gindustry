@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://src/content/content_scene.gd" id="1_upoch"]
 [ext_resource type="ArrayMesh" uid="uid://cw3paafpe4wg" path="res://mods/gindustry/assets/entities/player_player.res" id="2_1cvbf"]
 [ext_resource type="Script" path="res://mods/gindustry/src/entities/player.gd" id="2_q5pbw"]
-[ext_resource type="Script" path="res://src/entity/physics_entity/entity_collision_shape_3d.gd" id="3_r031s"]
+[ext_resource type="Script" path="res://src/editor/entity_collision_shape_3d.gd" id="3_r031s"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wxi2i"]
 size = Vector3(2, 2, 4)
