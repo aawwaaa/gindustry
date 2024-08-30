@@ -4,6 +4,8 @@ extends PhysicsEntity
 static func get_type() -> ObjectType:
     return (StandalonePhysicsEntity as Object).get_meta(OBJECT_TYPE_META)
 
+# TODO shape_idx -> PartialPhysicsEntity
+
 var physics_body_rid: RID
 var physics_body_direct_state: PhysicsDirectBodyState3D
 var physics_child_entities: Array[PartialPhysicsEntity]

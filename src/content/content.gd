@@ -35,3 +35,12 @@ func _load_headless() -> void:
 
 func _init_from_scene(_node: ContentScene) -> void:
     pass
+
+func get_relative_transform(node: Node3D) -> Transform3D:
+    var current = node.transform
+    var parent = node.get_parent()
+    while parent:
+        if parent is Node3D:
+            current = parent.transform * current
+        parent = parent.get_parent()
+    return current

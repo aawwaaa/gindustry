@@ -74,18 +74,22 @@ func entity_init() -> void:
     for child in child_entities:
         child.entity_init()
     _entity_init()
+    for mesh in meshes:
+        __attach_mesh(mesh)
+    _on_transform_changed(self)
     entity_active = true
 
 func entity_deinit() -> void:
     entity_active = false
+    for mesh in meshes:
+        __detach_mesh(mesh)
+    _entity_deinit()
     for child in child_entities:
         child.entity_deinit()
-    _entity_deinit()
 
 func _entity_init() -> void:
     for component in components.values():
         component._component_init()
-    _on_transform_changed(self)
 
 func _entity_deinit() -> void:
     for component in components.values():
@@ -106,9 +110,16 @@ func handle_remove_child_entity(entity: Entity) -> void:
     child_entities.erase(entity)
     child_entity_removed.emit(entity)
 
+var __global_transform_cache: Transform3D
+var __global_transform_cache_valid: bool = false
+
 func get_global_transform() -> Transform3D:
-    if parent_entity == null: return transform
-    return parent_entity.get_global_transform() * transform
+    if __global_transform_cache_valid: return __global_transform_cache
+    var tran = parent_entity.get_global_transform() * transform \
+            if parent_entity else transform
+    __global_transform_cache = tran
+    __global_transform_cache_valid = true
+    return tran
 
 func get_relative_transform(entity: Entity) -> Transform3D:
     if parent_entity == null: return transform
@@ -120,6 +131,10 @@ func set_transform(new_transform: Transform3D) -> void:
     transform_changed.emit(self)
 
 func _on_transform_changed(source: Entity) -> void:
+    __global_transform_cache_valid = false
+    if entity_active:
+        for mesh in meshes:
+            __update_mesh(mesh)
     for child in child_entities:
         child.transform_changed.emit(source)
 
@@ -136,6 +151,7 @@ func _object_create() -> void:
 func _object_init() -> void:
     super._object_init()
     transform_changed.connect(_on_transform_changed)
+    if entity_type: entity_type.apply_mesh(self)
 
 func _object_ready() -> void:
     if object_ready: return
@@ -219,6 +235,47 @@ func _controller_feedback(control_handle: ControlHandleComponent) -> void:
     var movement = control_handle.get_module(Controller.MovementModule.TYPE)
     if movement:
         movement.entity_basis = transform.basis
+
+var mesh_inc_id = 1
+var meshes: Dictionary = {}
+var mesh_transforms: Dictionary = {}
+var mesh_rids: Dictionary = {}
+
+func __attach_mesh(mesh_id: int) -> void:
+    if not meshes.has(mesh_id): return
+    mesh_rids[mesh_id] = RenderingServer.instance_create()
+    RenderingServer.instance_set_base(mesh_rids[mesh_id], meshes[mesh_id])
+    RenderingServer.instance_set_scenario(mesh_rids[mesh_id], world.scenario)
+    __update_mesh(mesh_id)
+
+func __update_mesh(mesh_id: int) -> void:
+    if not mesh_rids.has(mesh_id): return
+    var tran = get_global_transform() * mesh_transforms[mesh_id]
+    RenderingServer.instance_set_transform(mesh_rids[mesh_id], tran)
+
+func __detach_mesh(mesh_id: int) -> void:
+    if not mesh_rids.has(mesh_id): return
+    RenderingServer.free_rid(mesh_rids[mesh_id])
+    mesh_rids.erase(mesh_id)
+
+func add_mesh(mesh: RID, tran: Transform3D) -> void:
+    meshes[mesh_inc_id] = mesh
+    mesh_transforms[mesh_inc_id] = tran
+    if entity_active:
+        __attach_mesh(mesh_inc_id)
+    mesh_inc_id += 1
+
+func remove_mesh(mesh_id: int) -> void:
+    meshes.erase(mesh_id)
+    mesh_transforms.erase(mesh_id)
+    if entity_active:
+        __detach_mesh(mesh_id)
+    mesh_rids.erase(mesh_id)
+
+func set_mesh_transform(mesh_id: int, tran: Transform3D) -> void:
+    mesh_transforms[mesh_id] = tran
+    if entity_active:
+        __update_mesh(mesh_id)
 
 func _load_data(stream: Stream) -> Error:
     var err = super._load_data(stream)
