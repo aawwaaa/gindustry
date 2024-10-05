@@ -87,7 +87,7 @@ func physics_child_shape_changed(_child: PhysicsEntity) -> void:
 
 func __update_physics() -> void:
     var centroid_sum = Vector3()
-    var mass = 0
+    var mass = 0.0000001
     for shapeidx in shape_attached_idxs:
         var origin = shape_transforms[shapeidx].origin
         origin = get_relative_transform(self).affine_inverse() * origin

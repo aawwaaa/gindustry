@@ -1,6 +1,12 @@
 class_name MeshBlockEntity
 extends PartialPhysicsEntity
 
+## How to add it to a mesh entity
+## 1. Create it without init
+## 2. Set it as the child of the mesh entity
+## 3. Set its position and rotation
+## 4. Call `object_create()`
+
 const MESH_BLOCK_SIZE = MeshEntity.MESH_BLOCK_SIZE
 
 static func get_type() -> ObjectType:
@@ -50,6 +56,7 @@ func update_transform() -> void:
     var origin = base_origin + mesh_block_type.origin_offset
 
     transform = Transform3D(rotation.basis, origin)
+    print(transform)
 
 func assign_blocks() -> void:
     var offset = mesh_block_type.mesh_shape_offset

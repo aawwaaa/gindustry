@@ -10,6 +10,7 @@ static func __resource__static_init(_mod: Mod) -> void:
     ContentType.ITEM = type("item")
     ContentType.FLUID = type("fluid")
     ContentType.ENERGY = type("energy")
+    ContentType.MESH_BLOCK = type("mesh_block")
 
 static func type(id: String) -> ContentType:
     var t = ContentTypeTemplate.new()

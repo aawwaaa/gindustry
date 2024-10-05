@@ -54,6 +54,8 @@ static var DOWN_BACK = Rotation.new(Vector3i.DOWN, 2, \
 static var DOWN_LEFT = Rotation.new(Vector3i.DOWN, 3, \
         Basis.IDENTITY.rotated(Vector3i.RIGHT, TAU * 0.25))
 
+static var DEFAULT = FORWARD_UP
+
 static var values_dict: Dictionary
 
 enum Turn{

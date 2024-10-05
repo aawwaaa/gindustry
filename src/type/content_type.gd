@@ -9,6 +9,7 @@ static var BLOCK: ContentType
 static var ITEM: ContentType
 static var FLUID: ContentType
 static var ENERGY: ContentType
+static var MESH_BLOCK: ContentType
 
 @export var order: int = 0
 @export var icon: Texture2D = load("res://assets/asset-not-found.png")

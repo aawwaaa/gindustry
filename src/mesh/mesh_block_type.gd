@@ -19,6 +19,13 @@ const MESH_BLOCK_SIZE = MeshEntity.MESH_BLOCK_SIZE
 @export_node_path("MeshOrigin") var scene_origin_offset: NodePath
 @export var scene_mesh_shapes: NodePath
 
+func _create() -> RefObject:
+    return MeshBlockEntity.new()
+
+func _data() -> void:
+    super._data();
+    content_type = ContentType.MESH_BLOCK
+
 func _init_from_scene(node: ContentScene) -> void:
     super._init_from_scene(node)
     var origin = node.get_node(scene_origin_offset) as MeshOrigin

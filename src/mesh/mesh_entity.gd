@@ -1,7 +1,7 @@
 class_name MeshEntity
 extends StandalonePhysicsEntity
 
-const MESH_BLOCK_SIZE = 0.5
+const MESH_BLOCK_SIZE = 1.0
 
 static func get_type() -> ObjectType:
     return (MeshEntity as Object).get_meta(OBJECT_TYPE_META)
@@ -17,10 +17,10 @@ func get_chunk(position: Vector3i) -> MeshChunk:
                 _on_chunk_empty.bind(chunks[position]))
     return chunks[position]
 
-func assign_block(position: Vector3i, mesh_block: MeshBlockEntity) -> void:
+func assign_mesh_block(position: Vector3i, mesh_block: MeshBlockEntity) -> void:
     get_chunk(position).assign_block(MeshChunk.get_local_position(position), mesh_block)
 
-func unassign_block(position: Vector3i) -> void:
+func unassign_mesh_block(position: Vector3i) -> void:
     get_chunk(position).unassign_block(MeshChunk.get_local_position(position))
 
 func check_block(position: Vector3i) -> bool:
