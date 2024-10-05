@@ -53,7 +53,7 @@ func _save_data(stream: Stream) -> void:
     super._save_data(stream)
     return Utils.save_data_with_version(stream, [func():
         var size = chunks.size()
-        stream.put_64(size)
+        stream.store_64(size)
         for chunk in chunks.values():
             stream.store_var(chunk.chunk_position, true)
             chunk.save_data(stream)

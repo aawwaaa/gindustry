@@ -96,6 +96,7 @@ func load_save(save_name: String) -> Error:
     Vars.game.make_ready_game()
     var _player = Vars.client.join_local()
     Vars.game.enter_game()
+    Vars.game.save_preset._after_ready()
     return OK
 
 func delete_save(save_name: String) -> Error:

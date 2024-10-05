@@ -39,6 +39,10 @@ func save_data(stream: Stream) -> void:
 func load_data(stream: Stream) -> void:
     entity_ref.id = stream.get_64()
     component_id = stream.get_32()
+    await entity_ref.available
+    if component:
+        component.add_controller(self)
+    control_target_changed.emit()
 
 @rpc("authority", "call_remote", "reliable")
 func control_to(comp: ControlHandleComponent) -> void:
@@ -99,12 +103,13 @@ class MovementModule extends ControllerModule:
     var entity_basis: Basis
     var entity_linear_velocity: Vector3
     var entity_angular_velocity: Vector3
-    var entity_max_force: Array[float]
-    var entity_max_torque: float
+    var entity_max_force: Array[float] = [1, 1, 1, 1, 1, 1]
+    var entity_max_torque: float = 1
     var entity_mass: float
     var entity_gravity: Vector3
 
     func normalize_force(force: Vector3) -> Vector3:
+        if entity_max_force.size() < 6: return force
         if force.x >= 0: force.x /= entity_max_force[0]
         else: force.x /= entity_max_force[1]
         if force.y >= 0: force.y /= entity_max_force[2]
@@ -116,7 +121,11 @@ class MovementModule extends ControllerModule:
     func _get_move_velocity() -> Vector3:
         return Vector3.ZERO
     func get_move_velocity() -> Vector3:
-        return _get_move_velocity()
+        var vel = _get_move_velocity()
+        if !vel.is_finite():
+            push_warning("Invalid move velocity")
+            return Vector3.ZERO
+        return vel
     func get_move_velocity_normalized() -> Vector3:
         var vel = get_move_velocity()
         if vel == Vector3.ZERO: return vel
@@ -127,7 +136,11 @@ class MovementModule extends ControllerModule:
         return Vector3.ZERO
     # (x_axis_vel, y_axis_vel, z_axis_vel)
     func get_roll_velocity() -> Vector3:
-        return _get_roll_velocity()
+        var vel = _get_roll_velocity()
+        if !vel.is_finite():
+            push_warning("Invalid roll velocity")
+            return Vector3.ZERO
+        return vel
     func get_roll_velocity_normalized() -> Vector3:
         var vel = get_roll_velocity()
         if vel == Vector3.ZERO: return vel

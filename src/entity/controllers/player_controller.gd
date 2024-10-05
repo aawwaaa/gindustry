@@ -46,3 +46,4 @@ func _ready() -> void:
     add_module(movement)
     camera_output = Controller.CameraOutputModule.new()
     add_module(camera_output)
+

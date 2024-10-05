@@ -1,6 +1,8 @@
 class_name RefObjectRef
 extends RefCounted
 
+signal available()
+
 var v: RefObject = null:
     set = set_v
 var id: int = 0:
@@ -16,6 +18,8 @@ func get_id() -> int:
 func set_id(value: int) -> void:
     id = value
     v = null
-    Vars.objects.get_object_callback(id, func(obj):
+    await Vars.tree.process_frame
+    Vars.objects.get_object_callback(value, func(obj):
         v = obj
+        available.emit()
     )

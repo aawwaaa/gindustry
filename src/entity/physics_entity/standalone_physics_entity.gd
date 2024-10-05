@@ -4,6 +4,10 @@ extends PhysicsEntity
 static func get_type() -> ObjectType:
     return (StandalonePhysicsEntity as Object).get_meta(OBJECT_TYPE_META)
 
+var __temp_available: bool = false
+var __linear_velocity_temp: Vector3
+var __angular_velocity_temp: Vector3
+
 var physics_body_rid: RID
 var physics_body_direct_state: PhysicsDirectBodyState3D
 var physics_shape_idx_to_entity: Dictionary
@@ -17,6 +21,10 @@ func _object_init() -> void:
     super._object_init()
     physics_body_rid = PhysicsServer3D.body_create()
     PhysicsServer3D.body_attach_object_instance_id(physics_body_rid, get_instance_id())
+    if __temp_available:
+        __temp_available = false
+        linear_velocity = __linear_velocity_temp
+        angular_velocity = __angular_velocity_temp
 
 func _get_physics_body_rid() -> RID:
     return physics_body_rid
@@ -126,10 +134,11 @@ func _load_data(stream: Stream) -> Error:
     var err = super._load_data(stream)
     if err: return err
     return Utils.load_data_with_version(stream, [func():
-        linear_velocity = stream.get_var()
+        __linear_velocity_temp = stream.get_var()
         if stream.get_error(): return stream.get_error()
-        angular_velocity = stream.get_var()
+        __angular_velocity_temp = stream.get_var()
         if stream.get_error(): return stream.get_error()
+        __temp_available = true
         return OK
     ])
 

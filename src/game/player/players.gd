@@ -97,18 +97,7 @@ func load_player(player_id: int, update_data: Callable = func(): pass) -> Player
     player.init_player();
     players[player_id] = player;
     update_data.call(player)
-    for _1 in range(stream.get_32()):
-        var type = stream.get_string()
-        var inst = player_data_types[type].call()
-        inst.player = player
-        inst.player_data_type = type
-        inst._load_data(stream)
-        var has_private_data = stream.get_8() == 1
-        if has_private_data:
-            inst.has_private_data = true
-            inst._load_private_data(stream)
-        inst.name = type
-        player.get_datas_node().add_child(inst)
+    player.load_data(stream)
     players_node.add_child(player);
     apply_data_for(player)
     return player;
@@ -116,13 +105,7 @@ func load_player(player_id: int, update_data: Callable = func(): pass) -> Player
 func save_player(player: Player, with_private_data: bool = true) -> PackedByteArray:
     var array = PackedByteArray()
     var stream = ByteArrayStream.new(array)
-    stream.store_32(player.get_datas_node().get_child_count())
-    for child in player.get_datas_node().get_children():
-        stream.store_string(child.player_data_type)
-        child._save_data(stream)
-        stream.store_8(1 if with_private_data else 0)
-        if with_private_data:
-            child._save_private_data(stream)
+    player.save_data(stream, with_private_data)
     return array
 
 const current_data_version = 0

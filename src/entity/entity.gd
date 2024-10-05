@@ -53,7 +53,7 @@ func set_parent_entity(new_parent: Entity) -> void:
     parent_entity = new_parent
     if parent_entity: parent_entity.handle_add_child_entity(self)
     if object_ready: entity_init()
-    transform_changed.emit()
+    transform_changed.emit(self)
 
 func get_component(comp_name: StringName) -> EntityComponent:
     return components[comp_name]
