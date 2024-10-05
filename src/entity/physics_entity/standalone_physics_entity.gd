@@ -8,6 +8,7 @@ var physics_body_rid: RID
 var physics_body_direct_state: PhysicsDirectBodyState3D
 var physics_shape_idx_to_entity: Dictionary
 var physics_child_entities: Array[PartialPhysicsEntity]
+var physics_entities: Array[PhysicsEntity] = [self]
 var in_physics_transform_sync: bool = false
 
 var physics_last_transform: Transform3D
@@ -73,10 +74,12 @@ func _on_transform_changed(source: Entity) -> void:
 
 func add_physics_child(child: PartialPhysicsEntity) -> void:
     physics_child_entities.append(child)
+    physics_entities.append(child)
     if entity_active: __update_physics()
 
 func remove_physics_child(child: PartialPhysicsEntity) -> void:
     physics_child_entities.erase(child)
+    physics_entities.erase(child)
     if entity_active: __update_physics()
 
 func get_physics_entity_by_shape_idx(shapeidx: int) -> PhysicsEntity:
@@ -88,17 +91,11 @@ func physics_child_shape_changed(_child: PhysicsEntity) -> void:
 func __update_physics() -> void:
     var centroid_sum = Vector3()
     var mass = 0.0000001
-    for shapeidx in shape_attached_idxs:
-        var origin = shape_transforms[shapeidx].origin
-        origin = get_relative_transform(self).affine_inverse() * origin
-        var shape_mass = shape_masses[shapeidx]
-        centroid_sum += origin * shape_mass
-        mass += shape_mass
-    for child in physics_child_entities:
-        for shapeidx in child.shape_attached_idxs:
-            var origin = child.shape_transforms[shapeidx].origin
-            origin = child.get_relative_transform(self).affine_inverse() * origin
-            var shape_mass = child.shape_masses[shapeidx]
+    for entity in physics_entities:
+        for shapeidx in entity.shape_attached_idxs:
+            var origin = entity.shape_transforms[shapeidx].origin
+            origin = entity.get_relative_transform(self) * origin
+            var shape_mass = entity.shape_masses[shapeidx]
             centroid_sum += origin * shape_mass
             mass += shape_mass
     PhysicsServer3D.body_set_param(physics_body_rid, PhysicsServer3D.BODY_PARAM_CENTER_OF_MASS, \

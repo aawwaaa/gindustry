@@ -37,8 +37,8 @@ func _on_settings_pressed() -> void:
     Vars.main.open_window("Settings")
 
 func _on_exit_pressed() -> void:
-    hide_menu()
     Vars.game.reset_to_menu()
+    hide_menu()
 
 func _gui_input(event: InputEvent) -> void:
     if event.is_action_pressed("ui_open_pause_menu"):

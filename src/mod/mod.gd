@@ -93,8 +93,8 @@ func each_resource(path: String, callback: Callable,
     for index in reses_path.size():
         if not filter.call(reses_path[index]): continue
         reses_path[index] = to_absolute(reses_path[index])
-    reses_path.sort_custom(func(a, b): return a < b)
     var reses = await Utils.load_contents_async("", reses_path, hint, source)
+    reses.sort_custom(func(a, b): return a.resource_path < b.resource_path)
     for res in reses:
         await callback.call(res)
 

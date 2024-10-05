@@ -71,7 +71,12 @@ func _components_init() -> void:
     pass
 
 func entity_init() -> void:
+    # I don't know why it will be called when the object is not ready!
+    if not object_ready: return;
+    if entity_active: return
     for child in child_entities:
+        # The spreading is necessary but caused that, HOW TO FIX?
+        # For mesh merging.
         child.entity_init()
     _entity_init()
     for mesh in meshes:
@@ -80,6 +85,7 @@ func entity_init() -> void:
     entity_active = true
 
 func entity_deinit() -> void:
+    if not entity_active: return
     entity_active = false
     for mesh in meshes:
         __detach_mesh(mesh)

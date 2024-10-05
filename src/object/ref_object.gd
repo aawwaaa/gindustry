@@ -12,7 +12,7 @@ static func get_type() -> ObjectType:
 
 var object_id: int = 0;
 var object_type: ObjectType
-var object_ready: bool
+var object_ready: bool;
 
 func _object_create() -> void:
     pass

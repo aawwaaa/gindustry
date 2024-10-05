@@ -22,7 +22,7 @@ var position: Vector3i:
     set = set_position
 var rotation: Rotation = Rotation.FORWARD_UP:
     set = set_rotation
-var mesh_entity: MeshEntity
+var mesh_entity: MeshEntity;
 
 func _entity_init() -> void:
     super._entity_init()
@@ -56,7 +56,6 @@ func update_transform() -> void:
     var origin = base_origin + mesh_block_type.origin_offset
 
     transform = Transform3D(rotation.basis, origin)
-    print(transform)
 
 func assign_blocks() -> void:
     var offset = mesh_block_type.mesh_shape_offset
