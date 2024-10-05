@@ -55,3 +55,21 @@ func get_block(local_position: Vector3i) -> MeshBlockEntity:
         return null
     return object
 
+func load_data(stream: Stream) -> Error:
+    return _load_data(stream)
+
+func save_data(stream: Stream) -> void:
+    _save_data(stream)
+
+func _load_data(stream: Stream) -> Error:
+    return Utils.load_data_with_version(stream, [func():
+        mesh_blocks = stream.get_var()
+        if stream.get_error(): return stream.get_error()
+        return OK
+    ])
+
+func _save_data(stream: Stream) -> void:
+    Utils.save_data_with_version(stream, [func():
+        stream.store_var(mesh_blocks, true)
+    ])
+

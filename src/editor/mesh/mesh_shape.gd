@@ -43,7 +43,8 @@ func _process(_delta: float) -> void:
     transform.basis = Basis.IDENTITY
     if mesh_origin:
         var offset = position - mesh_origin.position
-        offset = offset.round()
+        offset = (offset / MeshEntity.MESH_BLOCK_SIZE).round()
+        offset = offset * MeshEntity.MESH_BLOCK_SIZE
         position = mesh_origin.position + offset
 
 func set_size(v: Vector3i) -> void:
@@ -51,12 +52,12 @@ func set_size(v: Vector3i) -> void:
     multimesh.instance_count = size.x * size.y * size.z
     for i in multimesh.instance_count:
         @warning_ignore("integer_division")
-        var pos = Vector3(i % size.x, (i / size.x) % size.y, i / size.x / size.y)
+        var pos = Vector3(i % size.x, (i / size.x) % size.y, i / size.x / size.y) * MeshEntity.MESH_BLOCK_SIZE
         multimesh.set_instance_transform(i, Transform3D.IDENTITY.translated(pos))
 
 func get_min_position() -> Vector3i:
-    return Vector3i(position - mesh_origin.position)
+    return ((position - mesh_origin.position) / MeshEntity.MESH_BLOCK_SIZE).round()
 
 func get_max_position() -> Vector3i:
-    return Vector3i(position - mesh_origin.position) + size
+    return get_min_position() + size
 

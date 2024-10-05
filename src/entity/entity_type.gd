@@ -23,7 +23,7 @@ func _init_from_scene(node: ContentScene) -> void:
         var n = node.get_node(scene_meshes)
         var shapes = n.find_children("*", "MeshInstance3D")
         for shape in shapes:
-            scene_mesh_nodes.append(shape)
+            scene_mesh_nodes.append(node.get_path_to(shape))
     for node_path in scene_mesh_nodes:
         var n = node.get_node(node_path)
         import_mesh(n)

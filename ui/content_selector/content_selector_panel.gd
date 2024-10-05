@@ -1,4 +1,4 @@
-class_name ContentSelectorPanel
+# class_name ContentSelectorPanel
 extends VBoxContainer
 
 signal selected_changed(selected: Content)
