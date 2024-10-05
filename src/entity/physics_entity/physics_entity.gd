@@ -46,6 +46,7 @@ func __attach_shape(shapeidx: int) -> void:
     PhysicsServer3D.body_add_shape(get_physics_body_rid(), \
         shapes[shapeidx], Transform3D.IDENTITY)
     shape_attached_idxs[shapeidx] = PhysicsServer3D.body_get_shape_count(get_physics_body_rid()) - 1
+    get_parent_standalone_physics_entity().physics_shape_idx_to_entity[shape_attached_idxs[shapeidx]] = self
     __update_shape(shapeidx)
 
 func __update_shape(shapeidx: int) -> void:
@@ -58,11 +59,19 @@ func __update_shape(shapeidx: int) -> void:
 
 func __detach_shape(shapeidx: int) -> void:
     PhysicsServer3D.body_remove_shape(get_physics_body_rid(), shape_attached_idxs[shapeidx])
+    get_parent_standalone_physics_entity().physics_shape_idx_to_entity.erase(shape_attached_idxs[shapeidx])
     var idx = shape_attached_idxs[shapeidx]
     shape_attached_idxs.erase(shapeidx)
-    for sidx in shape_attached_idxs:
+    for sidx in get_parent_standalone_physics_entity().shape_attached_idxs:
         if shape_attached_idxs[sidx] > idx:
             shape_attached_idxs[sidx] -= 1
+            get_parent_standalone_physics_entity().physics_shape_idx_to_entity[shape_attached_idxs[sidx]] = \
+                    get_parent_standalone_physics_entity()
+    for entity in get_parent_standalone_physics_entity().physics_child_entities:
+        for sidx in entity.shape_attached_idxs:
+            if shape_attached_idxs[sidx] > idx:
+                shape_attached_idxs[sidx] -= 1
+                entity.physics_shape_idx_to_entity[shape_attached_idxs[sidx]] = entity
 
 func add_shape(shape: RID, shape_transform: Transform3D, mass: float = 0) -> int:
     var idx = shape_inc_idx

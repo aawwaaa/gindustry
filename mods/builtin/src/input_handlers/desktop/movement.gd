@@ -11,8 +11,8 @@ const KEEP_Y_UP_IN_GRAVITY_CONFIG: StringName = &"desktop/input/keep_y_up_in_gra
 const KEEP_Y_UP_IN_GRAVITY_RATE_CONFIG: StringName = &"desktop/input/keep_y_up_in_gravity_rate"
 const ANTI_LINEAR_VELOCITY_CONFIG: StringName = &"desktop/input/anti_linear_velocity"
 
-static var flip_x_key = ConfigsGroup.ConfigKey.new(FLIP_X_CONFIG, false)
-static var flip_y_key = ConfigsGroup.ConfigKey.new(FLIP_Y_CONFIG, false)
+static var flip_x_key = ConfigsGroup.ConfigKey.new(FLIP_X_CONFIG, true)
+static var flip_y_key = ConfigsGroup.ConfigKey.new(FLIP_Y_CONFIG, true)
 static var swap_xy_key = ConfigsGroup.ConfigKey.new(SWAP_XY_CONFIG, true)
 static var mouse_deadzone_key = ConfigsGroup.ConfigKey.new(MOUSE_DEADZONE_CONFIG, 4)
 static var mouse_factor_key = ConfigsGroup.ConfigKey.new(MOUSE_FACTOR_CONFIG, 0.02)
@@ -158,8 +158,8 @@ func get_fix_roll_velocity_anti_angular_velocity() -> Vector3:
 
 func get_fix_roll_velocity_keep_y_up() -> Vector3:
     if not Vars.configs.k(keep_y_up_in_gravity_key): return Vector3.ZERO
-    # var gravity = controller.movement.entity_gravity
-    var gravity = controller.movement.entity_basis.inverse() * Vector3(0, -9.8, 0)
+    var gravity = controller.movement.entity_gravity
+    # var gravity = controller.movement.entity_basis.inverse() * Vector3(0, -9.8, 0)
     if gravity.length_squared() < Vars.configs.k(keep_y_up_in_gravity_rate_key) ** 2:
         return Vector3.ZERO
     var local_up = -gravity.normalized()

@@ -4,10 +4,9 @@ extends PhysicsEntity
 static func get_type() -> ObjectType:
     return (StandalonePhysicsEntity as Object).get_meta(OBJECT_TYPE_META)
 
-# TODO shape_idx -> PartialPhysicsEntity
-
 var physics_body_rid: RID
 var physics_body_direct_state: PhysicsDirectBodyState3D
+var physics_shape_idx_to_entity: Dictionary
 var physics_child_entities: Array[PartialPhysicsEntity]
 var in_physics_transform_sync: bool = false
 
@@ -79,6 +78,9 @@ func add_physics_child(child: PartialPhysicsEntity) -> void:
 func remove_physics_child(child: PartialPhysicsEntity) -> void:
     physics_child_entities.erase(child)
     if entity_active: __update_physics()
+
+func get_physics_entity_by_shape_idx(shapeidx: int) -> PhysicsEntity:
+    return physics_shape_idx_to_entity.get(shapeidx, null)
 
 func physics_child_shape_changed(_child: PhysicsEntity) -> void:
     __update_physics()

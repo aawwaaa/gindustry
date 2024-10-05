@@ -14,6 +14,10 @@ func _ready() -> void:
     multimesh = MultiMesh.new()
     multimesh.transform_format = MultiMesh.TRANSFORM_3D
     multimesh.mesh = MESH
+    update_content_scene()
+    set_size(size)
+
+func update_content_scene() -> void:
     var current = self
     while current:
         if current is ContentScene:
@@ -24,7 +28,6 @@ func _ready() -> void:
         content_scene.child_entered_tree.connect(update_mesh_origin)
         content_scene.child_exiting_tree.connect(update_mesh_origin)
         update_mesh_origin()
-    set_size(size)
 
 func update_mesh_origin(node: Node = content_scene) -> bool:
     if node == null: return false
@@ -50,4 +53,10 @@ func set_size(v: Vector3i) -> void:
         @warning_ignore("integer_division")
         var pos = Vector3(i % size.x, (i / size.x) % size.y, i / size.x / size.y)
         multimesh.set_instance_transform(i, Transform3D.IDENTITY.translated(pos))
+
+func get_min_position() -> Vector3i:
+    return Vector3i(position - mesh_origin.position)
+
+func get_max_position() -> Vector3i:
+    return Vector3i(position - mesh_origin.position) + size
 

@@ -22,10 +22,13 @@ storaged = {
 "max_force": Array[float]([1000.0, 1000.0, 2000.0, 1000.0, 1000.0, 1000.0]),
 "max_torque": 1000.0,
 "mesh": null,
+"meshes": Array[null]([]),
 "scene_camera": NodePath("Camera3D"),
 "scene_collision_shape_nodes": Array[NodePath]([]),
 "scene_collision_shapes": NodePath("RigidBody3D"),
-"scene_mesh": NodePath("MeshInstance3D")
+"scene_mesh": NodePath("MeshInstance3D"),
+"scene_mesh_nodes": Array[NodePath]([]),
+"scene_meshes": NodePath("")
 }
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

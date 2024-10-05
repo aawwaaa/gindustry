@@ -20,7 +20,7 @@ func _init_from_scene(node: ContentScene) -> void:
         var n = node.get_node(scene_collision_shapes)
         var shapes = n.find_children("*", "EntityCollisionShape3D")
         for shape in shapes:
-            scene_collision_shape_nodes.append(shape)
+            scene_collision_shape_nodes.append(node.get_path_to(shape))
     for node_path in scene_collision_shape_nodes:
         var n = node.get_node(node_path)
         import_shape(n)
