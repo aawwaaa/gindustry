@@ -38,16 +38,25 @@ func _init_preset() -> void:
 
     entity = MeshEntity.TYPE.create(false)
 
-    var block = Vars.contents.get_content_by_full_id("gindustry:mesh_block:block1")
+    var block1 = Vars.contents.get_content_by_full_id("gindustry:mesh_block:block1")
 
-    for pos in [Vector3i(0, 0, 0), Vector3i(0, 1, 0), Vector3i(0, -1, 0), Vector3i(0, 0, 1), Vector3i(0, 0, -1), \
-            Vector3i(0, 1, 1), Vector3i(1, 1, 1)]:
-        var inst = block.create(false)
+    for pos in [Vector3i(0, 0, 0), Vector3i(1, 0, 0), Vector3i(-1, 0, 0), Vector3i(0, 0, 1), Vector3i(0, 0, -1), \
+            Vector3i(1, 0, 1), Vector3i(1, 1, 1)]:
+        var inst = block1.create(false)
 
         inst.position = pos
         inst.rotation = Rotation.DEFAULT
         entity.add_child_entity(inst)
         inst.object_create()
+
+    var block2 = Vars.contents.get_content_by_full_id("gindustry:mesh_block:block2")
+
+    var inst2 = block2.create(false)
+    inst2.position = Vector3i(0, 1, 0)
+    inst2.rotation = Rotation.DEFAULT
+
+    entity.add_child_entity(inst2)
+    inst2.object_create()
 
     world.add_child_entity(entity)
     entity.object_create()

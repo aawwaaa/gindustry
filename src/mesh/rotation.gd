@@ -96,6 +96,6 @@ func turned(turn: Turn) -> Rotation:
         Turn.CLOCKWISE:
             return values_dict[facing][(rotation + 1) % 4]
         Turn.COUNTERCLOCKWISE:
-            return values_dict[facing][(rotation - 1) % 4]
+            return values_dict[facing][(rotation + 3) % 4]
     return null
 

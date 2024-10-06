@@ -54,7 +54,7 @@ func set_rotation(rot: Rotation) -> void:
 func update_transform() -> void:
     var base_origin = position * MESH_BLOCK_SIZE
     var origin = base_origin + mesh_block_type.origin_offset
-
+    
     transform = Transform3D(rotation.basis, origin)
 
 func assign_blocks() -> void:

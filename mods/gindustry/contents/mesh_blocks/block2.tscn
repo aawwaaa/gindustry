@@ -1,0 +1,66 @@
+[gd_scene load_steps=11 format=3 uid="uid://b200uirmdqwsd"]
+
+[ext_resource type="Script" path="res://src/content/content_scene.gd" id="1_d7fl3"]
+[ext_resource type="Script" path="res://src/mesh/mesh_block_type.gd" id="2_ox7qn"]
+[ext_resource type="ArrayMesh" uid="uid://cotisosod6vm6" path="res://assets/editor/mesh_origin_cube_cube.res" id="3_8hutc"]
+[ext_resource type="Script" path="res://src/editor/mesh/mesh_origin.gd" id="4_6u4l7"]
+[ext_resource type="ArrayMesh" uid="uid://8f4qwpdnqtqp" path="res://assets/editor/mesh_shape_cube_cube.res" id="5_l7g80"]
+[ext_resource type="Script" path="res://src/editor/mesh/mesh_shape.gd" id="6_1y7wj"]
+[ext_resource type="Script" path="res://src/editor/entity_collision_shape_3d.gd" id="7_8btgk"]
+[ext_resource type="ArrayMesh" uid="uid://dmc2omm0vr7k7" path="res://mods/gindustry/assets/mesh_blocks/block_block2.res" id="8_3hdp2"]
+
+[sub_resource type="MultiMesh" id="MultiMesh_7ssgy"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("5_l7g80")
+buffer = PackedFloat32Array(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7vrke"]
+size = Vector3(1, 1, 2)
+
+[node name="Block2" type="Node"]
+script = ExtResource("1_d7fl3")
+content_type = ExtResource("2_ox7qn")
+storaged = {
+"id": "block2",
+"mesh_shape": Array[BitMap]([]),
+"mesh_shape_offset": Vector3i(0, 0, 0),
+"meshes": [],
+"origin_offset": Vector3(0, 0, 0),
+"rotatable": 0,
+"scene_collision_shape_nodes": Array[NodePath]([]),
+"scene_collision_shapes": NodePath("CollisionShapes"),
+"scene_mesh_nodes": Array[NodePath]([]),
+"scene_mesh_shapes": NodePath("MeshStruct/MeshShapes"),
+"scene_meshes": NodePath("Meshes"),
+"scene_origin_offset": NodePath("MeshStruct/MeshOrigin")
+}
+
+[node name="MeshStruct" type="Node3D" parent="."]
+visible = false
+
+[node name="MeshOrigin" type="MeshInstance3D" parent="MeshStruct"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -0.5, -1)
+mesh = ExtResource("3_8hutc")
+skeleton = NodePath("../..")
+script = ExtResource("4_6u4l7")
+
+[node name="MeshShapes" type="Node3D" parent="MeshStruct"]
+
+[node name="MeshShape" type="MultiMeshInstance3D" parent="MeshStruct/MeshShapes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -0.5, -1)
+multimesh = SubResource("MultiMesh_7ssgy")
+script = ExtResource("6_1y7wj")
+size = Vector3i(1, 1, 2)
+
+[node name="CollisionShapes" type="RigidBody3D" parent="."]
+
+[node name="EntityCollisionShape3D" type="CollisionShape3D" parent="CollisionShapes"]
+shape = SubResource("BoxShape3D_7vrke")
+script = ExtResource("7_8btgk")
+mass = 10.0
+
+[node name="Meshes" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Meshes"]
+mesh = ExtResource("8_3hdp2")
