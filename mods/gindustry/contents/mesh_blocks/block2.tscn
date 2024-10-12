@@ -9,7 +9,7 @@
 [ext_resource type="Script" path="res://src/editor/entity_collision_shape_3d.gd" id="7_8btgk"]
 [ext_resource type="ArrayMesh" uid="uid://dmc2omm0vr7k7" path="res://mods/gindustry/assets/mesh_blocks/block_block2.res" id="8_3hdp2"]
 
-[sub_resource type="MultiMesh" id="MultiMesh_7ssgy"]
+[sub_resource type="MultiMesh" id="MultiMesh_rukyh"]
 transform_format = 1
 instance_count = 2
 mesh = ExtResource("5_l7g80")
@@ -49,7 +49,7 @@ script = ExtResource("4_6u4l7")
 
 [node name="MeshShape" type="MultiMeshInstance3D" parent="MeshStruct/MeshShapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -0.5, -1)
-multimesh = SubResource("MultiMesh_7ssgy")
+multimesh = SubResource("MultiMesh_rukyh")
 script = ExtResource("6_1y7wj")
 size = Vector3i(1, 1, 2)
 

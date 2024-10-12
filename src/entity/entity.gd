@@ -139,8 +139,7 @@ func set_transform(new_transform: Transform3D) -> void:
 func _on_transform_changed(source: Entity) -> void:
     __global_transform_cache_valid = false
     if entity_active:
-        for mesh in meshes:
-            __update_mesh(mesh)
+        meshes.keys().map(__update_mesh);
     for child in child_entities:
         child.transform_changed.emit(source)
 

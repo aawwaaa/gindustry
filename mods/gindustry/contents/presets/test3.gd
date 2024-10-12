@@ -13,14 +13,14 @@ var mesh = BoxMesh.new()
 
 func _data() -> void:
     super._data()
-    id = "test2"
+    id = "test3"
 
 func _assign() -> void:
     Vars.presets.register_preset_group("Gindustry").add(self)
 
 func _show_description(node: ScrollContainer) -> void:
     var label = Label.new()
-    label.text = tr("Gindustry_Presets_Test2_Description")
+    label.text = tr("Gindustry_Presets_Test3_Description")
     node.add_child(label)
 
 func _pre_config_preset() -> bool:
@@ -36,30 +36,31 @@ func _init_preset() -> void:
     world.add_child_entity(entity)
     entity.object_create()
 
-    entity = MeshEntity.TYPE.create(false)
+    for _1 in range(320):
+        entity = MeshEntity.TYPE.create(false)
 
-    var block1 = Vars.contents.get_content_by_full_id("gindustry:mesh_block:block1")
+        var block1 = Vars.contents.get_content_by_full_id("gindustry:mesh_block:block1")
 
-    for pos in [Vector3i(0, 0, 0), Vector3i(1, 0, 0), Vector3i(-1, 0, 0), Vector3i(0, 0, 1), Vector3i(0, 0, -1), \
+        for pos in [Vector3i(0, 0, 0), Vector3i(1, 0, 0), Vector3i(-1, 0, 0), Vector3i(0, 0, 1), Vector3i(0, 0, -1), \
             Vector3i(1, 0, 1), Vector3i(1, 1, 1)]:
-        var inst = block1.create(false)
+            var inst = block1.create(false)
 
-        inst.position = pos
-        inst.rotation = Rotation.DEFAULT
-        entity.add_child_entity(inst)
-        inst.object_create()
+            inst.position = pos
+            inst.rotation = Rotation.DEFAULT
+            entity.add_child_entity(inst)
+            inst.object_create()
 
-    var block2 = Vars.contents.get_content_by_full_id("gindustry:mesh_block:block2")
+        var block2 = Vars.contents.get_content_by_full_id("gindustry:mesh_block:block2")
 
-    var inst2 = block2.create(false)
-    inst2.position = Vector3i(0, 1, 0)
-    inst2.rotation = Rotation.DEFAULT
+        var inst2 = block2.create(false)
+        inst2.position = Vector3i(0, 1, 0)
+        inst2.rotation = Rotation.DEFAULT
 
-    entity.add_child_entity(inst2)
-    inst2.object_create()
+        entity.add_child_entity(inst2)
+        inst2.object_create()
 
-    world.add_child_entity(entity)
-    entity.object_create()
+        world.add_child_entity(entity)
+        entity.object_create()
 
 func _after_ready() -> void:
     directional_light = RenderingServer.directional_light_create()
