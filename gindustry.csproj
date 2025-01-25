@@ -1,0 +1,22 @@
+<Project Sdk="Godot.NET.Sdk/4.3.0">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net7.0</TargetFramework>
+    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'ios' ">net8.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>gen/csharp/$(TargetFramework)</CompilerGeneratedFilesOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="./csgen/csgen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <Compile Remove="./csgen/*.cs" />
+    <Compile Remove="./gen/**/*.cs" />
+    <Compile Remove="./csgen/obj/Debug/net6.0/*.cs" />
+    <Compile Remove="./src/object/GDScriptAdapterTemplate.t.cs" />
+    <ProjectReference Include="./csgen/csgen.csproj" />
+
+    <AdditionalFiles Include="./gindustry.csproj" />
+    <AdditionalFiles Include="./src/object/GDScriptAdapterTemplate.t.cs" />
+    <AdditionalFiles Include="./src/object/gdscript_adapter_template.t.gd" />
+  </ItemGroup>
+</Project>

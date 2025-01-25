@@ -16,3 +16,6 @@ mono_crash.*.json
 
 # export
 .export/
+
+# generated
+gen/

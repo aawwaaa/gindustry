@@ -9,7 +9,7 @@
 [ext_resource type="Script" path="res://src/editor/entity_collision_shape_3d.gd" id="7_q6exv"]
 [ext_resource type="ArrayMesh" uid="uid://co4ewse4ocreh" path="res://mods/gindustry/assets/mesh_blocks/block_block1.res" id="7_tskql"]
 
-[sub_resource type="MultiMesh" id="MultiMesh_8rq83"]
+[sub_resource type="MultiMesh" id="MultiMesh_u7koi"]
 transform_format = 1
 instance_count = 1
 mesh = ExtResource("5_6n8x0")
@@ -20,20 +20,6 @@ buffer = PackedFloat32Array(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0)
 [node name="Block1" type="Node"]
 script = ExtResource("1_j54e5")
 content_type = ExtResource("2_vg4dk")
-storaged = {
-"id": "block1",
-"mesh_shape": Array[BitMap]([]),
-"mesh_shape_offset": Vector3i(0, 0, 0),
-"meshes": [],
-"origin_offset": Vector3(0, 0, 0),
-"rotatable": 0,
-"scene_collision_shape_nodes": Array[NodePath]([]),
-"scene_collision_shapes": NodePath("CollisionShapes"),
-"scene_mesh_nodes": Array[NodePath]([]),
-"scene_mesh_shapes": NodePath("MeshStruct/MeshShapes"),
-"scene_meshes": NodePath("Meshes"),
-"scene_origin_offset": NodePath("MeshStruct/MeshOrigin")
-}
 
 [node name="MeshStruct" type="Node3D" parent="."]
 visible = false
@@ -48,7 +34,7 @@ script = ExtResource("4_v4p7p")
 
 [node name="MeshShape" type="MultiMeshInstance3D" parent="MeshStruct/MeshShapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -0.5, -0.5)
-multimesh = SubResource("MultiMesh_8rq83")
+multimesh = SubResource("MultiMesh_u7koi")
 script = ExtResource("6_rd0au")
 
 [node name="CollisionShapes" type="RigidBody3D" parent="."]
