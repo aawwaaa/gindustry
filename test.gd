@@ -32,6 +32,7 @@ func _ready() -> void:
     PhysicsServer3D.space_set_active(space, true)
     
     tracking = body
+    
 
 func _process(_delta: float) -> void:
     print(PhysicsServer3D.body_get_state(tracking, PhysicsServer3D.BODY_STATE_TRANSFORM))

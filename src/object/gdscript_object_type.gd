@@ -1,9 +1,8 @@
 class_name GDScriptObjectType
-extends ObjectType
+extends GA_ObjectType
 
-@export var type_script: GDScript:
-    set(v): type_script = v; v.set_meta(RefObject.OBJECT_TYPE_META, self)
+@export var type_script: GDScript;
 
-func _create() -> RefObject:
+func _create() -> Object:
     if not type_script: return null
     return type_script.new()

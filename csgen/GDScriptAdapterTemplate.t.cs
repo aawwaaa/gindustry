@@ -3,6 +3,9 @@
 using Godot;
 using System.Collections.Generic;
 
+namespace Gen
+{
+
 public sealed partial class __GDScriptAdapter_N__: __NS_GDScriptAdapter__, GDScriptAdapter
 {
     private static readonly Dictionary<string, StringName> _stringNameCache = new();
@@ -17,9 +20,9 @@ public sealed partial class __GDScriptAdapter_N__: __NS_GDScriptAdapter__, GDScr
     }
 
     public GodotObject _Adapter;
-    static __GDScriptAdapter_N__()
+    public static void _StaticInit()
     {
-        GDScriptAdapterImplement.AdapterSpawners.Add(new StringName("__GDScriptAdapter__"), () => {
+        GA.AdapterSpawners.Add(new StringName("__GDScriptAdapter__"), () => {
             var instance = new __GDScriptAdapter_N__();
             return instance;
         });
@@ -31,16 +34,26 @@ public sealed partial class __GDScriptAdapter_N__: __NS_GDScriptAdapter__, GDScr
         // __CSHARP_SIGNAL_CONNECT_INSERT__
     }
 
-    // __CSHARP_VIRTUAL_METHODS_INSERT__
+    public bool IsOverriden {get; set; } = false;
+
+// __CSHARP_VIRTUAL_METHODS_INSERT__
     /*
+        public bool _HaventOverriden_Name = false;
         public override void _Name()
         {
+            if (_HaventOverriden_Name) return default;
             return _Adapter.Call(_GetStringName("_Name"));
         }
     */
 
-    // __CSHARP_OVERRIDE_METHODS_INSERT__
+// __CSHARP_OVERRIDE_METHODS_INSERT__
     /*
+        public bool _HaventOverriden_Name = false;
+        public override void _Name()
+        {
+            if (_HaventOverriden_Name) return base._Name();
+            return _Adapter.Call(_GetStringName("_Name"));
+        }
         public override void _DefaultImplement_Name()
         {
             return base._Name();
@@ -48,4 +61,5 @@ public sealed partial class __GDScriptAdapter_N__: __NS_GDScriptAdapter__, GDScr
     */
 }
 
+}
 # endif

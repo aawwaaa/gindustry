@@ -15,7 +15,7 @@ var tree: SceneTree
 var core: Vars_Core
 
 var temp: Vars_Temp
-var objects: Objects
+var objects: Object
 
 var configs: Vars_Configs
 var mods: Vars_Mods
@@ -55,7 +55,9 @@ func init() -> void:
     core = add(Vars_Core.new(), "Core")
 
     temp = add(Vars_Temp.new(), "Temp")
-    objects = add(Objects.new(), "Objects")
+    objects = CSScript.Vars_Objects.new()
+    add_child(objects)
+    objects.name = "Objects"
 
     configs = add(Vars_Configs.new(), "Configs")
     mods = add(Vars_Mods.new(), "Mods")

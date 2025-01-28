@@ -23,10 +23,7 @@ config/icon="res://mods/gindustry/icon.png"
 
 [autoload]
 
-Utils="*res://src/utils.gd"
-Log="*res://src/log.gd"
-Vars="*res://src/vars.gd"
-GdScriptAdapterImplement="*res://src/object/GDScriptAdapterImplement.cs"
+GA="*res://src/object/GA.cs"
 
 [display]
 

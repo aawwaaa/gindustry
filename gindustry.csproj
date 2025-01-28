@@ -16,7 +16,8 @@
     <ProjectReference Include="./csgen/csgen.csproj" />
 
     <AdditionalFiles Include="./gindustry.csproj" />
-    <AdditionalFiles Include="./src/object/GDScriptAdapterTemplate.t.cs" />
-    <AdditionalFiles Include="./src/object/gdscript_adapter_template.t.gd" />
+    <AdditionalFiles Include="./csgen/GDScriptAdapterTemplate.t.cs" />
+    <AdditionalFiles Include="./csgen/GDScriptCompatibilityTemplate.t.cs" />
+    <AdditionalFiles Include="./csgen/gdscript_adapter_template.t.gd" />
   </ItemGroup>
 </Project>

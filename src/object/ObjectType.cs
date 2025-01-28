@@ -1,6 +1,8 @@
 using Godot;
 using System;
 
+[GDScriptAdapterTarget("GA_ObjectType")]
+[GlobalClass]
 public partial class ObjectType : Resource
 {
     public static ObjectType For<T>() where T : RefObject, new()
@@ -27,9 +29,6 @@ public partial class ObjectType : Resource
         get { return __fullId ?? (__fullId = _GetFullId()); }
     }
 
-    // gdscript compatibility
-    public String full_id { get { return FullId; } }
-
     public GodotObject mod = null;
 
     public String GetModId()
@@ -46,12 +45,12 @@ public partial class ObjectType : Resource
 
     protected virtual String _GetFullId()
     {
-        return _get_full_id();
+        return GetFullIdDefault();
     }
 
     protected virtual RefObject _Create()
     {
-        return _create();
+        throw new NotImplementedException();
     }
 
     public RefObject Create(bool callCreate = true)
@@ -60,20 +59,6 @@ public partial class ObjectType : Resource
         obj.objectType = this;
         if (callCreate) obj.ObjectCreate();
         return obj;
-    }
-
-    // gdscript compatibility
-    protected virtual String _get_full_id()
-    {
-        return GetFullIdDefault();
-    }
-    protected virtual RefObject _create()
-    {
-        throw new NotImplementedException();
-    }
-    public RefObject create(bool callCreate = true)
-    {
-        return Create(callCreate);
     }
 }
 
