@@ -1,5 +1,6 @@
+using Godot;
+using System;
 using System.IO;
-
 
 /*
     数据保存/加载需求：
@@ -10,6 +11,10 @@ using System.IO;
 
 public interface Saveable
 {
-    void SaveData(StreamWriter writer);
-    void LoadData(StreamReader reader);
+    public void _SaveData(Writer w);
+    public void _LoadData(Reader r);
+
+    public void _SaveSyncData(Writer w);
+    public void _LoadSyncData(Reader r);
 }
+

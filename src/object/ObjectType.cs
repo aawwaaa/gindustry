@@ -27,7 +27,10 @@ public partial class ObjectType : Resource
     public String FullId
     {
         get { return __fullId ?? (__fullId = _GetFullId()); }
+        set { __fullId = value; }
     }
+
+    public uint index = 0;
 
     public GodotObject mod = null;
 

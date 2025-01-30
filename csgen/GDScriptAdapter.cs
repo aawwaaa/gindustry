@@ -193,7 +193,8 @@ public bool _HaventOverriden{method.Name} = false;
         foreach(var method in (List<IMethodSymbol>)dict["overrideMethods"])
         {
             var assign = method.ReturnsVoid? "": "var ret = (" + method.ReturnType + ")";
-            var returns = method.ReturnsVoid? "": "return ret;";
+            var returns = method.ReturnsVoid? "": "return ";
+            var returnsRet = method.ReturnsVoid? "": "return ret;";
             var args = method.Parameters.Count() == 0? "": ", " + string.Join(", ", method.Parameters.Select(p => p.Name + "_"));
             override_method_insert.Append($@"
 public bool _HaventOverriden{method.Name} = false;
@@ -204,7 +205,7 @@ public bool _HaventOverriden{method.Name} = false;
     {assign}_Adapter.Call(_GetStringName({"\"" + ToGDScriptName(method.Name) + "\""}){args});
     if (!IsOverriden) {{{returns}base.{method.Name}({string.Join(", ",
         method.Parameters.Select(p => p.Name + "_"))}); {(returns == ""? "return;": "")}}}
-    {returns}
+    {returnsRet}
 }}
 ");
         }

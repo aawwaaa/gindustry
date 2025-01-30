@@ -48,4 +48,22 @@ public partial class GA: Node
             ad.IsOverriden = false;
         }
     }
+
+    public String TryCatch(Callable callable)
+    {
+        try
+        {
+            callable.Call();
+            return null;
+        }
+        catch (Exception e)
+        {
+            return e.ToString();
+        }
+    }
+
+    public void Throw(Vaiant obj)
+    {
+        throw obj;
+    }
 }

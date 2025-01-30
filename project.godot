@@ -24,6 +24,9 @@ config/icon="res://mods/gindustry/icon.png"
 [autoload]
 
 GA="*res://src/object/GA.cs"
+Log="*res://src/Log.cs"
+Utils="*res://src/utils.gd"
+Vars="*res://src/vars.gd"
 
 [display]
 
