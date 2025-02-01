@@ -54,9 +54,6 @@ public partial class RefObject : GodotObject, Saveable
     public void _LoadData(Reader r) { }
     public void _SaveData(Writer w) { }
 
-    public void _LoadSyncData(Reader r) { }
-    public void _SaveSyncData(Writer w) { }
-
     public void LoadData(Reader r)
     {
         r.A((r) => {
@@ -72,6 +69,11 @@ public partial class RefObject : GodotObject, Saveable
             w.U64(objectId);
         });
         _SaveData(w);
+    }
+
+    public RefObjectRef Ref()
+    {
+        return new RefObjectRef() { Id = objectId };
     }
 }
 

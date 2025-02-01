@@ -14,7 +14,7 @@ public interface Saveable
     public void _SaveData(Writer w);
     public void _LoadData(Reader r);
 
-    public void _SaveSyncData(Writer w);
-    public void _LoadSyncData(Reader r);
+    public virtual void _SaveSyncData(Writer w) {}
+    public virtual void _LoadSyncData(Reader r) {}
 }
 

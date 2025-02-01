@@ -6,3 +6,5 @@ extends GA_ObjectType
 func _create() -> Object:
     if not type_script: return null
     return type_script.new()
+
+
