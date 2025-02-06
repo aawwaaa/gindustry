@@ -346,13 +346,21 @@ public partial class Vars
                 progress.Name = $"Loading mods: Contents: {inst.ModInfo.RefString}";
                 Logger.Info(progress.Name);
 
+                Task task;
+
                 foreach (var type in inst.Types)
-                    await type.Load();
+                {
+                    type._Load(new CoroutineBridge(out task));
+                    await task;
+                }
 
                 foreach (var content in inst.Contents)
-                    await content.Load();
+                {
+                    content._Load(new CoroutineBridge(out task));
+                    await task;
+                }
 
-                inst._LoadContents(new CoroutineBridge(out var task));
+                inst._LoadContents(new CoroutineBridge(out task));
                 await task;
                 progress.Progress += 100;
             }
@@ -377,13 +385,15 @@ public partial class Vars
                 Logger.Info(progress.Name);
 
                 var p1 = Log.RegisterProgressTracker(inst.Types.Count + inst.Contents.Count, "-", "Mods assets");
+                Task task;
                 foreach (var type in inst.Types)
                 {
                     p1.Name = type.FullId;
                     if (headless)
-                        await type.LoadHeadless();
+                        type._LoadHeadless(new CoroutineBridge(out task));
                     else
-                        await type.LoadAssets();
+                        type._LoadAssets(new CoroutineBridge(out task));
+                    await task;
                     p1.Progress += 1;
                 }
 
@@ -391,9 +401,10 @@ public partial class Vars
                 {
                     p1.Name = content.FullId;
                     if (headless)
-                        await content.LoadHeadless();
+                        content._LoadHeadless(new CoroutineBridge(out task));
                     else
-                        await content.LoadAssets();
+                        content._LoadAssets(new CoroutineBridge(out task));
+                    await task;
                     p1.Progress += 1;
                 }
                 

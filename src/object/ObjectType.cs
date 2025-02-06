@@ -32,12 +32,12 @@ public partial class ObjectType : Resource
 
     public uint index = 0;
 
-    public GodotObject mod = null;
+    public Mod Mod { get; set; } = null;
 
     public String GetModId()
     {
-        if (mod == null) return "builtin";
-        return (String)mod.GetChained(StringNames.mod_info, StringNames.id);
+        if (Mod == null) return "builtin";
+        return Mod.ModInfo.Id;
     }
 
     public String GetFullIdDefault(String insert = "")

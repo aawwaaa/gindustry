@@ -25,10 +25,10 @@ public partial class Vars {
 
         public delegate T ConfigDefaultValueProvider<T>();
 
-        public void SetDefault<T>(string key, ConfigDefaultValueProvider<T> defaultValueProvider)
+        public void SetDefault<T>(ConfigKey<T> key, ConfigDefaultValueProvider<T> defaultValueProvider)
         {
             if (configs.Contains(key)) return;
-            configs[key] = defaultValueProvider();
+            key[configs] = defaultValueProvider();
             configValueChanged = true;
         }
 

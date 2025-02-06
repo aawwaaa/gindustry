@@ -209,7 +209,16 @@ public partial class Vars
 
         public static void AddObjectType(ObjectType type)
         {
+            type.Mod = Vars.Mods.CurrentLoadingMod;
             Registry.ObjectTypes[type.FullId] = type;
+        }
+
+        public static void AddObjectType(ObjectType type1, ObjectType type2, params ObjectType[] types)
+        {
+            AddObjectType(type1);
+            AddObjectType(type2);
+            foreach (var type in types)
+                AddObjectType(type);
         }
 
         public void InitObjectTypesMapping()

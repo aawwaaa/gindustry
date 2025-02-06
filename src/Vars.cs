@@ -21,7 +21,7 @@ public partial class Vars : Node
     public static Vars_Objects Objects;
     public static Vars_Configs Configs;
     public static Vars_Mods Mods;
-    public static GodotObject Types;
+    public static Vars_Types Types;
     public static GodotObject Contents;
     public static GodotObject Game;
     public static GodotObject Players;
@@ -30,7 +30,7 @@ public partial class Vars : Node
     public static GodotObject Saves;
     public static GodotObject Client;
     public static GodotObject Server;
-    public static GodotObject Headless;
+    public static Vars_Headless Headless;
     public static GodotObject Input;
     public static GodotObject UI;
 
@@ -41,7 +41,7 @@ public partial class Vars : Node
     public Vars_Objects objects => Objects;
     public Vars_Configs configs => Configs;
     public Vars_Mods mods => Mods;
-    public GodotObject types => Types;
+    public Vars_Types types => Types;
     public GodotObject contents => Contents;
     public GodotObject game => Game;
     public GodotObject players => Players;
@@ -50,7 +50,7 @@ public partial class Vars : Node
     public GodotObject saves => Saves;
     public GodotObject client => Client;
     public GodotObject server => Server;
-    public GodotObject headless => Headless;
+    public Vars_Headless headless => Headless;
     public GodotObject input => Input;
     public GodotObject ui => UI;
 
@@ -83,14 +83,14 @@ public partial class Vars : Node
 
     public void Init()
     {
-        Core = LoadAdd<GodotObject>("res://src/core/core.gd", "Core");
+        Core = Add(new Vars_Core(), "Core");
         
         Objects = Add(new Vars_Objects(), "Objects");
         
         Configs = Add(new Vars_Configs(), "Configs");
         Mods = Add(new Vars_Mods(), "Mods");
-
-        Types = LoadAdd<GodotObject>("res://src/type/types.gd", "Types");
+        
+        Types = Add(new Vars_Types(), "Types");
         Contents = LoadAdd<GodotObject>("res://src/content/contents.gd", "Contents");
 
         Game = LoadAdd<GodotObject>("res://src/game/game.gd", "Game");
@@ -102,8 +102,8 @@ public partial class Vars : Node
 
         Client = LoadAdd<GodotObject>("res://src/net/client.gd", "Client");
         Server = LoadAdd<GodotObject>("res://src/net/server.gd", "Server");
-
-        Headless = LoadAdd<GodotObject>("res://src/server/headless.gd", "Headless");
+        
+        Headless = Add(new Vars_Headless(), "Headless");
         Input = LoadAdd<GodotObject>("res://src/input/input.gd", "Input");
         UI = LoadAdd<GodotObject>("res://ui/ui.gd", "UI");
     }

@@ -235,8 +235,3 @@ public partial class Mod : Node
         return window;
     }
 }
-
-[AttributeUsage(AttributeTargets.Method)]
-public class ResourceLoadMethodAttribute : Attribute
-{
-}

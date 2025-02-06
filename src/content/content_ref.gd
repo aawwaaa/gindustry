@@ -20,6 +20,7 @@ func set_full_id(value: String) -> void:
         return
     v = Vars.contents.get_content_by_full_id(full_id)
     while not v:
+        # TODO here is wrong
         var content = await Vars.objects.object_registed
         if content.full_id != full_id: continue
         v = content
