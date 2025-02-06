@@ -6,6 +6,8 @@ using System.Collections.Generic;
 [GlobalClass]
 public partial class ByteArrayIO: GodotObject
 {
+    public static ByteArrayIO Temp = new();
+
     const int MAX_BUFFER_SIZE = 64 * 1024;
 
     public class BufferBlock

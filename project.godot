@@ -26,7 +26,7 @@ config/icon="res://mods/gindustry/icon.png"
 GA="*res://src/object/GA.cs"
 Log="*res://src/Log.cs"
 Utils="*res://src/utils.gd"
-Vars="*res://src/vars.gd"
+Vars="*res://src/Vars.cs"
 
 [display]
 

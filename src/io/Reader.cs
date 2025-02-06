@@ -69,6 +69,7 @@ public partial class Reader: GodotObject
     public string S() => System.Text.Encoding.UTF8.GetString(MB());
 
     public Variant V() => GD.BytesToVarWithObjects(MB());
+    public T SV<T>() => Utils.Serialization.Unserialize<T>(this);
 
     public delegate void ReadDelegate(Reader reader);
 
@@ -82,3 +83,4 @@ public partial class Reader: GodotObject
         }
     }
 }
+

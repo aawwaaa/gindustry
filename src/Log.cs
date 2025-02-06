@@ -113,7 +113,7 @@ public partial class Log: GodotObject
         return new Logger(source);
     }
 
-    public static Logger RegisterLogger(string source) => Instance.register_logger(source);
+    public static Logger RegisterLogger(string source) => new Logger(source);
 
     public void PrintLog(string formatted, string _1, string _2, string _3)
     {

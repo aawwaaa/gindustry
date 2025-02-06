@@ -62,8 +62,8 @@ public partial class GA: Node
         }
     }
 
-    public void Throw(Vaiant obj)
+    public void Throw(Variant obj)
     {
-        throw obj;
+        throw new Exception(obj.ToString());
     }
 }

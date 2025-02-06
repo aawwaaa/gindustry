@@ -2,26 +2,109 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public static class Vars
+public partial class Vars : Node
 {
-    public static readonly StringName singletonName = new StringName("Vars");
-    public static Node Instance{ get {
-        return (Node)Engine.GetSingleton(singletonName);
-    } }
+    public static Vars Instance { get; private set; }
 
-    private static Dictionary<String, GodotObject> cache = new Dictionary<String, GodotObject>();
-    private static T Get<T>(String name) where T : GodotObject
+    public List<GodotObject> varsObjects = new();
+
+    // 静态变量
+    public static Log.Logger Logger = Log.RegisterLogger("Vars");
+
+    // 实例属性
+    public Log.Logger logger => Logger;
+
+    // 其他静态变量
+    public static Node Main;
+    public static SceneTree Tree;
+    public static Vars_Core Core;
+    public static Vars_Objects Objects;
+    public static Vars_Configs Configs;
+    public static Vars_Mods Mods;
+    public static GodotObject Types;
+    public static GodotObject Contents;
+    public static GodotObject Game;
+    public static GodotObject Players;
+    public static GodotObject Worlds;
+    public static GodotObject Presets;
+    public static GodotObject Saves;
+    public static GodotObject Client;
+    public static GodotObject Server;
+    public static GodotObject Headless;
+    public static GodotObject Input;
+    public static GodotObject UI;
+
+    // 实例属性
+    public Node main => Main;
+    public SceneTree tree => Tree;
+    public Vars_Core core => Core;
+    public Vars_Objects objects => Objects;
+    public Vars_Configs configs => Configs;
+    public Vars_Mods mods => Mods;
+    public GodotObject types => Types;
+    public GodotObject contents => Contents;
+    public GodotObject game => Game;
+    public GodotObject players => Players;
+    public GodotObject worlds => Worlds;
+    public GodotObject presets => Presets;
+    public GodotObject saves => Saves;
+    public GodotObject client => Client;
+    public GodotObject server => Server;
+    public GodotObject headless => Headless;
+    public GodotObject input => Input;
+    public GodotObject ui => UI;
+
+    public Vars()
     {
-        if (cache.ContainsKey(name)) return (T)cache[name];
-        GodotObject obj = (GodotObject)Instance.Get(new StringName(name));
-        if (obj == null) return null;
-        cache[name] = obj;
-        return (T)obj;
+        Instance = this;
     }
 
-    public static Node main{ get { return Get<Node>("main"); }}
-    public static SceneTree tree{ get { return Get<SceneTree>("tree"); }}
+    public override void _Ready()
+    {
+        Tree = GetTree();
+    }
+    
+    private T Add<T>(T obj, string name) where T : GodotObject
+    {
+        if (obj is Node n)
+        {
+            n.Name = name;
+            AddChild(n);
+        }
 
-    public static Objects objects{ get { return Get<Objects>("objects"); }}
+        varsObjects.Add(obj);
+        return obj;
+    }
 
+    private T LoadAdd<T>(string path, string name) where T : GodotObject
+    {
+        return Add((T)((GDScript)GD.Load(path)).New(), name);
+    }
+
+    public void Init()
+    {
+        Core = LoadAdd<GodotObject>("res://src/core/core.gd", "Core");
+        
+        Objects = Add(new Vars_Objects(), "Objects");
+        
+        Configs = Add(new Vars_Configs(), "Configs");
+        Mods = Add(new Vars_Mods(), "Mods");
+
+        Types = LoadAdd<GodotObject>("res://src/type/types.gd", "Types");
+        Contents = LoadAdd<GodotObject>("res://src/content/contents.gd", "Contents");
+
+        Game = LoadAdd<GodotObject>("res://src/game/game.gd", "Game");
+        Players = LoadAdd<GodotObject>("res://src/game/player/players.gd", "Players");
+        Worlds = LoadAdd<GodotObject>("res://src/world/worlds.gd", "Worlds");
+
+        Presets = LoadAdd<GodotObject>("res://src/game/presets.gd", "Presets");
+        Saves = LoadAdd<GodotObject>("res://src/game/saves.gd", "Saves");
+
+        Client = LoadAdd<GodotObject>("res://src/net/client.gd", "Client");
+        Server = LoadAdd<GodotObject>("res://src/net/server.gd", "Server");
+
+        Headless = LoadAdd<GodotObject>("res://src/server/headless.gd", "Headless");
+        Input = LoadAdd<GodotObject>("res://src/input/input.gd", "Input");
+        UI = LoadAdd<GodotObject>("res://ui/ui.gd", "UI");
+    }
 }

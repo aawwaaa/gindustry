@@ -32,7 +32,7 @@ public partial class RefObjectRef : RefCounted, Saveable
         if (v is null && id == 0) return;
         if (v is not null && id == v.objectId) return;
         var nid = id;
-        Vars.objects.GetObjectCallback(id, (obj) => {
+        Vars.Objects.GetObjectCallback(id, (obj) => {
             if (id != nid) return;
             v = obj;
         });

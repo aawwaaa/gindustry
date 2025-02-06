@@ -11,7 +11,7 @@ public partial class RefObject : GodotObject, Saveable
     public bool objectReady = false;
 
     public virtual void _ObjectInit() {
-        Vars.objects.AddObject(this, objectId);
+        Vars.Objects.AddObject(this, objectId);
     }
     public virtual void _ObjectCreate() { }
     public virtual void _ObjectReady() { }
@@ -27,7 +27,7 @@ public partial class RefObject : GodotObject, Saveable
     public void ObjectInit()
     {
         _ObjectInit();
-        if (Vars.objects.AutoReady)
+        if (Vars.Objects.AutoReady)
             ObjectReady();
     }
 
@@ -40,7 +40,7 @@ public partial class RefObject : GodotObject, Saveable
     public void ObjectFree()
     {
         _ObjectFree();
-        Vars.objects.ObjectFreed(objectId);
+        Vars.Objects.ObjectFreed(objectId);
         CallDeferred("free");
     }
     
