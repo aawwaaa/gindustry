@@ -22,14 +22,15 @@ public partial class Vars : Node
     public static Vars_Configs Configs;
     public static Vars_Mods Mods;
     public static Vars_Types Types;
-    public static GodotObject Contents;
-    public static GodotObject Game;
+    public static Vars_Contents Contents;
+    public static Vars_Game Game;
     public static GodotObject Players;
-    public static GodotObject Worlds;
-    public static GodotObject Presets;
-    public static GodotObject Saves;
-    public static GodotObject Client;
-    public static GodotObject Server;
+    public static Vars_Worlds Worlds => SaveDataComponent.GetSaveDataComponent<Vars_Worlds>();
+    public static Vars_Presets Presets;
+    public static Vars_Saves Saves;
+    public static NetLayer Net;
+    public static Vars_Client Client;
+    public static Vars_Server Server;
     public static Vars_Headless Headless;
     public static GodotObject Input;
     public static GodotObject UI;
@@ -42,14 +43,15 @@ public partial class Vars : Node
     public Vars_Configs configs => Configs;
     public Vars_Mods mods => Mods;
     public Vars_Types types => Types;
-    public GodotObject contents => Contents;
-    public GodotObject game => Game;
+    public Vars_Contents contents => Contents;
+    public Vars_Game game => Game;
     public GodotObject players => Players;
-    public GodotObject worlds => Worlds;
-    public GodotObject presets => Presets;
+    public Vars_Worlds worlds => SaveDataComponent.GetSaveDataComponent<Vars_Worlds>();
+    public Vars_Presets presets => Presets;
     public GodotObject saves => Saves;
-    public GodotObject client => Client;
-    public GodotObject server => Server;
+    public NetLayer net => Net;
+    public Vars_Client client => Client;
+    public Vars_Server server => Server;
     public Vars_Headless headless => Headless;
     public GodotObject input => Input;
     public GodotObject ui => UI;
@@ -91,17 +93,17 @@ public partial class Vars : Node
         Mods = Add(new Vars_Mods(), "Mods");
         
         Types = Add(new Vars_Types(), "Types");
-        Contents = LoadAdd<GodotObject>("res://src/content/contents.gd", "Contents");
-
-        Game = LoadAdd<GodotObject>("res://src/game/game.gd", "Game");
+        Contents = Add(new Vars_Contents(), "Contents");
+        
+        Game = Add(new Vars_Game(), "Game");
         Players = LoadAdd<GodotObject>("res://src/game/player/players.gd", "Players");
-        Worlds = LoadAdd<GodotObject>("res://src/world/worlds.gd", "Worlds");
-
-        Presets = LoadAdd<GodotObject>("res://src/game/presets.gd", "Presets");
-        Saves = LoadAdd<GodotObject>("res://src/game/saves.gd", "Saves");
-
-        Client = LoadAdd<GodotObject>("res://src/net/client.gd", "Client");
-        Server = LoadAdd<GodotObject>("res://src/net/server.gd", "Server");
+        SaveDataComponent.RegisterSaveDataComponentInitList(() => new Vars_Worlds());
+        
+        Presets = Add(new Vars_Presets(), "Presets");
+        Saves = Add(new Vars_Saves(), "Saves");
+        
+        Client = Add(new Vars_Client(), "Client");
+        Server = Add(new Vars_Server(), "Server");
         
         Headless = Add(new Vars_Headless(), "Headless");
         Input = LoadAdd<GodotObject>("res://src/input/input.gd", "Input");

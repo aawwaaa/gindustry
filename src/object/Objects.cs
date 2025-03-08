@@ -281,5 +281,13 @@ public partial class Vars
                 w.S(type.FullId);
             }
         }
+
+        public override void _PhysicsProcess(double delta)
+        {
+            if (!AutoReady)
+                return;
+            foreach (var obj in objects.Values)
+                obj.ObjectUpdate((float)delta);
+        }
     }
 }

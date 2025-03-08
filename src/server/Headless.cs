@@ -34,6 +34,8 @@ public partial class Vars{
 
         public void ApplyArgsFromCmdline()
         {
+            var args = OS.GetCmdlineArgs();
+            parser.Parse(args);
         }
 
         public void Restart(string[] args = null)

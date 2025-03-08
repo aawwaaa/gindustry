@@ -46,4 +46,9 @@ public partial class RefObjectRef : RefCounted, Saveable
     {
         w.U64(id);
     }
+
+    public static implicit operator RefObject(RefObjectRef v)
+    {
+        return v.V;
+    }
 }

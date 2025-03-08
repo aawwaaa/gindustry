@@ -3,19 +3,19 @@ using System;
 using System.Collections.Generic;
 
 public partial class Vars{
+    public enum State
+    {
+        None = -1,
+        Loading = 0,
+        MainMenu = 1,
+        PresetConfig = 2,
+        LoadingGame = 3,
+        InGame = 4,
+        ResetingGame = 5
+    }
+
     public partial class Vars_Core : Node
     {
-        public enum State
-        {
-            None = -1,
-            Loading = 0,
-            MainMenu = 1,
-            PresetConfig = 2,
-            LoadingGame = 3,
-            InGame = 4,
-            ResetingGame = 5
-        }
-
         [Signal]
         public delegate void StateChangedEventHandler(int state, int from);
         public delegate void StateChangedGenericEventHandler(State state, State from);
@@ -76,7 +76,7 @@ public partial class Vars{
             if (state.GetState() != State.Loading)
                 return;
             state.SetState(State.MainMenu);
-            Vars.Headless.ApplyArgsFromCmdLine();
+            Vars.Headless.ApplyArgsFromCmdline();
         }
 
         public bool IsHeadlessClient()

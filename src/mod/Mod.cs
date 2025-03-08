@@ -161,8 +161,8 @@ public partial class Mod : Node
         if (res is PackedScene packedScene)
         {
             var node = packedScene.Instantiate();
-            var free = (bool)node.Call("__packed_scene__init", this);
-            RegisterResource((Resource)node.Call("__packed_scene__get_resource"));
+            var free = (bool)node.Call("__PackedScene__Init", this);
+            RegisterResource((Resource)node.Call("__PackedScene__GetResource"));
             if (free) node.QueueFree();
             return;
         }

@@ -25,7 +25,7 @@ config/icon="res://mods/gindustry/icon.png"
 
 GA="*res://src/object/GA.cs"
 Log="*res://src/Log.cs"
-Utils="*res://src/utils.gd"
+Utils="*res://src/Utils.cs"
 Vars="*res://src/Vars.cs"
 
 [display]
@@ -148,6 +148,7 @@ locale/test="en"
 
 [physics]
 
+common/physics_ticks_per_second=20
 common/physics_jitter_fix=0.0
 2d/default_gravity=0.0
 

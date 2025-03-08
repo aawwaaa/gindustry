@@ -31,3 +31,33 @@ public partial class CoroutineBridge: GodotObject
 
     public void @throw(Variant e) => Throw(e);
 }
+
+[GlobalClass]
+public partial class CoroutineBridgeResult<[MustBeVariant] T>: GodotObject
+{
+    private TaskCompletionSource<T> source;
+
+    public Task<T> Task => source.Task;
+
+    public CoroutineBridgeResult(out Task<T> task)
+    {
+        source = new();
+        task = source.Task;
+    }
+
+    public void Finish(T result)
+    {
+        source.SetResult(result);
+        Free();
+    }
+
+    public void finish(T t) => Finish(t);
+
+    public void Throw(Variant e)
+    {
+        source.SetException(new Exception(e.ToString()));
+        Free();
+    }
+
+    public void @throw(Variant e) => Throw(e);
+}

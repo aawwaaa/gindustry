@@ -12,6 +12,12 @@ public partial class ModInfo : Resource
         public ModRef(){ }
 
         public string RefString => $"{Id} [{Min}{(Max != "none"? " ~ " + Max: "+")}]";
+
+        public static explicit operator ModRef(ModInfo info) => new ModRef
+        {
+            Id = info.Id,
+            Min = info.Version
+        };
     }
 
     public string RefString => $"{Id} ({Name}) [{Version}]({DisplayVersion})";

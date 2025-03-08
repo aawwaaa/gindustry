@@ -30,7 +30,7 @@ public partial class RefObject : GodotObject, Saveable
         if (Vars.Objects.AutoReady)
             ObjectReady();
     }
-
+    
     public void ObjectUpdate(float duration)
     {
         if (!objectReady) return;
@@ -51,8 +51,8 @@ public partial class RefObject : GodotObject, Saveable
         _ObjectReady();
     }
 
-    public void _LoadData(Reader r) { }
-    public void _SaveData(Writer w) { }
+    public virtual void _LoadData(Reader r) { }
+    public virtual void _SaveData(Writer w) { }
 
     public void LoadData(Reader r)
     {
