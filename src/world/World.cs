@@ -31,7 +31,13 @@ public partial class World: GodotObject, Saveable
 
     public void ObjectFree()
     {
-    
+        foreach (var chunk in chunks.Values)
+        {
+            chunk.ObjectFree();
+        }
+
+        RenderingServer.FreeRid(Scenario);
+        PhysicsServer3D.FreeRid(Space);
     }
 
     public Chunk LoadChunk(Vector3I position, Reader r)

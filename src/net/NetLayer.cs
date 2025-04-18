@@ -13,25 +13,53 @@ public partial class NetLayer: Node
         this.Name = "NetLayer";
     }
 
-    public virtual bool Post(Node RpcBase, string name, params Variant[] args)
+    public virtual bool Post(Node rpcBase, string name, params Variant[] args)
     {
         return true;
     }
 
-    public virtual void Sync(Node RpcBase, string name, params Variant[] args)
+    public virtual void Sync(Node rpcBase, string name, params Variant[] args)
     {
-        RpcBase.Call(name, args);
+        rpcBase.Call(name, args);
     }
     
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false)]
-    public void RpcRefObject(ulong objectId, string name, Variant[] args)
+    public void RpcNode(NodePath node, string name, byte[] data)
     {
+        if (!name.StartsWith("rpc")) return;
+        var args = Utils.Serialization.UnserializeFromBuffer<Variant[]>(data);
+        Vars.Tree.Root.GetNodeOrNull(node)?.Call(name, args);
+    }
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false)]
+    public void RpcRefObject(ulong objectId, string name, byte[] data)
+    {
+        if (!name.StartsWith("rpc")) return;
+        var args = Utils.Serialization.UnserializeFromBuffer<Variant[]>(data);
         Vars.Objects.GetObjectOrNull(objectId)?.Call(name, args);
     }
 }
 
+public partial class DefaultNetLayer: NetLayer
+{}
+
+public partial class ClientNetLayer: NetLayer
+{
+    public override void Sync(Node rpcBase, string name, params Variant[] args) { }
+}
+
 public static class NetLayerFuncs
 {
+    public static void RpcS(this Node node, string name, params Variant[] args)
+        => Vars.Net.Rpc("RpcNode", node, name, Utils.Serialization.SerializeAsBuffer(args));
+    public static void RpcIdS(this Node node, long id, string name, params Variant[] args)
+        => Vars.Net.RpcId(id, "RpcNode", node, name, Utils.Serialization.SerializeAsBuffer(args));
+    public static void RpcS(this RefObject obj, string name, params Variant[] args)
+        => Vars.Net.Rpc("RpcRefObject", obj.objectId, name, Utils.Serialization.SerializeAsBuffer(args));
+    public static void RpcIdS(this RefObject obj, long id, string name, params Variant[] args)
+        => Vars.Net.RpcId(id, "RpcRefObject", obj.objectId, name, Utils.Serialization.SerializeAsBuffer(args));
+    public static long RpcCaller(this Node node) => node.Multiplayer.GetRemoteSenderId();
+    public static long RpcCaller(this RefObject obj) => Vars.Net.Multiplayer.GetRemoteSenderId();
+
     public static bool Post(this Node node, Variant[] args, [CallerMemberName] string name = "")
     {
         return Vars.Net.Post(node, name, args);

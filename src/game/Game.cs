@@ -12,7 +12,7 @@ public partial class Vars
         [Signal]
         public delegate void PlayerChangedEventHandler(Player player, Player from);
 
-        private Log.Logger logger = Log.RegisterLogger("Game_LogSource");
+        private Log.Logger logger = Log.RegisterLogger("Game");
 
         private bool isPaused;
 
@@ -94,6 +94,8 @@ public partial class Vars
         {
             logger.Info("Saving game");
             SaveDataLayer.SaveAll();
+            SaveDataLayer.QueueFree();
+            SaveDataLayer = null;
             logger.Info("Resetting game");
             SetPausedRpc(false);
             Vars.Client.Reset();

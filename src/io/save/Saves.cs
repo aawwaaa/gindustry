@@ -10,7 +10,7 @@ public partial class Vars
         [Signal]
         public delegate void SavesChangedEventHandler();
 
-        private Log.Logger logger = Log.RegisterLogger("Saves_LogSource");
+        private Log.Logger logger = Log.RegisterLogger("Saves");
 
         private Dictionary<string, SaveMeta> saves = new Dictionary<string, SaveMeta>();
 
@@ -82,6 +82,7 @@ public partial class Vars
             string path = "user://saves/" + saveName;
             Vars.Game.SaveMeta.SaveName = saveName;
             Vars.Game.SaveMeta.FilePath = path;
+            Vars.Game.SaveDataLayer.QueueFree();
             Vars.Game.SaveDataLayer = new SaveFileSaveDataLayer(Vars.Game.SaveMeta);
             Vars.Game.SaveDataLayer.SaveAll();
             saves[saveName] = Vars.Game.SaveMeta;

@@ -10,7 +10,7 @@ public partial class Vars
         public delegate void ContentRegistedEventHandler(Content content);
         private Dictionary<string, List<Action<Content>>> contentCallbacks = new ();
 
-        private Log.Logger logger = Log.RegisterLogger("Contents_LogSource");
+        private Log.Logger logger = Log.RegisterLogger("Contents");
 
         private List<Content> contents = new ();
         private Dictionary<string, Content> contentsMapping = new ();

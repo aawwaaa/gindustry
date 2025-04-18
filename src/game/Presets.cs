@@ -5,7 +5,7 @@ public partial class Vars
 {
     public partial class Vars_Presets : Node
     {
-        private Log.Logger logger = Log.RegisterLogger("Presets_LogSource");
+        private Log.Logger logger = Log.RegisterLogger("Presets");
 
         public class PresetGroup
         {

@@ -2,8 +2,18 @@ using Godot;
 using System;
 
 [GlobalClass]
-public partial class SaveDataLayer: RefCounted
+public partial class SaveDataLayer: Node
 {
+    public static class ChainLoadMask
+    {
+        public const int MeshParent = 1 << 0;
+        public const int MeshChunks = 1 << 1;
+        public const int EntitiesInMeshChunks = 1 << 2;
+
+        public const int Default = MeshParent;
+        public const int All = (1 << 30) - 1;
+    }
+    
     public virtual void Close() {}
 
     public virtual void RequestLoadGameMeta() { }
@@ -22,6 +32,8 @@ public partial class SaveDataLayer: RefCounted
     public virtual bool RequestSaveMesh(ulong mesh) { return false; }
     public virtual bool RequestSaveMeshChunk(ulong mesh, Vector3I chunk) { return false; }
 
+    public virtual int GetChainLoadMask() => ChainLoadMask.Default;
+
     public virtual void SaveAll(){}
 
     protected static string PS (Vector3I pos) => $"{pos.X}_{pos.Y}_{pos.Z}";
@@ -30,6 +42,20 @@ public partial class SaveDataLayer: RefCounted
 public partial class MemorySaveDataLayer: SaveDataLayer
 { }
 
+/*
+    | save.bin
+    | world
+      | <world_id>
+        | chunk
+          | <chunk_pos>
+    | entity_map
+      | <entity_id_suffix(last 5 dight)>
+    | mesh
+      | <mesh_id>
+        | mesh.bin
+        | chunk
+          | <chunk_pos>
+*/
 public partial class SaveFileSaveDataLayer: SaveDataLayer
 {
     public SaveMeta meta;
@@ -115,7 +141,12 @@ public partial class SaveFileSaveDataLayer: SaveDataLayer
             }
         }
     }
+
+    // It means all the calculation should be done in the local machine
+    public override int GetChainLoadMask() => ChainLoadMask.All;
 }
 
 public partial class RemoteSaveDataLayer: SaveDataLayer
-{ }
+{
+    public void RemoteData(params object[] args) {}
+}
