@@ -23,7 +23,7 @@ public partial class GA: Node
         return (GodotObject)spawner();
     }
 
-    public partial void LoadStatics();
+    public void LoadStatics() {}
 
     public GodotObject u(GodotObject data)
     {

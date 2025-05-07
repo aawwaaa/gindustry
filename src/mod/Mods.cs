@@ -67,6 +67,10 @@ public partial class Vars
             {
                 DirAccess.MakeDirAbsolute("user://mod-configs/");
             }
+            if (!DirAccess.DirExistsAbsolute("user://mods/"))
+            {
+                DirAccess.MakeDirAbsolute("user://mods/");
+            }
         }
 
         public void LoadEnableConfigs()
@@ -112,7 +116,7 @@ public partial class Vars
 
         public void SaveEnableConfigs()
         {
-            Logger.Info(Tr("Mods_SaveEnableConfigs"));
+            Logger.Info("Mod enable configs saved.");
             var access = FileAccess.Open("user://mod-enable-config.bin", FileAccess.ModeFlags.Write);
             foreach (var info in ModInfoList.Values)
             {
@@ -190,7 +194,7 @@ public partial class Vars
                     errors.Add($"Unexpected mod: {ModInfoList[id].RefString}");
                 }
 
-                if (errors.Count >= 0)
+                if (errors.Count > 0)
                     output[info.RefString] = errors;
             }
             return output;
@@ -311,6 +315,7 @@ public partial class Vars
                     progress.Progress += 100;
                     continue;
                 }
+                mod.ModInfo = info;
                 CurrentLoadingMod = mod;
                 ModInstList[info.Id] = mod;
                 mod._ModInit(new CoroutineBridge(out var task));
@@ -408,7 +413,7 @@ public partial class Vars
                     p1.Progress += 1;
                 }
                 
-                var c = new CoroutineBridge(out var task);
+                var c = new CoroutineBridge(out task);
                 if (headless)
                     inst._LoadHeadless(c);
                 else

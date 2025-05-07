@@ -33,25 +33,25 @@ public partial class CoroutineBridge: GodotObject
 }
 
 [GlobalClass]
-public partial class CoroutineBridgeResult<[MustBeVariant] T>: GodotObject
+public partial class CoroutineBridgeResult: GodotObject
 {
-    private TaskCompletionSource<T> source;
+    private TaskCompletionSource<Variant> source;
 
-    public Task<T> Task => source.Task;
+    public Task<Variant> Task => source.Task;
 
-    public CoroutineBridgeResult(out Task<T> task)
+    public CoroutineBridgeResult(out Task<Variant> task)
     {
         source = new();
         task = source.Task;
     }
 
-    public void Finish(T result)
+    public void Finish(Variant result)
     {
         source.SetResult(result);
         Free();
     }
 
-    public void finish(T t) => Finish(t);
+    public void finish(Variant t) => Finish(t);
 
     public void Throw(Variant e)
     {

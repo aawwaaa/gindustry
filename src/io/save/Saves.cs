@@ -73,6 +73,10 @@ public partial class Vars
 
         public void LoadSaves()
         {
+            if (!DirAccess.DirExistsAbsolute("user://saves/"))
+            {
+                DirAccess.MakeDirAbsolute("user://saves/");
+            }
             SearchSaveFolder("user://saves/");
         }
 
@@ -97,7 +101,7 @@ public partial class Vars
             Vars.Game.SaveDataLayer = new SaveFileSaveDataLayer(meta);
             Vars.Game.SaveDataLayer.RequestLoadGameMeta();
             Vars.Game.MakeReadyGame();
-            var player = Vars.Client.JoinLocal();
+            Vars.Client.JoinLocal();
             Vars.Game.EnterGame();
             Vars.Game.SavePreset._AfterReady();
         }

@@ -9,5 +9,5 @@
    "excepts": [],
    "icon": "icon.png",
    "iconType": "png",
-   "main": "/src/main.gd"
+   "main": "/src/Main.cs"
 }

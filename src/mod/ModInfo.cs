@@ -18,6 +18,23 @@ public partial class ModInfo : Resource
             Id = info.Id,
             Min = info.Version
         };
+        public static ModRef ParseFromRefString(string s)
+        {
+            var split = s.Split(' ');
+            var id = split[0];
+            var version = split[1].Substring(1, split[1].Length - 1);
+            if (version.Contains('~')) return new ModRef
+            {
+                Id = id,
+                Min = version.Split('~')[0],
+                Max = version.Split('~')[1]
+            };
+            return new ModRef
+            {
+                Id = id,
+                Min = version.Split('+')[0]
+            };
+        }
     }
 
     public string RefString => $"{Id} ({Name}) [{Version}]({DisplayVersion})";
@@ -39,10 +56,43 @@ public partial class ModInfo : Resource
     /// <summary>
     /// Dictionary of dependencies in the format {"id": [min, max?]}
     /// </summary>
+    
     [Export]
-    public Dictionary<string, ModRef> Depends { get; set; } = new ();
+    public Godot.Collections.Dictionary Depends_export 
+    {
+        get
+        {
+            var d = new Godot.Collections.Dictionary();
+            foreach (var dep in Depends)
+                d[dep.Key] = dep.Value.RefString;
+            return d;
+        }
+        set
+        {
+            Depends = new Dictionary<string, ModRef>();
+            foreach (var dep in value)
+                Depends[dep.Key.As<string>()] = ModRef.ParseFromRefString(dep.Value.As<string>());
+        }
+    }
+    [Export]
+    public Godot.Collections.Dictionary Excepts_export 
+    {
+        get
+        {
+            var d = new Godot.Collections.Dictionary();
+            foreach (var dep in Excepts)
+                d[dep.Key] = dep.Value.RefString;
+            return d;
+        }
+        set
+        {
+            Excepts = new Dictionary<string, ModRef>();
+            foreach (var dep in value)
+                Excepts[dep.Key.As<string>()] = ModRef.ParseFromRefString(dep.Value.As<string>());
+        }
+    }
 
-    [Export]
+    public Dictionary<string, ModRef> Depends { get; set; } = new ();
     public Dictionary<string, ModRef> Excepts { get; set; } = new ();
 
     [Export]

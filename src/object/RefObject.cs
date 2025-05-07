@@ -8,7 +8,7 @@ public partial class RefObject : GodotObject, Saveable
 {
     public ulong objectId = 0;
     public ObjectType objectType = null;
-    public bool objectReady = false;
+    public bool objectReadyFlag = false;
 
     public virtual void _ObjectInit() {
         Vars.Objects.AddObject(this, objectId);
@@ -33,7 +33,7 @@ public partial class RefObject : GodotObject, Saveable
     
     public void ObjectUpdate(float duration)
     {
-        if (!objectReady) return;
+        if (!objectReadyFlag) return;
         _ObjectUpdate(duration);
     }
 
@@ -46,8 +46,8 @@ public partial class RefObject : GodotObject, Saveable
     
     public void ObjectReady()
     {
-        if (objectReady) return;
-        objectReady = true;
+        if (objectReadyFlag) return;
+        objectReadyFlag = true;
         _ObjectReady();
     }
 

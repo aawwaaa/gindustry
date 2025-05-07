@@ -12,7 +12,7 @@ public partial class Mod : Node
     [Signal]
     public delegate void SignalConfigsChangedEventHandler(Mod mod);
 
-    public ModInfo ModInfo { get; private set; }
+    public ModInfo ModInfo { get; internal set; }
     public ConfigsGroup ModConfigs { get; private set; }
 
     public string Root => ModInfo.Root;
@@ -23,11 +23,6 @@ public partial class Mod : Node
     public static Mod Current()
     {
         return Vars.Mods.CurrentLoadingMod;
-    }
-
-    public Mod(ModInfo info)
-    {
-        ModInfo = info;
     }
 
     /// <summary>

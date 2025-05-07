@@ -26,11 +26,11 @@ public partial class Preset : ResourceType
     // It will be await to wait for user input
     // When returns true, it will continue load preset
     // When returns false, it will back to new_game menu
-    public virtual void _PreConfigPreset(CoroutineBridgeResult<bool> c)
+    public virtual void _PreConfigPreset(CoroutineBridgeResult c)
     {
         c.Finish(true);
     }
-    public void PreConfigPreset(CoroutineBridgeResult<bool> c) => _PreConfigPreset(c);
+    public void PreConfigPreset(CoroutineBridgeResult c) => _PreConfigPreset(c);
 
     // Call when preset is loaded to create a new game, before _EnablePreset
     // Check and assign default value of preset's data

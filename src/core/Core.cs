@@ -105,7 +105,7 @@ public partial class Vars{
                     foreach (var error in errors[source])
                         message.Append("  - " + error + "\n");
                 }
-                Logger.Error($"Mod dependency error: {message.ToString()}");
+                Logger.Error($"Mod dependency error: \n{message.ToString()}");
                 foreach (var info in Vars.Mods.ModInfoList.Values)
                 {
                     info.Enabled = false;
@@ -113,13 +113,13 @@ public partial class Vars{
                 await ToSignal(GetTree().CreateTimer(3), "timeout");
                 progress.Progress = progress.Total;
                 Vars.Mods.DisplayOrder = new List<string>(Vars.Mods.ModInfoList.Keys);
-                Vars.Main.GetWindowNode("Mods").Call("load_mod_list");
+                // Vars.Main.GetWindowNode("Mods").Call("load_mod_list");
                 return;
             }
 
             progress.Name = "Loading configs";
             Vars.Configs.LoadConfigs();
-            Vars.Main.GetWindowNode("Settings").Call("load_tabs");
+            // Vars.Main.GetWindowNode("Settings").Call("load_tabs");
             progress.Progress += 5;
 
             progress.Name = "Loading mods";
@@ -135,7 +135,7 @@ public partial class Vars{
             Vars.Saves.LoadSaves();
             progress.Progress += 20;
 
-            Vars.Main.LoadUi(progress);
+            // Vars.Main.LoadUi(progress);
 
             Vars.Game.ResetGame();
             progress.Finish();

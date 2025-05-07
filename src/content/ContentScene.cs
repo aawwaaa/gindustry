@@ -2,6 +2,7 @@ using Godot;
 using Godot.Collections;
 
 [Tool]
+[GlobalClass]
 public partial class ContentScene : Node
 {
     [Export]

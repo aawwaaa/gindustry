@@ -23,7 +23,7 @@ public class GDScriptAdapterGenerator : ISourceGenerator
     };
 
     private static readonly string[] propertyBlacklist = new string[] {
-        "_ImportPath"
+        "_ImportPath",
     };
 
     private static string projectBase = "";
@@ -120,6 +120,8 @@ public class GDScriptAdapterGenerator : ISourceGenerator
             ((Dictionary<string, string>)dict["type2target"]).TryGetValue(namedType.Name, out var targetName);
             if (targetName != null) return "Object";
             if (namedType.ContainingNamespace.ToDisplayString().StartsWith("Godot"))
+                targetName = namedType.Name;
+            if (targetName == null && namedType.GetAttributes().Any(attr => attr?.AttributeClass?.Name == "GlobalClassAttribute"))
                 targetName = namedType.Name;
             if (targetName == null) return $"GenerateError_{namedType.Name}";
             if (namedType.Name.EndsWith("Enum")) return "int";
@@ -337,11 +339,11 @@ func {ToGDScriptName(method.Name)}({string.Join(", ", method.Parameters.Select(p
         foreach(var method in (List<IMethodSymbol>)dict["overrideMethods"])
         {
             var returns = method.ReturnsVoid? "": "return ";
-            var args = method.Parameters.Count() == 0? "": string.Join(", ", method.Parameters.Select(p => ToGDScriptName(p.Name) + "_"));
+            var args = method.Parameters.Count() == 0? "": string.Join(", ", method.Parameters.Select(p => "_" + ToGDScriptName(p.Name) + "_"));
             var defaultValue = TOGDScriptDefaultValue(ToGDScriptType(method.ReturnType, dict));
             override_method_insert.Append($@"
 func {ToGDScriptName(method.Name)}({string.Join(", ", method.Parameters.Select(p => 
-        ToGDScriptName(p.Name) + "_: " + ToGDScriptType(p.Type, dict)))}) -> {ToGDScriptType(method.ReturnType, dict)}:
+        "_" + ToGDScriptName(p.Name) + "_: " + ToGDScriptType(p.Type, dict)))}) -> {ToGDScriptType(method.ReturnType, dict)}:
     GA.HaventOverriden(_instance);
     {returns}{defaultValue};
 ");
@@ -350,10 +352,10 @@ func {ToGDScriptName(method.Name)}({string.Join(", ", method.Parameters.Select(p
         foreach(var method in (List<IMethodSymbol>)dict["methods"])
         {
             var returns = method.ReturnsVoid? "": "return ";
-            var args = method.Parameters.Count() == 0? "": string.Join(", ", method.Parameters.Select(p => ToGDScriptName(p.Name) + "_"));
+            var args = method.Parameters.Count() == 0? "": string.Join(", ", method.Parameters.Select(p => "_" + ToGDScriptName(p.Name) + "_"));
             method_insert.Append($@"
 func {ToGDScriptName(method.Name)}({string.Join(", ", method.Parameters.Select(p => 
-        ToGDScriptName(p.Name) + "_: " + ToGDScriptType(p.Type, dict)))}) -> {ToGDScriptType(method.ReturnType, dict)}:
+        "_" + ToGDScriptName(p.Name) + "_: " + ToGDScriptType(p.Type, dict)))}) -> {ToGDScriptType(method.ReturnType, dict)}:
     {returns}_instance.{method.Name}({args});
 ");
         }
@@ -391,6 +393,7 @@ func {ToGDScriptName(method.Name)}({string.Join(", ", method.Parameters.Select(p
         var fields = new List<IFieldSymbol>();
         var properties = new List<IPropertySymbol>();
         var signals = new List<INamedTypeSymbol>();
+        IMethodSymbol? constructor = null;
         var current = symbol;
         INamedTypeSymbol? last = null;
         while (current is not null && !SymbolEqualityComparer.Default.Equals(current, endSymbol))
@@ -409,8 +412,8 @@ func {ToGDScriptName(method.Name)}({string.Join(", ", method.Parameters.Select(p
                 methodsSet.Add(method.Name);
                 if (method.IsVirtual && method.Name.StartsWith("_")) 
                     overrideMethods.Add(method);
+                else if (method.IsOverride && method.Name.StartsWith("_")) overrideMethods.Add(method);
                 else if (method.DeclaredAccessibility == Accessibility.Public && current.ContainingNamespace.Name != "Godot") methods.Add(method);
-                if (method.IsOverride && method.Name.StartsWith("_")) overrideMethods.Add(method);
             }
 
             foreach(var field in current.GetMembers().OfType<IFieldSymbol>())
@@ -418,6 +421,7 @@ func {ToGDScriptName(method.Name)}({string.Join(", ", method.Parameters.Select(p
                 if (last is not null && last.FindImplementationForInterfaceMember(field) is not null)
                     continue;
                 if (field.IsConst) continue;
+                if (field.Name.EndsWith("__BackingField")) continue;
                 if (propertyBlacklist.Contains(field.Name)) continue;
                 fields.Add(field);
             }
@@ -427,6 +431,7 @@ func {ToGDScriptName(method.Name)}({string.Join(", ", method.Parameters.Select(p
                 if (last is not null && last.FindImplementationForInterfaceMember(property) is not null)
                     continue;
                 if (property.Name == "NativeInstance") continue;
+                if (property.Name.EndsWith("__BackingField")) continue;
                 if (propertyBlacklist.Contains(property.Name)) continue;
                 properties.Add(property);
             }
@@ -449,6 +454,8 @@ func {ToGDScriptName(method.Name)}({string.Join(", ", method.Parameters.Select(p
         dict["fields"] = fields;
         dict["properties"] = properties;
         dict["signals"] = signals;
+        if (constructor is not null)
+            dict["constructor"] = constructor;
     }
 
     private void Process(GeneratorExecutionContext context, INamedTypeSymbol symbol, string targetName, out string classRef)
@@ -605,4 +612,3 @@ public class GDScriptAdapterTargetAttribute : Attribute
         TargetName = targetName;
     }
 }
-

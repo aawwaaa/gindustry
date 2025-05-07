@@ -1,4 +1,5 @@
 using Godot;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 
 public partial class Vars
@@ -35,7 +36,7 @@ public partial class Vars
 
         public List<PresetGroup> GetPresetGroups() => presetGroups;
 
-        public async void LoadPreset(Preset preset)
+        public async Task LoadPreset(Preset preset)
         {
             logger.Info($"Load preset {preset.FullId}");
 
@@ -43,7 +44,7 @@ public partial class Vars
             preset.PreConfigPreset(new(out var task));
             var result = await task;
 
-            if (!result)
+            if (!result.As<bool>())
             {
                 Vars.Core.state.SetState(State.MainMenu);
                 return;
@@ -58,7 +59,7 @@ public partial class Vars
             preset.ApplyPreset();
             preset.LoadAfterWorldLoad();
             Vars.Game.MakeReadyGame();
-            var player = Vars.Client.JoinLocal();
+            Vars.Client.JoinLocal();
             preset.InitAfterLocalPlayerJoin();
             Vars.Game.EnterGame();
             preset.AfterReady();

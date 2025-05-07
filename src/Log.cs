@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
-public partial class Log: GodotObject
+public partial class Log: Node
 {
     public static Log Instance { get; private set; }
 
@@ -23,7 +23,7 @@ public partial class Log: GodotObject
 
     public enum LogLevel { Debug = 0, Info = 1, Warn = 2, Error = 3 }
 
-    public static readonly string[] LogLevels = { "Debug", "Info", "Warn", "Error" };
+    public static readonly string[] LogLevels = { "Debug", "Info ", "Warn ", "Error" };
 
     public static bool EnableDebugLog { get { return OS.HasFeature("debug"); } }
     public Godot.FileAccess logAccess;
@@ -39,6 +39,7 @@ public partial class Log: GodotObject
         public Logger(string source)
         {
             this.source = source;
+            source = source.PadRight(8, ' ');
             this.template = $"[{source}]\t[{{level}}]\t{{message}}";
         }
         
@@ -46,8 +47,8 @@ public partial class Log: GodotObject
         {
             if (level == LogLevel.Debug && !EnableDebugLog) return;
             var formatted = template
-                .Replace("{{level}}", LogLevels[(int)level])
-                .Replace("{{message}}", message);
+                .Replace("{level}", LogLevels[(int)level])
+                .Replace("{message}", message);
             Instance.EmitSignal(global::Log.SignalName.log_created,
                 formatted, source, LogLevels[(int)level], message);
         }
@@ -128,10 +129,13 @@ public partial class Log: GodotObject
 
     public static ProgressTracker RegisterProgressTracker(int total, string name, string source) => Instance.register_progress_tracker(total, name, source);
 
-    public void _Ready()
+    public Log()
     {
         Instance = this;
+    }
 
+    public override void _Ready()
+    {
         logAccess = Godot.FileAccess.Open("user://log_file.log", Godot.FileAccess.ModeFlags.Write);
         LogCreated += PrintLog;
 

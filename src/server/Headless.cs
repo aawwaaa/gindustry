@@ -34,7 +34,7 @@ public partial class Vars{
 
         public void ApplyArgsFromCmdline()
         {
-            var args = OS.GetCmdlineArgs();
+            var args = OS.GetCmdlineUserArgs();
             parser.Parse(args);
         }
 
@@ -45,7 +45,7 @@ public partial class Vars{
             Exit();
         }
 
-        public void Exit()
+        public static void Exit()
         {
             _logger.Info("Exiting");
             Vars.Tree.Quit();
@@ -71,14 +71,14 @@ Actions:
 
         private static void ActionLoadPreset(string presetId)
         {
-            var preset = Vars.Types.GetType(Preset.TYPE, presetId) as Preset;
+            var preset = Preset.Type.Get<Preset>(presetId);
             if (preset == null)
             {
                 _logger.Error($"Unknown preset: {presetId}");
                 Exit();
                 return;
             }
-            Vars.Presets.LoadPreset(preset);
+            Vars.Presets.LoadPreset(preset).Wait();
         }
 
         private static async void ActionMultiplayerTest(string presetId)
@@ -105,7 +105,7 @@ Actions:
 
             if (runId % 2 == 0)
             {
-                var preset = Vars.Types.GetType(Preset.TYPE, presetId) as Preset;
+                var preset = Preset.Type.Get<Preset>(presetId);
                 await Vars.Presets.LoadPreset(preset);
                 Vars.Server.CreateServer(1234);
             }

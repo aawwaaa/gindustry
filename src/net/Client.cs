@@ -33,12 +33,12 @@ public partial class Vars
             set => state.SetState(value);
         }
 
-        public Vars_Client()
+        public override void _Ready()
         {
             Multiplayer.ConnectedToServer += _OnConnectToServer;
             Multiplayer.ConnectionFailed += _OnConnectionFailed;
             Multiplayer.ServerDisconnected += _OnServerDisconnected;
-            
+
             Reset();
         }
 
@@ -140,6 +140,14 @@ public partial class Vars
             State = ClientState.Conntected;
             Vars.Game.SaveDataLayer = RemoteSaveDataLayer;
             Vars.Game.SaveDataLayer.RequestLoadGameMeta();
+        }
+
+        public void JoinLocal()
+        {
+        }
+        public bool PostToServer(GodotObject obj, string name, params object[] args)
+        {
+            return true;
         }
     }
 }

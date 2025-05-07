@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 
 [GlobalClass]
-public class SaveMeta : RefCounted
+public partial class SaveMeta : RefCounted
 {
     public String SaveName = "save";
     public string FilePath { get; set; }

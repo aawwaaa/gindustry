@@ -16,7 +16,7 @@ config/name_localized={
 }
 config/version="1.0.0"
 config/tags=PackedStringArray("projects")
-run/main_scene="res://test.tscn"
+run/main_scene="res://main.tscn"
 config/features=PackedStringArray("4.3", "C#", "GL Compatibility")
 run/max_fps=60
 config/icon="res://mods/gindustry/icon.png"

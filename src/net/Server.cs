@@ -10,5 +10,15 @@ public partial class Vars
         {
 
         }
+
+        public bool IsCallerHasPermission(MultiplayerApi api, string permission)
+        {
+            return true;
+        }
+
+        public void CreateServer(int port)
+        {}
+        public void Reset()
+        {}
     }
 }

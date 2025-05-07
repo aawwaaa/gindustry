@@ -5,13 +5,6 @@ using System;
 [GlobalClass]
 public partial class Entity: RefObject
 {
-    private World _world;
-    public World World {
-        get { return _world; }
-        set { _world = value; }
-    }
-    
-
     public override void _LoadData(Reader r) 
     {
         base._LoadData(r);

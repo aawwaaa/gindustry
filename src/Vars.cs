@@ -24,7 +24,7 @@ public partial class Vars : Node
     public static Vars_Types Types;
     public static Vars_Contents Contents;
     public static Vars_Game Game;
-    public static GodotObject Players;
+    // public static GodotObject Players;
     public static Vars_Worlds Worlds => SaveDataComponent.GetSaveDataComponent<Vars_Worlds>();
     public static Vars_Presets Presets;
     public static Vars_Saves Saves;
@@ -32,8 +32,8 @@ public partial class Vars : Node
     public static Vars_Client Client;
     public static Vars_Server Server;
     public static Vars_Headless Headless;
-    public static GodotObject Input;
-    public static GodotObject UI;
+    // public static GodotObject Input;
+    // public static GodotObject UI;
 
     // 实例属性
     public Node main => Main;
@@ -45,7 +45,7 @@ public partial class Vars : Node
     public Vars_Types types => Types;
     public Vars_Contents contents => Contents;
     public Vars_Game game => Game;
-    public GodotObject players => Players;
+    // public GodotObject players => Players;
     public Vars_Worlds worlds => SaveDataComponent.GetSaveDataComponent<Vars_Worlds>();
     public Vars_Presets presets => Presets;
     public GodotObject saves => Saves;
@@ -53,8 +53,8 @@ public partial class Vars : Node
     public Vars_Client client => Client;
     public Vars_Server server => Server;
     public Vars_Headless headless => Headless;
-    public GodotObject input => Input;
-    public GodotObject ui => UI;
+    // public GodotObject input => Input;
+    // public GodotObject ui => UI;
 
     public Vars()
     {
@@ -96,7 +96,7 @@ public partial class Vars : Node
         Contents = Add(new Vars_Contents(), "Contents");
         
         Game = Add(new Vars_Game(), "Game");
-        Players = LoadAdd<GodotObject>("res://src/game/player/players.gd", "Players");
+        // Players = LoadAdd<GodotObject>("res://src/game/player/players.gd", "Players");
         SaveDataComponent.RegisterSaveDataComponentInitList(() => new Vars_Worlds());
         
         Presets = Add(new Vars_Presets(), "Presets");
@@ -106,7 +106,7 @@ public partial class Vars : Node
         Server = Add(new Vars_Server(), "Server");
         
         Headless = Add(new Vars_Headless(), "Headless");
-        Input = LoadAdd<GodotObject>("res://src/input/input.gd", "Input");
-        UI = LoadAdd<GodotObject>("res://ui/ui.gd", "UI");
+        // Input = LoadAdd<GodotObject>("res://src/input/input.gd", "Input");
+        // UI = LoadAdd<GodotObject>("res://ui/ui.gd", "UI");
     }
 }

@@ -62,7 +62,8 @@ public partial class Vars
             if (Vars.Client.PostToServer(this, nameof(SetPaused), v)) return;
             if (!Vars.Server.IsCallerHasPermission(Multiplayer, "Game/SetPaused"))
                 return;
-            Sync(nameof(SetPausedRpc), v);
+            // Sync(nameof(SetPausedRpc), v);
+            SetPausedRpc(v);
         }
 
         public void SetPausedRpc(bool v)
@@ -92,10 +93,13 @@ public partial class Vars
 
         public void ResetGame()
         {
-            logger.Info("Saving game");
-            SaveDataLayer.SaveAll();
-            SaveDataLayer.QueueFree();
-            SaveDataLayer = null;
+            if (SaveDataLayer is not null)
+            {
+                logger.Info("Saving game");
+                SaveDataLayer.SaveAll();
+                SaveDataLayer.QueueFree();
+                SaveDataLayer = null;
+            }
             logger.Info("Resetting game");
             SetPausedRpc(false);
             Vars.Client.Reset();
@@ -118,7 +122,7 @@ public partial class Vars
             savePreset = null;
             player = null;
 
-            Vars.Players.Reset();
+            // Vars.Players.Reset();
             Vars.Server.Reset();
             SaveDataLayer = null;
         }
@@ -176,7 +180,7 @@ public partial class Vars
             ResetGame();
             var msg = $"Load error: {err}";
             logger.Error(msg);
-            Vars.UI.MessagePanel.AddMessage(msg);
+            // Vars.UI.MessagePanel.AddMessage(msg);
         }
 
         public void LoadGameMeta(Reader r)
@@ -211,7 +215,7 @@ public partial class Vars
                 savePreset.EnablePreset();
                 savePreset.ApplyPreset();
 
-                Vars.Players.LoadData(r);
+                // Vars.Players.LoadData(r);
 
                 savePreset.LoadAfterWorldLoad();
             });
@@ -244,10 +248,10 @@ public partial class Vars
                         pair.Value.SaveData(w);
                 }
 
-                if (toClient)
-                    Vars.Players.SaveDataEmpty(w);
-                else
-                    Vars.Players.SaveData(w);
+                // if (toClient)
+                //     Vars.Players.SaveDataEmpty(w);
+                // else
+                //     Vars.Players.SaveData(w);
             });
         }
     }
