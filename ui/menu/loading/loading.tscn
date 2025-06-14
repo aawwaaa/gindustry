@@ -1,0 +1,67 @@
+[gd_scene load_steps=5 format=3 uid="uid://ceexpwd4cnmih"]
+
+[ext_resource type="Texture2D" uid="uid://d050h3gfr5u88" path="res://assets/ui/title.png" id="1_2sk7p"]
+[ext_resource type="Script" uid="uid://bqc73jdvgj1pi" path="res://ui/menu/loading/Loading.cs" id="1_atp2b"]
+[ext_resource type="PackedScene" uid="uid://spgxd8gticys" path="res://ui/menu/loading/loading_progress.tscn" id="2_it7m7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ebmv5"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 5
+border_color = Color(0.352941, 0.729412, 0.94902, 0.776471)
+
+[node name="Loading" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_atp2b")
+progressScene = ExtResource("2_it7m7")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -528.0
+offset_top = -152.0
+offset_right = 528.0
+offset_bottom = 152.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="TextureRect" parent="VBoxContainer"]
+custom_minimum_size = Vector2(1056, 96)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("1_2sk7p")
+
+[node name="Control" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(1000, 300)
+layout_mode = 2
+
+[node name="Logs" type="Label" parent="VBoxContainer/Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_ebmv5")
+tab_stops = PackedFloat32Array(0, 200, 300)
+
+[node name="Progress" type="VBoxContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2

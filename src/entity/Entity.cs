@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-[GDScriptAdapterTargetAttribute("GA_Entity")]
+[GDScriptAdapterTarget("GA_Entity")]
 [GlobalClass]
 public partial class Entity: RefObject
 {

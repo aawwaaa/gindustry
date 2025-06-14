@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 public partial class Log: Node
 {
@@ -43,9 +44,34 @@ public partial class Log: Node
             this.template = $"[{source}]\t[{{level}}]\t{{message}}";
         }
         
-        public void Log(LogLevel level, string message)
+        private bool HasPlaceholders(string format)
+        {
+            if (string.IsNullOrEmpty(format)) return false;
+            for (int i = 0; i < format.Length - 1; i++)
+            {
+                if (format[i] == '{' && format[i + 1] != '{')
+                    return true;
+            }
+            return false;
+        }
+
+        public void Log(LogLevel level, object obj, params object[] others)
         {
             if (level == LogLevel.Debug && !EnableDebugLog) return;
+            string format = obj?.ToString() ?? "null";
+            string message;
+            if (others.Length == 0)
+            {
+                message = format;
+            }
+            else if (!HasPlaceholders(format))
+            {
+                message = format + " " + string.Join(" ", others.Select(o => o?.ToString() ?? "null"));
+            }
+            else
+            {
+                message = string.Format(format, others);
+            }
             var formatted = template
                 .Replace("{level}", LogLevels[(int)level])
                 .Replace("{message}", message);
@@ -53,24 +79,24 @@ public partial class Log: Node
                 formatted, source, LogLevels[(int)level], message);
         }
 
-        public void Info(string message)
+        public void Info(object obj, params object[] others)
         {
-            Log(LogLevel.Info, message);
+            Log(LogLevel.Info, obj, others);
         }
 
-        public void Warn(string message)
+        public void Warn(object obj, params object[] others)
         {
-            Log(LogLevel.Warn, message);
+            Log(LogLevel.Warn, obj, others);
         }
 
-        public void Error(string message)
+        public void Error(object obj, params object[] others)
         {
-            Log(LogLevel.Error, message);
+            Log(LogLevel.Error, obj, others);
         }
 
-        public void Debug(string message)
+        public void Debug(object obj, params object[] others)
         {
-            Log(LogLevel.Debug, message);
+            Log(LogLevel.Debug, obj, others);
         }
     }
 
@@ -88,6 +114,8 @@ public partial class Log: Node
 
         [Signal]
         public delegate void UpdatedEventHandler();
+        [Signal]
+        public delegate void FinishedEventHandler();
 
         public ProgressTracker(int total, string name, string source)
         {
@@ -102,6 +130,7 @@ public partial class Log: Node
 
         public void Finish()
         {
+            EmitSignal(SignalName.Finished);
             Instance.EmitSignal(global::Log.SignalName.progress_tracker_finished, this);
             Instance.activeProgressTrackers.Remove(this);
             if (Instance.activeProgressTrackers.Count == 0)

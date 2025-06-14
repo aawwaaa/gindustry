@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Threading.Tasks;
 
 namespace builtin;
 
@@ -8,7 +9,6 @@ public partial class Main: Mod
 {
     public override void _ModInit(CoroutineBridge b)
     {
-        GD.Print("Hello world!");
         b.Finish();
     }
 }

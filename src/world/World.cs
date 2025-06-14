@@ -46,4 +46,10 @@ public partial class World: GodotObject, Saveable
         chunks.Add(chunk.Position, chunk);
         return chunk;
     }
+    
+    public Chunk GetChunk(Vector3I position) {
+        if (chunks.TryGetValue(position, out var chunk))
+            return chunk;
+        return null;
+    }
 }

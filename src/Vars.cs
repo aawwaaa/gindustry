@@ -1,3 +1,4 @@
+using builtin.ui;
 using Godot;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,8 @@ public partial class Vars : Node
     public Log.Logger logger => Logger;
 
     // 其他静态变量
-    public static Node Main;
+    public static Main Main;
+    public static MainUi MainUi;
     public static SceneTree Tree;
     public static Vars_Core Core;
     public static Vars_Objects Objects;
@@ -32,11 +34,13 @@ public partial class Vars : Node
     public static Vars_Client Client;
     public static Vars_Server Server;
     public static Vars_Headless Headless;
+    public static Gindustry.Test.Vars_Tests Tests;
     // public static GodotObject Input;
     // public static GodotObject UI;
 
     // 实例属性
-    public Node main => Main;
+    public Main main => Main;
+    public MainUi mainUi => MainUi;
     public SceneTree tree => Tree;
     public Vars_Core core => Core;
     public Vars_Objects objects => Objects;
@@ -53,6 +57,7 @@ public partial class Vars : Node
     public Vars_Client client => Client;
     public Vars_Server server => Server;
     public Vars_Headless headless => Headless;
+    public Gindustry.Test.Vars_Tests tests => Tests;
     // public GodotObject input => Input;
     // public GodotObject ui => UI;
 
@@ -64,6 +69,7 @@ public partial class Vars : Node
     public override void _Ready()
     {
         Tree = GetTree();
+        Init();
     }
     
     private T Add<T>(T obj, string name) where T : GodotObject
@@ -106,6 +112,7 @@ public partial class Vars : Node
         Server = Add(new Vars_Server(), "Server");
         
         Headless = Add(new Vars_Headless(), "Headless");
+        Tests = Add(new Gindustry.Test.Vars_Tests(), "Tests");
         // Input = LoadAdd<GodotObject>("res://src/input/input.gd", "Input");
         // UI = LoadAdd<GodotObject>("res://ui/ui.gd", "UI");
     }

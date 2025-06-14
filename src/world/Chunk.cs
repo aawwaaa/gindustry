@@ -17,7 +17,8 @@ public partial class Chunk: GodotObject, Saveable
     public World World{get; set;}
     public Vector3I Position {get; set; }
 
-    public List<ulong> Entities {get; set; } = new();
+    public HashSet<ulong> EntityIds {get; set; } = new();
+    public HashSet<Entity> Entities {get; set; } = new();
 
     public virtual void _LoadData(Reader r)
     {
@@ -25,15 +26,16 @@ public partial class Chunk: GodotObject, Saveable
             var len = r.U32();
             for (int i = 0; i < len; i++)
             {
-                Entities.Add(r.U64());
+                var id = r.U64();
+                EntityIds.Add(id);
             }
         });
     }
     public virtual void _SaveData(Writer w)
     {
         w.A(w => {
-            w.U32((uint)Entities.Count);
-            foreach (var id in Entities)
+            w.U32((uint)EntityIds.Count);
+            foreach (var id in EntityIds)
             {
                 w.U64(id);
             }
@@ -54,5 +56,17 @@ public partial class Chunk: GodotObject, Saveable
     public void ObjectFree()
     {
 
+    }
+
+    public void AddEntity(Entity entity)
+    {
+        EntityIds.Add(entity.objectId);
+        Entities.Add(entity);
+    }
+
+    public void RemoveEntity(Entity entity)
+    {
+        EntityIds.Remove(entity.objectId);
+        Entities.Remove(entity);
     }
 }

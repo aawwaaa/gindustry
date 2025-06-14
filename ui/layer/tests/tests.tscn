@@ -1,0 +1,64 @@
+[gd_scene load_steps=2 format=3 uid="uid://17j7hp4jnmun"]
+
+[ext_resource type="Script" uid="uid://dir3mkq4trmij" path="res://ui/layer/tests/Tests.cs" id="1_eiq7m"]
+
+[node name="Tests" type="PanelContainer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -700.0
+offset_top = 100.0
+offset_right = -100.0
+offset_bottom = 500.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_eiq7m")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Tests"
+
+[node name="ResetAll" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Reset All"
+
+[node name="RunGroup" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Run Group"
+
+[node name="RunAll" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Run All"
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Close"
+
+[node name="HBoxContainer2" type="HSplitContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TestGroups" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.3
+
+[node name="GroupContents" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.7
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/ResetAll" to="." method="_OnResetAllPressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/RunGroup" to="." method="_OnRunGroupPressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/RunAll" to="." method="_OnRunAllPressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="." method="hide"]

@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public partial class Vars{
     public enum State
@@ -83,19 +84,23 @@ public partial class Vars{
         {
             return DisplayServer.GetName() == "headless";
         }
+        public bool IsEditorEnvironment()
+        {
+            return OS.HasFeature("editor");
+        }
 
-        public async void StartLoad()
+        public async Task StartLoad()
         {
             state.SetState(State.Loading);
             var progress = Log.RegisterProgressTracker(100, "Loading", logger.source);
             progress.Name = "Searching mods";
-            Vars.Mods.SearchModFolder("res://mods/");
-            Vars.Mods.SearchModFolder("user://mods/");
-            Vars.Mods.LoadEnableConfigs();
+            Mods.SearchModFolder("res://mods/");
+            Mods.SearchModFolder("user://mods/");
+            Mods.LoadEnableConfigs();
             progress.Progress += 5;
 
             progress.Name = "Checking dependencies";
-            var errors = Vars.Mods.CheckErrors();
+            var errors = Mods.CheckErrors();
             if (errors.Count != 0)
             {
                 var message = new System.Text.StringBuilder();
@@ -106,39 +111,53 @@ public partial class Vars{
                         message.Append("  - " + error + "\n");
                 }
                 Logger.Error($"Mod dependency error: \n{message.ToString()}");
-                foreach (var info in Vars.Mods.ModInfoList.Values)
+                foreach (var info in Mods.ModInfoList.Values)
                 {
                     info.Enabled = false;
                 }
                 await ToSignal(GetTree().CreateTimer(3), "timeout");
                 progress.Progress = progress.Total;
-                Vars.Mods.DisplayOrder = new List<string>(Vars.Mods.ModInfoList.Keys);
-                // Vars.Main.GetWindowNode("Mods").Call("load_mod_list");
+                Mods.DisplayOrder = [.. Mods.ModInfoList.Keys];
+                // Main.GetWindowNode("Mods").Call("load_mod_list");
                 return;
             }
 
             progress.Name = "Loading configs";
-            Vars.Configs.LoadConfigs();
-            // Vars.Main.GetWindowNode("Settings").Call("load_tabs");
+            Configs.LoadConfigs();
+            // Main.GetWindowNode("Settings").Call("load_tabs");
             progress.Progress += 5;
 
             progress.Name = "Loading mods";
-            await Vars.Mods.LoadModsInit();
+            await Mods.LoadModsInit();
             progress.Progress += 10;
-            await Vars.Mods.LoadModsContents();
+            await Mods.LoadModsContents();
             progress.Progress += 20;
-            await Vars.Mods.LoadModsAssets();
+            await Mods.LoadModsAssets();
             progress.Progress += 20;
-            await Vars.Mods.LoadModsPost();
+            await Mods.LoadModsPost();
             progress.Progress += 10;
             progress.Name = "Loading saves";
-            Vars.Saves.LoadSaves();
-            progress.Progress += 20;
+            Saves.LoadSaves();
+            progress.Progress += 15;
 
-            // Vars.Main.LoadUi(progress);
+            if (IsEditorEnvironment()) 
+            {
+                progress.Name = "Discovering tests";
+                await Tests.DiscoverTestsDir("res://test/");
+            }
+            progress.Progress += 5;
 
-            Vars.Game.ResetGame();
+            MainUi.LoadUi(progress); // 10
+
+            Game.ResetGame();
             progress.Finish();
+        }
+
+        public void Exit(string reason = "")
+        {
+            if (reason != "")
+                logger.Info("Exit: " + reason);
+            GetTree().Quit();
         }
     }
 }

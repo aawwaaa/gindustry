@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bmjcycscdm3ky"]
 
-[ext_resource type="Script" path="res://addons/gindustry_tools_contents_manager/content_editors/content_editor.gd" id="1_edbcf"]
+[ext_resource type="Script" uid="uid://sae3nct1y6jg" path="res://addons/gindustry_tools_contents_manager/content_editors/content_editor.gd" id="1_edbcf"]
 
 [node name="ContentEditor" type="VBoxContainer"]
 anchors_preset = 15
