@@ -2,6 +2,13 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "clean",
+            "command": "dotnet",
+            "type": "process",
+            "args": ["clean"],
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "build",
             "command": "dotnet",
             "type": "process",
@@ -36,6 +43,12 @@
                 "${workspaceFolder}/gindustry.sln"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "wait",
+            "command": "watch",
+            "args": ["-g", "-n", "0.2", "ps -eo pid,cmd | grep '[G]odot'"],
+            "type": "shell"
         }
     ]
 }

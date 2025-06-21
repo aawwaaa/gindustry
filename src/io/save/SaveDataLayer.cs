@@ -1,5 +1,9 @@
 using Godot;
 using System;
+using Gindustry.World;
+using Gindustry.IO;
+
+namespace Gindustry.IO.Save;
 
 [GlobalClass]
 public partial class SaveDataLayer: Node
@@ -18,15 +22,15 @@ public partial class SaveDataLayer: Node
 
     public virtual void RequestLoadGameMeta() { }
   
-    public virtual void RequestLoadWorld(uint world) {}
+    public virtual void RequestLoadDimension(uint dimension) {}
     // if return false: generate new one;
-    public virtual bool RequestLoadChunk(uint world, Vector3I chunk) { return false; }
+    public virtual bool RequestLoadChunk(uint dimension, Vector3I chunk) { return false; }
     public virtual void RequestLoadMesh(ulong mesh) { }
     public virtual void RequestLoadMeshChunk(ulong mesh, Vector3I chunk) { }
 
     public virtual void RequestSaveGameMeta() { }
     
-    public virtual bool RequestSaveWorld(World world) { return false; }
+    public virtual bool RequestSaveDimension(Dimension dimension) { return false; }
     // if return false: do not dispose
     public virtual bool RequestSaveChunk(Chunk chunk) { return false; }
     public virtual bool RequestSaveMesh(ulong mesh) { return false; }
@@ -44,8 +48,8 @@ public partial class MemorySaveDataLayer: SaveDataLayer
 
 /*
     | save.bin
-    | world
-      | <world_id>
+    | dimension
+      | <dimension_id>
         | chunk
           | <chunk_pos>
     | entity_map
@@ -77,16 +81,16 @@ public partial class SaveFileSaveDataLayer: SaveDataLayer
         access.Close();
     }
 
-    public override void RequestLoadWorld(uint world)
+    public override void RequestLoadDimension(uint dimension)
     { }
 
-    public override bool RequestLoadChunk(uint world, Vector3I chunk)
+    public override bool RequestLoadChunk(uint dimension, Vector3I chunk)
     {
-        if (!FileAccess.FileExists($"{Path}/world/{world}/chunk/{PS(chunk)}")) return false;
+        if (!FileAccess.FileExists($"{Path}/dimension/{dimension}/chunk/{PS(chunk)}")) return false;
         
-        var access = new GodotFileIO($"{Path}/world/{world}/chunk/{PS(chunk)}", FileAccess.ModeFlags.Read);
+        var access = new GodotFileIO($"{Path}/dimension/{dimension}/chunk/{PS(chunk)}", FileAccess.ModeFlags.Read);
         var reader = access.Reader();
-        Vars.Worlds.worlds[world].LoadChunk(chunk, reader).ChainLoad(this);
+        Vars.Dimensions.dimensions[dimension].LoadChunk(chunk, reader).ChainLoad(this);
         access.Close();
         return true;
     }
@@ -100,7 +104,7 @@ public partial class SaveFileSaveDataLayer: SaveDataLayer
     public override void RequestSaveGameMeta()
     {
         MakeDir($"{Path}/");
-        MakeDir($"{Path}/world/");
+        MakeDir($"{Path}/dimension/");
 
         var access = new GodotFileIO($"{Path}/save.bin", FileAccess.ModeFlags.Write);
         var writer = access.Writer();
@@ -108,20 +112,20 @@ public partial class SaveFileSaveDataLayer: SaveDataLayer
         access.Close();
     }
 
-    public override bool RequestSaveWorld(World world)
+    public override bool RequestSaveDimension(Dimension dimension)
     {
         RequestSaveGameMeta();
         
-        MakeDir($"{Path}/world/{world.Id}");
-        MakeDir($"{Path}/world/{world.Id}/chunk/");
+        MakeDir($"{Path}/dimension/{dimension.Id}");
+        MakeDir($"{Path}/dimension/{dimension.Id}/chunk/");
         return true;
     }
 
     public override bool RequestSaveChunk(Chunk chunk)
     {
-        if (!FileAccess.FileExists($"{Path}/world/{chunk.World}"))
-            if (!RequestSaveWorld(chunk.World)) return false;
-        var access = new GodotFileIO($"{Path}/world/{chunk.World.Id}/chunk/{PS(chunk.Position)}", FileAccess.ModeFlags.Write);
+        if (!FileAccess.FileExists($"{Path}/dimension/{chunk.Dimension}"))
+            if (!RequestSaveDimension(chunk.Dimension)) return false;
+        var access = new GodotFileIO($"{Path}/dimension/{chunk.Dimension.Id}/chunk/{PS(chunk.Position)}", FileAccess.ModeFlags.Write);
         var writer = access.Writer();
         chunk.SaveData(writer);
         access.Close();
@@ -132,10 +136,10 @@ public partial class SaveFileSaveDataLayer: SaveDataLayer
     {
         RequestSaveGameMeta();
 
-        foreach (var world in Vars.Worlds.worlds.Values)
+        foreach (var dimension in Vars.Dimensions.dimensions.Values)
         {
-            RequestSaveWorld(world);
-            foreach (var chunk in world.chunks.Values)
+            RequestSaveDimension(dimension);
+            foreach (var chunk in dimension.chunks.Values)
             {
                 RequestSaveChunk(chunk);
             }

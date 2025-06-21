@@ -1,5 +1,8 @@
 using Godot;
 using System;
+using Gindustry.Utils;
+
+namespace Gindustry.IO;
 
 public interface WriterImplement
 {
@@ -56,7 +59,7 @@ public partial class Writer: GodotObject
     public void S(string value) => MB(System.Text.Encoding.UTF8.GetBytes(value));
 
     public void V(Variant value) => MB(GD.VarToBytes(value));
-    public void SV(object value) => Utils.Serialization.Serialize(this, value);
+    public void SV(object value) => Util.Serialization.Serialize(this, value);
 
     public delegate void WriteDelegate(Writer writer);
 

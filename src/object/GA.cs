@@ -2,51 +2,43 @@ using Godot;
 using System.Collections.Generic;
 using System;
 
-namespace Gen {};
+namespace Gindustry.Object;
 
 public interface GDScriptAdapter
 {
-    public bool IsOverriden {get; set;}
-    public void _SetAdapter(GodotObject adapter);
 }
 
 [GodotClassName("GA")]
 public partial class GA: Node
 {
     public static readonly Dictionary<StringName, Spawner> AdapterSpawners = new();
-    public delegate GDScriptAdapter Spawner();
+    public static GA Instance {get; private set;}
+    public delegate GDScriptAdapter Spawner(Godot.Collections.Array args);
 
-    public GodotObject Create(StringName name)
+    public GodotObject Create(StringName name, Godot.Collections.Array args)
     {
         if (!AdapterSpawners.TryGetValue(name, out var spawner))
             return null;
-        return (GodotObject)spawner();
+        return (GodotObject)spawner(args);
     }
 
-    public void LoadStatics() {}
-
-    public GodotObject u(GodotObject data)
+    public override void _Ready()
     {
-        if (data.HasMethod("_get_instance"))
-            return (GodotObject)data.Call("_get_instance");
-
-        return data;
+        Instance = this;
     }
 
-    public void SetAdapter(GodotObject input, GodotObject adapter)
-    {
-        if (input is GDScriptAdapter ad)
-        {
-            ad._SetAdapter(adapter);
-        }
-    }
+    public partial void LoadStatics();
 
-    public void HaventOverriden(GodotObject input)
+    public static T U<T>(GodotObject data) where T: GodotObject
     {
-        if (input is GDScriptAdapter ad)
-        {
-            ad.IsOverriden = false;
-        }
+        if (data.HasMethod("inst"))
+            return (T)data.Call("inst");
+
+        return (T)data;
+    }
+    public T u<T>(GodotObject data) where T: GodotObject
+    {
+        return U<T>(data);
     }
 
     public String TryCatch(Callable callable)

@@ -21,6 +21,17 @@ namespace Gindustry.Test
             logger.Error("Test failed");
         }
 
+        public void Success(string message)
+        {
+            logger.Info(message);
+        }
+
+        public void Failed(string message)
+        {
+            failed = true;
+            logger.Error(message);
+        }
+
         public void Equal<T>(T a, T b, 
             [CallerArgumentExpression(nameof(a))] string aExpr = null,
             [CallerArgumentExpression(nameof(b))] string bExpr = null,

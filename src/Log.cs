@@ -4,6 +4,8 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 
+namespace Gindustry;
+
 public partial class Log: Node
 {
     public static Log Instance { get; private set; }
@@ -75,7 +77,7 @@ public partial class Log: Node
             var formatted = template
                 .Replace("{level}", LogLevels[(int)level])
                 .Replace("{message}", message);
-            Instance.EmitSignal(global::Log.SignalName.log_created,
+            Instance.CallDeferred(MethodName.EmitSignal, Gindustry.Log.SignalName.log_created,
                 formatted, source, LogLevels[(int)level], message);
         }
 
@@ -125,16 +127,16 @@ public partial class Log: Node
             this.Progress = 0;
             
             Instance.activeProgressTrackers.Add(this);
-            Instance.EmitSignal(global::Log.SignalName.progress_tracker_created, this);
+            Instance.EmitSignal(Gindustry.Log.SignalName.progress_tracker_created, this);
         }
 
         public void Finish()
         {
             EmitSignal(SignalName.Finished);
-            Instance.EmitSignal(global::Log.SignalName.progress_tracker_finished, this);
+            Instance.EmitSignal(Gindustry.Log.SignalName.progress_tracker_finished, this);
             Instance.activeProgressTrackers.Remove(this);
             if (Instance.activeProgressTrackers.Count == 0)
-                Instance.EmitSignal(global::Log.SignalName.all_progress_tracker_finished);
+                Instance.EmitSignal(Gindustry.Log.SignalName.all_progress_tracker_finished);
         }
     }
 

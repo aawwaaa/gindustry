@@ -1,5 +1,10 @@
 using Godot;
 using System;
+using Gindustry.Attributes;
+using Gindustry.IO;
+using Gindustry.CSharpUtils;
+
+namespace Gindustry.Object;
 
 [CSharpObjectTypeName("ref_object")]
 [GDScriptAdapterTarget("GA_RefObject")]

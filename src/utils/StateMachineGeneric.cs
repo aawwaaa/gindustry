@@ -1,6 +1,8 @@
 using Godot;
 using System;
 
+namespace Gindustry.Utils;
+
 public class StateMachineGeneric<T>
 {
     public delegate void StateChangeEventHandler<A>(A newState, A oldState);

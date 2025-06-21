@@ -1,6 +1,9 @@
+using Gindustry.Mod;
 using Godot;
 using System;
 using System.Collections.Generic;
+
+namespace Gindustry.IO.Save;
 
 [GlobalClass]
 public partial class SaveMeta : RefCounted
@@ -14,7 +17,7 @@ public partial class SaveMeta : RefCounted
     public void ApplyCurrentMods()
     {
         foreach (var mod in Vars.Mods.ModInstList.Values)
-            Mods[mod.ModInfo.Id] = (ModInfo.ModRef)mod.ModInfo;
+            Mods[mod.Info.Id] = (ModInfo.ModRef)mod.Info;
     }
 
     public void LoadFrom(Reader reader)
@@ -48,8 +51,8 @@ public partial class SaveMeta : RefCounted
         writer.I32(values.Count);
         foreach (var mod in values)
         {
-            writer.S(mod.ModInfo.Id);
-            writer.S(mod.ModInfo.Version);
+            writer.S(mod.Info.Id);
+            writer.S(mod.Info.Version);
         }
     }
 }

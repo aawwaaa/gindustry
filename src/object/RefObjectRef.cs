@@ -1,5 +1,8 @@
 using Godot;
 using System.Threading.Tasks;
+using Gindustry.IO;
+
+namespace Gindustry.Object;
 
 [GlobalClass]
 public partial class RefObjectRef : RefCounted, Saveable

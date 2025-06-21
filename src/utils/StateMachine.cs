@@ -1,5 +1,7 @@
 using Godot;
 
+namespace Gindustry.Utils;
+
 [GlobalClass]
 public partial class StateMachine : Node
 {

@@ -1,6 +1,8 @@
 using Godot;
 using System;
 
+namespace Gindustry;
+
 public partial class Vars
 {
     [GlobalClass]

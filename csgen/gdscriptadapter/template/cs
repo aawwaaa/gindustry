@@ -1,0 +1,102 @@
+## paramWithType {type} {name}
+## identityPrefix @
+using System;
+using System.Runtime.InteropServices;
+using Godot.Bridge;
+using Godot.NativeInterop;
+
+namespace Gindustry.Gen {
+
+public class =TargetName: =FullName, Gindustry.Object.GDScriptAdapter {
+    private Godot.GodotObject _proxy;
+
+<<< =constructors
+    public =TargetName(Godot.GodotObject _proxy=ParamsAppendWithType): base(=Params) {
+        this._proxy = _proxy;
+        _InitSignals(_proxy);
+    }
+>>>
+
+    ~=TargetName() {
+        _proxy.Free();
+    }
+
+<<< =virtualMethods
+    private bool _=Name_overriden = true;
+    =Accessibility override =ReturnType =Name(=ParamsWithType) {
+        if (_=Name_overriden) {
+            =ReturnIfNotVoid _proxy.Call(MethodName.@=Name=ParamsAppend); =ReturnIfVoid
+        }
+        =ReturnIfNotVoid base.=Name(=Params);
+    }
+>>>
+
+    private void _InitSignals(Godot.GodotObject _proxy) {
+<<< =signalsAll
+        this.Connect("=Name", Godot.Callable.From((=ParamsWithType) => {
+            _proxy.EmitSignal(SignalName.@=Name=ParamsAppend);
+        }));
+>>>
+    }
+
+#pragma warning disable CS0109
+    public new class PropertyName : =FullName.PropertyName {
+<<< =virtualMethods
+        public new static readonly global::Godot.StringName @_=Name_overriden = "_=Name_overriden";
+>>>
+    }
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+    protected override bool SetGodotClassPropertyValue(in godot_string_name name, in godot_variant value)
+    {
+<<< =virtualMethods
+        if (name == PropertyName.@_=Name_overriden) {
+            this.@_=Name_overriden = global::Godot.NativeInterop.VariantUtils.ConvertTo<bool>(value);
+            return true;
+        }
+>>>
+        return base.SetGodotClassPropertyValue(name, value);
+    }
+    /// <inheritdoc/>
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+    protected override bool GetGodotClassPropertyValue(in godot_string_name name, out godot_variant value)
+    {
+<<< =virtualMethods
+        if (name == PropertyName.@_=Name_overriden) {
+            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<bool>(this.@_=Name_overriden);
+            return true;
+        }
+>>>
+        return base.GetGodotClassPropertyValue(name, out value);
+    }
+
+    public new class MethodName : =FullName.MethodName {
+<<< =virtualMethods
+        public new static readonly global::Godot.StringName @super_=Name = "super_=Name";
+>>>
+    }
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+    protected override bool InvokeGodotClassMethod(in godot_string_name method, Godot.NativeInterop.NativeVariantPtrArgs Params, out godot_variant ret)
+    {
+<<< =virtualMethods
+        if (method == MethodName.@super_=Name && Params.Count == =ParamsCount) {
+            =RetIfNotVoid base.=Name(=ParamsVariantConverted)=RetIfVoid
+            return true;
+        }
+>>>
+        return base.InvokeGodotClassMethod(method, Params, out ret);
+    }
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+    protected override bool HasGodotClassMethod(in godot_string_name method)
+    {
+<<< =virtualMethods
+        if (method == MethodName.@super_=Name) {
+           return true;
+        }
+>>>
+        return base.HasGodotClassMethod(method);
+    }
+#pragma warning restore CS0109
+
+}
+
+}

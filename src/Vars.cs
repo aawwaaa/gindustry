@@ -2,6 +2,10 @@ using builtin.ui;
 using Godot;
 using System;
 using System.Collections.Generic;
+using Gindustry.IO.Save;
+using Gindustry.Net;
+
+namespace Gindustry;
 
 public partial class Vars : Node
 {
@@ -27,7 +31,7 @@ public partial class Vars : Node
     public static Vars_Contents Contents;
     public static Vars_Game Game;
     // public static GodotObject Players;
-    public static Vars_Worlds Worlds => SaveDataComponent.GetSaveDataComponent<Vars_Worlds>();
+    public static Vars_Dimensions Dimensions => SaveDataComponent.GetSaveDataComponent<Vars_Dimensions>();
     public static Vars_Presets Presets;
     public static Vars_Saves Saves;
     public static NetLayer Net;
@@ -50,7 +54,7 @@ public partial class Vars : Node
     public Vars_Contents contents => Contents;
     public Vars_Game game => Game;
     // public GodotObject players => Players;
-    public Vars_Worlds worlds => SaveDataComponent.GetSaveDataComponent<Vars_Worlds>();
+    public Vars_Dimensions dimensions => SaveDataComponent.GetSaveDataComponent<Vars_Dimensions>();
     public Vars_Presets presets => Presets;
     public GodotObject saves => Saves;
     public NetLayer net => Net;
@@ -103,7 +107,7 @@ public partial class Vars : Node
         
         Game = Add(new Vars_Game(), "Game");
         // Players = LoadAdd<GodotObject>("res://src/game/player/players.gd", "Players");
-        SaveDataComponent.RegisterSaveDataComponentInitList(() => new Vars_Worlds());
+        SaveDataComponent.RegisterSaveDataComponentInitList(() => new Vars_Dimensions());
         
         Presets = Add(new Vars_Presets(), "Presets");
         Saves = Add(new Vars_Saves(), "Saves");

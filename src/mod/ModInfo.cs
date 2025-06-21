@@ -1,6 +1,8 @@
 using Godot;
 using System.Collections.Generic;
 
+namespace Gindustry.Mod;
+
 [GlobalClass]
 public partial class ModInfo : Resource
 {
@@ -133,7 +135,7 @@ public partial class ModInfo : Resource
         if (info != null && infoDict.ContainsKey("icon") && infoDict.ContainsKey("iconType"))
         {
             var iconData = reader.ReadFile((string)infoDict["icon"]);
-            info.Icon = Utils.ParseImageData(iconData, (string)infoDict["iconType"]);
+            info.Icon = Util.ParseImageData(iconData, (string)infoDict["iconType"]);
         }
 
         reader.Close();

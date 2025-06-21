@@ -1,5 +1,6 @@
 using Godot;
 using System.Collections.Generic;
+using Gindustry.Attributes;
 
 namespace Gindustry.Test
 {

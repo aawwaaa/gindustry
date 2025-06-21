@@ -1,4 +1,8 @@
+using Gindustry.IO;
+using Gindustry.Utils;
 using Godot;
+
+namespace Gindustry;
 
 public partial class Vars {
     public partial class Vars_Configs : Node

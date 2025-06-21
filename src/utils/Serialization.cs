@@ -1,8 +1,12 @@
+using Gindustry.IO;
+using Gindustry.Object;
 using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class Utils
+namespace Gindustry;
+
+public partial class Util
 {
     public partial class Serialization : GodotObject
     {

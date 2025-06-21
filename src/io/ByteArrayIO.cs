@@ -3,6 +3,8 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
+namespace Gindustry.IO;
+
 [GlobalClass]
 public partial class ByteArrayIO: GodotObject
 {

@@ -2,14 +2,20 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch",
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:codetools.getLatestGodotPid}",
+            "justMyCode": true
+        },
+        {
+            "name": "Launch Godot",
             "type": "godot",
             "request": "launch",
             "project": "${workspaceFolder}",
             "address": "127.0.0.1",
             "port": 6007,
             "scene": "main",
-            // engine command line flags
             "profiling": false,
             "single_threaded_scene": false,
             "debug_collisions": false,
@@ -21,8 +27,17 @@
             "time_scale": 1.0,
             "disable_vsync": false,
             "fixed_fps": 60,
-            // anything else
-            "additional_options": ""
+            "additional_options": "",
+            "preLaunchTask": "build"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Debug",
+            "configurations": [
+                "Launch Godot",
+                ".NET Core Attach"
+            ],
         }
     ]
 }

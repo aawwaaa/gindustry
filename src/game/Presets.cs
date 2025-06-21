@@ -1,6 +1,9 @@
 using Godot;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Gindustry.Game;
+
+namespace Gindustry;
 
 public partial class Vars
 {

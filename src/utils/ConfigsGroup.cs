@@ -1,6 +1,9 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using Gindustry.IO;
+
+namespace Gindustry.Utils;
 
 public class ConfigKey<T>
 {

@@ -1,0 +1,53 @@
+## paramWithType {name}: {type}
+## baseClassTargetName CSharpObjectProxy
+class_name =TargetName
+extends =BaseClassTargetName
+
+func inst() -> =ClassName:
+    return instance
+
+<<< =constructors
+func _init(=ParamsWithType) -> void:
+    instance = GA.Create(&"=TargetName", [self=ParamsAppend])
+    if instance == null:
+        push_error("Failed to create instance of =TargetName")
+>>>
+
+<<< =signals
+@warning_ignore("unused_signal")
+signal =Name(=ParamsWithType)
+>>>
+
+<<< =properties
+@warning_ignore("unused_private_class_variable")
+var =Name: =Type:
+    get: return instance.=Name
+>>>
+
+<<< =propertiesAssignable
+@warning_ignore("unused_private_class_variable")
+var =Name: =Type:
+    get: return instance.=Name
+    set(value): instance.=Name = value
+>>>
+
+<<< =methods
+func =Name(=ParamsWithType) -> =ReturnType:
+    @warning_ignore("unsafe_void_return")
+    return instance.=Name(=Params)
+>>>
+
+<<< =virtualMethods
+func =Name(=ParamsWithType) -> =ReturnType:
+    instance._=Name_overriden = false
+    @warning_ignore("unsafe_void_return")
+    return instance.=Name(=Params)
+
+func super_=Name(=ParamsWithType) -> =ReturnType:
+    @warning_ignore("unsafe_void_return")
+    return instance.super_=Name(=Params)
+>>>
+
+<<< =comments
+# =Comment
+>>>

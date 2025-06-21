@@ -1,6 +1,8 @@
 using Godot;
 using Godot.Collections;
 
+namespace Gindustry.Content;
+
 [Tool]
 [GlobalClass]
 public partial class ContentScene : Node
@@ -146,7 +148,7 @@ public partial class ContentScene : Node
         return _defaults.ContainsKey(property);
     }
 
-    public virtual bool __PackedScene__Init(Mod mod)
+    public virtual bool __PackedScene__Init(Mod.Mod mod)
     {
         Init();
         foreach (var key in _storaged.Keys)

@@ -1,5 +1,9 @@
 using Godot;
 using System;
+using Gindustry.Attributes;
+using Gindustry.Mod;
+
+namespace Gindustry.Object;
 
 [GDScriptAdapterTarget("GA_ObjectType")]
 [GlobalClass]
@@ -7,7 +11,7 @@ public partial class ObjectType : Resource
 {
     public static ObjectType For<T>() where T : RefObject, new()
     {
-        Type t = typeof(T);
+        System.Type t = typeof(T);
         CSharpObjectTypeNameAttribute attr = t.GetCustomAttributes(typeof(CSharpObjectTypeNameAttribute), false)[0]
             as CSharpObjectTypeNameAttribute;
         if (attr == null) return null;
@@ -20,11 +24,11 @@ public partial class ObjectType : Resource
     }
 
     public ObjectType() {}
-    public ObjectType(String id) { this.id = id; }
+    public ObjectType(string id) { this.id = id; }
 
-    [Export] public String id;
-    private String __fullId = null;
-    public String FullId
+    [Export] public string id;
+    private string __fullId = null;
+    public string FullId
     {
         get { return __fullId ?? (__fullId = _GetFullId()); }
         set { __fullId = value; }
@@ -32,21 +36,21 @@ public partial class ObjectType : Resource
 
     public uint index = 0;
 
-    public Mod Mod { get; set; } = null;
+    public Mod.Mod Source { get; set; } = null;
 
-    public String GetModId()
+    public string GetModId()
     {
-        if (Mod == null) return "builtin";
-        return Mod.ModInfo.Id;
+        if (Source == null) return "builtin";
+        return Source.Info.Id;
     }
 
-    public String GetFullIdDefault(String insert = "")
+    public string GetFullIdDefault(string insert = "")
     {
         return GetModId() + ":" +
             (insert.Length > 0? insert + ":": "") + id;
     }
 
-    protected virtual String _GetFullId()
+    protected virtual string _GetFullId()
     {
         return GetFullIdDefault();
     }
@@ -68,10 +72,10 @@ public partial class ObjectType : Resource
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 public class CSharpObjectTypeNameAttribute : Attribute
 {
-    public String id;
+    public string id;
     private ObjectType type;
 
-    public CSharpObjectTypeNameAttribute(String id)
+    public CSharpObjectTypeNameAttribute(string id)
     {
         this.id = id;
     }

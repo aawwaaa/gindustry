@@ -1,14 +1,19 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using Gindustry.IO;
+using Gindustry.IO.Save;
+using Gindustry.World;
+
+namespace Gindustry;
 
 public partial class Vars
 {
     [GlobalClass]
-    public partial class Vars_Worlds: SaveDataComponent
+    public partial class Vars_Dimensions: SaveDataComponent
     {
-        public Dictionary<uint, World> worlds = new();
-        public uint worldIncId = 1;
+        public Dictionary<uint, Dimension> dimensions = new();
+        public uint dimensionIncId = 1;
 
         public override void InitData()
         {
@@ -17,15 +22,15 @@ public partial class Vars
         public override void LoadData(Reader r)
         {
             r.A(r => {
-                worldIncId = r.U32();
+                dimensionIncId = r.U32();
 
-                worlds.Clear();
+                dimensions.Clear();
                 var size = r.I32();
                 for (int i = 0; i < size; i++)
                 {
-                    var world = new World();
-                    world._LoadData(r);
-                    worlds.Add(world.Id, world);
+                    var dimension = new Dimension();
+                    dimension._LoadData(r);
+                    dimensions.Add(dimension.Id, dimension);
                 }
             });
         }
@@ -33,9 +38,9 @@ public partial class Vars
         public override void SaveData(Writer w)
         {
             w.A(w => {
-                w.U32(worldIncId);
-                w.I32(worlds.Count);
-                foreach(var pair in worlds)
+                w.U32(dimensionIncId);
+                w.I32(dimensions.Count);
+                foreach(var pair in dimensions)
                 {
                     w.U32(pair.Key);
                     pair.Value._SaveData(w);
@@ -45,19 +50,19 @@ public partial class Vars
 
         public override void DisposeData()
         {
-            foreach(var world in worlds.Values)
+            foreach(var dimension in dimensions.Values)
             {
-                world.ObjectFree();
-                world.Free();
+                dimension.ObjectFree();
+                dimension.Free();
             }
         }
 
-        public World Create()
+        public Dimension Create()
         {
-            var world = new World();
-            world.Id = worldIncId++;
-            worlds.Add(world.Id, world);
-            return world;
+            var dimension = new Dimension();
+            dimension.Id = dimensionIncId++;
+            dimensions.Add(dimension.Id, dimension);
+            return dimension;
         }
     }
 }

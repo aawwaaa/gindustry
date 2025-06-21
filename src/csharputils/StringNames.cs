@@ -1,5 +1,7 @@
 using Godot;
 
+namespace Gindustry.CSharpUtils;
+
 public static class StringNames
 {
     public static readonly StringName id = new StringName("id");

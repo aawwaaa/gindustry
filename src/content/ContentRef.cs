@@ -1,6 +1,9 @@
+using Gindustry.IO;
 using Godot;
 using System;
 using System.Threading.Tasks;
+
+namespace Gindustry.Content;
 
 [GlobalClass]
 public partial class ContentRef : RefCounted, Saveable

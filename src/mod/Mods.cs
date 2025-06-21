@@ -1,8 +1,15 @@
+using Gindustry.Mod;
+using Gindustry.Utils;
+using Gindustry.IO;
+using Gindustry.Object;
 using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Gindustry.CSharpUtils;
+
+namespace Gindustry;
 
 public partial class Vars
 {
@@ -11,9 +18,9 @@ public partial class Vars
         private static readonly Log.Logger Logger = Log.RegisterLogger("Mods");
 
         public Dictionary<string, ModInfo> ModInfoList { get; private set; } = new Dictionary<string, ModInfo>();
-        public Dictionary<string, Mod> ModInstList { get; private set; } = new Dictionary<string, Mod>();
+        public Dictionary<string, Mod.Mod> ModInstList { get; private set; } = new Dictionary<string, Mod.Mod>();
 
-        public Mod CurrentLoadingMod { get; private set; }
+        public Mod.Mod CurrentLoadingMod { get; private set; }
 
         public void SearchModFolder(string path)
         {
@@ -126,26 +133,26 @@ public partial class Vars
             access.Close();
         }
 
-        public void LoadModConfigs(Mod mod)
+        public void LoadModConfigs(Mod.Mod mod)
         {
-            var path = $"user://mod-configs/{mod.ModInfo.Id}.bin";
+            var path = $"user://mod-configs/{mod.Info.Id}.bin";
             if (!FileAccess.FileExists(path))
             {
-                Logger.Warn($"Mod config file not found, using defaults: {mod.ModInfo.RefString}");
+                Logger.Warn($"Mod config file not found, using defaults: {mod.Info.RefString}");
                 mod._InitConfigs();
                 return;
             }
 
-            Logger.Info($"Loading mod configs: {mod.ModInfo.RefString}");
+            Logger.Info($"Loading mod configs: {mod.Info.RefString}");
             var io = new GodotFileIO(path, FileAccess.ModeFlags.Read);
             mod._LoadConfigs(io.Reader());
             io.Close();
         }
 
-        public void SaveModConfigs(Mod mod)
+        public void SaveModConfigs(Mod.Mod mod)
         {
-            Logger.Info($"Saving mod configs: {mod.ModInfo.RefString}");
-            var path = $"user://mod-configs/{mod.ModInfo.Id}.bin";
+            Logger.Info($"Saving mod configs: {mod.Info.RefString}");
+            var path = $"user://mod-configs/{mod.Info.Id}.bin";
             var io = new GodotFileIO(path, FileAccess.ModeFlags.Write);
             mod._SaveConfigs(io.Writer());
             io.Close();
@@ -168,8 +175,8 @@ public partial class Vars
                     }
 
                     var dependenceInfo = ModInfoList[id];
-                    var minVersionMatched = Utils.CompareVersionStringGe(dependenceInfo.Version, dependence.Min);
-                    var maxVersionMatched = dependence.Max == "none" || !Utils.CompareVersionStringGe(dependenceInfo.Version, dependence.Max);
+                    var minVersionMatched = Util.CompareVersionStringGe(dependenceInfo.Version, dependence.Min);
+                    var maxVersionMatched = dependence.Max == "none" || !Util.CompareVersionStringGe(dependenceInfo.Version, dependence.Max);
                     var matched = minVersionMatched && maxVersionMatched;
 
                     if (!matched)
@@ -304,18 +311,18 @@ public partial class Vars
 
                 progress.Progress += 30;
                 var mainScript = GD.Load<Script>(info.Root + info.Main);
-                Mod mod = null;
+                Mod.Mod mod = null;
                 if (mainScript is GDScript gDScript)
-                    mod = (Mod)gDScript.New();
+                    mod = (Mod.Mod)gDScript.New();
                 else if (mainScript is CSharpScript cSharpScript)
-                    mod = (Mod)cSharpScript.New();
+                    mod = (Mod.Mod)cSharpScript.New();
                 else
                 {
                     Logger.Error($"Unknown main script type: {info.RefString}");
                     progress.Progress += 100;
                     continue;
                 }
-                mod.ModInfo = info;
+                mod.Info = info;
                 CurrentLoadingMod = mod;
                 ModInstList[info.Id] = mod;
                 mod._ModInit(new CoroutineBridge(out var task));
@@ -348,7 +355,7 @@ public partial class Vars
                 }
 
                 CurrentLoadingMod = inst;
-                progress.Name = $"Loading mods: Contents: {inst.ModInfo.RefString}";
+                progress.Name = $"Loading mods: Contents: {inst.Info.RefString}";
                 Logger.Info(progress.Name);
 
                 Task task;
@@ -386,7 +393,7 @@ public partial class Vars
                 }
 
                 CurrentLoadingMod = inst;
-                progress.Name = $"Loading mods: Assets: {inst.ModInfo.RefString}";
+                progress.Name = $"Loading mods: Assets: {inst.Info.RefString}";
                 Logger.Info(progress.Name);
 
                 var p1 = Log.RegisterProgressTracker(inst.Types.Count + inst.Contents.Count, "-", "Mods assets");
@@ -438,7 +445,7 @@ public partial class Vars
                 }
 
                 CurrentLoadingMod = inst;
-                progress.Name = $"Loading mods: Post: {inst.ModInfo.RefString}";
+                progress.Name = $"Loading mods: Post: {inst.Info.RefString}";
                 Logger.Info(progress.Name);
                 inst._Post(new CoroutineBridge(out var task));
                 await task;

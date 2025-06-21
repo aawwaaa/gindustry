@@ -1,6 +1,8 @@
 using Godot;
 using System.Collections.Generic;
 
+namespace Gindustry.Type;
+
 [GlobalClass]
 public sealed partial class ResourceTypeType: ResourceType
 {

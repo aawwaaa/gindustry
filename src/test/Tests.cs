@@ -35,7 +35,12 @@ namespace Gindustry.Test
                 var fullPath = dirPath + "/" + fileName;
                 if (dir.CurrentIsDir())
                 {
-                    scripts.AddRange(IterDir(dir, fullPath));
+                    // 使用新的 DirAccess 实例递归子目录
+                    using var subDir = DirAccess.Open(fullPath);
+                    if (subDir != null)
+                        scripts.AddRange(IterDir(subDir, fullPath));
+                    else
+                        logger.Warn($"Failed to open subdirectory: {fullPath}");
                 }
                 else if (!fileName.EndsWith(".uid"))
                 {
@@ -45,7 +50,7 @@ namespace Gindustry.Test
                 fileName = dir.GetNext();
             }
             dir.ListDirEnd();
-            return scripts;
+            return scripts.Where(s => Path.GetFileName(s).ToLower().Contains("test")).ToList();
         }
 
         public async Task DiscoverTestsDir(string dirPath)
@@ -61,7 +66,7 @@ namespace Gindustry.Test
             var count = 0;
 
             var scripts = IterDir(dir, dirPath);
-            var contents = await Utils.LoadContentsAsync("", scripts, "Tests_LoadTests", logger.source);
+            var contents = await Util.LoadContentsAsync("", scripts, "Tests_LoadTests", logger.source);
 
             foreach (var content in contents)
             {

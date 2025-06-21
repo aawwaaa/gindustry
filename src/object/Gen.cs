@@ -1,0 +1,1 @@
+namespace Gindustry.Gen {};

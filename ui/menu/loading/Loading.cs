@@ -1,3 +1,4 @@
+using Gindustry;
 using Godot;
 using System;
 
@@ -16,9 +17,9 @@ public partial class Loading : Control
     {
         logs = GetNode<Label>("%Logs");
         progress = GetNode<VBoxContainer>("%Progress");
-        global::Log.LogCreated += Log;
+        Gindustry.Log.LogCreated += Log;
         logRows = 0;
-        global::Log.ProgressTrackerCreated += ProgressTrackerCreated;
+        Gindustry.Log.ProgressTrackerCreated += ProgressTrackerCreated;
     }
 
     public void Log(string formatted, string _1, string _2, string _3)
@@ -32,7 +33,7 @@ public partial class Loading : Control
         logs.Text += "\n" + formatted;
     }
 
-    public void ProgressTrackerCreated(global::Log.ProgressTracker tracker)
+    public void ProgressTrackerCreated(Log.ProgressTracker tracker)
     {
         LoadingProgress progress = progressScene.Instantiate<LoadingProgress>();
         progress.tracker = tracker;

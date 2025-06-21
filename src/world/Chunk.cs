@@ -1,24 +1,30 @@
 using Godot;
 using System.Collections.Generic;
 using System;
+using Gindustry.IO;
+using Gindustry.Entity;
+using Gindustry.IO.Save;
+using Gindustry.World;
+
+namespace Gindustry.World;
 
 [GlobalClass]
 public partial class Chunk: GodotObject, Saveable
 {
-    public static Chunk LoadFrom(World world, Vector3I position, Reader r)
+    public static Chunk LoadFrom(Dimension dimension, Vector3I position, Reader r)
     {
         var chunk = new Chunk();
-        chunk.World = world;
+        chunk.Dimension = dimension;
         chunk.Position = position;
         chunk._LoadData(r);
         return chunk;
     }
 
-    public World World{get; set;}
+    public Dimension Dimension{get; set;}
     public Vector3I Position {get; set; }
 
     public HashSet<ulong> EntityIds {get; set; } = new();
-    public HashSet<Entity> Entities {get; set; } = new();
+    public HashSet<Entity.Entity> Entities {get; set; } = new();
 
     public virtual void _LoadData(Reader r)
     {
@@ -58,13 +64,13 @@ public partial class Chunk: GodotObject, Saveable
 
     }
 
-    public void AddEntity(Entity entity)
+    public void AddEntity(Entity.Entity entity)
     {
         EntityIds.Add(entity.objectId);
         Entities.Add(entity);
     }
 
-    public void RemoveEntity(Entity entity)
+    public void RemoveEntity(Entity.Entity entity)
     {
         EntityIds.Remove(entity.objectId);
         Entities.Remove(entity);

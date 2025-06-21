@@ -1,5 +1,11 @@
 using Godot;
 using System.Threading.Tasks;
+using Gindustry.Attributes;
+using Gindustry.CSharpUtils;
+using Gindustry.Type;
+using Gindustry.IO;
+
+namespace Gindustry.Game;
 
 [GDScriptAdapterTarget("GA_Preset")]
 [GlobalClass]
@@ -41,7 +47,7 @@ public partial class Preset : ResourceType
     public void PreInitPreset() => _PreInitPreset();
 
     // Call when preset is loaded to create a new game, after _EnablePreset
-    // Do world operations in this method
+    // Do dimension operations in this method
     public virtual void _InitPreset()
     {
         // Implement your logic here
@@ -56,7 +62,7 @@ public partial class Preset : ResourceType
     }
     public void InitAfterLocalPlayerJoin() => _InitAfterLocalPlayerJoin();
 
-    // Call when world is ready, after _ApplyPreset
+    // Call when dimension is ready, after _ApplyPreset
     public virtual void _LoadAfterWorldLoad()
     {
         // Implement your logic here

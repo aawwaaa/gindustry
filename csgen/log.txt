@@ -1,0 +1,16 @@
+Initialize 2025/6/20 22:24:32
+/home/user/Desktop/projects/gindustry/csgen/FileOp.cs/../
+Found target: GA_Content
+Found target: GA_Entity
+Found target: GA_StandaloneEntity
+Found target: GA_SubEntity
+Found target: GA_Preset
+Found target: GA_SaveDataComponent
+Found target: GA_Mod
+Found target: GA_ObjectType
+Found target: GA_RefObject
+Found target: GA_TestRun
+Found target: GA_ContentCategory
+Found target: GA_ContentTag
+Found target: GA_ContentType
+Found target: GA_ResourceType

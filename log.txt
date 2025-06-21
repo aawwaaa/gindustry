@@ -1,0 +1,101 @@
+Initialize 2025/6/21 22:00:06
+Found target: GA_Content
+Found target: GA_Entity
+Found target: GA_StandaloneEntity
+Found target: GA_SubEntity
+Found target: GA_Preset
+Found target: GA_SaveDataComponent
+Found target: GA_Mod
+Found target: GA_ObjectType
+Found target: GA_RefObject
+Found target: GA_TestRun
+Found target: GA_ContentCategory
+Found target: GA_ContentTag
+Found target: GA_ContentType
+Found target: GA_ResourceType
+Found target: GA_CSharpClass
+ --- Anaylsis.Init --- 
+AddSource: Gindustry.Content.Content
+AddSource: Gindustry.Entity.Entity
+AddSource: Gindustry.Entity.Type.Base.StandaloneEntity
+AddSource: Gindustry.Entity.Type.Base.SubEntity
+AddSource: Gindustry.Game.Preset
+AddSource: Gindustry.IO.Save.SaveDataComponent
+AddSource: Gindustry.Mod.Mod
+AddSource: Gindustry.Object.ObjectType
+AddSource: Gindustry.Object.RefObject
+AddSource: Gindustry.Test.TestRun
+AddSource: Gindustry.Type.ContentCategory
+AddSource: Gindustry.Type.ContentTag
+AddSource: Gindustry.Type.ContentType
+AddSource: Gindustry.Type.ResourceType
+AddSource: Gindustry.Test.GA.CSharpClass
+Bind: Gindustry.Content.Content
+ -> Gindustry.Object.ObjectType
+Bind: Gindustry.Entity.Entity
+ -> Gindustry.Object.RefObject
+Bind: Gindustry.Entity.Type.Base.StandaloneEntity
+ -> Gindustry.Entity.Entity
+Bind: Gindustry.Entity.Type.Base.SubEntity
+ -> Gindustry.Entity.Entity
+Bind: Gindustry.Game.Preset
+ -> Gindustry.Type.ResourceType
+SolveBaseClass: Godot.Node
+Bind: Gindustry.IO.Save.SaveDataComponent
+ <- Godot.Node
+Bind: Gindustry.Mod.Mod
+ <- Godot.Node
+SolveBaseClass: Godot.Resource
+SolveBaseClass: Godot.RefCounted
+Bind: Gindustry.Object.ObjectType
+ <- Godot.Resource
+ <- Godot.RefCounted
+Bind: Gindustry.Test.TestRun
+ <- Godot.RefCounted
+Bind: Gindustry.Type.ContentCategory
+ -> Gindustry.Type.ResourceType
+Bind: Gindustry.Type.ContentTag
+ -> Gindustry.Type.ResourceType
+Bind: Gindustry.Type.ContentType
+ -> Gindustry.Type.ResourceType
+Bind: Gindustry.Type.ResourceType
+ <- Godot.Resource
+ <- Godot.RefCounted
+ --- Anaylsis.Reset --- 
+ --- Parser.Init --- 
+Parse: Gindustry.Content.Content
+Parse: Gindustry.Entity.Entity
+Parse: Gindustry.Entity.Type.Base.StandaloneEntity
+Parse: Gindustry.Entity.Type.Base.SubEntity
+Parse: Gindustry.Game.Preset
+Parse: Gindustry.IO.Save.SaveDataComponent
+Parse: Gindustry.Mod.Mod
+Parse: Gindustry.Object.ObjectType
+Parse: Gindustry.Object.RefObject
+Parse: Gindustry.Test.TestRun
+Parse: Gindustry.Type.ContentCategory
+Parse: Gindustry.Type.ContentTag
+Parse: Gindustry.Type.ContentType
+Parse: Gindustry.Type.ResourceType
+Parse: Gindustry.Test.GA.CSharpClass
+ --- Parser.Reset --- 
+ --- Render --- 
+Loaded template: cs
+Loaded template: gd
+Render Gindustry.Content.Content
+Render Gindustry.Entity.Entity
+Render Gindustry.Entity.Type.Base.StandaloneEntity
+Render Gindustry.Entity.Type.Base.SubEntity
+Render Gindustry.Game.Preset
+Render Gindustry.IO.Save.SaveDataComponent
+Render Gindustry.Mod.Mod
+Render Gindustry.Object.ObjectType
+Render Gindustry.Object.RefObject
+Render Gindustry.Test.TestRun
+Render Gindustry.Type.ContentCategory
+Render Gindustry.Type.ContentTag
+Render Gindustry.Type.ContentType
+Render Gindustry.Type.ResourceType
+Render Gindustry.Test.GA.CSharpClass
+Loaded template: GA_cs
+ --- Render --- 

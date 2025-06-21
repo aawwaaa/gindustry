@@ -1,6 +1,8 @@
 using Godot;
 using System;
 
+namespace Gindustry.IO;
+
 [GlobalClass]
 public partial class GodotFileIO: GodotObject
 {

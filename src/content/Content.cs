@@ -1,6 +1,12 @@
 using Godot;
 using System;
+using Gindustry.Attributes;
 using System.Collections.Generic;
+using Gindustry.Object;
+using Gindustry.Type;
+using Gindustry.CSharpUtils;
+
+namespace Gindustry.Content;
 
 [GDScriptAdapterTarget("GA_Content")]
 [GlobalClass]

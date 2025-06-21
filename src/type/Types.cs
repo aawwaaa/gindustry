@@ -1,6 +1,9 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using Gindustry.Type;
+
+namespace Gindustry;
 
 public partial class Vars
 {
@@ -12,9 +15,9 @@ public partial class Vars
         
         public T RegisterType<T>(T type) where T : ResourceType
         {
-            type.Mod = Vars.Mods.CurrentLoadingMod;
+            type.Source = Vars.Mods.CurrentLoadingMod;
             type._Data();
-            if (type.Mod != null) type.Mod.Types.Add(type);
+            if (type.Source != null) type.Source.Types.Add(type);
             type.InitFullId();
             _logger.Debug("Registered type: " + type.FullId);
             if (type is ResourceTypeType typeType)

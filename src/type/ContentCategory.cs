@@ -1,5 +1,9 @@
 using Godot;
 using System.Collections.Generic;
+using Gindustry.Attributes;
+using Gindustry.Content;
+
+namespace Gindustry.Type;
 
 [GDScriptAdapterTarget("GA_ContentCategory")]
 [GlobalClass]
@@ -33,11 +37,11 @@ public partial class ContentCategory : ResourceType
     [Export]
     public Texture2D icon = GD.Load<Texture2D>("res://assets/asset-not-found.png");
 
-    public List<Content> Contents { get; private set; } = new List<Content>();
-    public Godot.Collections.Array<Content> contents() => new Godot.Collections.Array<Content>(Contents);
+    public List<Content.Content> Contents { get; private set; } = new List<Content.Content>();
+    public Godot.Collections.Array<Content.Content> contents() => new Godot.Collections.Array<Content.Content>(Contents);
 
-    public virtual void _AddContent(Content content) { }
-    public void AddContent(Content content)
+    public virtual void _AddContent(Content.Content content) { }
+    public void AddContent(Content.Content content)
     {
         _AddContent(content);
         Contents.Add(content);

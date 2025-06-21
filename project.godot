@@ -25,7 +25,7 @@ config/icon="uid://b4knnc0wxaxjj"
 
 GA="*res://src/object/GA.cs"
 Log="*res://src/Log.cs"
-Utils="*res://src/Utils.cs"
+Util="*res://src/Util.cs"
 Vars="*res://src/Vars.cs"
 
 [display]
@@ -141,7 +141,7 @@ locale/test="en"
 
 [layer_names]
 
-2d_render/layer_1="World"
+2d_render/layer_1="Dimension"
 2d_render/layer_16="Minimap"
 2d_render/layer_17="AltDisplay"
 2d_physics/layer_24="Fields"

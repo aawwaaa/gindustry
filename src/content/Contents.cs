@@ -1,29 +1,32 @@
 using Godot;
 using System.Collections.Generic;
 using System;
+using Gindustry.Content;
+
+namespace Gindustry;
 
 public partial class Vars
 {
     public partial class Vars_Contents : Node
     {
         [Signal]
-        public delegate void ContentRegistedEventHandler(Content content);
-        private Dictionary<string, List<Action<Content>>> contentCallbacks = new ();
+        public delegate void ContentRegistedEventHandler(Content.Content content);
+        private Dictionary<string, List<Action<Content.Content>>> contentCallbacks = new ();
 
         private Log.Logger logger = Log.RegisterLogger("Contents");
 
-        private List<Content> contents = new ();
-        private Dictionary<string, Content> contentsMapping = new ();
-        private Dictionary<ContentType, Dictionary<string, Content>> contentsMappingBasedType = new ();
-        private Dictionary<ContentCategory, Dictionary<ContentType, Dictionary<string, Content>>> contentsMappingBasedCategory = new ();
+        private List<Content.Content> contents = new ();
+        private Dictionary<string, Content.Content> contentsMapping = new ();
+        private Dictionary<Type.ContentType, Dictionary<string, Content.Content>> contentsMappingBasedType = new ();
+        private Dictionary<Type.ContentCategory, Dictionary<Type.ContentType, Dictionary<string, Content.Content>>> contentsMappingBasedCategory = new ();
 
-        public Content RegisterContent(Content content)
+        public Content.Content RegisterContent(Content.Content content)
         {
-            content.Mod = Vars.Mods.CurrentLoadingMod;
+            content.Source = Vars.Mods.CurrentLoadingMod;
             content._Data();
             Vars_Objects.AddObjectType(content);
             contents.Add(content);
-            content.Mod.Contents.Add(content);
+            content.Source.Contents.Add(content);
             string fullId = content.FullId;
             logger.Debug($"Load content: {fullId}");
             contentsMapping[fullId] = content;
@@ -49,27 +52,27 @@ public partial class Vars
             return content;
         }
 
-        public List<Content> GetContents(ContentType type)
+        public List<Content.Content> GetContents(Type.ContentType type)
         {
-            return new List<Content>(contentsMappingBasedType[type].Values);
+            return new List<Content.Content>(contentsMappingBasedType[type].Values);
         }
 
-        public List<Content> GetContentsByCategory(ContentCategory category, ContentType type)
+        public List<Content.Content> GetContentsByCategory(Type.ContentCategory category, Type.ContentType type)
         {
-            return new List<Content>(contentsMappingBasedCategory[category][type].Values);
+            return new List<Content.Content>(contentsMappingBasedCategory[category][type].Values);
         }
 
-        public Content GetContentByFullId(string fullId)
+        public Content.Content GetContentByFullId(string fullId)
         {
             return contentsMapping.ContainsKey(fullId) ? contentsMapping[fullId] : null;
         }
 
-        public Content GetContentByIndex(uint index)
+        public Content.Content GetContentByIndex(uint index)
         {
-            return Vars.Objects.GetObjectTypeByIndex(index) as Content;
+            return Vars.Objects.GetObjectTypeByIndex(index) as Content.Content;
         }
 
-        public void GetContentCallback(string fullId, Action<Content> callback)
+        public void GetContentCallback(string fullId, Action<Content.Content> callback)
         {
             if (contentsMapping.ContainsKey(fullId))
                 callback(contentsMapping[fullId]);

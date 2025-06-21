@@ -2,6 +2,10 @@ using Godot;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Gindustry.Object;
+using Gindustry.IO;
+
+namespace Gindustry;
 
 public partial class Vars
 {
@@ -209,7 +213,7 @@ public partial class Vars
 
         public static void AddObjectType(ObjectType type)
         {
-            type.Mod = Vars.Mods.CurrentLoadingMod;
+            type.Source = Vars.Mods.CurrentLoadingMod;
             Registry.ObjectTypes[type.FullId] = type;
         }
 

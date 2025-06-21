@@ -1,3 +1,4 @@
+using Gindustry;
 using Godot;
 using System;
 using System.Collections.Generic;
@@ -22,8 +23,10 @@ public partial class Tests : PanelContainer
 	{
 		uiTest = GD.Load<PackedScene>("uid://bgsl4fx87ek2b" /* test.tscn */);
 		foreach (var group in Vars.Tests.groups.Values) {
-			var groupButton = new Button();
-			groupButton.Text = group.name;
+			var groupButton = new Button
+			{
+				Text = group.name
+			};
 			var dict = new Dictionary<string, UiTest>();
 			tests[group.name] = dict;
 			groupButton.Pressed += () => {

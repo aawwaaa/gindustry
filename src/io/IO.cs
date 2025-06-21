@@ -2,6 +2,8 @@ using Godot;
 using System;
 using System.IO;
 
+namespace Gindustry.IO;
+
 /*
     数据保存/加载需求：
     1 保存/加载至文件（存档/读档） - 可流式处理

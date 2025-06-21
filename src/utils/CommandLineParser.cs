@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+namespace Gindustry.Utils;
+
 public partial class CommandLineParser: GodotObject
 {
     // 定义接口 ArgType

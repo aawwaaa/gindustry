@@ -1,6 +1,13 @@
+using Gindustry.Utils;
 using Godot;
 using System;
 using System.Collections.Generic;
+using Gindustry.Content;
+using Gindustry.Object;
+using Gindustry.IO;
+using Gindustry.Game;
+
+namespace Gindustry;
 
 /*
     输入：["--a", "abc", "--b", "--c=123", "--d=\"123", "456\"", "-efg"]
@@ -113,7 +120,7 @@ Actions:
             {
                 Vars.Tree.CreateTimer(0.1f).Timeout += () =>
                 {
-                    Vars.Client.ConfigPlayerToken.V = Utils.GenerateToken();
+                    Vars.Client.ConfigPlayerToken.V = Util.GenerateToken();
                     Vars.Client.ConnectTo("localhost", 1234);
                 };
             }

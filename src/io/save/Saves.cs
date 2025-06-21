@@ -2,6 +2,10 @@ using Godot;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Gindustry.IO.Save;
+using Gindustry.IO;
+
+namespace Gindustry;
 
 public partial class Vars
 {

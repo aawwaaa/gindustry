@@ -1,6 +1,8 @@
 using Godot;
 using System;
 
+namespace Gindustry.Object;
+
 public partial class CSharpObjectType<T> : ObjectType where T : RefObject, new()
 {
     public CSharpObjectType() {}

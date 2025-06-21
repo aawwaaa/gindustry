@@ -1,9 +1,11 @@
 using Godot;
 using System;
 
+namespace Gindustry.CSharpUtils;
+
 public static class GDOperates
 {
-    public static Nullable<Variant> GetChained(this GodotObject obj, params StringName[] names)
+    public static Variant? GetChained(this GodotObject obj, params StringName[] names)
     {
         for (int i = 0; i < names.Length; i++)
         {

@@ -1,0 +1,12 @@
+using Gindustry.Gen;
+
+namespace Gindustry.Object;
+
+public partial class GA: Godot.Node {
+    public partial void LoadStatics()
+    {
+<<< =constructors
+        AdapterSpawners[new Godot.StringName("=TargetName")] = (args) => new =TargetName(=ParamsArgs);
+>>>
+    }
+}

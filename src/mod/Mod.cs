@@ -1,9 +1,18 @@
 using Godot;
 using System;
+using Gindustry.Attributes;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Reflection;
+using Gindustry.Content;
+using Gindustry.CSharpUtils;
+using Gindustry.IO;
+using Gindustry.Utils;
+using Gindustry.Type;
+using Gindustry.Object;
+
+namespace Gindustry.Mod;
 
 [GDScriptAdapterTarget("GA_Mod")]
 [GlobalClass]
@@ -12,13 +21,13 @@ public partial class Mod : Node
     [Signal]
     public delegate void SignalConfigsChangedEventHandler(Mod mod);
 
-    public ModInfo ModInfo { get; internal set; }
+    public ModInfo Info { get; internal set; }
     public ConfigsGroup ModConfigs { get; private set; }
 
-    public string Root => ModInfo.Root;
+    public string Root => Info.Root;
 
-    public List<Content> Contents { get; private set; } = new List<Content>();
-    public List<ResourceType> Types { get; private set; } = new List<ResourceType>();
+    public List<Content.Content> Contents { get; private set; } = new List<Content.Content>();
+    public List<Type.ResourceType> Types { get; private set; } = new List<Type.ResourceType>();
 
     public static Mod Current()
     {
@@ -135,7 +144,7 @@ public partial class Mod : Node
             if (!(bool)filter.Call(resesPath[index])) continue;
             resesPath[index] = ToAbsolute(resesPath[index]);
         }
-        var reses = await Utils.LoadContentsAsync("", resesPath, hint, source);
+        var reses = await Util.LoadContentsAsync("", resesPath, hint, source);
         reses.Sort((a, b) => string.Compare(a.ResourcePath, b.ResourcePath));
         foreach (var res in reses)
             callback.Call(res);
@@ -191,7 +200,7 @@ public partial class Mod : Node
             inst.Call("__Resource__Init", this);
         if (inst is ResourceType resourceType)
             Vars.Types.RegisterType(resourceType);
-        else if (inst is Content content)
+        else if (inst is Content.Content content)
             Vars.Contents.RegisterContent(content);
         else if (inst is ObjectType objectType)
             Vars.Vars_Objects.AddObjectType(objectType);
@@ -216,7 +225,7 @@ public partial class Mod : Node
             typesPath.Remove(p);
         for (var i = 0; i < typesPath.Count; i++)
             typesPath[i] = ToAbsolute(typesPath[i]);
-        var scripts = await Utils.LoadContentsAsync("", typesPath, "Load_LoadScripts", source);
+        var scripts = await Util.LoadContentsAsync("", typesPath, "Load_LoadScripts", source);
         foreach (var script in scripts)
             if (script.HasMethod("__script__init"))
                 script.Call("__script__init");

@@ -1,6 +1,13 @@
+using Gindustry.Game;
+using Gindustry.Game.Player;
+using Gindustry.IO;
+using Gindustry.IO.Save;
+using Gindustry.Utils;
 using Godot;
 using System;
 using System.Collections.Generic;
+
+namespace Gindustry;
 
 public partial class Vars
 {

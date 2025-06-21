@@ -1,6 +1,10 @@
 using Godot;
 using System;
+using Gindustry.Attributes;
 using System.Collections.Generic;
+using Gindustry.CSharpUtils;
+
+namespace Gindustry.IO.Save;
 
 [GDScriptAdapterTarget("GA_SaveDataComponent")]
 [GlobalClass]

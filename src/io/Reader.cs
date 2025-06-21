@@ -1,6 +1,8 @@
 using Godot;
 using System;
 
+namespace Gindustry.IO;
+
 public interface ReaderImplement
 {
     public void Skip(int size);
@@ -69,7 +71,7 @@ public partial class Reader: GodotObject
     public string S() => System.Text.Encoding.UTF8.GetString(MB());
 
     public Variant V() => GD.BytesToVarWithObjects(MB());
-    public T SV<T>() => Utils.Serialization.Unserialize<T>(this);
+    public T SV<T>() => Util.Serialization.Unserialize<T>(this);
 
     public delegate void ReadDelegate(Reader reader);
 

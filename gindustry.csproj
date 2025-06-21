@@ -6,17 +6,9 @@
     <CompilerGeneratedFilesOutputPath>gen/csharp/$(TargetFramework)</CompilerGeneratedFilesOutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <!-- <ProjectReference Include="./csgen/csgen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" /> -->
-    <Compile Remove="./csgen/*.cs" />
+    <ProjectReference Include="./csgen/csgen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <Compile Remove="./csgen/**/*.cs" />
     <Compile Remove="./gen/**/*.cs" />
-    <Compile Remove="./csgen/obj/Debug/net6.0/*.cs" />
-    <Compile Remove="./src/object/GDScriptAdapterTemplate.t.cs" />
-    <Compile Include="./test/**/*.cs" />
-    <ProjectReference Include="./csgen/csgen.csproj" />
-
-    <AdditionalFiles Include="./gindustry.csproj" />
-    <AdditionalFiles Include="./csgen/GDScriptAdapterTemplate.t.cs" />
-    <AdditionalFiles Include="./csgen/GDScriptCompatibilityTemplate.t.cs" />
-    <AdditionalFiles Include="./csgen/gdscript_adapter_template.t.gd" />
+    <Compile Remove="./csgen/obj/Debug/net8.0/*.cs" />
   </ItemGroup>
 </Project>

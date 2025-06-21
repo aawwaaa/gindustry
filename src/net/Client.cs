@@ -1,5 +1,10 @@
+using Gindustry.IO.Save;
+using Gindustry.Net;
+using Gindustry.Utils;
 using Godot;
 using System;
+
+namespace Gindustry;
 
 public partial class Vars
 {
@@ -44,7 +49,7 @@ public partial class Vars
 
         public void Reset()
         {
-            Vars.Net = new DefaultNetLayer();
+            Vars.Net = new Net.DefaultNetLayer();
             if (GodotObject.IsInstanceValid(RemoteSaveDataLayer))
                 RemoteSaveDataLayer.QueueFree();
             RemoteSaveDataLayer = new RemoteSaveDataLayer();

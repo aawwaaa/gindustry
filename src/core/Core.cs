@@ -1,7 +1,11 @@
+using Gindustry.Object;
+using Gindustry.Utils;
 using Godot;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
+namespace Gindustry;
 
 public partial class Vars{
     public enum State
@@ -92,12 +96,30 @@ public partial class Vars{
         public async Task StartLoad()
         {
             state.SetState(State.Loading);
+            // 如果在编辑器环境下，等待5秒以便调试器附加
+            if (IsEditorEnvironment())
+            {
+                Logger.Info("Editor environment detected, waiting up to 5 seconds for debugger to attach...");
+                for (int i = 0; i < 50; i++)
+                {
+                    if (System.Diagnostics.Debugger.IsAttached)
+                    {
+                        Logger.Info("Debugger attached, continuing immediately.");
+                        break;
+                    }
+                    await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
+                }
+            }
             var progress = Log.RegisterProgressTracker(100, "Loading", logger.source);
+            progress.Name = "Loading GA";
+            GA.Instance.LoadStatics();
+            progress.Progress += 1;
+
             progress.Name = "Searching mods";
             Mods.SearchModFolder("res://mods/");
             Mods.SearchModFolder("user://mods/");
             Mods.LoadEnableConfigs();
-            progress.Progress += 5;
+            progress.Progress += 4;
 
             progress.Name = "Checking dependencies";
             var errors = Mods.CheckErrors();
@@ -143,7 +165,7 @@ public partial class Vars{
             if (IsEditorEnvironment()) 
             {
                 progress.Name = "Discovering tests";
-                await Tests.DiscoverTestsDir("res://test/");
+                await Tests.DiscoverTestsDir("res://test");
             }
             progress.Progress += 5;
 

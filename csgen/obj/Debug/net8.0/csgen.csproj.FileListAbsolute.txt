@@ -1,0 +1,13 @@
+/home/user/Desktop/projects/gindustry/csgen/bin/Debug/net8.0/csgen.deps.json
+/home/user/Desktop/projects/gindustry/csgen/bin/Debug/net8.0/csgen.dll
+/home/user/Desktop/projects/gindustry/csgen/bin/Debug/net8.0/csgen.pdb
+/home/user/Desktop/projects/gindustry/csgen/obj/Debug/net8.0/csgen.csproj.AssemblyReference.cache
+/home/user/Desktop/projects/gindustry/csgen/obj/Debug/net8.0/csgen.GeneratedMSBuildEditorConfig.editorconfig
+/home/user/Desktop/projects/gindustry/csgen/obj/Debug/net8.0/csgen.AssemblyInfoInputs.cache
+/home/user/Desktop/projects/gindustry/csgen/obj/Debug/net8.0/csgen.AssemblyInfo.cs
+/home/user/Desktop/projects/gindustry/csgen/obj/Debug/net8.0/csgen.csproj.CoreCompileInputs.cache
+/home/user/Desktop/projects/gindustry/csgen/obj/Debug/net8.0/csgen.sourcelink.json
+/home/user/Desktop/projects/gindustry/csgen/obj/Debug/net8.0/csgen.dll
+/home/user/Desktop/projects/gindustry/csgen/obj/Debug/net8.0/refint/csgen.dll
+/home/user/Desktop/projects/gindustry/csgen/obj/Debug/net8.0/csgen.pdb
+/home/user/Desktop/projects/gindustry/csgen/obj/Debug/net8.0/ref/csgen.dll
