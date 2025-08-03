@@ -38,8 +38,8 @@ public partial class Vars
         {
             ulong id = objectIncId;
             do{
-                objectIncId++;
-            }while(objects.ContainsKey(id));
+                objectIncId = (objectIncId + 1) & 0x7FFFFFFFFFFFFFFF;
+            }while(objects.ContainsKey(id) || objectIncId == 0);
             return id;
         }
 
@@ -246,12 +246,10 @@ public partial class Vars
 
             Registry.ObjectTypeIncId = 1;
             
-            var size = r.U32();
-
-            for (int i = 0; i < size; i++)
+            var objectTypeUuids = r.Iter<List<string>, string>(reader => reader.S());
+            
+            foreach (var uuid in objectTypeUuids)
             {
-                var uuid = r.S();
-
                 ObjectType type;
                 if (Registry.ObjectTypes.ContainsKey(uuid))
                     type = Registry.ObjectTypes[uuid];

@@ -60,14 +60,23 @@ public partial class Vars
             }
         }
 
-        public SaveDataLayer SaveDataLayer { get; set; }
+        private SaveDataLayer saveDataLayer;
+        public SaveDataLayer SaveDataLayer {
+            get => saveDataLayer;
+            set
+            {
+                saveDataLayer = value;
+
+                
+            }
+        }
         public readonly Dictionary<string, SaveDataComponent> saveDataComponents = new Dictionary<string, SaveDataComponent>();
 
         [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable, CallLocal = false)]
         public void SetPaused(bool v)
         {
             if (Vars.Client.PostToServer(this, nameof(SetPaused), v)) return;
-            if (!Vars.Server.IsCallerHasPermission(Multiplayer, "Game/SetPaused"))
+            if (!Multiplayer.IsCallerHasPermission("Game/SetPaused"))
                 return;
             // Sync(nameof(SetPausedRpc), v);
             SetPausedRpc(v);
@@ -206,10 +215,9 @@ public partial class Vars
                 if (savePreset == null)
                     throw new Exception($"Preset {r.S()} not found");
                 savePreset.LoadPresetData(r);
-                var size = r.U16();
-                for(int i = 0; i < size; i++)
+                var componentIds = r.Iter<List<string>, string>(reader => reader.S());
+                foreach(var id in componentIds)
                 {
-                    var id = r.S();
                     if (!SaveDataComponent.SaveDataComponentInitList.ContainsKey(id))
                         throw new Exception($"SaveDataComponent {id} not found");
                     var func = SaveDataComponent.SaveDataComponentInitList[id];
@@ -221,8 +229,6 @@ public partial class Vars
                 }
                 savePreset.EnablePreset();
                 savePreset.ApplyPreset();
-
-                // Vars.Players.LoadData(r);
 
                 savePreset.LoadAfterWorldLoad();
             });
@@ -254,11 +260,6 @@ public partial class Vars
                     else
                         pair.Value.SaveData(w);
                 }
-
-                // if (toClient)
-                //     Vars.Players.SaveDataEmpty(w);
-                // else
-                //     Vars.Players.SaveData(w);
             });
         }
     }

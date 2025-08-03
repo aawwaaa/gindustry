@@ -13,7 +13,8 @@ internal class Render {
         PropertiesAssignable = 5,
         Methods = 6,
         VirtualMethods = 7,
-        Comments = 8,
+        VirtualMethodsAll = 8,
+        Comments = 9,
     }
     public struct RenderData {
         public Dictionary<string, string> Data;
@@ -45,6 +46,7 @@ internal class Render {
                     "propertiesAssignable" => SectionType.PropertiesAssignable,
                     "methods" => SectionType.Methods,
                     "virtualMethods" => SectionType.VirtualMethods,
+                    "virtualMethodsAll" => SectionType.VirtualMethodsAll,
                     "comments" => SectionType.Comments,
                     _ => throw new Exception($"Unknown section: {current}"),
                 },
@@ -157,6 +159,109 @@ internal class Render {
         LogFile?.Flush();
     }
 
+    // Helper functions for parameter processing
+    private static string GetParamsWithType(Parser.FileContent.Property[] parameters, Template template) {
+        return template.Params(parameters.Select(p =>
+            template.ParamWithType(p.Type.For(template.Name), template.Identity(p.Name))
+        ));
+    }
+
+    private static string GetParams(Parser.FileContent.Property[] parameters, Template template) {
+        return template.Params(parameters.Select(p => template.Identity(p.Name)));
+    }
+
+    private static string GetParamsAppend(Parser.FileContent.Property[] parameters, Template template) {
+        return template.ParamsAppend(parameters.Select(p => template.Identity(p.Name)));
+    }
+
+    private static string GetParamsVariantConverted(Parser.FileContent.Property[] parameters, Template template) {
+        return template.Params(parameters.Select((p, i) =>
+            $"global::Godot.NativeInterop.VariantUtils.ConvertTo<{p.Type.For(template.Name)}>(Params[{i}])"
+        ));
+    }
+
+    // Helper functions for return type handling
+    private static bool IsVoidReturnType(Parser.FileContent.Type returnType, Template template) {
+        return returnType.For(template.Name) == "void";
+    }
+
+    private static Dictionary<string, string> GetReturnTypeData(Parser.FileContent.Type returnType, Template template) {
+        var isVoid = IsVoidReturnType(returnType, template);
+        var returnTypeString = returnType.For(template.Name);
+        
+        return new Dictionary<string, string> {
+            ["RetIfNotVoid"] = isVoid ? "" : "ret = global::Godot.NativeInterop.VariantUtils.CreateFrom<" + returnTypeString + ">(",
+            ["RetIfVoid"] = isVoid ? ";\n            ret = default;" : ");",
+            ["ReturnIfNotVoid"] = isVoid ? "" : "return (" + returnTypeString + ")",
+            ["ReturnIfVoid"] = isVoid ? "\n            return;" : "",
+        };
+    }
+
+    // Dictionary builder functions
+    private static Dictionary<string, string> BuildConstructorDictionary(Parser.FileContent.Method constructor, Template template) {
+        return new Dictionary<string, string> {
+            ["ParamsAppendWithType"] = template.ParamsAppend(constructor.Parameters.Select(p =>
+                template.ParamWithType(p.Type.For(template.Name), template.Identity(p.Name))
+            )),
+            ["ParamsWithType"] = GetParamsWithType(constructor.Parameters, template),
+            ["ParamsAppend"] = GetParamsAppend(constructor.Parameters, template),
+            ["ParamsCount"] = constructor.Parameters.Length.ToString(),
+            ["Params"] = GetParams(constructor.Parameters, template),
+        };
+    }
+
+    private static Dictionary<string, string> BuildMethodDictionary(Parser.FileContent.Method method, Template template) {
+        return new Dictionary<string, string> {
+            ["Name"] = method.Name,
+            ["ReturnType"] = method.ReturnType.For(template.Name),
+            ["ParamsWithType"] = GetParamsWithType(method.Parameters, template),
+            ["ParamsCount"] = method.Parameters.Length.ToString(),
+            ["Params"] = GetParams(method.Parameters, template),
+        };
+    }
+
+    private static Dictionary<string, string> BuildVirtualMethodDictionary(Parser.FileContent.Method method, Template template) {
+        var dictionary = new Dictionary<string, string> {
+            ["Name"] = method.Name,
+            ["Accessibility"] = method.Accessibility,
+            ["ReturnType"] = method.ReturnType.For(template.Name),
+            ["ParamsWithType"] = GetParamsWithType(method.Parameters, template),
+            ["ParamsVariantConverted"] = GetParamsVariantConverted(method.Parameters, template),
+            ["ParamsCount"] = method.Parameters.Length.ToString(),
+            ["ParamsAppend"] = GetParamsAppend(method.Parameters, template),
+            ["Params"] = GetParams(method.Parameters, template),
+        };
+
+        // Add return type handling
+        foreach (var kvp in GetReturnTypeData(method.ReturnType, template)) {
+            dictionary[kvp.Key] = kvp.Value;
+        }
+
+        return dictionary;
+    }
+
+    private static Dictionary<string, string> BuildPropertyDictionary(Parser.FileContent.Property property, Template template) {
+        return new Dictionary<string, string> {
+            ["Name"] = property.Name,
+            ["Type"] = property.Type.For(template.Name),
+        };
+    }
+
+    private static Dictionary<string, string> BuildSignalDictionary(Parser.FileContent.Signal signal, Template template) {
+        return new Dictionary<string, string> {
+            ["Name"] = signal.Name,
+            ["ParamsWithType"] = GetParamsWithType(signal.Parameters, template),
+            ["ParamsAppend"] = GetParamsAppend(signal.Parameters, template),
+        };
+    }
+
+    private static Dictionary<string, string> BuildOwnedSignalDictionary(Parser.FileContent.Signal signal, Template template) {
+        return new Dictionary<string, string> {
+            ["Name"] = signal.Name,
+            ["ParamsWithType"] = GetParamsWithType(signal.Parameters, template),
+        };
+    }
+
     private static RenderData GenerateData(Parser.FileContent fileContent, Template template) {
         var data = new RenderData();
         data.Data = new () {
@@ -166,66 +271,14 @@ internal class Render {
             ["BaseClassTargetName"] = fileContent.BaseClassTargetName != ""? fileContent.BaseClassTargetName: template.BaseClassTargetName,
             ["BaseClassFullName"] = fileContent.BaseClassFullName,
         };
-        data.SectionData[SectionType.Constructors] = fileContent.Constructors.Select(c => new Dictionary<string, string> {
-            ["ParamsAppendWithType"] = template.ParamsAppend(c.Parameters.Select(p =>
-                template.ParamWithType(p.Type.For(template.Name), template.Identity(p.Name))
-            )),
-            ["ParamsWithType"] = template.Params(c.Parameters.Select(p =>
-                template.ParamWithType(p.Type.For(template.Name), template.Identity(p.Name))
-            )),
-            ["ParamsAppend"] = template.ParamsAppend(c.Parameters.Select(p => template.Identity(p.Name))),
-            ["ParamsCount"] = c.Parameters.Length.ToString(),
-            ["Params"] = template.Params(c.Parameters.Select(p => template.Identity(p.Name))),
-        }).ToList();
-        data.SectionData[SectionType.Methods] = fileContent.Methods.Select(m => new Dictionary<string, string> {
-            ["Name"] = m.Name,
-            ["ReturnType"] = m.ReturnType.For(template.Name),
-            ["ParamsWithType"] = template.Params(m.Parameters.Select(p =>
-                template.ParamWithType(p.Type.For(template.Name), template.Identity(p.Name))
-            )),
-            ["ParamsCount"] = m.Parameters.Length.ToString(),
-            ["Params"] = template.Params(m.Parameters.Select(p => template.Identity(p.Name))),
-        }).ToList();
-        data.SectionData[SectionType.VirtualMethods] = fileContent.VirtualMethods.Select(m => new Dictionary<string, string> {
-            ["Name"] = m.Name,
-            ["Accessibility"] = m.Accessibility,
-            ["ReturnType"] = m.ReturnType.For(template.Name),
-            ["ParamsWithType"] = template.Params(m.Parameters.Select(p =>
-                template.ParamWithType(p.Type.For(template.Name), template.Identity(p.Name))
-            )),
-            ["ParamsVariantConverted"] = template.Params(m.Parameters.Select((p, i) =>
-                $"global::Godot.NativeInterop.VariantUtils.ConvertTo<{p.Type.For(template.Name)}>(Params[{i}])"
-            )),
-            ["ParamsCount"] = m.Parameters.Length.ToString(),
-            ["ParamsAppend"] = template.ParamsAppend(m.Parameters.Select(p => template.Identity(p.Name))),
-            ["Params"] = template.Params(m.Parameters.Select(p => template.Identity(p.Name))),
-            ["RetIfNotVoid"] = m.ReturnType.For(template.Name) == "void" ? "" : "ret = global::Godot.NativeInterop.VariantUtils.CreateFrom<"
-                + m.ReturnType.For(template.Name) + ">(",
-            ["RetIfVoid"] = m.ReturnType.For(template.Name) == "void" ? ";\n            ret = default;" : ");",
-            ["ReturnIfNotVoid"] = m.ReturnType.For(template.Name) == "void" ? "" : "return (" + m.ReturnType.For(template.Name) + ")",
-            ["ReturnIfVoid"] = m.ReturnType.For(template.Name) == "void" ? "\n            return;" : "",
-        }).ToList();
-        data.SectionData[SectionType.Properties] = fileContent.Properties.Where(p => !p.Assignable).Select(p => new Dictionary<string, string> {
-            ["Name"] = p.Name,
-            ["Type"] = p.Type.For(template.Name),
-        }).ToList();
-        data.SectionData[SectionType.PropertiesAssignable] = fileContent.Properties.Where(p => p.Assignable).Select(p => new Dictionary<string, string> {
-            ["Name"] = p.Name,
-            ["Type"] = p.Type.For(template.Name),
-        }).ToList();
-        data.SectionData[SectionType.SignalsAll] = fileContent.Signals.Select(s => new Dictionary<string, string> {
-            ["Name"] = s.Name,
-            ["ParamsWithType"] = template.Params(s.Parameters.Select(p =>
-                template.ParamWithType(p.Type.For(template.Name), template.Identity(p.Name))
-            )),
-            ["ParamsAppend"] = template.ParamsAppend(s.Parameters.Select(p => template.Identity(p.Name))),
-        }).ToList();
-        data.SectionData[SectionType.Signals] = fileContent.Signals.Where(s => s.Owned).Select(s => new Dictionary<string, string> {
-            ["Name"] = s.Name,
-            ["ParamsWithType"] = template.Params(s.Parameters.Select(p =>
-                template.ParamWithType(p.Type.For(template.Name), template.Identity(p.Name))
-            )),
-        }).ToList();
+        data.SectionData[SectionType.Constructors] = fileContent.Constructors.Select(c => BuildConstructorDictionary(c, template)).ToList();
+        data.SectionData[SectionType.Methods] = fileContent.Methods.Select(m => BuildMethodDictionary(m, template)).ToList();
+        data.SectionData[SectionType.VirtualMethods] = fileContent.VirtualMethods.Where(m => m.Owned).Select(m => BuildVirtualMethodDictionary(m, template)).ToList();
+        data.SectionData[SectionType.VirtualMethodsAll] = fileContent.VirtualMethods.Select(m => BuildVirtualMethodDictionary(m, template)).ToList();
+        data.SectionData[SectionType.Properties] = fileContent.Properties.Where(p => !p.Assignable).Select(p => BuildPropertyDictionary(p, template)).ToList();
+        data.SectionData[SectionType.PropertiesAssignable] = fileContent.Properties.Where(p => p.Assignable).Select(p => BuildPropertyDictionary(p, template)).ToList();
+        data.SectionData[SectionType.SignalsAll] = fileContent.Signals.Select(s => BuildSignalDictionary(s, template)).ToList();
+        data.SectionData[SectionType.Signals] = fileContent.Signals.Where(s => s.Owned).Select(s => BuildOwnedSignalDictionary(s, template)).ToList();
         data.SectionData[SectionType.Comments] = fileContent.Comments.Select(c => new Dictionary<string, string> {
             ["Comment"] = c,
         }).ToList();

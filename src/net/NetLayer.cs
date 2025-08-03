@@ -2,6 +2,7 @@ using Godot;
 using System.Runtime.CompilerServices;
 using System;
 using Gindustry.Object;
+using System.Linq;
 
 namespace Gindustry.Net;
 
@@ -18,7 +19,11 @@ public partial class NetLayer: Node
 
     public virtual bool Post(Node rpcBase, string name, params Variant[] args)
     {
-        return true;
+        var pass = Vars.Server.state == Vars.Vars_Server.ServerState.Idle
+            || rpcBase.Multiplayer.GetRemoteSenderId() != 0;
+        if (!pass)
+            rpcBase.Callv(Node.MethodName.Rpc, [name, .. args]);
+        return pass;
     }
 
     public virtual void Sync(Node rpcBase, string name, params Variant[] args)

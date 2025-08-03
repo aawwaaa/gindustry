@@ -68,6 +68,7 @@ internal class Parser
             public string Accessibility = "";
             public Type ReturnType = new();
             public Property[] Parameters = [];
+            public bool Owned = true;
             public Method() { }
         }
         public struct Signal {
@@ -103,34 +104,58 @@ internal class Parser
     }
 
     private static AnaylsisResult AnaylsisResult;
+    private static Dictionary<string, FileContent> ParsedResults = new();
+
+    /// <summary>
+    /// 获取基于继承依赖的解析顺序，确保基类先于派生类被解析
+    /// </summary>
+    private static List<string> GetSortedParsingOrder(AnaylsisResult anaylsisResult)
+    {
+        var visited = new HashSet<string>();
+        var result = new List<string>();
+        
+        void Visit(string className)
+        {
+            if (visited.Contains(className))
+                return;
+                
+            visited.Add(className);
+            
+            // 先访问基类
+            if (anaylsisResult.Infos.TryGetValue(className, out var info))
+            {
+                if (!string.IsNullOrEmpty(info.BaseInfo) && anaylsisResult.Infos.ContainsKey(info.BaseInfo))
+                {
+                    Visit(info.BaseInfo);
+                }
+            }
+            
+            result.Add(className);
+        }
+        
+        // 访问所有类，确保基类先于派生类
+        foreach (var className in anaylsisResult.Infos.Keys)
+        {
+            Visit(className);
+        }
+        
+        return result;
+    }
 
     public static ParserResult Execute(AnaylsisResult anaylsisResult){
         var result = new ParserResult();
         AnaylsisResult = anaylsisResult;
-        foreach (var info in anaylsisResult.Infos) {
-            Log("Parse:", info.Key);
-            result.FileContents[info.Key] = Parse(info.Value);
+        ParsedResults.Clear();
+        
+        // 使用基于继承依赖的排序顺序解析
+        var sortedOrder = GetSortedParsingOrder(anaylsisResult);
+        foreach (var className in sortedOrder) {
+            Log("Parse:", className);
+            var fileContent = Parse(anaylsisResult.Infos[className]);
+            ParsedResults[className] = fileContent;
         }
-        // INSERT_YOUR_CODE
-        // 移除子类与基类重复的属性
-        foreach (var info in anaylsisResult.Infos)
-        {
-            var fileContent = result.FileContents[info.Key];
-            // 获取基类的 TargetName
-            if (anaylsisResult.Infos.TryGetValue(info.Value.BaseInfo, out var baseInfo))
-            {
-                if (result.FileContents.TryGetValue(baseInfo.FullName, out var baseFileContent))
-                {
-                    // 用 HashSet 加速查找
-                    var basePropertyNames = new HashSet<string>(baseFileContent.Properties.Select(p => p.Name));
-                    // 只保留子类独有的属性
-                    fileContent.Properties = fileContent.Properties
-                        .Where(p => !basePropertyNames.Contains(p.Name))
-                        .ToList();
-                    result.FileContents[info.Key] = fileContent;
-                }
-            }
-        }
+        result.FileContents = ParsedResults;
+        
         return result;
     }
 
@@ -151,6 +176,7 @@ internal class Parser
         fileContent.TargetName = info.TargetName;
         Anaylsis.AnaylsisInfo? baseInfo = info.BaseInfo != "" ? AnaylsisResult.Infos[info.BaseInfo] : null;
         fileContent.BaseClassTargetName = baseInfo?.TargetName ?? "";
+        fileContent.BaseClassFullName = baseInfo?.FullName ?? "";
     }
 
     private static string TypeString(ITypeSymbol type)
@@ -297,6 +323,20 @@ internal class Parser
                 ReturnType = Type(info.Symbol),
             });
         }
+        // 如果有基类信息，则将基类的所有虚方法复制到当前类，owned=false
+        if (!string.IsNullOrEmpty(info.BaseInfo) && ParsedResults.TryGetValue(info.BaseInfo, out var baseFileContent))
+        {
+            foreach (var baseVirtualMethod in baseFileContent.VirtualMethods)
+            {
+                // 检查当前类是否已存在同名虚方法，避免重复
+                if (!fileContent.VirtualMethods.Any(m => m.Name == baseVirtualMethod.Name))
+                {
+                    var copiedMethod = baseVirtualMethod;
+                    copiedMethod.Owned = false;
+                    fileContent.VirtualMethods.Add(copiedMethod);
+                }
+            }
+        }
     }
 
     private static void MethodsSymbol(INamedTypeSymbol symbol, ref FileContent fileContent)
@@ -326,12 +366,12 @@ internal class Parser
                     Type = Type(p.Type),
                 })]
             };
-            if (method.IsVirtual || method.IsOverride)
+            if (method.IsVirtual)
                 fileContent.VirtualMethods.Add(methodContent);
             else if (method.MethodKind == MethodKind.Constructor)
                 fileContent.Constructors.Add(methodContent);
-            else
-                fileContent.Methods.Add(methodContent);
+            else if (method.IsOverride) {}
+            else fileContent.Methods.Add(methodContent);
         }
     }
 
@@ -340,6 +380,15 @@ internal class Parser
         PropertiesSymbol(info.Symbol, ref fileContent);
         foreach (var baseClass in info.BaseClasses) {
             PropertiesSymbol(baseClass.Symbol, ref fileContent);
+        }
+        
+        // 移除与基类重复的属性
+        if (!string.IsNullOrEmpty(info.BaseInfo) && ParsedResults.TryGetValue(info.BaseInfo, out var baseFileContent))
+        {
+            var basePropertyNames = new HashSet<string>(baseFileContent.Properties.Select(p => p.Name));
+            fileContent.Properties = fileContent.Properties
+                .Where(p => !basePropertyNames.Contains(p.Name))
+                .ToList();
         }
     }
     private static void PropertiesSymbol(INamedTypeSymbol symbol, ref FileContent fileContent)

@@ -41,6 +41,8 @@ public partial class SaveDataLayer: Node
     public virtual void SaveAll(){}
 
     protected static string PS (Vector3I pos) => $"{pos.X}_{pos.Y}_{pos.Z}";
+
+    public virtual void CreateLoadManager(LoadManager loadManager) {}
 }
 
 public partial class MemorySaveDataLayer: SaveDataLayer
@@ -148,9 +150,17 @@ public partial class SaveFileSaveDataLayer: SaveDataLayer
 
     // It means all the calculation should be done in the local machine
     public override int GetChainLoadMask() => ChainLoadMask.All;
+
+    public override void CreateLoadManager(LoadManager loadManager)
+    {
+        
+    }
 }
 
 public partial class RemoteSaveDataLayer: SaveDataLayer
 {
     public void RemoteData(params object[] args) {}
+
+    public override void CreateLoadManager(LoadManager loadManager)
+    {}
 }

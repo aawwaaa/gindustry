@@ -104,39 +104,37 @@ public partial class CommandLineParser: GodotObject
 
     public void Parse(string[] args)
     {
-        for (int i = 0; i < args.Length; i++)
-        {
-            string arg = args[i];
-            if (arg.StartsWith("--"))
-            {
-                // 处理长名称参数
-                string[] parts = arg.Substring(2).Split(new[] { '=' }, 2);
-                string name = parts[0];
-                string[] values = parts.Length > 1 ? new[] { parts[1] } : new string[0];
-
-                if (_propertyArgs.TryGetValue(name, out var propertyArg))
-                    propertyArg.DoAction(values);
-                else if (_actionArgs.TryGetValue(name, out var actionArg))
-                    actionArg.DoAction(values);
-                else
-                    throw new ArgumentException($"Unknown argument: {name}");
+        var operation = "";
+        var argBuffer = new List<string>();
+        void Execute() {
+            if (operation == "") return;
+            if (_propertyArgs.TryGetValue(operation, out var propertyArg)) {
+                propertyArg.DoAction(argBuffer.ToArray());
+            } else if (_actionArgs.TryGetValue(operation, out var actionArg)) {
+                actionArg.DoAction(argBuffer.ToArray());
+            } else {
+                throw new ArgumentException($"Unknown argument: {operation}");
             }
-            else if (arg.StartsWith("-"))
-            {
-                // 处理短名称参数
-                string shortName = arg.Substring(1);
-                if (_propertyArgs.TryGetValue(shortName, out var propertyArg))
-                    propertyArg.DoAction(new string[0]);
-                else if (_actionArgs.TryGetValue(shortName, out var actionArg))
-                    actionArg.DoAction(new string[0]);
-                else
-                    throw new ArgumentException($"Unknown short argument: {shortName}");
+            operation = "";
+            argBuffer.Clear();
+        }
+        foreach(var arg in args) {
+            if (!arg.StartsWith("-")) {
+                argBuffer.Add(arg);
+                continue;
             }
-            else
-            {
-                // 处理无前缀参数
-                throw new ArgumentException($"Unexpected argument: {arg}");
+            Execute();
+            if (arg.StartsWith("--")) {
+                operation = arg.Substring(2);
+                if (operation.Contains("=")) {
+                    var parts = operation.Split(new[] { '=' }, 2);
+                    operation = parts[0];
+                    argBuffer.Add(parts[1]);
+                }
+            } else {
+                operation = arg.Substring(1);
             }
         }
+        Execute();
     }
 }

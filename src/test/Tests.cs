@@ -32,7 +32,7 @@ namespace Gindustry.Test
             var fileName = dir.GetNext();
             while (!string.IsNullOrEmpty(fileName))
             {
-                var fullPath = dirPath + "/" + fileName;
+                var fullPath = dirPath.TrimEnd('/') + "/" + fileName;
                 if (dir.CurrentIsDir())
                 {
                     // 使用新的 DirAccess 实例递归子目录
@@ -80,10 +80,7 @@ namespace Gindustry.Test
                             var test = new Test
                             {
                                 name = ((string)method["name"])[5..],
-                                action = r =>
-                                {
-                                    return (TestRun)instance.Call((string)method["name"], r);
-                                }
+                                action = r => instance.Call((string)method["name"], r)
                             };
                             GetOrCreateGroup(gdScript.ResourcePath).Add(test);
                             count++;
@@ -102,10 +99,8 @@ namespace Gindustry.Test
                             var test = new Test
                             {
                                 name = attr.Name,
-                                action = r =>
-                                {
-                                    return (TestRun)method.Invoke(instance, [r]);
-                                }
+                                excludeBatch = attr.ExcludeBatch,
+                                action = r => method.Invoke(instance, [r])
                             };
                             GetOrCreateGroup(attr.Group).Add(test);
                             count++;

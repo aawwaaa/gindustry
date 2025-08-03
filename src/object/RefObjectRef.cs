@@ -1,6 +1,7 @@
 using Godot;
 using System.Threading.Tasks;
 using Gindustry.IO;
+using System;
 
 namespace Gindustry.Object;
 
@@ -53,5 +54,28 @@ public partial class RefObjectRef : RefCounted, Saveable
     public static implicit operator RefObject(RefObjectRef v)
     {
         return v.V;
+    }
+}
+
+public partial class RefObjectRefGeneric<T> : RefObjectRef where T : RefObject
+{
+    public new T V
+    {
+        get => base.V as T;
+        set => base.V = value;
+    }
+
+    public void LoadData(Reader r)
+    {
+        this._LoadData(r);
+    }
+    public void SaveData(Writer w)
+    {
+        this._SaveData(w);
+    }
+
+    public static implicit operator T(RefObjectRefGeneric<T> v)
+    {
+        return v?.V as T;
     }
 }

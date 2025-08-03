@@ -67,6 +67,8 @@ public partial class ObjectType : Resource
         if (callCreate) obj.ObjectCreate();
         return obj;
     }
+
+    public virtual bool _Visible() { return true; }
 }
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]

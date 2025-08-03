@@ -27,19 +27,14 @@ public partial class SaveMeta : RefCounted
         // Version 0
         if (SaveMetaVersion < 0) return;
 
-        int size = reader.I32();
-
-        for (int i = 0; i < size; i++)
-        {
-            string modId = reader.S();
-
-            string modVersion = reader.S();
-
-            Mods[modId] = new ModInfo.ModRef {
+        reader.Iter(Mods, r => {
+            string modId = r.S();
+            string modVersion = r.S();
+            return new KeyValuePair<string, ModInfo.ModRef>(modId, new ModInfo.ModRef {
                 Id = modId,
                 Min = modVersion
-            };
-        }
+            });
+        });
     }
 
     public void SaveTo(Writer writer)

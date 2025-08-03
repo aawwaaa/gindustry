@@ -3,7 +3,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-namespace Gindustry.Entity.Type.Base;
+namespace Gindustry.Entities.Type.Base;
 
 [GDScriptAdapterTarget("GA_StandaloneEntity")]
 [GlobalClass]
@@ -83,4 +83,4 @@ public partial class StandaloneEntity : Entity
         }
         chunksUpdated = false;
     }
-} 
+}

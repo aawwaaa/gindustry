@@ -4,8 +4,9 @@ using Gindustry.Attributes;
 using Gindustry.World;
 using Gindustry.IO;
 using Gindustry.Object;
+using System.Collections.Generic;
 
-namespace Gindustry.Entity;
+namespace Gindustry.Entities;
 
 [GDScriptAdapterTarget("GA_Entity")]
 [GlobalClass]
@@ -16,6 +17,17 @@ public partial class Entity: RefObject
 
     public virtual Dimension Dim { get => _dimension; set => _dimension = value; }
     public virtual Vector3 Position { get => _position; set => _position = value; }
+
+    public List<Entity> Children { get; set; } = new();
+
+    public void AddChild(Entity child)
+    {
+        Children.Add(child);
+    }
+    public void RemoveChild(Entity child)
+    {
+        Children.Remove(child);
+    }
 
     public override void _LoadData(Reader r) 
     {

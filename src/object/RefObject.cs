@@ -11,7 +11,7 @@ namespace Gindustry.Object;
 [GlobalClass]
 public partial class RefObject : GodotObject, Saveable
 {
-    public ulong objectId = 0;
+    public ulong objectId = 0; // NOTE: 0 is invalid id, only 63 bits are available, see MeshChunk.cs
     public ObjectType objectType = null;
     public bool objectReadyFlag = false;
 

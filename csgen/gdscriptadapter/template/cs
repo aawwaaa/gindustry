@@ -21,7 +21,7 @@ public class =TargetName: =FullName, Gindustry.Object.GDScriptAdapter {
         _proxy.Free();
     }
 
-<<< =virtualMethods
+<<< =virtualMethodsAll
     private bool _=Name_overriden = true;
     =Accessibility override =ReturnType =Name(=ParamsWithType) {
         if (_=Name_overriden) {
@@ -41,14 +41,14 @@ public class =TargetName: =FullName, Gindustry.Object.GDScriptAdapter {
 
 #pragma warning disable CS0109
     public new class PropertyName : =FullName.PropertyName {
-<<< =virtualMethods
+<<< =virtualMethodsAll
         public new static readonly global::Godot.StringName @_=Name_overriden = "_=Name_overriden";
 >>>
     }
     [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     protected override bool SetGodotClassPropertyValue(in godot_string_name name, in godot_variant value)
     {
-<<< =virtualMethods
+<<< =virtualMethodsAll
         if (name == PropertyName.@_=Name_overriden) {
             this.@_=Name_overriden = global::Godot.NativeInterop.VariantUtils.ConvertTo<bool>(value);
             return true;
@@ -60,7 +60,7 @@ public class =TargetName: =FullName, Gindustry.Object.GDScriptAdapter {
     [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     protected override bool GetGodotClassPropertyValue(in godot_string_name name, out godot_variant value)
     {
-<<< =virtualMethods
+<<< =virtualMethodsAll
         if (name == PropertyName.@_=Name_overriden) {
             value = global::Godot.NativeInterop.VariantUtils.CreateFrom<bool>(this.@_=Name_overriden);
             return true;
@@ -70,14 +70,14 @@ public class =TargetName: =FullName, Gindustry.Object.GDScriptAdapter {
     }
 
     public new class MethodName : =FullName.MethodName {
-<<< =virtualMethods
+<<< =virtualMethodsAll
         public new static readonly global::Godot.StringName @super_=Name = "super_=Name";
 >>>
     }
     [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     protected override bool InvokeGodotClassMethod(in godot_string_name method, Godot.NativeInterop.NativeVariantPtrArgs Params, out godot_variant ret)
     {
-<<< =virtualMethods
+<<< =virtualMethodsAll
         if (method == MethodName.@super_=Name && Params.Count == =ParamsCount) {
             =RetIfNotVoid base.=Name(=ParamsVariantConverted)=RetIfVoid
             return true;
@@ -88,7 +88,7 @@ public class =TargetName: =FullName, Gindustry.Object.GDScriptAdapter {
     [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     protected override bool HasGodotClassMethod(in godot_string_name method)
     {
-<<< =virtualMethods
+<<< =virtualMethodsAll
         if (method == MethodName.@super_=Name) {
            return true;
         }

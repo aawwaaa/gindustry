@@ -42,7 +42,6 @@ project/assembly_name="gindustry"
 
 movie_writer/movie_file="E:/workspace/out.avi"
 movie_writer/disable_vsync=true
-run/main_run_args="--load-preset gindustry:preset:test"
 
 [filesystem]
 
@@ -150,6 +149,7 @@ locale/test="en"
 
 common/physics_ticks_per_second=20
 common/physics_jitter_fix=0.0
+3d/physics_engine="Rapier3D"
 2d/default_gravity=0.0
 
 [rendering]

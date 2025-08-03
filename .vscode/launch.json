@@ -16,19 +16,14 @@
             "address": "127.0.0.1",
             "port": 6007,
             "scene": "main",
-            "profiling": false,
-            "single_threaded_scene": false,
-            "debug_collisions": false,
-            "debug_paths": false,
-            "debug_navigation": false,
-            "debug_avoidance": false,
-            "debug_stringnames": false,
-            "frame_delay": 0,
-            "time_scale": 1.0,
-            "disable_vsync": false,
-            "fixed_fps": 60,
             "additional_options": "",
             "preLaunchTask": "build"
+        },
+        {
+            "name": "SourceGenerator",
+            "type": "coreclr",
+            "request": "attach",
+            "justMyCode": true
         }
     ],
     "compounds": [

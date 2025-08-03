@@ -22,6 +22,7 @@ namespace Gindustry.Test
 
             foreach (var test in tests.Values)
             {
+                if (test.excludeBatch) continue;
                 var run = test.Run(result => results[test.name] = result);
                 runs[test.name] = run;
             }

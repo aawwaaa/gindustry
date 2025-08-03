@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 namespace Gindustry.IO;
 
@@ -82,6 +83,45 @@ public partial class Reader: GodotObject
         for (int i = 0; i < count; i++)
         {
             delegates[i](this);
+        }
+    }
+
+    public I Iter<I, T>(Func<Reader, T> func) where I : ICollection<T>, new()
+    {
+        var count = U32();
+        var list = new I();
+        for (int i = 0; i < count; i++)
+        {
+            list.Add(func(this));
+        }
+        return list;
+    }
+    public void Iter<T>(ICollection<T> collection, Func<Reader, T> func)
+    {
+        var count = U32();
+        for (int i = 0; i < count; i++)
+        {
+            collection.Add(func(this));
+        }
+    }
+    public I Iter<I, K, V>(Func<Reader, KeyValuePair<K, V>> func) where I : IDictionary<K, V>, new()
+    {
+        var count = U32();
+        var dict = new I();
+        for (int i = 0; i < count; i++)
+        {
+            var pair = func(this);
+            dict.Add(pair);
+        }
+        return dict;
+    }
+    public void Iter<K, V>(IDictionary<K, V> dictionary, Func<Reader, KeyValuePair<K, V>> func)
+    {
+        var count = U32();
+        for (int i = 0; i < count; i++)
+        {
+            var pair = func(this);
+            dictionary.Add(pair);
         }
     }
 }

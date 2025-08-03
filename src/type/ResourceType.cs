@@ -35,4 +35,6 @@ public partial class ResourceType: Resource
     public virtual void _Load(CoroutineBridge c) { c.Finish(); }
     public virtual void _LoadAssets(CoroutineBridge c) { c.Finish(); }
     public virtual void _LoadHeadless(CoroutineBridge c) { c.Finish(); }
+
+    public virtual bool _Visible() { return true; }
 }

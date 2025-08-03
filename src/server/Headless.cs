@@ -30,12 +30,15 @@ public partial class Vars{
 
         public static CommandLineParser parser = new CommandLineParser(
             new List<CommandLineParser.PropertyArg>{
-                new ("lang", lang => TranslationServer.SetLocale(lang)),
+                new ("lang", TranslationServer.SetLocale),
+                new ("multi-instance-id", Log.SetMultiInstanceId),
             }, new List<CommandLineParser.ActionArg>{
                 new ("help", ActionHelp, null, "h"),
                 new ("load-save", s => ActionLoadSave(s[0]), s => s.Length != 1? "load-save <name>": "", "l"),
                 new ("load-preset", s => ActionLoadPreset(s[0]), s => s.Length != 1? "load-preset <presetId>": "", "p"),
-                new ("multiplayer-test", s => ActionMultiplayerTest(s[0]), s => s.Length != 1? "multiplayer-test <presetId>": ""),
+                new ("create-server", s => ActionCreateServer(s[0]), s => s.Length != 1? "create-server <port>": ""),
+                new ("test", ActionTest, null),
+                new ("multiplayer-test", s => ActionMultiplayerTest(s.Length > 0 ? s[0] : null), null),
             }
         );
 
@@ -58,16 +61,29 @@ public partial class Vars{
             Vars.Tree.Quit();
         }
 
+        public void LoadMultiInstanceId()
+        {
+            var args = OS.GetCmdlineUserArgs();
+            foreach(var arg in args) {
+                if (arg.StartsWith("--multi-instance-id=")) {
+                    Log.SetMultiInstanceId(arg.Substring("--multi-instance-id=".Length));
+                }
+            }
+        }
+
         private static void ActionHelp(string[] args)
         {
             _logger.Info(@"
 Properties:
     --lang=<locale> Set language of translation
+    --multi-instance-id=<id> Set multi instance id for logging
 Actions:
     --help Show this message
     --load-save <name> Load save
     --load-preset <presetId> Load preset
-    --multiplayer-test <presetId> Test multiplayer
+    --create-server <port> Create server on specified port
+    --test [group] [test] Run tests (all tests, specific group, or specific test)
+    --multiplayer-test <presetId> Test multiplayer with preset
 ");
         }
 
@@ -88,41 +104,158 @@ Actions:
             Vars.Presets.LoadPreset(preset).Wait();
         }
 
+        private static void ActionCreateServer(string portStr)
+        {
+            if (!int.TryParse(portStr, out int port) || port < 1 || port > 65535)
+            {
+                _logger.Error($"Invalid port number: {portStr}. Port must be between 1 and 65535.");
+                Exit();
+                return;
+            }
+
+            try
+            {
+                _logger.Info($"Creating server on port {port}");
+                Vars.Server.CreateServer(port);
+                _logger.Info($"Server created successfully on port {port}");
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Failed to create server on port {port}: {e.Message}");
+                Exit();
+            }
+        }
+
+        private static void ActionTest(string[] args)
+        {
+            try
+            {
+                if (args.Length == 0)
+                {
+                    // Run all tests
+                    _logger.Info("Running all tests...");
+                    int totalTests = 0;
+                    int failedTests = 0;
+                    
+                    foreach (var group in Vars.Tests.groups.Values)
+                    {
+                        group.RunAll(testResults => 
+                        {
+                            foreach (var result in testResults.Values)
+                            {
+                                totalTests++;
+                                if (result.failed)
+                                    failedTests++;
+                            }
+                        });
+                    }
+                    
+                    _logger.Info($"Test results: {totalTests - failedTests}/{totalTests} passed, {failedTests} failed");
+                }
+                else if (args.Length == 1)
+                {
+                    // Run specific group
+                    string groupName = args[0];
+                    if (Vars.Tests.groups.ContainsKey(groupName))
+                    {
+                        _logger.Info($"Running tests in group: {groupName}");
+                        var group = Vars.Tests.groups[groupName];
+                        int totalTests = 0;
+                        int failedTests = 0;
+                        
+                        group.RunAll(testResults => 
+                        {
+                            totalTests = testResults.Count;
+                            foreach (var result in testResults.Values)
+                            {
+                                if (result.failed)
+                                    failedTests++;
+                            }
+                        });
+                        
+                        _logger.Info($"Group {groupName} results: {totalTests - failedTests}/{totalTests} passed, {failedTests} failed");
+                    }
+                    else
+                    {
+                        _logger.Error($"Test group not found: {groupName}");
+                        Exit();
+                    }
+                }
+                else if (args.Length == 2)
+                {
+                    // Run specific test in specific group
+                    string groupName = args[0];
+                    string testName = args[1];
+                    if (Vars.Tests.groups.ContainsKey(groupName))
+                    {
+                        var group = Vars.Tests.groups[groupName];
+                        if (group.tests.ContainsKey(testName))
+                        {
+                            _logger.Info($"Running test: {groupName}.{testName}");
+                            var test = group.tests[testName];
+                            test.Run(testResult => 
+                            {
+                                if (testResult.failed)
+                                    _logger.Error($"Test {groupName}.{testName} failed");
+                                else
+                                    _logger.Info($"Test {groupName}.{testName} passed");
+                            });
+                        }
+                        else
+                        {
+                            _logger.Error($"Test not found: {groupName}.{testName}");
+                            Exit();
+                        }
+                    }
+                    else
+                    {
+                        _logger.Error($"Test group not found: {groupName}");
+                        Exit();
+                    }
+                }
+                else
+                {
+                    _logger.Error("Invalid arguments for test command. Usage: --test [group] [test]");
+                    Exit();
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Error running tests: {e.Message}");
+                Exit();
+            }
+        }
+
         private static async void ActionMultiplayerTest(string presetId)
         {
-            await Vars.Headless.ToSignal(Vars.Tree.CreateTimer(GD.RandRange(0, 0.4f)), "timeout");
-
-            FileAccess file;
-            int runId;
-            if (FileAccess.FileExists("user://runid"))
+            if (string.IsNullOrEmpty(presetId))
             {
-                file = FileAccess.Open("user://runid", FileAccess.ModeFlags.Read);
-                string s = file.GetAsText();
-                file.Close();
-                runId = int.Parse(s);
+                _logger.Error("Preset ID is required for multiplayer test");
+                Exit();
+                return;
             }
-            else
-                runId = 0;
 
-            file = FileAccess.Open("user://runid", FileAccess.ModeFlags.Write);
-            file.StoreString((runId + 1).ToString());
-            file.Close();
-
-            _logger.Info("Runid " + runId);
-
-            if (runId % 2 == 0)
+            try
             {
                 var preset = Preset.Type.Get<Preset>(presetId);
-                await Vars.Presets.LoadPreset(preset);
-                Vars.Server.CreateServer(1234);
-            }
-            else
-            {
-                Vars.Tree.CreateTimer(0.1f).Timeout += () =>
+                if (preset == null)
                 {
-                    Vars.Client.ConfigPlayerToken.V = Util.GenerateToken();
-                    Vars.Client.ConnectTo("localhost", 1234);
-                };
+                    _logger.Error($"Unknown preset: {presetId}");
+                    Exit();
+                    return;
+                }
+
+                _logger.Info($"Starting multiplayer test with preset: {presetId}");
+                await Vars.Presets.LoadPreset(preset);
+                
+                // Create server for multiplayer testing
+                Vars.Server.CreateServer(1234);
+                _logger.Info("Multiplayer test server created on port 1234");
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Error in multiplayer test: {e.Message}");
+                Exit();
             }
         }
     }

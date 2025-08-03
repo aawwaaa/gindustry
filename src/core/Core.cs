@@ -81,7 +81,7 @@ public partial class Vars{
             if (state.GetState() != State.Loading)
                 return;
             state.SetState(State.MainMenu);
-            Vars.Headless.ApplyArgsFromCmdline();
+            Vars.Headless.CallDeferred("ApplyArgsFromCmdline");
         }
 
         public bool IsHeadlessClient()
@@ -95,12 +95,13 @@ public partial class Vars{
 
         public async Task StartLoad()
         {
+            Headless.LoadMultiInstanceId();
             state.SetState(State.Loading);
             // 如果在编辑器环境下，等待5秒以便调试器附加
             if (IsEditorEnvironment())
             {
-                Logger.Info("Editor environment detected, waiting up to 5 seconds for debugger to attach...");
-                for (int i = 0; i < 50; i++)
+                Logger.Info("Editor environment detected, waiting up to 1 seconds for debugger to attach...");
+                for (int i = 0; i < 10; i++)
                 {
                     if (System.Diagnostics.Debugger.IsAttached)
                     {

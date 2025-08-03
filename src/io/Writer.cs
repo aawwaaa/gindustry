@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using Gindustry.Utils;
+using System.Collections.Generic;
 
 namespace Gindustry.IO;
 
@@ -69,6 +70,23 @@ public partial class Writer: GodotObject
         foreach (var d in delegates)
         {
             d(this);
+        }
+    }
+    
+    public void Iter<T>(ICollection<T> collection, Action<Writer, T> func)
+    {
+        U32((uint)collection.Count);
+        foreach (var item in collection)
+        {
+            func(this, item);
+        }
+    }
+    public void Iter<K, V>(IDictionary<K, V> dictionary, Action<Writer, K, V> func)
+    {
+        U32((uint)dictionary.Count);
+        foreach (var item in dictionary)
+        {
+            func(this, item.Key, item.Value);
         }
     }
 }

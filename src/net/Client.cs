@@ -14,6 +14,8 @@ public partial class Vars
         public readonly ConfigKey<string> ConfigPlayerToken = new("client/player_token", "");
         public readonly ConfigKey<string> ConfigPlayerName = new("client/player_name", "player");
 
+        private const double CONNECTION_TIMEOUT_SECONDS = 5.0;
+
         [Signal]
         public delegate void SendJoinDataEventHandler();
 
@@ -28,7 +30,7 @@ public partial class Vars
             WaitingServer,
             // login, hub, redirect, maintain info display, blacklisted display, etc.
             ServerInteract,
-            Conntected
+            Conntected,
         }
 
         public StateMachineGeneric<ClientState> state = new(ClientState.Idle);
@@ -37,6 +39,7 @@ public partial class Vars
             get => state.GetState();
             set => state.SetState(value);
         }
+        public bool localJoin = false;
 
         public override void _Ready()
         {
@@ -50,11 +53,20 @@ public partial class Vars
         public void Reset()
         {
             Vars.Net = new Net.DefaultNetLayer();
+            localJoin = false;
             if (GodotObject.IsInstanceValid(RemoteSaveDataLayer))
                 RemoteSaveDataLayer.QueueFree();
             RemoteSaveDataLayer = new RemoteSaveDataLayer();
             RemoteSaveDataLayer.Name = "RemoteSaveDataLayer";
             AddChild(RemoteSaveDataLayer);
+            
+            // Clean up multiplayer peer and reset state
+            if (Multiplayer.MultiplayerPeer != null)
+            {
+                Multiplayer.MultiplayerPeer.Close();
+                Multiplayer.MultiplayerPeer = null;
+            }
+            State = ClientState.Idle;
         }
         
         [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false)]
@@ -71,9 +83,7 @@ public partial class Vars
         { }
         public void _OnMessageSubmit(string message)
         {
-        }
-        public void _OnMessageRequestAutoComplete(string message)
-        {
+            CallRemote("MessageSubmit", message);
         }
 
         public bool ClientActive => State != ClientState.Idle;
@@ -98,7 +108,7 @@ public partial class Vars
             }
             Multiplayer.MultiplayerPeer = peer;
             logger.Info($"Connecting to {host}:{port}");
-            Vars.Tree.CreateTimer(5.0, true, false, true).Timeout += () => 
+            Vars.Tree.CreateTimer(CONNECTION_TIMEOUT_SECONDS, true, false, true).Timeout += () => 
             {
                 if (State != ClientState.NetworkConnecting)
                     return;
@@ -108,15 +118,18 @@ public partial class Vars
 
         public void CallRemote(string name, params Variant[] args)
         {
-            RpcId(1, name, args);
+            if (localJoin)
+                Vars.Server.Call(name, args);
+            else
+                Vars.Server.RpcId(1, name, args);
         }
 
         public void _OnConnectToServer()
         {
             State = ClientState.WaitingServer;
             CallRemote("PeerConnected",
-                ConfigPlayerToken.V,
-                ConfigPlayerName.V);
+                ConfigPlayerName.V,
+                ConfigPlayerToken.V);
             EmitSignal(SignalName.SendJoinData);
         }
         public void _OnConnectionFailed()
@@ -140,15 +153,21 @@ public partial class Vars
             logger.Info("Server required interact");
         }
         [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false)]
-        public void AcceptConnection()
+        public void AcceptConnection(int playerId)
         {
             State = ClientState.Conntected;
-            Vars.Game.SaveDataLayer = RemoteSaveDataLayer;
-            Vars.Game.SaveDataLayer.RequestLoadGameMeta();
+            if (!localJoin) {
+                Vars.Game.SaveDataLayer = RemoteSaveDataLayer;
+            }
+
+            Vars.Player = Vars.Players.GetPlayer(playerId);
         }
 
         public void JoinLocal()
         {
+            localJoin = true;
+            Vars.Server.CreatePeerForLocal();
+            _OnConnectToServer();
         }
         public bool PostToServer(GodotObject obj, string name, params object[] args)
         {

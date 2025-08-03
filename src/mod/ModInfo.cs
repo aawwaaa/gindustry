@@ -151,19 +151,19 @@ public partial class ModInfo : Resource
     /// <returns>ModInfo instance or null if loading fails.</returns>
     public static ModInfo LoadFromFolder(string path)
     {
-        if (!FileAccess.FileExists(path + "/info.json"))
+        if (!FileAccess.FileExists(path.TrimEnd('/') + "/info.json"))
         {
             return null;
         }
 
-        using var infoAccess = FileAccess.Open(path + "/info.json", FileAccess.ModeFlags.Read);
+        using var infoAccess = FileAccess.Open(path.TrimEnd('/') + "/info.json", FileAccess.ModeFlags.Read);
         var infoData = infoAccess.GetAsText();
         var infoDict = (Godot.Collections.Dictionary)Json.ParseString(infoData);
         var info = ParseInfoDict(infoDict);
 
         if (info != null && infoDict.ContainsKey("icon") && infoDict.ContainsKey("iconType"))
         {
-            var fullPath = path + "/" + (string)infoDict["icon"];
+            var fullPath = path.TrimEnd('/') + "/" + (string)infoDict["icon"];
             if (path.StartsWith("res://"))
             {
                 info.Icon = ResourceLoader.Load<Texture2D>(fullPath);

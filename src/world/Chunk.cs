@@ -2,7 +2,7 @@ using Godot;
 using System.Collections.Generic;
 using System;
 using Gindustry.IO;
-using Gindustry.Entity;
+using Gindustry.Entities;
 using Gindustry.IO.Save;
 using Gindustry.World;
 
@@ -11,6 +11,7 @@ namespace Gindustry.World;
 [GlobalClass]
 public partial class Chunk: GodotObject, Saveable
 {
+    public const uint DimensionChunkSize = 64;
     public static Chunk LoadFrom(Dimension dimension, Vector3I position, Reader r)
     {
         var chunk = new Chunk();
@@ -20,21 +21,33 @@ public partial class Chunk: GodotObject, Saveable
         return chunk;
     }
 
+    public static Vector3I ChunkPosition(Vector3 pos)
+    {
+        return new Vector3I(
+            (int)(pos.X / DimensionChunkSize),
+            (int)(pos.Y / DimensionChunkSize),
+            (int)(pos.Z / DimensionChunkSize)
+        );
+    }
+    public static Vector3 InChunkPosition(Vector3 pos)
+    {
+        return new Vector3(
+            pos.X % DimensionChunkSize,
+            pos.Y % DimensionChunkSize,
+            pos.Z % DimensionChunkSize
+        );
+    }
+
     public Dimension Dimension{get; set;}
     public Vector3I Position {get; set; }
 
     public HashSet<ulong> EntityIds {get; set; } = new();
-    public HashSet<Entity.Entity> Entities {get; set; } = new();
+    public HashSet<Entity> Entities {get; set; } = new();
 
     public virtual void _LoadData(Reader r)
     {
         r.A(r => {
-            var len = r.U32();
-            for (int i = 0; i < len; i++)
-            {
-                var id = r.U64();
-                EntityIds.Add(id);
-            }
+            EntityIds = r.Iter<HashSet<ulong>, ulong>(reader => reader.U64());
         });
     }
     public virtual void _SaveData(Writer w)
@@ -64,13 +77,13 @@ public partial class Chunk: GodotObject, Saveable
 
     }
 
-    public void AddEntity(Entity.Entity entity)
+    public void AddEntity(Entity entity)
     {
         EntityIds.Add(entity.objectId);
         Entities.Add(entity);
     }
 
-    public void RemoveEntity(Entity.Entity entity)
+    public void RemoveEntity(Entity entity)
     {
         EntityIds.Remove(entity.objectId);
         Entities.Remove(entity);

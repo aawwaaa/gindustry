@@ -9,13 +9,16 @@ namespace Gindustry.Test
     public partial class TestRun: RefCounted
     {
         public Test test;
-        public virtual void _Inspect() {}
+        public delegate void InspectDelegate();
+        public InspectDelegate InspectAction = delegate { };
         public void Inspect() {
-            _Inspect();
+            InspectAction();
         }
-        public virtual void _Reset() {}
+
+        public delegate void ResetDelegate();
+        public ResetDelegate ResetAction = delegate { };
         public void Reset() {
-            _Reset();
+            ResetAction();
         }
     }
 

@@ -1,11 +1,11 @@
 using Godot;
 using Gindustry.World;
-using Gindustry.Entity;
+using Gindustry.Entities;
 
 namespace Gindustry.Test;
 
 // 创建一个具体的测试实体类
-public partial class TestEntity : Entity.Entity
+public partial class TestEntity : Entity
 {
     // TestEntity now inherits directly from Entity which has default implementations
     // No need to override Dimension and Position properties unless custom behavior is needed

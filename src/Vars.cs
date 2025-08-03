@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using Gindustry.IO.Save;
 using Gindustry.Net;
+using Gindustry.Game.Player;
 
 namespace Gindustry;
 
@@ -30,7 +31,7 @@ public partial class Vars : Node
     public static Vars_Types Types;
     public static Vars_Contents Contents;
     public static Vars_Game Game;
-    // public static GodotObject Players;
+    public static Vars_Players Players;
     public static Vars_Dimensions Dimensions => SaveDataComponent.GetSaveDataComponent<Vars_Dimensions>();
     public static Vars_Presets Presets;
     public static Vars_Saves Saves;
@@ -41,6 +42,8 @@ public partial class Vars : Node
     public static Gindustry.Test.Vars_Tests Tests;
     // public static GodotObject Input;
     // public static GodotObject UI;
+
+    public static Player Player;
 
     // 实例属性
     public Main main => Main;
@@ -53,7 +56,7 @@ public partial class Vars : Node
     public Vars_Types types => Types;
     public Vars_Contents contents => Contents;
     public Vars_Game game => Game;
-    // public GodotObject players => Players;
+    public GodotObject players => Players;
     public Vars_Dimensions dimensions => SaveDataComponent.GetSaveDataComponent<Vars_Dimensions>();
     public Vars_Presets presets => Presets;
     public GodotObject saves => Saves;
@@ -64,6 +67,8 @@ public partial class Vars : Node
     public Gindustry.Test.Vars_Tests tests => Tests;
     // public GodotObject input => Input;
     // public GodotObject ui => UI;
+
+    public Player player => Player;
 
     public Vars()
     {
@@ -106,7 +111,7 @@ public partial class Vars : Node
         Contents = Add(new Vars_Contents(), "Contents");
         
         Game = Add(new Vars_Game(), "Game");
-        // Players = LoadAdd<GodotObject>("res://src/game/player/players.gd", "Players");
+        Players = Add(new Vars_Players(), "Players");
         SaveDataComponent.RegisterSaveDataComponentInitList(() => new Vars_Dimensions());
         
         Presets = Add(new Vars_Presets(), "Presets");

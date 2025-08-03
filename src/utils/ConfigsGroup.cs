@@ -28,6 +28,11 @@ public class ConfigKey<T>
         get => Vars.Configs.Get(this);
         set => Vars.Configs.Set(this, value);
     }
+
+    public static implicit operator T(ConfigKey<T> key)
+    {
+        return key.V;
+    }
 }
 
 [GlobalClass]
@@ -48,12 +53,7 @@ public partial class ConfigsGroup : Resource, Saveable
 
     public void LoadConfigs(Reader stream)
     {
-        int size = stream.I32();
-        for (int i = 0; i < size; i++)
-        {
-            string key = stream.S();
-            _dict[key] = stream.SV<object>();
-        }
+        stream.Iter(_dict, reader => new KeyValuePair<string, object>(reader.S(), reader.SV<object>()));
     }
 
     public void SaveConfigs(Writer stream)

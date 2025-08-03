@@ -17,10 +17,13 @@ public partial class Dimension: GodotObject, Saveable
     public Rid Scenario { get; private set; }
     public Rid Space { get; private set; }
 
+    public LoadManager LoadManager { get; private set; }
+
     public Dimension()
     {
         Scenario = RenderingServer.ScenarioCreate();
         Space = PhysicsServer3D.SpaceCreate();
+        LoadManager = new LoadManager(this);
     }
 
     public void _LoadData(Reader r) {
@@ -43,6 +46,7 @@ public partial class Dimension: GodotObject, Saveable
 
         RenderingServer.FreeRid(Scenario);
         PhysicsServer3D.FreeRid(Space);
+        LoadManager.Free();
     }
 
     public Chunk LoadChunk(Vector3I position, Reader r)
@@ -56,5 +60,11 @@ public partial class Dimension: GodotObject, Saveable
         if (chunks.TryGetValue(position, out var chunk))
             return chunk;
         return null;
+    }
+
+    public void UpdateManager()
+    {
+        LoadManager.Destroy();
+        LoadManager.Create();
     }
 }

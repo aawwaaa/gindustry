@@ -147,8 +147,16 @@ public partial class Log: Node
 
     public static Logger RegisterLogger(string source) => new Logger(source);
 
+    private static string multiInstanceId = "";
+    public static void SetMultiInstanceId(string id)
+    {
+        multiInstanceId = id;
+    }
+
     public void PrintLog(string formatted, string _1, string _2, string _3)
     {
+        if (!string.IsNullOrEmpty(multiInstanceId))
+            formatted = $"[{multiInstanceId}] " + formatted;
         GD.Print(formatted);
         logAccess?.StoreString(formatted + "\n");
     }

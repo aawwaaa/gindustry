@@ -39,7 +39,6 @@ text = "Run All"
 
 [node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
-focus_mode = 0
 text = "Close"
 
 [node name="HBoxContainer2" type="HSplitContainer" parent="VBoxContainer"]

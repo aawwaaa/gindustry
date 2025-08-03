@@ -25,13 +25,11 @@ public partial class Vars
                 dimensionIncId = r.U32();
 
                 dimensions.Clear();
-                var size = r.I32();
-                for (int i = 0; i < size; i++)
-                {
+                r.Iter(dimensions, reader => {
                     var dimension = new Dimension();
-                    dimension._LoadData(r);
-                    dimensions.Add(dimension.Id, dimension);
-                }
+                    dimension._LoadData(reader);
+                    return new KeyValuePair<uint, Dimension>(dimension.Id, dimension);
+                });
             });
         }
 
@@ -39,12 +37,10 @@ public partial class Vars
         {
             w.A(w => {
                 w.U32(dimensionIncId);
-                w.I32(dimensions.Count);
-                foreach(var pair in dimensions)
-                {
-                    w.U32(pair.Key);
-                    pair.Value._SaveData(w);
-                }
+                w.Iter(dimensions, (w, key, value) => {
+                    w.U32(key);
+                    value._SaveData(w);
+                });
             });
         }
 
@@ -63,6 +59,14 @@ public partial class Vars
             dimension.Id = dimensionIncId++;
             dimensions.Add(dimension.Id, dimension);
             return dimension;
+        }
+
+        public void UpdateManagers()
+        {
+            foreach(var dimension in dimensions.Values)
+            {
+                dimension.UpdateManager();
+            }
         }
     }
 }

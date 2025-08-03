@@ -104,7 +104,7 @@ public partial class Mod : Node
         var fileName = access.GetNext();
         while (fileName != "")
         {
-            var file = ToRelative(path + "/" + fileName);
+            var file = ToRelative(path.TrimEnd('/') + "/" + fileName);
             if (access.CurrentIsDir())
                 arr.AddRange(GetFiles(file));
             else
@@ -118,14 +118,14 @@ public partial class Mod : Node
     public string ToAbsolute(string path)
     {
         if (path.StartsWith("mod://"))
-            return Root + "/" + path.Substring(6);
+            return string.Concat(Root, "/", path.AsSpan(6));
         return path;
     }
 
     public string ToRelative(string path)
     {
         if (path.StartsWith(Root))
-            return "mod://" + path.Substring(Root.Length + 1);
+            return string.Concat("mod://", path.AsSpan(Root.Length + 1));
         return path;
     }
 
@@ -135,16 +135,18 @@ public partial class Mod : Node
     }
 
     public async Task EachResource(string path, Callable callback, string hint = "Load_LoadResources", string source = "Unknown")
-        =>  await EachResource(path, callback, Callable.From(() => true), hint, source);
+        =>  await EachResource(path, callback, Callable.From((string path) => !path.EndsWith(".uid")), hint, source);
     public async Task EachResource(string path, Callable callback, Callable filter, string hint = "Load_LoadResources", string source = "Unknown")
     {
         var resesPath = GetFiles(path);
+        var loads = new List<string>();
         for (var index = 0; index < resesPath.Count; index++)
         {
             if (!(bool)filter.Call(resesPath[index])) continue;
-            resesPath[index] = ToAbsolute(resesPath[index]);
+            var resPath = ToAbsolute(resesPath[index]);
+            loads.Add(resPath);
         }
-        var reses = await Util.LoadContentsAsync("", resesPath, hint, source);
+        var reses = await Util.LoadContentsAsync("", loads, hint, source);
         reses.Sort((a, b) => string.Compare(a.ResourcePath, b.ResourcePath));
         foreach (var res in reses)
             callback.Call(res);
@@ -194,6 +196,7 @@ public partial class Mod : Node
 
     public bool RegisterObject(GodotObject inst)
     {
+        inst = GA.U<GodotObject>(inst);
         if (inst.HasMethod("__resource__init"))
             inst.Call("__resource__init", this);
         if (inst.HasMethod("__Resource__Init"))

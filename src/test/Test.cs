@@ -5,10 +5,11 @@ namespace Gindustry.Test
 {
     public class Test
     {
-        public delegate TestRun TestAction(TestReporter r);
+        public delegate void TestAction(TestReporter r);
         public TestAction action;
         public string name;
         public TestGroup group;
+        public bool excludeBatch;
 
         public TestRun Run(Action<TestResult> callback)
         {
@@ -18,10 +19,10 @@ namespace Gindustry.Test
             };
 
             var run = new TestRun { test = this };
+            reporter.run = run;
             try
             {
                 action(reporter);
-                reporter.Success();
             }
             catch (Exception e)
             {
